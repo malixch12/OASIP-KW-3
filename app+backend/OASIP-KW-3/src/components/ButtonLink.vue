@@ -22,7 +22,7 @@ const GotoLink = () => myRouter.push({name :props.link})
 </script>
 <template>
 <div>
-<button @click="GotoLink" type="button" class=" bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 h-14 w-80 pr-4 pl-4 mr-4 rounded-lg">
+<button @click="GotoLink" type="button" class=" transition ease-in-out delay-150 bg-yellow-300 hover:-translate-y-1 hover:scale-110 hover:bg-red-200 duration-150 h-14 w-80 pr-4 pl-4 mr-4 rounded-lg">
  {{name}}
 </button>
 

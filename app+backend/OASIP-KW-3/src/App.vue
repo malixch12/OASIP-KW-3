@@ -1,8 +1,8 @@
 <script setup>
 import { ref, onBeforeMount } from "vue";
-import EventList from "./components/EventListAllEmty.vue";
 
-import EventList1 from "./components/EventListAllEmty.vue";
+import Navbar from './components/Navbar.vue';
+
 </script>
 
 <template>
@@ -12,7 +12,9 @@ import EventList1 from "./components/EventListAllEmty.vue";
     <div
       class="relative dark:bg-gray-800 bg-white px-16 pt-16 pb-16 shadow-xl ring-1 ring-gray-900/5 sm:mx-auto sm:max sm:rounded-lg grid grid-cols-1"
     >
-  <router-view> </router-view>
+     <Navbar />
+  <router-view>
+     </router-view>
 
   </div> </div>
 </template>

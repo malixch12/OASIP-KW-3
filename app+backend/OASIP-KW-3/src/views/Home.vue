@@ -4,8 +4,8 @@ import ButtonLink from '../components/ButtonLink.vue'
 
 <template>
 <div>
-      <div class="text-7xl font-bold col-span-1 text-center">Clinic</div>
-
+      <div class="text-7xl font-medium  col-span-1 text-center">Clinic</div>
+      
       <div class="col-span-1 text-center">
         Website for booking clinics of INT221 subject
       </div>

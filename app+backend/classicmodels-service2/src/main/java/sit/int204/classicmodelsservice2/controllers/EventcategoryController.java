@@ -2,11 +2,11 @@ package sit.int204.classicmodelsservice2.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import sit.int204.classicmodelsservice2.dtos.SimpleEventcategoryDTO;
 import sit.int204.classicmodelsservice2.entities.Eventcategory;
 import sit.int204.classicmodelsservice2.repositories.EventcategoryRepository;
@@ -38,4 +38,13 @@ public class EventcategoryController {
     public SimpleEventcategoryDTO getEventcategoryById(@PathVariable Integer id) {
         return EventcategoryService.getSimpleEventcategoryById(id);
     }
+
+    @DeleteMapping("/{eventCatCode}")
+    public void delete(@PathVariable Integer eventCatCode){
+        repository.findById(eventCatCode).orElseThrow(() ->
+        new RuntimeException(eventCatCode + "Does not exit !!!"));
+        repository.deleteById(eventCatCode);
+    }
+
+//    put
 }

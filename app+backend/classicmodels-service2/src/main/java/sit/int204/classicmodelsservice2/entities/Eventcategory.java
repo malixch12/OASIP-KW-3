@@ -24,6 +24,4 @@ public class Eventcategory {
 
     @Column(name = "EventDuration", nullable = false)
     private Integer eventDuration;
-
-    
 }

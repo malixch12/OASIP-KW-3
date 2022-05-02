@@ -5,12 +5,16 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import sit.int204.classicmodelsservice2.dtos.SimpleEventcategoryDTO;
 import sit.int204.classicmodelsservice2.entities.Eventcategory;
 import sit.int204.classicmodelsservice2.repositories.EventcategoryRepository;
 import sit.int204.classicmodelsservice2.services.EventCategoryService;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
@@ -39,12 +43,10 @@ public class EventcategoryController {
         return EventcategoryService.getSimpleEventcategoryById(id);
     }
 
-    @DeleteMapping("/{eventCatCode}")
-    public void delete(@PathVariable Integer eventCatCode){
-        repository.findById(eventCatCode).orElseThrow(() ->
-        new RuntimeException(eventCatCode + "Does not exit !!!"));
-        repository.deleteById(eventCatCode);
+    @PostMapping("")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Eventcategory create(@RequestBody Eventcategory newEvent) {
+        return repository.saveAndFlush(newEvent);
     }
 
-//    put
 }

@@ -14,6 +14,7 @@ public class SimpleEventDTO {
     private String BookingEmail;
     private String EventCategory;
     private Instant EventStartTime;
+    private Integer eventDuration;
     private String EventNotes;
     private Integer EventCategoryID;
 

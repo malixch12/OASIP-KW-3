@@ -43,10 +43,5 @@ public class EventcategoryController {
         return EventcategoryService.getSimpleEventcategoryById(id);
     }
 
-    @PostMapping("")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Eventcategory create(@RequestBody Eventcategory newEvent) {
-        return repository.saveAndFlush(newEvent);
-    }
-
+  
 }

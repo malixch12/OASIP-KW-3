@@ -37,7 +37,8 @@ const sendIndex = (num) => {
 
           <!-- <h1 class="text-1xl font-bold mb-4 mt-4">{{ event.eventCategory }}</h1> -->
           <p class="text-2xl font-bold">{{ event.bookingName }} </p>
-          <p> {{ event.eventStartTime }} </p>
+          <p> {{ event.eventDate }} </p>
+          <p>{{ event.eventTime }}</p>
         </div>
 
         <br />

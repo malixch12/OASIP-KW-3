@@ -1,5 +1,6 @@
 package sit.int204.classicmodelsservice2.controllers;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +17,7 @@ import sit.int204.classicmodelsservice2.dtos.SimpleEventDTO;
 import sit.int204.classicmodelsservice2.entities.Event;
 import sit.int204.classicmodelsservice2.repositories.EventRepository;
 import sit.int204.classicmodelsservice2.services.EventService;
+import sit.int204.classicmodelsservice2.utils.ListMapper;
 
 import java.util.List;
 
@@ -26,18 +28,23 @@ public class EventController {
 
     @Autowired
     private EventService EventService;
-
+    @Autowired
     private final EventRepository repository ;
 
+    private ListMapper listMapper = new ListMapper();
+    @Autowired
+    private ModelMapper modelMapper;
     @Autowired
     public EventController(EventRepository repository) {
         this.repository = repository;
     }
 
     @GetMapping("")
-    public List<Event> getEventByAll() {
-        return EventService.getSimpleEventAll();
+    public List<SimpleEventDTO> getEventByAll() {
+        return listMapper.mapList(repository.findAll(), SimpleEventDTO.class,modelMapper);
+
     }
+
     
     @GetMapping("/{id}")
     public SimpleEventDTO getEventById(@PathVariable Integer id) {

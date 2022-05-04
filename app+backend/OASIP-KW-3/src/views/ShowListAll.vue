@@ -9,8 +9,6 @@ const getLinkAll = async () => {
   const res = await fetch(`http://localhost:8080/api/events`);
   if (res.status === 200) {
     eventLists.value = await res.json();
-    
-  
   }
 };
 

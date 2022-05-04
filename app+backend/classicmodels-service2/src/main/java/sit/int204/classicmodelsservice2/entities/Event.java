@@ -11,6 +11,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Getter @Setter
@@ -31,7 +33,7 @@ public class Event {
     private String eventCategory;
 
     @Column(name = "EventStartTime", nullable = false)
-    private Instant eventStartTime;
+    private LocalDateTime eventStartTime;
 
     @Column(name = "EventDuration", nullable = false)
     private Integer eventDuration;

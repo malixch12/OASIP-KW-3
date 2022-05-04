@@ -52,8 +52,9 @@ public class EventController {
     }
 
     @GetMapping("/category/{eventCategoryID}")
-    public List<Event> getEventByCatetory(@PathVariable Integer eventCategoryID) {
-        return EventService.getEventByCatetory(eventCategoryID);
+    public List<SimpleEventDTO> getEventByCatetory(@PathVariable Integer eventCategoryID) {
+        return listMapper.mapList(repository.findByEventCategoryID(eventCategoryID),SimpleEventDTO.class,modelMapper);
+
     }
     
     @DeleteMapping("/{eventID}")

@@ -18,9 +18,9 @@ import java.util.Date;
 @Getter @Setter
 @Table(name = "event")
 public class Event {
-    @Id
+    @Id  
+    // @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name = "BookingID", nullable = false)
- //  @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer BookingId;
 
     @Column(name = "BookingName", nullable = false, length = 100)

@@ -14,7 +14,7 @@ import Navbar from './components/Navbar.vue';
     >
      <Navbar />
   <router-view>
-     </router-view>
+  </router-view>
 
   </div> </div>
 </template>

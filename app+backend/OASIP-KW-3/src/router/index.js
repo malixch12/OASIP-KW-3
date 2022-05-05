@@ -4,6 +4,7 @@ import ShowListAll from "../views/ShowListAll.vue";
 import Home from "../views/Home.vue";
 import ListAllByCate from "../views/ListAllEventByCate.vue";
 import ShowList from "../views/ShowList.vue";
+import Booking from "../views/Booking.vue";
 
 const history = createWebHistory();
 const routes = [
@@ -31,7 +32,12 @@ const routes = [
     path: "/ShowList",
     name: "ShowList",
     component: ShowList,
- }
+ },
+ {
+   path: "/Booking",
+   name: "Booking",
+   component: Booking,
+}
 
   
 ];

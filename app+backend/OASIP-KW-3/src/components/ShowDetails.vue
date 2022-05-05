@@ -19,7 +19,7 @@ const props = defineProps({
   <div>
     <div
       v-if="props.showDiv"
-      class="border-2 border-black-600  ring-1 ring-red-900/5  sm:rounded-lg  p-6"
+      class="border-2 border-red-600  ring-1 ring-red-900/5  sm:rounded-lg  p-6"
     >
       <p>
         <span class="font-bold">Booking Name</span>

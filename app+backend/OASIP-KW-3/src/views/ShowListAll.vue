@@ -19,11 +19,12 @@ onBeforeMount(async () => {
 });
 
 
+
 </script>
  
 <template>
 <div>
-  
+
    <ShowList :eventLists="eventLists"/>
   </div>
 </template>

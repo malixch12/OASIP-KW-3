@@ -23,8 +23,10 @@ onBeforeUpdate(async () => {
 });
 
 const index = ref();
-const sendIndex = (num) => {
+const SendBookId = ref();
+const sendIndex = (num,id) => {
   index.value = num
+  SendBookId.value = id
   send.value = true
 }
 
@@ -39,12 +41,12 @@ function scrollWin() {
 
     <div v-if="check" class="flex justify-between grid grid-cols-4 gap-4">
       <div v-for="(event, index) in props.eventLists" :key="index">
-        <div class="bg-red-100 mt-4 shadow-xl ring-1 ring-red-900/5 sm:rounded-lg p-6" @click="sendIndex(index),scrollWin()">
+        <div class="bg-red-100 mt-4 shadow-xl ring-1 ring-red-900/5 sm:rounded-lg p-6" @click="sendIndex(index,event.bookingId),scrollWin()">
 
           <!-- <h1 class="text-1xl font-bold mb-4 mt-4">{{ event.eventCategory }}</h1> -->
-          <p class="text-1xl font-bold">{{ event.bookingName }} </p>
-          <p> {{ event.eventDate }} </p>
-          <p>{{ event.eventTime }}</p>
+          <p class="text-1xl font-bold">Name : {{ event.bookingName }} </p>
+          <p>Date :  {{ event.eventDate }} </p>
+          <p>Time : {{ event.eventTime }}</p>
         </div>
 
         <br />
@@ -55,7 +57,7 @@ function scrollWin() {
     <div v-if="check == false">Empty schedule ! ! !</div>
 
 
-    <ShowDetail :eventLists="props.eventLists" :number="index" :showDiv="send"  />
+    <ShowDetail :eventLists="props.eventLists" :number="index" :showDiv="send" :id="SendBookId" />
 
   </div>
 </template>

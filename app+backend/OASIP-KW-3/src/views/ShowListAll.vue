@@ -17,7 +17,11 @@ onBeforeMount(async () => {
       getLinkAll()
  
 });
-
+onBeforeUpdate(async () => {
+  
+      getLinkAll()
+ 
+});
 
 
 </script>

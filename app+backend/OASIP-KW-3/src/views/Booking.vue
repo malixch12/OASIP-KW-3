@@ -13,26 +13,27 @@ const getLinkAll = async () => {
    
   }
 };
- getLinkAll();
+getLinkAll();
 
 onBeforeUpdate( () => {
   id.value = eventLists.value.length
   console.log(id.value)
 });
 
-    console.log(id.value)
+
 const addEvent = async (dataBooking) => {
   console.log(dataBooking)
   getLinkAll()
-const res = await fetch('http://localhost:8080/api/events',{
+  if(dataBooking.bookingName == ''){
+    console.log('empty')
+  }
+  const res = await fetch('http://localhost:8080/api/events',{
     method: 'POST',
     headers: {
         'content-type' : 'application/json'
     },
     body:JSON.stringify(dataBooking)
-
 })
-
 getLinkAll()
 }
 
@@ -43,9 +44,10 @@ getLinkAll()
 
 <div>
   <div  class="flex justify-between grid grid-cols-2 gap-2">
+  
     <AddEvent :id="id" @addEvent="addEvent"/>
     <ShowList :eventLists="eventLists" />
-    </div>
+  </div>
 </div>
 </template>
  

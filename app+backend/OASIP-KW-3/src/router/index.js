@@ -5,41 +5,45 @@ import Home from "../views/Home.vue";
 import ListAllByCate from "../views/ListAllEventByCate.vue";
 import ShowList from "../views/ShowList.vue";
 import Booking from "../views/Booking.vue";
+import ShowDetails from "../views/ShowDetails.vue"
 
 const history = createWebHistory();
 const routes = [
-{
-        path: "/",
-        name: "Home",
-        component: Home,
-},
-{
+  {
+    path: "/",
+    name: "Home",
+    component: Home,
+  },
+  {
     path: "/viewAll",
     name: "ListAllEvent",
     component: ShowListAll,
-},
-{
+  },
+  {
     path: "/:pageNotFound(.*)",
     name: "NotFound",
     component: NotFound,
- },
- {
+  },
+  {
     path: "/ListAllByCate",
     name: "ListAllByCate",
     component: ListAllByCate,
- },
- {
+  },
+  {
     path: "/ShowList",
     name: "ShowList",
     component: ShowList,
- },
- {
-   path: "/Booking",
-   name: "Booking",
-   component: Booking,
-}
-
-  
+  },
+  {
+    path: "/Booking",
+    name: "Booking",
+    component: Booking,
+  },
+  {
+    path: "/ShowDetails",
+    name: "ShowDetails",
+    component: ShowDetails,
+  },
 ];
 
 const router = createRouter({ history, routes });

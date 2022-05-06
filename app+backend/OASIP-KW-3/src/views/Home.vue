@@ -1,32 +1,27 @@
 <script setup>
-import ButtonLink from '../components/ButtonLink.vue'
+import ButtonLink from "../components/ButtonLink.vue";
+
 </script>
 
 <template>
-<div>
+  <div>
+    <div class="bg-white shadow-xl rounded-lg ml-24 mr-24 p-12">
       <div class="text-7xl font-bold col-span-1 text-center">Clinic</div>
-      
+
       <div class="col-span-1 text-center">
         Website for booking clinics of INT221 subject
       </div>
+   
       <br />
-       <div class="col-span-1 grid grid-cols-3">
-      <ButtonLink name="book a clinic" />
-      <ButtonLink name="our book information" />
-      <ButtonLink name="check all book" link="ListAllEvent" />
-       </div>
-     
+      <div class="col-span-1 grid grid-cols-3">
+        <ButtonLink name="Book a clinic" link="Booking"/>
+        <ButtonLink name="Our book information" />
+        <ButtonLink name="Check all book" link="ListAllEvent" />
+      </div>
+    </div>
   </div>
 </template>
 
 <style>
-@import url("https://fonts.googleapis.com/css?family=Rubik");
 
-html,
-body {
-  font-family: "Rubik", sans-serif;
-}
-
-#app {
-  font-family: "Rubik", sans-serif;
-}</style>
+</style>

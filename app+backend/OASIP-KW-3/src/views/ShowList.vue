@@ -2,7 +2,7 @@
 import { onBeforeMount, ref , onBeforeUpdate} from "@vue/runtime-core";
 import { useRoute } from "vue-router";
 import ShowList from '../components/ShowList.vue'
-
+import Navbar from '../components/Navbar.vue'
 const route = useRoute();
 
 console.log(route.query.categoryId)
@@ -28,8 +28,8 @@ onBeforeMount(async () => {
  
 <template>
 <div>
-  
-   <ShowList :eventLists="eventLists"/>
+  <Navbar/>
+  <ShowList :eventLists="eventLists"/>
   </div>
 </template>
  

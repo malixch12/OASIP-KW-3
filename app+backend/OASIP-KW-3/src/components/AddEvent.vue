@@ -1,26 +1,31 @@
 <script setup>
 import RoundButton from "../components/RoundButton.vue";
-import {useRouter ,useRoute} from 'vue-router'
+import ErrorForm from "../components/ErrorForm.vue";
+import { useRouter, useRoute } from "vue-router";
 import { ref, onBeforeMount, onBeforeUpdate } from "vue";
 
 const props = defineProps({
   id: {
     type: Number,
+    default:0
   },
 });
 defineEmits(["addEvent"]);
 
 onBeforeUpdate(() => {
+  console.log(props.id + ' id')
   dataBooking.value.bookingId = props.id + 1;
+  
+  
 });
 
-// 
-const appRouter = useRouter()
+//
+const appRouter = useRouter();
 
 const dataBooking = ref({
   bookingId: "",
-  bookingName: "",
-  bookingEmail: "",
+  bookingName: null,
+  bookingEmail: null,
   eventCategory: "DevOps/Infra Clinic",
   eventStartTime: null,
   eventDuration: null,
@@ -28,98 +33,82 @@ const dataBooking = ref({
   eventCategoryID: 2,
 });
 
-const cancelBooking= () =>{
-  appRouter.push({name : 'Home'})
-}
+const cancelBooking = () => {
+  appRouter.push({ name: "Home" });
+};
 
 console.log(dataBooking.value);
-// var tester = /^[-!#$%&'*+\/0-9=?A-Z^_a-z{|}~](\.?[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-*\.?[a-zA-Z0-9])*\.[a-zA-Z](-?[a-zA-Z0-9])+$/;
-// function validateEmail(email)
-// {
-//     if (!email)
-//         return false;
 
-//     if(email.length>254)
-//         return false;
-//     var valid = tester.test(email);
-//     if(!valid)
-//         return false;
-//     // Further checking of some things regex can't handle
-//     var parts = email.split("@");
-//     if(parts[0].length>64)
-//         return false;
-//     var domainParts = parts[1].split(".");
-//     if(domainParts.some(function(part) { return part.length>63; }))
-//         return false;
-//     return true;
-// }
-
-// console.log(validateEmail("asdsad"))
 </script>
  
 <template>
-  <div class="space-y-7">
-    <br />
-    <h2 class="text-1xl">Information for booking clinic</h2>
-    <p>
-      Name :
-      <input
+  <div>
+    <div class="space-y-7 bg-white shadow-xl rounded-lg ml-24  p-10">
+      <RoundButton
+          bg-color="bg-emerald-400"
+          button-name="ย้อนกลับจ้าพี่"
+          @click="$emit('addEvent', dataBooking)"
+        />
+      <h2 class="text-2xl font-semibold text-center ">Information for booking clinic</h2>
+      <p>
+        Name :
+        <input
+          type="text"
+          v-model="dataBooking.bookingName"
+          class="border-2 pl-2 border-sky-200 w-72 rounded-lg"
+        />
+      </p>
+      <p>
+        Email :
+        <input
+          type="text"
+          v-model="dataBooking.bookingEmail"
+          class="pl-2 border-2 border-sky-200 w-72 rounded-lg"
+        />
+      </p>
+      <hr />
+      <p class="text-2xl font-semibold text-center">Date and Time for booking clinic</p>
+      <p>
+        DateTime :
+        <input
+          type="datetime-local"
+          v-model="dataBooking.eventStartTime"
+          class="border-2 border-sky-200 w-58 rounded-lg"
+        />
+      </p>
+      <p>
+        Duration :
+        <input
+          type="number"
+          v-model="dataBooking.eventDuration"
+          class="pl-2 border-2 border-sky-200 w-16 rounded-lg"
+        />
+        minutes
+      </p>
+      <p class="text-xs text-red-600">
+        * Duration for booking can not exceed 30 minutes.*
+      </p>
+      <p>Message to Advisor</p>
+        <textarea
         type="text"
-        v-model="dataBooking.bookingName"
-        class="border-double border-2 border-sky-200 w-96 rounded-lg"
-      />
-    </p>
-    <p>
-      Email :
-      <input
-        type="text"
-        v-model="dataBooking.bookingEmail"
-        class="border-double border-2 border-sky-200 w-96 rounded-lg"
-      />
-    </p>
-    <hr />
-    <p class="text-1xl">Date and Time for booking clinic</p>
-    <p>
-      DateTime :
-      <input
-        type="datetime-local"
-        v-model="dataBooking.eventStartTime"
-        class="border-double border-2 border-sky-200 w-58 rounded-lg"
-      />
-    </p>
-    <p>
-      Duration :
-      <input
-        type="number"
-        v-model="dataBooking.eventDuration"
-        class="border-double border-2 border-sky-200 w-20 rounded-lg"
-      />
-      minutes
-    </p>
-    <p class="text-xs text-red-600">
-      * Duration for booking can not exceed 30 minutes.*
-    </p>
-    <p>Message to Advisor</p>
-    <input
-      type="text"
-      v-model="dataBooking.eventNotes"
-      class="border-double border-2 border-sky-200 w-1/3 h-56 rounded-lg"
-    />
+        v-model="dataBooking.eventNotes"
+        class="border-2 border-sky-200 w-96 h-56 rounded-lg"
+      ></textarea>
+    
 
-    <div class="grid grid-cols-2 w-48 ml-52">
-      <RoundButton
-        bg-color="bg-emerald-400"
-        button-name="add"
-        @click="$emit('addEvent', dataBooking)"
-      />
-      <RoundButton
-        bg-color="bg-rose-400"
-        button-name="cancel"
-        @click="cancelBooking"
-      />
+      <div class="grid grid-cols-2 place-items-center">
+        <RoundButton
+          bg-color="bg-emerald-400"
+          button-name="add"
+          @click="$emit('addEvent', dataBooking)"
+        />
+        <RoundButton
+          bg-color="bg-rose-400"
+          button-name="cancel"
+          @click="cancelBooking"
+        />
+      </div>
     </div>
-
-    {{ dataBooking }}
   </div>
 </template>
  

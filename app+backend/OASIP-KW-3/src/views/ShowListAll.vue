@@ -2,7 +2,7 @@
 import { onBeforeMount, ref , onBeforeUpdate} from "@vue/runtime-core";
 import { useRoute } from "vue-router";
 import ShowList from '../components/ShowList.vue'
-
+import Navbar from '../components/Navbar.vue'
 const route = useRoute();
 const eventLists = ref();
 const getLinkAll = async () => {
@@ -15,20 +15,20 @@ const getLinkAll = async () => {
 onBeforeMount(async () => {
   
       getLinkAll()
- 
-});
-onBeforeUpdate(async () => {
-  
-      getLinkAll()
+      console.log("สักทีไอ้สัส2")
  
 });
 
+
+
+
+  
 
 </script>
  
 <template>
 <div>
-
+  <Navbar />
    <ShowList :eventLists="eventLists"/>
   </div>
 </template>

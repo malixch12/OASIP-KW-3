@@ -9,7 +9,7 @@ defineProps({
     }
 })
 
-const style = "rounded-3xl px-5 text-white"
+const style = "rounded-3xl px-5 text-white shadow-xl"
 
 
 </script>

@@ -6,7 +6,7 @@ import Navbar from '../components/Navbar.vue'
 const route = useRoute();
 const eventLists = ref();
 const getLinkAll = async () => {
-  const res = await fetch(`http://localhost:8080/api/events`);
+  const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events`);
   if (res.status === 200) {
     eventLists.value = await res.json();
   }
@@ -29,7 +29,9 @@ onBeforeMount(async () => {
 <template>
 <div>
   <Navbar />
-   <ShowList :eventLists="eventLists"/>
+   <ShowList :eventLists="eventLists" colNum='grid-cols-4'/>
+
+  
   </div>
 </template>
  

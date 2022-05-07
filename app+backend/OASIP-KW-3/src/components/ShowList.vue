@@ -1,13 +1,16 @@
 <script setup>
 import { ref, onBeforeMount, onBeforeUpdate, computed } from "vue";
 import { useRouter } from "vue-router";
+import RoundButton from "../components/RoundButton.vue";
 
 const router = useRouter();
 const props = defineProps({
   eventLists: {
     type: Array,
-   
   },
+  colNum:{
+    type: String
+  }
 });
 
 const check = ref(true);
@@ -63,13 +66,13 @@ const showDet = (BookingId) => {
     query: { BookingId: BookingId }
   });
 };
-
+const style = "flex justify-between grid gap-4"
 </script>
  
 <template>
   <div>
     <div class="bg-white shadow-xl rounded-b-lg ml-24 mr-24 p-12">
-      <div v-if="check" class="flex justify-between grid grid-cols-4 gap-4">
+      <div v-if="check" :class="[style,colNum]">
         <div v-for="(event, index) in props.eventLists" :key="index">
           <div
             class="
@@ -79,13 +82,14 @@ const showDet = (BookingId) => {
               sm:rounded-lg
               mt-4
               p-6
+              space-y-3
             "
-            @click="showDet(event.bookingId), scrollWin()"
           >
-            <h1 class="text-1xl font-bold mb-4 mt-4">{{ event.eventCategory }}</h1>
-            <p class="text-1xl font-bold">Name : {{ event.bookingName }}</p>
+            <h1 class="text-1xl font-bold">{{ event.eventCategory }}</h1>
+            <p >Name : {{ event.bookingName }}</p>
             <p>Date : {{ event.eventDate }}</p>
             <p>Time : {{ event.eventTime }}</p>
+            <RoundButton bg-color="bg-rose-300" button-name="Show detail ->>" @click="showDet(event.bookingId)" />
           </div>
 
           <br />

@@ -38,7 +38,7 @@ const addEvent = async (dataBooking) => {
   // if(dataBooking.bookingName == ''){
   //   console.log('empty')
   // }
-  const res = await fetch('http://localhost:8080/api/events',{
+  const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events`,{
     method: 'POST',
     headers: {
         'content-type' : 'application/json'
@@ -56,7 +56,7 @@ getLinkAll()
   <div  class="flex justify-between grid grid-cols-3 gap-2">
   
     <AddEvent :id="id" @addEvent="addEvent" @click="getLinkAll"/>
-    <ShowList :eventLists="eventLists" class="col-span-2" />
+    <ShowList :eventLists="eventLists" colNum="grid-cols-3" class="col-span-2" />
   </div>
 </div> 
 </template>

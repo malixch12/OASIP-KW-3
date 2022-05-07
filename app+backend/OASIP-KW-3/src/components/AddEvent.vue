@@ -45,7 +45,7 @@ console.log(dataBooking.value);
  
 <template>
   <div>
-    <div class="space-y-7 bg-white shadow-xl rounded-lg ml-24  p-10">
+    <div class="space-y-7 bg-white shadow-xl rounded-lg ml-24 p-10">
       <RoundButton
           bg-color="bg-slate-400 text-sm"
           button-name="<< go back"

@@ -6,6 +6,7 @@ import ListAllByCate from "../views/ListAllEventByCate.vue";
 import ShowList from "../views/ShowList.vue";
 import Booking from "../views/Booking.vue";
 import ShowDetails from "../views/ShowDetails.vue"
+import { publicPath } from '../vue.config'
 
 //const history = createWebHistory();
 const history = createWebHistory('/kw3/');
@@ -48,4 +49,9 @@ const routes = [
 ];
 
 const router = createRouter({ history, routes });
-export default router;
+//export default router;
+export default new Router({
+  mode: 'history',
+  base: publicPath,
+  /* ... */
+})

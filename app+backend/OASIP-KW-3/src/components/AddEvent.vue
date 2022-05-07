@@ -4,6 +4,8 @@ import ErrorForm from "../components/ErrorForm.vue";
 import { useRouter, useRoute } from "vue-router";
 import { ref, onBeforeMount, onBeforeUpdate } from "vue";
 
+const goBack = () => appRouter.go(-1)
+
 const props = defineProps({
   id: {
     type: Number,
@@ -45,9 +47,9 @@ console.log(dataBooking.value);
   <div>
     <div class="space-y-7 bg-white shadow-xl rounded-lg ml-24  p-10">
       <RoundButton
-          bg-color="bg-emerald-400"
-          button-name="ย้อนกลับจ้าพี่"
-          @click="$emit('addEvent', dataBooking)"
+          bg-color="bg-slate-400 text-sm"
+          button-name="<< go back"
+          @click="goBack"
         />
       <h2 class="text-2xl font-semibold text-center ">Information for booking clinic</h2>
       <p>
@@ -55,7 +57,7 @@ console.log(dataBooking.value);
         <input
           type="text"
           v-model="dataBooking.bookingName"
-          class="border-2 pl-2 border-sky-200 w-72 rounded-lg"
+          class="border-2 pl-2 border-sky-200 w-8/12 rounded-lg"
         />
       </p>
       <p>
@@ -63,7 +65,7 @@ console.log(dataBooking.value);
         <input
           type="text"
           v-model="dataBooking.bookingEmail"
-          class="pl-2 border-2 border-sky-200 w-72 rounded-lg"
+          class="pl-2 border-2 border-sky-200 w-8/12 rounded-lg"
         />
       </p>
       <hr />
@@ -73,7 +75,7 @@ console.log(dataBooking.value);
         <input
           type="datetime-local"
           v-model="dataBooking.eventStartTime"
-          class="border-2 border-sky-200 w-58 rounded-lg"
+          class="border-2 border-sky-200 w-9/12 rounded-lg"
         />
       </p>
       <p>
@@ -92,7 +94,7 @@ console.log(dataBooking.value);
         <textarea
         type="text"
         v-model="dataBooking.eventNotes"
-        class="border-2 border-sky-200 w-96 h-56 rounded-lg"
+        class="border-2 border-sky-200 w-11/12 h-56 rounded-lg"
       ></textarea>
     
 

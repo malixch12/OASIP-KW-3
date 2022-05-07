@@ -19,7 +19,7 @@ const eventLists = ref({
 
 const getLinkAll = async () => {
   const res = await fetch(
-    `http://localhost:8080/api/events/${myRouter.query.BookingId}`
+    `${import.meta.env.VITE_APP_TITLE}/${myRouter.query.BookingId}`
   );
   if (res.status === 200) {
     eventLists.value = await res.json();

@@ -48,7 +48,8 @@ const goAboutUs = () => appRouter.push({name:'About'})
 <template>
   <div>
     <div class="bg-white shadow-xl rounded-b-lg ml-24 mr-24 p-12">
-         <RoundButton bg-color="bg-black" button-name="ย้อนกลับจ้าพี่" @click="goBack" />
+         <RoundButton bg-color="bg-slate-400 text-sm"
+          button-name="<< go back" @click="goBack" />
       <div
         class="border-2 border-rose-200 ring-1 ring-red-900/5 sm:rounded-lg p-6"
       >

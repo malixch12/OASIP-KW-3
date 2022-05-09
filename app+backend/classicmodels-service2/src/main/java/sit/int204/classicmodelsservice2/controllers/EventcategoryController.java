@@ -24,8 +24,7 @@ import java.util.List;
 public class EventcategoryController {
 
     @Autowired
-    private EventCategoryService EventcategoryService;
-
+    private EventCategoryService eventcategoryService;
     private final EventcategoryRepository repository ;
 
     @Autowired
@@ -34,13 +33,13 @@ public class EventcategoryController {
     }
 
     @GetMapping("")
-    public List<Eventcategory> getEventcategoryByAll() {
-        return EventcategoryService.getSimpleEventcategoryAll();
+    public List<SimpleEventcategoryDTO> getEventcategoryByAll() {
+        return eventcategoryService.getSimpleEventcategoryAll();
     }
     
     @GetMapping("/{id}")
     public SimpleEventcategoryDTO getEventcategoryById(@PathVariable Integer id) {
-        return EventcategoryService.getSimpleEventcategoryById(id);
+        return eventcategoryService.getSimpleEventcategoryById(id);
     }
 
   

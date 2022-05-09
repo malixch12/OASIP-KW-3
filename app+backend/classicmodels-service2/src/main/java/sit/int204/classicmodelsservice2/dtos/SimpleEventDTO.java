@@ -19,6 +19,7 @@ public class SimpleEventDTO {
     private Integer EventDuration;
     private String EventNotes;
     private Integer EventCategoryID;
+
     public String getEventDate(){
         return EventStartTime.format(DateTimeFormatter.ofPattern("dd MMM YYYY"));
     }

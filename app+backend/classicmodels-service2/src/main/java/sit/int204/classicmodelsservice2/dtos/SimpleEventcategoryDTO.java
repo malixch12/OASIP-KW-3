@@ -10,7 +10,4 @@ public class SimpleEventcategoryDTO {
     private String EventCategoryName;
     private String EventCategoryDescription;
     private Integer EventDuration;
-    //   private String SalesPerson;
-
-
 }

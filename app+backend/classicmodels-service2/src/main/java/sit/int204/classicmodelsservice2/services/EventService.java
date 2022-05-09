@@ -6,22 +6,28 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.server.ResponseStatusException;
 import sit.int204.classicmodelsservice2.dtos.SimpleEventDTO;
 import sit.int204.classicmodelsservice2.entities.Event;
 import sit.int204.classicmodelsservice2.repositories.EventRepository;
+import sit.int204.classicmodelsservice2.utils.ListMapper;
 
 @Service
 public class EventService {
 
     private final EventRepository repository;
 
+    private ListMapper listMapper = new ListMapper();
     @Autowired
     private ModelMapper modelMapper;
-
     @Autowired
     public EventService(EventRepository repository) {
         this.repository = repository;
+    }
+
+    public List<SimpleEventDTO> getSimpleEventAll() {
+        return listMapper.mapList(repository.findAll(), SimpleEventDTO.class,modelMapper);
     }
 
     public SimpleEventDTO getSimpleEventById(Integer id) {
@@ -32,19 +38,15 @@ public class EventService {
 
     }
 
-    public List<Event> getEventByCatetory(Integer eventCategoryID) {
-        return repository.findByEventCategoryID(eventCategoryID);
-    }
-
-    public List<Event> getSimpleEventAll() {
-        List<Event> event = repository.findAll();
-        return event;
+    public List<SimpleEventDTO> getEventByCatetory(Integer eventCategoryID) {
+        return listMapper.mapList(repository.findByEventCategoryID(eventCategoryID),SimpleEventDTO.class,modelMapper);
     }
 
     public void delete(Integer eventID) {
         repository.findById(eventID).orElseThrow(() -> new RuntimeException(eventID + "Does not exit !!!"));
         repository.deleteById(eventID);
     }
+
 
     public Event save(SimpleEventDTO newEvent) {
         Event e = modelMapper.map(newEvent, Event.class);
@@ -65,7 +67,6 @@ public class EventService {
         existingEvent.setBookingName(updateEvent.getBookingName());
         existingEvent.setBookingEmail(updateEvent.getBookingEmail());
         existingEvent.setEventCategory(updateEvent.getEventCategory());
-//        existingEvent.setEventStartTime(updateEvent.getEventStartTime());
         existingEvent.setEventDuration(updateEvent.getEventDuration());
         existingEvent.setEventNotes(updateEvent.getEventNotes());
         existingEvent.setEventCategoryID(updateEvent.getEventCategoryID());

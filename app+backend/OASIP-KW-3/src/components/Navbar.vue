@@ -59,7 +59,7 @@ function push() {
                 hover:bg-gray-50
                 md:hover:text-pink-500 md:p-0
               "
-              >All booking
+              >Check Appointments
             </router-link>
           </li>
           <li>
@@ -72,7 +72,7 @@ function push() {
                 hover:bg-gray-50
                 md:hover:text-pink-500 md:p-0
               "
-              >test all book no catetory</router-link
+              >Check all Appointments</router-link
             >
           </li>
         </ul>

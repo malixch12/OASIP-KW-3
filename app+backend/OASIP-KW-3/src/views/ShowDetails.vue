@@ -19,7 +19,7 @@ const eventLists = ref({
 
 const getLinkAll = async () => {
   const res = await fetch(
-    `http://localhost:8080/api/events/${myRouter.query.BookingId}`
+    `${import.meta.env.VITE_APP_TITLE}/${myRouter.query.BookingId}`
   );
   if (res.status === 200) {
     eventLists.value = await res.json();
@@ -30,57 +30,74 @@ onBeforeMount(async () => {
   getLinkAll();
 });
 
+let text;
 const removeEvent = async () => {
-  const res = await fetch(
-    `http://localhost:8080/events/${myRouter.query.BookingId}`,
+  
+if (confirm("Would you like to cancel your appointment?") == true) {
+
+   const res = await fetch(
+    `${import.meta.env.VITE_APP_TITLE}/api/events/${myRouter.query.BookingId}`,
     {
       method: "DELETE",
     }
   );
-router.go(-1)
+  router.go(-1);
+} else {
+  
+}
+ 
 };
 
-const goBack = () => router.go(-1)
+const goBack = () => router.go(-1);
 
-const goAboutUs = () => appRouter.push({name:'About'})
+const goAboutUs = () => appRouter.push({ name: "About" });
 </script>
  
 <template>
-  <div>
-    <div class="bg-white shadow-xl rounded-b-lg ml-24 mr-24 p-12">
-         <RoundButton bg-color="bg-slate-400 text-sm"
-          button-name="<< go back" @click="goBack" />
-      <div
-        class="border-2 border-rose-200 ring-1 ring-red-900/5 sm:rounded-lg p-6"
-      >
-        <p>
-          <span class="font-bold">Booking Name : </span>
-          {{ eventLists.bookingName }}
-        </p>
+  <div class="flex justify-center">
+    <div class="bg-white space-y-7  shadow-xl rounded-lg ml-48 mr-48 p-12 w-2/5">
+      <RoundButton  bg-color="bg-slate-400 text-sm" button-name="<< go back" @click="goBack" />
+       
+      <div class="col-span-1 grid grid-cols-1 place-items-center">
+         
+      <div class="space-y-5">
+        <p class="text-3xl font-bold text-rose-400">{{ eventLists.eventCategory}}</p>
+           <p>
+            <span class="font-bold text-slate-600">Booking Name : </span>
+            {{ eventLists.bookingName }}
+          </p>
 
-        <p>
-          <span class="font-bold">Email : </span>
-          {{ eventLists.bookingEmail }}
-        </p>
+          <p>
+            <span class="text-slate-600 font-bold">Email : </span>
+            {{ eventLists.bookingEmail }}
+          </p>
 
-        <p>
-          <span class="font-bold"> Date : </span>{{ eventLists.eventDate }}
-          <span class="font-bold"> Time : </span>{{ eventLists.eventTime }}
-          <span class="font-bold">Duration : </span>
-          {{ eventLists.eventDuration }}
-          <span class="font-bold">Minutes</span>
-        </p>
-        <p class="font-bold">Message to Advisor :</p>
-        <p>{{ eventLists.eventNotes }}</p>
+          <p>
+            <span class="text-slate-600 font-bold"> Date : </span>
+            {{ eventLists.eventDate }}
+          </p>
+
+          <p>
+            <span class="text-slate-600 font-bold"> Time : </span>
+            {{ eventLists.eventTime }}
+            </p>
+            <p>
+              <span class="text-slate-600 font-bold">Duration </span>
+            {{ eventLists.eventDuration }}
+            <span class="text-slate-600 font-bold">Minutes</span>
+            </p>
+   
+          <p class="text-slate-600 font-bold">Message to Advisor </p>
+          <p>{{ eventLists.eventNotes }}</p>
+            <div class="grid grid-cols-2  pt-3">
+      <RoundButton bg-color="bg-emerald-400" button-name="edit" />
+      <RoundButton bg-color="bg-rose-400" button-name="delete" @click="removeEvent" />
       </div>
-      <div class="grid grid-cols-2 mt-5 w-96 ml-56">
-        <RoundButton bg-color="bg-emerald-400" button-name="edit" />
-        <RoundButton
-          bg-color="bg-rose-400"
-          button-name="delete"
-          @click="removeEvent"
-        />
+       </div >
+     
       </div>
+        
+     
     </div>
   </div>
 </template>

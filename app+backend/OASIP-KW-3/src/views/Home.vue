@@ -15,10 +15,10 @@ import ButtonLink from "../components/ButtonLink.vue";
       <div class="col-span-1 grid grid-cols-1 place-items-center"><img src="../assets/Group.png" /></div>
       <br />
 
-      <div class="col-span-1 grid grid-cols-3 place-items-center">
+      <div class="text-white font-bold col-span-1 grid grid-cols-3 place-items-center ">
         <ButtonLink name="Book a clinic" link="Booking" />
-        <ButtonLink name="Our book information" />
-        <ButtonLink name="Check all book" link="ListAllEvent" />
+        <ButtonLink name="Check Appointments" link="ListAllByCate"/>
+        <ButtonLink name="Check All Appointments" link="ListAllEvent" />
       </div>
     </div>
   </div>

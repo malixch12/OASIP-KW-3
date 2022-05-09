@@ -10,7 +10,7 @@ console.log(route.query.categoryId)
 
 const eventLists = ref();
 const getLink = async () => {
-  const res = await fetch(`http://localhost:8080/api/events/category/${route.query.categoryId}`);
+  const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events/category/${route.query.categoryId}`);
   if (res.status === 200) {
     eventLists.value = await res.json();
     
@@ -29,7 +29,7 @@ onBeforeMount(async () => {
 <template>
 <div>
   <Navbar/>
-  <ShowList :eventLists="eventLists"/>
+  <ShowList :eventLists="eventLists" colNum='grid-cols-4'/>
   </div>
 </template>
  

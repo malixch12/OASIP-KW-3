@@ -1,11 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
 import NotFound from "../views/NotFound.vue";
-import ShowListAll from "../views/ShowListAll.vue";
+import ShowListAll from "../views/ShowListAllPage.vue";
 import Home from "../views/Home.vue";
-import ListAllByCate from "../views/ListAllEventByCate.vue";
-import ShowList from "../views/ShowList.vue";
-import Booking from "../views/Booking.vue";
+import ListAllByCate from "../views/CategoryPage.vue";
+import ShowList from "../views/ShowListPage.vue";
+import Booking from "../views/BookingPage.vue";
 import ShowDetails from "../views/ShowDetails.vue"
+import BookingEventByCate from "../views/BookingEventByCategory.vue"
 
 //const history = createWebHistory();
 const history = createWebHistory('/kw3/');
@@ -44,6 +45,10 @@ const routes = [
     path: "/ShowDetails",
     name: "ShowDetails",
     component: ShowDetails,
+  },{
+    path: "/BookingEventByCate",
+    name: "BookingEventByCate",
+    component: BookingEventByCate,
   },
 ];
 

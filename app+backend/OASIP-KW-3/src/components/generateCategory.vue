@@ -8,14 +8,39 @@ const props = defineProps({
     type: String,
     require: false,
   },
+   categorys: {
+    type: Array,
+    require: true,
+  } ,
+  type: {
+    type: String,
+    require: true
+  }
+
+
 });
 
-const addList = (categoryId , categoryName) => {
-  router.push({
+const addList = (categoryId , eventCategoryName , eventDuration) => {
+  if(props.type=="ShowList") {
+router.push({
     name: "ShowList",
-    query: { categoryId: categoryId },
+    query: { categoryId: categoryId , eventCategoryName : eventCategoryName },
   });
+  }
+  
+  if(props.type=="Booking"){
+    router.push({
+    name: "Booking",
+    query: { categoryId: categoryId , eventCategoryName: eventCategoryName , eventDuration: eventDuration },
+  });
+  }
+  
 };
+
+
+
+const pic2 = ["../../public/backend.png"]
+
 
 </script>
  
@@ -27,12 +52,18 @@ const addList = (categoryId , categoryName) => {
       </div>
 
   <div class="grid grid-cols-3 gap-6 place-items-center my-12">
-  <div><img src="../assets/fontEnd.png"  @click="addList(6)" class="w-64"> <div class="text-center mt-4">FrontEnd Clinic</div></div>
-  <div><img src="../assets/backend.png"  @click="addList(5)" class="w-64"> <div class="text-center mt-4">BackEnd Clinic</div></div>
-  <div><img src="../assets/database.png" @click="addList(3)" class="w-64"> <div class="text-center mt-4">Database Clinic</div></div>
-  <div><img src="../assets/devop.png"  @click="addList(2)" class="w-64"><div class="text-center mt-4">DevOps-Infra Clinic</div> </div>
-  <div><img src="../assets/BR.png" @click="addList(4)" class="w-64 "><div class="text-center mt-4">Business Requirements</div> </div>
-  <div><img src="../assets/PM.png"  @click="addList(1)" class="w-64"><div class="text-center mt-4">Project Managements</div> </div>
+ 
+
+      <div v-for="category in categorys" :key="category.eventCategoryID">
+      
+      <div><img :src="`../../public/`+category.eventCategoryID+`.png`"  @click="addList(category.eventCategoryID,category.eventCategoryName,category.eventDuration)" class="w-64"> <div class="text-center mt-4">{{ category.eventCategoryName }}</div>
+   
+      </div>
+
+  
+</div>
+
+
 </div>
 </div>
    </div>
@@ -40,4 +71,4 @@ const addList = (categoryId , categoryName) => {
  
 <style>
 
-</style>
+</style> 

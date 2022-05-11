@@ -11,7 +11,12 @@ const props = defineProps({
     type: Number,
     default:0
   },
+   categoryDetail: {
+    type: Object
+  
+  }
 });
+
 defineEmits(["addEvent"]);
 
 onBeforeUpdate(() => {
@@ -28,16 +33,26 @@ const dataBooking = ref({
   bookingId: "",
   bookingName: null,
   bookingEmail: null,
-  eventCategory: "DevOps/Infra Clinic",
+  eventCategory: props.categoryDetail.categoryName,
   eventStartTime: null,
-  eventDuration: null,
+  eventDuration: props.categoryDetail.categoryDuration,
   eventNotes: "",
-  eventCategoryID: 2,
+  eventCategoryID: props.categoryDetail.categoryId
 });
 
 const cancelBooking = () => {
   appRouter.push({ name: "Home" });
 };
+
+const reSet = () => {
+
+    dataBooking.value.bookingId = ""
+    dataBooking.value.bookingName = null
+    dataBooking.value.bookingEmail = null
+    dataBooking.value.eventStartTime = null   
+    dataBooking.value.eventNotes = ""
+};
+
 
 console.log(dataBooking.value);
 
@@ -51,12 +66,13 @@ console.log(dataBooking.value);
           button-name="<< go back"
           @click="goBack"
         />
-      <h2 class="text-2xl font-semibold text-center ">Information for booking clinic</h2>
+      <h2 class="text-2xl font-semibold text-center ">Information for booking {{ categoryDetail.categoryName }}</h2>
       <p>
         Name :
         <input
           type="text"
           v-model="dataBooking.bookingName"
+          placeholder="Please enter your name"
           class="border-2 pl-2 border-sky-200 w-8/12 rounded-lg"
         />
       </p>
@@ -65,11 +81,12 @@ console.log(dataBooking.value);
         <input
           type="text"
           v-model="dataBooking.bookingEmail"
+          placeholder="Please enter your email"
           class="pl-2 border-2 border-sky-200 w-8/12 rounded-lg"
         />
       </p>
       <hr />
-      <p class="text-2xl font-semibold text-center">Date and Time for booking clinic</p>
+      <p class="text-2xl font-semibold text-center">Date and Time for Booking</p>
       <p>
         DateTime :
         <input
@@ -79,16 +96,7 @@ console.log(dataBooking.value);
         />
       </p>
       <p>
-        Duration :
-        <input
-          type="number"
-          v-model="dataBooking.eventDuration"
-          class="pl-2 border-2 border-sky-200 w-16 rounded-lg"
-        />
-        minutes
-      </p>
-      <p class="text-xs text-red-600">
-        * Duration for booking can not exceed 30 minutes.*
+        Duration {{ categoryDetail.categoryDuration }}  minutes
       </p>
       <p>Message to Advisor</p>
         <textarea
@@ -102,7 +110,7 @@ console.log(dataBooking.value);
         <RoundButton
           bg-color="bg-emerald-400"
           button-name="add"
-          @click="$emit('addEvent', dataBooking)"
+          @click="$emit('addEvent', dataBooking) , reSet()"
         />
         <RoundButton
           bg-color="bg-rose-400"

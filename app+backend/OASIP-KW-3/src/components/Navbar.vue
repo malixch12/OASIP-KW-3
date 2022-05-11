@@ -37,7 +37,7 @@ function push() {
           </li>
           <li>
             <router-link
-              :to="{ name: 'Booking' }"
+              :to="{ name: 'BookingEventByCate' }"
               class="
                  block
                 text-gray-700

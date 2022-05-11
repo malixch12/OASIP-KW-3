@@ -19,7 +19,7 @@ const eventLists = ref({
 
 const getLinkAll = async () => {
   const res = await fetch(
-    `${import.meta.env.VITE_APP_TITLE}/${myRouter.query.BookingId}`
+    `${import.meta.env.VITE_APP_TITLE}/api/events/${myRouter.query.BookingId}`
   );
   if (res.status === 200) {
     eventLists.value = await res.json();
@@ -87,8 +87,9 @@ const goAboutUs = () => appRouter.push({ name: "About" });
             <span class="text-slate-600 font-bold">Minutes</span>
             </p>
    
-          <p class="text-slate-600 font-bold">Message to Advisor </p>
-          <p>{{ eventLists.eventNotes }}</p>
+          <p class="text-slate-600 font-bold ">Message to Advisor </p>
+          <p class="pl-5" v-if="eventLists.eventNotes.length > 0">{{ eventLists.eventNotes }}</p>
+          <p class="pl-5" v-else>-</p>
             <div class="grid grid-cols-2  pt-3">
       <RoundButton bg-color="bg-emerald-400" button-name="edit" />
       <RoundButton bg-color="bg-rose-400" button-name="delete" @click="removeEvent" />

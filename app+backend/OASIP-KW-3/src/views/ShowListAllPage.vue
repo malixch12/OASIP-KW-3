@@ -15,7 +15,7 @@ const getLinkAll = async () => {
 onBeforeMount(async () => {
   
       getLinkAll()
-      console.log("สักทีไอ้สัส2")
+      
  
 });
 

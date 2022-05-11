@@ -8,3 +8,4 @@ ENTRYPOINT ["java","-jar","classicmodels-service2-0.0.1-SNAPSHOT.jar"]
 #WORKDIR /classicmodels-service2
 #COPY . .
 #CMD mvn spring-boot:run
+

@@ -10,7 +10,10 @@ const props = defineProps({
   },
   colNum:{
     type: String
-  }
+  } ,
+    name:{
+    type: String
+  } 
 });
 
 const check = ref(true);
@@ -23,13 +26,6 @@ onBeforeUpdate(async () => {
     check.value = true;
   }
 });
-
-// onBeforeMount(async () => {
-//   // console.log(props.eventLists.length)
-//   if (props.eventLists.length == 0) {
-//     check.value = false;
-//   }
-// });
 
 const index = ref();
 const SendBookId = ref();
@@ -44,22 +40,6 @@ function scrollWin() {
   window.scrollTo(0, 1500);
 }
 
-// function DeleteEvent () {
-// //  props.eventLists = props.eventLists.filter((i) => i.bookingId != SendBookId.value)
-// //  console.log(SendBookId.value)
-// //  console.log(props.eventLists)
-  
-//   props.eventLists.splice( index.value, 1);
-
-// }
-
-// if (res.status === 200) {
-//     //ทำการลบที่หน้าเว็บด้วย ถ้าไม่เขียนจะลบแค่ที่ backend แต่ front ไม่ลบตาม
-//     notes.value = notes.value.filter((note) => note.id != deleteNoteId)
-//     console.log('delete successfully')
-//   } else console.log('error, cannot delete')
-
-
 const showDet = (BookingId) => {
   router.push({
     name: "ShowDetails",
@@ -72,6 +52,7 @@ const style = "flex justify-between grid gap-4"
 <template>
   <div>
     <div class="bg-white shadow-xl rounded-b-lg ml-24 mr-24 p-12">
+      <h1 class="text-4xl pb-5 text-center font-bold">{{ name }}</h1>
       <div v-if="check" :class="[style,colNum]">
         <div v-for="(event, index) in props.eventLists" :key="index">
           <div
@@ -85,11 +66,12 @@ const style = "flex justify-between grid gap-4"
               space-y-3
             "
           >
-            <h1 class="text-1xl font-bold">{{ event.eventCategory }}</h1>
-            <p >Name : {{ event.bookingName }}</p>
+            
+            <p>Name : {{ event.bookingName }}</p>
             <p>Date : {{ event.eventDate }}</p>
             <p>Time : {{ event.eventTime }}</p>
-            <RoundButton bg-color="bg-rose-300" button-name="Show detail ->>" @click="showDet(event.bookingId)" />
+            <p class="font-semibold">{{ event.eventCategory }}</p>
+            <RoundButton bg-color="bg-rose-300" button-name="Show detail >>" @click="showDet(event.bookingId)" />
           </div>
 
           <br />

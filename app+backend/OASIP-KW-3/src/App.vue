@@ -1,7 +1,6 @@
 <script setup>
 import { ref, onBeforeMount } from "vue";
 
-import Navbar from "./components/Navbar.vue";
 </script>
 
 <template>
@@ -23,7 +22,7 @@ import Navbar from "./components/Navbar.vue";
     "
   >
     
-      <!-- <Navbar /> -->
+    
       <router-view> </router-view>
 
   </div>

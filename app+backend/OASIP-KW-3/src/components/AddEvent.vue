@@ -2,31 +2,27 @@
 import RoundButton from "../components/RoundButton.vue";
 import ErrorForm from "../components/ErrorForm.vue";
 import { useRouter, useRoute } from "vue-router";
-import { ref, onBeforeMount, onBeforeUpdate } from "vue";
-
-const goBack = () => appRouter.go(-1)
+import { ref, onBeforeMount, onBeforeUpdate, computed } from "vue";
+import PopupPage from "../components/PopupPage.vue"
+const goBack = () => appRouter.go(-1);
 
 const props = defineProps({
   id: {
     type: Number,
-    default:0
+    default: 0,
   },
-   categoryDetail: {
-    type: Object
-  
-  }
+  categoryDetail: {
+    type: Object,
+  },
 });
 
 defineEmits(["addEvent"]);
 
 onBeforeUpdate(() => {
-  console.log(props.id + ' id')
+  console.log(props.id + " id");
   dataBooking.value.bookingId = props.id + 1;
-  
-  
 });
 
-//
 const appRouter = useRouter();
 
 const dataBooking = ref({
@@ -37,7 +33,7 @@ const dataBooking = ref({
   eventStartTime: null,
   eventDuration: props.categoryDetail.categoryDuration,
   eventNotes: "",
-  eventCategoryID: props.categoryDetail.categoryId
+  eventCategoryID: props.categoryDetail.categoryId,
 });
 
 const cancelBooking = () => {
@@ -45,28 +41,43 @@ const cancelBooking = () => {
 };
 
 const reSet = () => {
-
-    dataBooking.value.bookingId = ""
-    dataBooking.value.bookingName = null
-    dataBooking.value.bookingEmail = null
-    dataBooking.value.eventStartTime = null   
-    dataBooking.value.eventNotes = ""
+  dataBooking.value.bookingId = "";
+  dataBooking.value.bookingName = null;
+  dataBooking.value.bookingEmail = null;
+  dataBooking.value.eventStartTime = null;
+  dataBooking.value.eventNotes = "";
 };
-
 
 console.log(dataBooking.value);
 
+
+
+const yourDateTime = ref("2022-04-26T15:30");
+const test1 = ref()
+// ส่งไป BE
+const yourISODateTime = computed(() => {
+  test1.value = new Date(yourDateTime.value).toISOString();
+ return new Date(yourDateTime.value).toISOString();
+});
+// แปลงจาก BE
+const winner = computed(() => {
+  return new Date(test1.value).toLocaleString("th-TH");
+})
+
+const isActivePopup = ref(false)
 </script>
- 
+
 <template>
   <div>
     <div class="space-y-7 bg-white shadow-xl rounded-lg ml-24 p-10">
       <RoundButton
-          bg-color="bg-slate-400 text-sm"
-          button-name="<< go back"
-          @click="goBack"
-        />
-      <h2 class="text-2xl font-semibold text-center ">Information for booking {{ categoryDetail.categoryName }}</h2>
+        bg-color="bg-slate-400 text-sm"
+        button-name="<< go back"
+        @click="goBack"
+      />
+      <h2 class="text-2xl font-semibold text-center">
+        Information for booking {{ categoryDetail.categoryName }}
+      </h2>
       <p>
         Name :
         <input
@@ -86,31 +97,30 @@ console.log(dataBooking.value);
         />
       </p>
       <hr />
-      <p class="text-2xl font-semibold text-center">Date and Time for Booking</p>
+      <p class="text-2xl font-semibold text-center">
+        Date and Time for Booking
+      </p>
       <p>
-        DateTime :
+       Date Time :
         <input
           type="datetime-local"
           v-model="dataBooking.eventStartTime"
           class="border-2 border-sky-200 w-9/12 rounded-lg"
         />
       </p>
-      <p>
-        Duration {{ categoryDetail.categoryDuration }}  minutes
-      </p>
+      <p>Duration {{ categoryDetail.categoryDuration }} minutes</p>
       <p>Message to Advisor</p>
-        <textarea
+      <textarea
         type="text"
         v-model="dataBooking.eventNotes"
         class="border-2 border-sky-200 w-11/12 h-56 rounded-lg"
       ></textarea>
-    
 
       <div class="grid grid-cols-2 place-items-center">
         <RoundButton
           bg-color="bg-emerald-400"
           button-name="add"
-          @click="$emit('addEvent', dataBooking) , reSet()"
+          @click="()=>isActivePopup=true"
         />
         <RoundButton
           bg-color="bg-rose-400"
@@ -118,9 +128,34 @@ console.log(dataBooking.value);
           @click="cancelBooking"
         />
       </div>
+
+      <!-- popup -->
+      <PopupPage v-show="isActivePopup" :dim-background="true">
+        <p class="text-3xl font-semibold text-slate-600 tracking-wide pb-16">
+          Do you want to add?
+        </p>
+        <div class="flex justify-between max-w-lg mx-auto">
+          <RoundButton
+            bg-color="bg-emerald-400"
+            button-name="Yes"
+            @click="$emit('addEvent', dataBooking), reSet()"
+          />
+
+          <RoundButton
+            bg-color="bg-rose-400"
+            button-name="No"
+            @click="
+              () => {
+                isActivePopup = false;
+              }
+            "
+          />
+        </div>
+      </PopupPage>
     </div>
+
+ 
   </div>
 </template>
- 
-<style>
-</style>
+
+<style></style>

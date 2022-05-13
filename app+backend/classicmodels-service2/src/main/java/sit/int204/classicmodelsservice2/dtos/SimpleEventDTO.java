@@ -1,7 +1,9 @@
 package sit.int204.classicmodelsservice2.dtos;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,15 +17,16 @@ public class SimpleEventDTO {
     private String BookingName;
     private String BookingEmail;
     private String EventCategory;
-    private LocalDateTime EventStartTime;
+    private Instant EventStartTime;
     private Integer EventDuration;
     private String EventNotes;
     private Integer EventCategoryID;
 
-    public String getEventDate(){
-        return EventStartTime.format(DateTimeFormatter.ofPattern("dd MMM YYYY"));
-    }
-    public String getEventTime(){
-        return EventStartTime.format(DateTimeFormatter.ofPattern("HH:mm"));
-    }
+    // public String getEventDate(){
+    //     return EventStartTime.format(DateTimeFormatter.ofPattern("dd MMM YYYY"));
+    // }
+
+    // public String getEventTime(){
+    //     return EventStartTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+    // }
 }

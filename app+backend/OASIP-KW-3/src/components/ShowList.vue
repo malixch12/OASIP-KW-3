@@ -1,8 +1,10 @@
 <script setup>
 import { ref, onBeforeMount, onBeforeUpdate, computed } from "vue";
+import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
 import RoundButton from "../components/RoundButton.vue";
 
+const myRouter = useRoute();
 const router = useRouter();
 const props = defineProps({
   eventLists: {
@@ -47,6 +49,7 @@ const showDet = (BookingId) => {
   });
 };
 const style = "flex justify-between grid gap-4"
+
 </script>
  
 <template>
@@ -68,8 +71,9 @@ const style = "flex justify-between grid gap-4"
           >
             
             <p>Name : {{ event.bookingName }}</p>
-            <p>Date : {{ event.eventDate }}</p>
-            <p>Time : {{ event.eventTime }}</p>
+            <!-- <p>Name : {{ event.eventStartTime }}</p> -->
+            <p>Date : {{ new Date(event.eventStartTime).toLocaleDateString("th-TH") }}</p>
+            <p>Time : {{ new Date(event.eventStartTime).toLocaleTimeString("th-TH") }}</p>
             <p class="font-semibold">{{ event.eventCategory }}</p>
             <RoundButton bg-color="bg-rose-300" button-name="Show detail >>" @click="showDet(event.bookingId)" />
           </div>

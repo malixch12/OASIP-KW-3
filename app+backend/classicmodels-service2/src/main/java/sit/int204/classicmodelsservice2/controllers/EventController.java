@@ -2,7 +2,6 @@ package sit.int204.classicmodelsservice2.controllers;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,17 +11,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.http.HttpStatus;
 import sit.int204.classicmodelsservice2.dtos.SimpleEventDTO;
 import sit.int204.classicmodelsservice2.entities.Event;
 import sit.int204.classicmodelsservice2.repositories.EventRepository;
 import sit.int204.classicmodelsservice2.services.EventService;
-import sit.int204.classicmodelsservice2.utils.ListMapper;
+
 import java.util.List;
 
-@Configuration
-@EnableWebMvc
+
 @RestController
 
 @RequestMapping("/api/events")
@@ -44,6 +41,10 @@ public class EventController {
         return eventService.getSimpleEventAll();
     }
 
+    // @GetMapping("")
+    // public List<Event> getEventByAll() {
+    //     return repository.findAll();
+    // }
     
     @GetMapping("/{id}")
     public SimpleEventDTO getEventById(@PathVariable Integer id) {

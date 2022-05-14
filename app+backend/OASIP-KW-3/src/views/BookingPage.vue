@@ -16,11 +16,11 @@ const getLinkAll = async () => {
 };
 
 onBeforeUpdate(() => {
-  if (eventLists.value.length > 0) {
-    id.value = eventLists.value[eventLists.value.length - 1].bookingId;
-  } else {
-    id.value = 0;
-  }
+  // if (eventLists.value.length > 0) {
+  //   id.value = eventLists.value[eventLists.value.length - 1].bookingId;
+  // } else {
+  //   id.value = 0;
+  // }
 });
 
 onBeforeMount(() => {
@@ -63,7 +63,9 @@ const categoryDetail = {
 <template>
   <div>
     <div class="flex justify-between grid grid-cols-3 gap-2">
-      <AddEvent :id="id" @addEvent="addEvent" @click="getLinkAll" :categoryDetail="categoryDetail"/>
+        <AddEvent  @addEvent="addEvent" @click="getLinkAll" :categoryDetail="categoryDetail"/>
+
+  <!-- <AddEvent :id="id" @addEvent="addEvent" @click="getLinkAll" :categoryDetail="categoryDetail"/> -->
       <ShowList
         :eventLists="eventLists"
         colNum="grid-cols-3"

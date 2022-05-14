@@ -21,7 +21,7 @@ defineEmits(["addEvent"]);
 
 onBeforeUpdate(() => {
 
-dataBooking.value.bookingId = props.id + 1;
+//dataBooking.value.bookingId = props.id + 1;
 
  if ((countTime.value > new Date(dataBooking.value.eventStartTime))  ){
 

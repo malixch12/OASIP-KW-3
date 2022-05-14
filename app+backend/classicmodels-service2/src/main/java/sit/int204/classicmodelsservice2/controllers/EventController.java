@@ -60,21 +60,21 @@ public class EventController {
         return eventService.getSimpleEventById(id);
     }
 
-    // @GetMapping("/category/{eventCategoryID}")
-    // public List<SimpleEventDTO> getEventByCatetory(@PathVariable Integer
-    // eventCategoryID) {
-    // return eventService.getEventByCatetory(eventCategoryID);
-    // }
-
     @GetMapping("/category/{eventCategoryID}")
-    public Page<Event> getEventByCategory(
-            @PathVariable Integer eventCategoryID,
-            @RequestParam(defaultValue = "eventStartTime") String sortBy,
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "2") Integer pageSize) {
-            Sort sort = Sort.by(sortBy);
-        return repository.findByEventCategoryID(eventCategoryID,PageRequest.of(page,pageSize,sort));
+    public List<SimpleEventDTO> getEventByCatetory(@PathVariable Integer
+    eventCategoryID) {
+    return eventService.getEventByCatetory(eventCategoryID);
     }
+
+    // @GetMapping("/category/{eventCategoryID}")
+    // public Page<Event> getEventByCategory(
+    //         @PathVariable Integer eventCategoryID,
+    //         @RequestParam(defaultValue = "eventStartTime") String sortBy,
+    //         @RequestParam(defaultValue = "0") Integer page,
+    //         @RequestParam(defaultValue = "2") Integer pageSize) {
+    //         Sort sort = Sort.by(sortBy);
+    //     return repository.findByEventCategoryID(eventCategoryID,PageRequest.of(page,pageSize,sort));
+    // }
 
     @DeleteMapping("/{eventID}")
     public void delete(@PathVariable Integer eventID) {

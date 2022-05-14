@@ -4,10 +4,6 @@ import ShowList from '../components/ShowList.vue'
 import Navbar from '../components/Navbar.vue'
 import { useRoute } from "vue-router";
 const route = useRoute();
-
-console.log(route.query.categoryId)
-
-
 const eventLists = ref();
 const getLink = async () => {
   const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events/category/${route.query.categoryId}`);

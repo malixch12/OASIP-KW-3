@@ -39,7 +39,7 @@ public class EventService {
 
     }
 
-    public List<SimpleEventDTO> getEventByCatetory(Integer eventCategoryID) {
+    public List<SimpleEventDTO> getEventByCatetory(Integer eventCategoryID ) {
         return listMapper.mapList(repository.findByEventCategoryID(eventCategoryID),SimpleEventDTO.class,modelMapper);
     }
 

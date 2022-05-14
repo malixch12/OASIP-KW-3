@@ -4,6 +4,7 @@ import ErrorForm from "../components/ErrorForm.vue";
 import { useRouter, useRoute } from "vue-router";
 import { ref, onBeforeMount, onBeforeUpdate, computed } from "vue";
 import PopupPage from "../components/PopupPage.vue"
+
 const goBack = () => appRouter.go(-1);
 
 const props = defineProps({
@@ -19,10 +20,18 @@ const props = defineProps({
 defineEmits(["addEvent"]);
 
 onBeforeUpdate(() => {
-  console.log(props.id + " id");
-  dataBooking.value.bookingId = props.id + 1;
+
+dataBooking.value.bookingId = props.id + 1;
+
+ if ((countTime.value > new Date(dataBooking.value.eventStartTime))  ){
+
+textTest.value = true
+}else{
+textTest.value = false
+ }
 });
 
+const textTest = ref(false)
 const appRouter = useRouter();
 
 const dataBooking = ref({
@@ -35,6 +44,9 @@ const dataBooking = ref({
   eventNotes: "",
   eventCategoryID: props.categoryDetail.categoryId,
 });
+
+
+
 
 const cancelBooking = () => {
   appRouter.push({ name: "Home" });
@@ -52,19 +64,24 @@ console.log(dataBooking.value);
 
 
 
-const yourDateTime = ref("2022-04-26T15:30");
-const test1 = ref()
-// ส่งไป BE
-const yourISODateTime = computed(() => {
-  test1.value = new Date(yourDateTime.value).toISOString();
- return new Date(yourDateTime.value).toISOString();
-});
-// แปลงจาก BE
-const winner = computed(() => {
-  return new Date(test1.value).toLocaleString("th-TH");
-})
 
 const isActivePopup = ref(false)
+
+
+const countTime = ref('');
+function setTime() {
+var today = new Date()
+var now_date = (today.getDate() + '/' + (today.getMonth()+1) + '/' + (today.getFullYear()+543 ));
+var now_time = (today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()).toString("th-TH")
+
+  countTime.value = today
+
+}
+setInterval(setTime, 1000);
+
+
+
+
 </script>
 
 <template>
@@ -107,7 +124,14 @@ const isActivePopup = ref(false)
           v-model="dataBooking.eventStartTime"
           class="border-2 border-sky-200 w-9/12 rounded-lg"
         />
+        {{new Date(dataBooking.eventStartTime)}}<br>
+        <br>
+       
+        <br>
+         time now--> {{countTime}}
+         
       </p>
+      <div v-show="textTest" class="text-red-600"> กรุณาเลือกวันที่ในอนาคตเท่านั้น </div>
       <p>Duration {{ categoryDetail.categoryDuration }} minutes</p>
       <p>Message to Advisor</p>
       <textarea
@@ -138,7 +162,7 @@ const isActivePopup = ref(false)
           <RoundButton
             bg-color="bg-emerald-400"
             button-name="Yes"
-            @click="$emit('addEvent', dataBooking), reSet()"
+            @click="$emit('addEvent', dataBooking , textTest ), reSet(),isActivePopup = false"
           />
 
           <RoundButton
@@ -150,11 +174,15 @@ const isActivePopup = ref(false)
               }
             "
           />
+
+          
         </div>
       </PopupPage>
     </div>
 
- 
+
+
+
   </div>
 </template>
 

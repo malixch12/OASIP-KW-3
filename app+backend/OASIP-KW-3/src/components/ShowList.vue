@@ -4,7 +4,7 @@ import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
 import RoundButton from "../components/RoundButton.vue";
 
-const myRouter = useRoute();
+// const myRouter = useRoute();
 const router = useRouter();
 const props = defineProps({
   eventLists: {
@@ -54,7 +54,7 @@ const style = "flex justify-between grid gap-4"
  
 <template>
   <div>
-    <div class="bg-white shadow-xl rounded-b-lg ml-24 mr-24 p-12">
+    <div class="bg-white shadow-xl  ml-24 mr-24 p-12">
       <h1 class="text-4xl pb-5 text-center font-bold">{{ name }}</h1>
       <div v-if="check" :class="[style,colNum]">
         <div v-for="(event, index) in props.eventLists" :key="index">
@@ -71,7 +71,6 @@ const style = "flex justify-between grid gap-4"
           >
             
             <p>Name : {{ event.bookingName }}</p>
-            <!-- <p>Name : {{ event.eventStartTime }}</p> -->
             <p>Date : {{ new Date(event.eventStartTime).toLocaleDateString("th-TH") }}</p>
             <p>Time : {{ new Date(event.eventStartTime).toLocaleTimeString("th-TH") }}</p>
             <p class="font-semibold">{{ event.eventCategory }}</p>

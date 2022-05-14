@@ -32,13 +32,9 @@ onBeforeMount(() => {
 //  return new Date(yourDateTime.value).toISOString();
 // });
 
-const addEvent = async (dataBooking) => {
-
-  
-  dataBooking.eventStartTime=new Date(dataBooking.eventStartTime).toISOString();
-
- console.log("test " +dataBooking);
-  console.log("varar " + dataBooking.eventStartTime);
+const addEvent = async (dataBooking , textTest) => {
+  if(textTest == false) {
+ dataBooking.eventStartTime=new Date(dataBooking.eventStartTime).toISOString();
   getLinkAll();
   // if(dataBooking.bookingName == ''){
   //   console.log('empty')
@@ -52,6 +48,8 @@ const addEvent = async (dataBooking) => {
   });
   
   getLinkAll();
+  }
+ 
 };
 
 const categoryDetail = {

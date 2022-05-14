@@ -12,7 +12,7 @@ public class ListMapper {
     public ListMapper() {
     }
 
-    public <S, T> List<T> mapList(Page<S> source, Class<T> targetClass, ModelMapper modelMapper) {
+    public <S, T> List<T> mapList(List<S> source, Class<T> targetClass, ModelMapper modelMapper) {
         return source.stream().map(entity -> modelMapper.map(entity, targetClass)).collect(Collectors.toList());
     }
 

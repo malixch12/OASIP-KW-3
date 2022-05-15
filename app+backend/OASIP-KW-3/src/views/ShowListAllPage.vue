@@ -11,7 +11,7 @@ const getLinkAll = async () => {
   // const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events`);
 
   const res = await fetch(
-    `http://localhost:8080/api/events?page=${page.value}&pageSize=8`
+    `${import.meta.env.VITE_APP_TITLE}/api/events?page=${page.value}&pageSize=8`
   );
   if (res.status === 200) {
     eventLists.value = await res.json();

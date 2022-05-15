@@ -1,10 +1,9 @@
 <script setup>
 import RoundButton from "../components/RoundButton.vue";
-import ErrorForm from "../components/ErrorForm.vue";
 import { useRouter, useRoute } from "vue-router";
 import { ref, onBeforeMount, onBeforeUpdate, computed } from "vue";
 import PopupPage from "../components/PopupPage.vue"
-
+const appRouter = useRouter();
 const goBack = () => appRouter.go(-1);
 
 const props = defineProps({
@@ -23,21 +22,63 @@ onBeforeUpdate(() => {
 
 //dataBooking.value.bookingId = props.id + 1;
 
- if ((countTime.value > new Date(dataBooking.value.eventStartTime))  ){
-
-textTest.value = true
-}else{
-textTest.value = false
- }
+ CheckData ()
 });
 
-const textTest = ref(false)
-const appRouter = useRouter();
+function CheckData () {
+  //check date and time
+  if ((countTime.value > new Date(dataBooking.value.eventStartTime))  ){
 
+    DateTimeCheck.value = true
+ }else{
+  DateTimeCheck.value = false
+  }
+
+  //check name
+  if(dataBooking.value.bookingName != "") {
+    NameCheck.value =true
+  }else {
+        NameCheck.value =false
+
+  }
+
+   if(dataBooking.value.bookingEmail != "") {
+    EmailCheck.value =true
+   }else{EmailCheck.value =false}
+
+
+    // Check Email validateEmail
+   if(validateEmail(dataBooking.value.bookingEmail)==true) {
+       EmailValidation.value = true
+   }else {
+            EmailValidation.value = false
+   }
+   // All check
+  if(NameCheck.value==true && EmailCheck.value==true && DateTimeCheck.value ==false && EmailValidation.value == true ) {
+    AllDataCheck.value = true
+  }else {
+    AllDataCheck.value = false
+
+  }
+}
+
+
+function validateEmail(email) 
+    {
+        var re = /\S+@\S+\.\S+/;
+        return re.test(email);
+    }
+
+
+const AllDataCheck = ref(false)
+const DateTimeCheck = ref(false)
+const NameCheck = ref(false)
+const EmailCheck =ref(false)
+const EmailValidation = ref(false)
 const dataBooking = ref({
   bookingId: "",
-  bookingName: null,
-  bookingEmail: null,
+  bookingName: "",
+  bookingEmail: "",
   eventCategory: props.categoryDetail.categoryName,
   eventStartTime: null,
   eventDuration: props.categoryDetail.categoryDuration,
@@ -53,14 +94,16 @@ const cancelBooking = () => {
 };
 
 const reSet = () => {
+  if(AllDataCheck.value = true) {
   dataBooking.value.bookingId = "";
-  dataBooking.value.bookingName = null;
-  dataBooking.value.bookingEmail = null;
+  dataBooking.value.bookingName = '';
+  dataBooking.value.bookingEmail = '';
   dataBooking.value.eventStartTime = null;
   dataBooking.value.eventNotes = "";
+  }
 };
 
-console.log(dataBooking.value);
+
 
 
 
@@ -80,7 +123,7 @@ var now_time = (today.getHours() + ":" + today.getMinutes() + ":" + today.getSec
 setInterval(setTime, 1000);
 
 
-
+    
 
 </script>
 
@@ -104,6 +147,7 @@ setInterval(setTime, 1000);
           class="border-2 pl-2 border-sky-200 w-8/12 rounded-lg"
         />
       </p>
+      <span v-show="!NameCheck"  class="text-red-600"> กรุณาใส่ชื่อ</span>
       <p>
         Email :
         <input
@@ -113,6 +157,8 @@ setInterval(setTime, 1000);
           class="pl-2 border-2 border-sky-200 w-8/12 rounded-lg"
         />
       </p>
+    <span v-show="!EmailCheck"  class="text-red-600"> กรุณาใส่อีเมล</span>
+    <span v-show="!EmailValidation"  class="text-red-600"> กรุณากรอกอีเมลล์ให้ถูกต้อง</span>
       <hr />
       <p class="text-2xl font-semibold text-center">
         Date and Time for Booking
@@ -131,7 +177,7 @@ setInterval(setTime, 1000);
          time now--> {{countTime}}
          
       </p>
-      <div v-show="textTest" class="text-red-600"> กรุณาเลือกวันที่ในอนาคตเท่านั้น </div>
+      <div v-show="DateTimeCheck" class="text-red-600"> กรุณาเลือกวันที่ในอนาคตเท่านั้น </div>
       <p>Duration {{ categoryDetail.categoryDuration }} minutes</p>
       <p>Message to Advisor</p>
       <textarea
@@ -140,21 +186,22 @@ setInterval(setTime, 1000);
         class="border-2 border-sky-200 w-11/12 h-56 rounded-lg"
       ></textarea>
 
-      <div class="grid grid-cols-2 place-items-center">
+      <div class="grid grid-cols-1 place-items-center">
         <RoundButton
           bg-color="bg-emerald-400"
           button-name="add"
-          @click="()=>isActivePopup=true"
+          @click="$emit('addEvent', dataBooking , AllDataCheck ), reSet()"
         />
-        <RoundButton
+      {{AllDataCheck}}
+        <!-- <RoundButton
           bg-color="bg-rose-400"
           button-name="cancel"
           @click="cancelBooking"
-        />
+        /> -->
       </div>
 
       <!-- popup -->
-      <PopupPage v-show="isActivePopup" :dim-background="true">
+      <!-- <PopupPage v-show="isActivePopup" :dim-background="true">
         <p class="text-3xl font-semibold text-slate-600 tracking-wide pb-16">
           Do you want to add?
         </p>
@@ -162,7 +209,7 @@ setInterval(setTime, 1000);
           <RoundButton
             bg-color="bg-emerald-400"
             button-name="Yes"
-            @click="$emit('addEvent', dataBooking , textTest ), reSet(),isActivePopup = false"
+            @click="$emit('addEvent', dataBooking , DateTimeCheck ), reSet(),isActivePopup = false"
           />
 
           <RoundButton
@@ -177,7 +224,7 @@ setInterval(setTime, 1000);
 
           
         </div>
-      </PopupPage>
+      </PopupPage> -->
     </div>
 
 

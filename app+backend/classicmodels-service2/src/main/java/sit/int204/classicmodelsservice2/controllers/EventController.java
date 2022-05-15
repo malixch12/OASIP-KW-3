@@ -20,6 +20,11 @@ import sit.int204.classicmodelsservice2.entities.Event;
 import sit.int204.classicmodelsservice2.repositories.EventRepository;
 import sit.int204.classicmodelsservice2.services.EventService;
 import org.springframework.data.domain.PageRequest;
+
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -40,9 +45,10 @@ public class EventController {
     }
 
     // @GetMapping("")
-    // public List<SimpleEventDTO> getEventByAll( @RequestParam(defaultValue = "eventStartTime") String sortBy,
-    //         @RequestParam(defaultValue = "0") Integer page,
-    //         @RequestParam(defaultValue = "8") Integer pageSize) {
+    // public List<SimpleEventDTO> getEventByAll( @RequestParam(defaultValue =
+    // "eventStartTime") String sortBy,
+    // @RequestParam(defaultValue = "0") Integer page,
+    // @RequestParam(defaultValue = "8") Integer pageSize) {
     // return eventService.getSimpleEventAll(sortBy, page, pageSize);
     // }
 
@@ -60,21 +66,72 @@ public class EventController {
         return eventService.getSimpleEventById(id);
     }
 
-    @GetMapping("/category/{eventCategoryID}")
-    public List<SimpleEventDTO> getEventByCatetory(@PathVariable Integer
-    eventCategoryID) {
-    return eventService.getEventByCatetory(eventCategoryID);
+    // @GetMapping("/category/{eventCategoryID}")
+    // public List<SimpleEventDTO> getEventByCatetory(@PathVariable Integer
+    // eventCategoryID) {
+    // return eventService.getEventByCatetory(eventCategoryID);
+    // }
+
+    @GetMapping("/past")
+    public Page<Event> getEventPastDate(
+            @RequestParam(defaultValue = "eventStartTime") String sortBy,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "8") Integer pageSize) {
+        Sort sort = Sort.by(sortBy);
+        long now = System.currentTimeMillis();
+        now = now / 1000;
+        Instant dateNow = Instant.now().ofEpochSecond(now);
+        return repository.findByEventStartTimeLessThan(dateNow, PageRequest.of(page, pageSize, sort));
     }
 
-    // @GetMapping("/category/{eventCategoryID}")
-    // public Page<Event> getEventByCategory(
-    //         @PathVariable Integer eventCategoryID,
-    //         @RequestParam(defaultValue = "eventStartTime") String sortBy,
-    //         @RequestParam(defaultValue = "0") Integer page,
-    //         @RequestParam(defaultValue = "2") Integer pageSize) {
-    //         Sort sort = Sort.by(sortBy);
-    //     return repository.findByEventCategoryID(eventCategoryID,PageRequest.of(page,pageSize,sort));
-    // }
+    @GetMapping("/future")
+    public Page<Event> getEventFutureDate(
+            @RequestParam(defaultValue = "eventStartTime") String sortBy,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "8") Integer pageSize) {
+        Sort sort = Sort.by(sortBy);
+        long now = System.currentTimeMillis();
+        now = now / 1000;
+        Instant dateNow = Instant.now().ofEpochSecond(now);
+        return repository.findByEventStartTimeGreaterThan(dateNow, PageRequest.of(page, pageSize, sort));
+    }
+
+    @GetMapping("/category/{eventCategoryID}")
+    public Page<Event> getEventByCategory(
+            @PathVariable Integer eventCategoryID,
+            @RequestParam(defaultValue = "eventStartTime") String sortBy,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "8") Integer pageSize) {
+        Sort sort = Sort.by(sortBy);
+        return repository.findByEventCategoryID(eventCategoryID, PageRequest.of(page, pageSize, sort));
+    }
+
+    @GetMapping("/category/past/{eventCategoryID}")
+    public Page<Event> getEventPastDateByCategory(
+            @PathVariable Integer eventCategoryID,
+            @RequestParam(defaultValue = "eventStartTime") String sortBy,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "8") Integer pageSize) {
+        Sort sort = Sort.by(sortBy);
+        long now = System.currentTimeMillis();
+        now = now / 1000;
+        Instant dateNow = Instant.now().ofEpochSecond(now);
+        return repository.findByEventCategoryIDAndEventStartTimeLessThan(eventCategoryID, dateNow,
+                PageRequest.of(page, pageSize, sort));
+    }
+    @GetMapping("/category/future/{eventCategoryID}")
+    public Page<Event> getEventFutureDateByCategory(
+            @PathVariable Integer eventCategoryID,
+            @RequestParam(defaultValue = "eventStartTime") String sortBy,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "8") Integer pageSize) {
+        Sort sort = Sort.by(sortBy);
+        long now = System.currentTimeMillis();
+        now = now / 1000;
+        Instant dateNow = Instant.now().ofEpochSecond(now);
+        return repository.findByEventCategoryIDAndEventStartTimeGreaterThan(eventCategoryID, dateNow,
+                PageRequest.of(page, pageSize, sort));
+    }
 
     @DeleteMapping("/{eventID}")
     public void delete(@PathVariable Integer eventID) {

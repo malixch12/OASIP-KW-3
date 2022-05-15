@@ -10,13 +10,17 @@ const props = defineProps({
   eventLists: {
     type: Array,
   },
-  colNum:{
-    type: String
-  } ,
-    name:{
-    type: String
-  } 
+  colNum: {
+    type: String,
+  },
+  name: {
+    type: String,
+  },
+  numPage: {
+    type: Number,
+  },
 });
+defineEmits(["paging"], ["pastFilter"], ["futureFilter"], ["allFilter"]);
 
 const check = ref(true);
 const send = ref(false);
@@ -24,70 +28,122 @@ onBeforeUpdate(async () => {
   if (props.eventLists.length == 0) {
     check.value = false;
   }
-   if (props.eventLists.length > 0) {
+  if (props.eventLists.length > 0) {
     check.value = true;
   }
 });
 
+const page = ref();
 const index = ref();
 const SendBookId = ref();
 const sendIndex = (num, id) => {
   index.value = num;
   SendBookId.value = id;
   send.value = true;
-  console.log( index.value)
+  console.log(index.value);
 };
-
-function scrollWin() {
-  window.scrollTo(0, 1500);
-}
 
 const showDet = (BookingId) => {
   router.push({
     name: "ShowDetails",
-    query: { BookingId: BookingId }
+    query: { BookingId: BookingId },
   });
 };
-const style = "flex justify-between grid gap-4"
+const style = "flex justify-between grid gap-4";
 
+// filter
+const filter = ref(3);
+
+// http://localhost:8080/api/events/past/?pageSize=8&page=0
+// const getLink = async () => {
+//   const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events/past/?pageSize=8`);
+//   if (res.status === 200) {
+//     props.eventLists = await res.json();
+
+//   }
+// };
 </script>
- 
+
 <template>
   <div>
-    <div class="bg-white shadow-xl  ml-24 mr-24 p-12">
+    <div class="bg-white shadow-xl ml-24 mr-24 p-12">
+      <div class="grid grid-cols-3 place-items-center mb-12">
+        <div >
+          <input
+            type="radio"
+            id="all"
+            value="3"
+            v-model="filter"
+            @click="$emit('allFilter')"
+            
+          />
+          <label for="all" class="p-2">นัดทั้งหมด</label>
+        </div>
+        <div>
+          <input
+            type="radio"
+            id="past"
+            value="1"
+            v-model="filter"
+            @click="$emit('pastFilter')"
+          />
+          <label for="past" class="p-2">นัดที่ผ่านมาแล้ว</label>
+        </div>
+        <div>
+          <input
+            type="radio"
+            id="future"
+            value="2"
+            v-model="filter"
+            @click="$emit('futureFilter')"
+          />
+          <label for="future" class="p-2">นัดที่ยังไม่ถึง</label>
+        </div>
+      </div>
       <h1 class="text-4xl pb-5 text-center font-bold">{{ name }}</h1>
-      <div v-if="check" :class="[style,colNum]">
+      <div v-if="check" :class="[style, colNum]">
         <div v-for="(event, index) in props.eventLists" :key="index">
           <div
-            class="
-              bg-red-100
-              shadow-xl
-              ring-1 ring-red-900/5
-              sm:rounded-lg
-              mt-4
-              p-6
-              space-y-3
-            "
+            class="bg-red-100 shadow-xl ring-1 ring-red-900/5 sm:rounded-lg mt-4 p-6 space-y-3"
           >
-            
             <p>Name : {{ event.bookingName }}</p>
-            <p>Date : {{ new Date(event.eventStartTime).toLocaleDateString("th-TH") }}</p>
-            <p>Time : {{ new Date(event.eventStartTime).toLocaleTimeString("th-TH") }}</p>
+            <p>
+              Date :
+              {{ new Date(event.eventStartTime).toLocaleDateString("th-TH") }}
+            </p>
+            <p>
+              Time :
+              {{ new Date(event.eventStartTime).toLocaleTimeString("th-TH") }}
+            </p>
             <p class="font-semibold">{{ event.eventCategory }}</p>
-            <RoundButton bg-color="bg-rose-300" button-name="Show detail >>" @click="showDet(event.bookingId)" />
+            <RoundButton
+              bg-color="bg-rose-300"
+              button-name="Show detail >>"
+              @click="showDet(event.bookingId)"
+            />
           </div>
 
           <br />
         </div>
       </div>
-
-      <div v-if="check == false" class="text-slate-400 text-center">Empty schedule ! ! ! </div>
-
-
+      <div v-if="check == false" class="text-slate-400 text-center">
+        Empty schedule ! ! !
+      </div>
+    </div>
+    <div class="bg-rose-300 shadow-xl rounded-b-lg ml-24 mr-24 text-center">
+      <span
+        v-for="(e, index) in numPage"
+        :key="index"
+        class="p-5 text-white hover:text-rose-400"
+      >
+        <button @click="$emit('paging', index, filter)">
+          {{ index + 1 }}
+        </button>
+      </span>
     </div>
   </div>
 </template>
- 
+
 <style>
 body {
   font-size: 20px;

@@ -77,7 +77,7 @@ const filter = ref(3);
             @click="$emit('allFilter')"
             
           />
-          <label for="all" class="p-2">นัดทั้งหมด</label>
+          <label for="all" class="p-2">All Appointments</label>
         </div>
         <div>
           <input
@@ -87,7 +87,7 @@ const filter = ref(3);
             v-model="filter"
             @click="$emit('pastFilter')"
           />
-          <label for="past" class="p-2">นัดที่ผ่านมาแล้ว</label>
+          <label for="past" class="p-2">Past Appointments</label>
         </div>
         <div>
           <input
@@ -97,7 +97,7 @@ const filter = ref(3);
             v-model="filter"
             @click="$emit('futureFilter')"
           />
-          <label for="future" class="p-2">นัดที่ยังไม่ถึง</label>
+          <label for="future" class="p-2">Next Appointments</label>
         </div>
       </div>
       <h1 class="text-4xl pb-5 text-center font-bold">{{ name }}</h1>

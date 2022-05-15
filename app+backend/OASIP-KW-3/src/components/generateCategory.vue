@@ -58,8 +58,10 @@ const pic2 = ["../../public/backend.png"]
          
       <div v-for="category in categorys" :key="category.eventCategoryID">
       
-      <div><img :src="`../../public/`+category.eventCategoryID+`.png`"  @click="addList(category.eventCategoryID,category.eventCategoryName,category.eventDuration)" class="w-64"> <div class="text-center mt-4">{{ category.eventCategoryName }}</div>
-   
+      <!-- <div><img :src="`../../public/`+category.eventCategoryID+`.png`"  @click="addList(category.eventCategoryID,category.eventCategoryName,category.eventDuration)" class="w-64"> <div class="text-center mt-4">{{ category.eventCategoryName }}</div> -->
+      <div> <div @click="addList(category.eventCategoryID,category.eventCategoryName,category.eventDuration)"
+ class="text-center mt-4">{{ category.eventCategoryName }}</div>
+
       </div>
 
   

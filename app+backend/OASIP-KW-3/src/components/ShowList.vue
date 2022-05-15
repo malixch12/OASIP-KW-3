@@ -52,7 +52,7 @@ const showDet = (BookingId) => {
 const style = "flex justify-between grid gap-4";
 
 // filter
-const filter = ref(3);
+const filter = ref();
 
 // http://localhost:8080/api/events/past/?pageSize=8&page=0
 // const getLink = async () => {

@@ -10,7 +10,7 @@ import java.time.Instant;
 import java.util.List;
 
 public interface EventRepository extends JpaRepository<Event, Integer> {
-        Page<Event> findByEventCategoryID(Integer eventCategoryID, Pageable pageable);
+        List<Event> findByEventCategoryID(Integer eventCategoryID);
 
         Page<Event> findByEventCategoryIDAndEventStartTimeLessThan(Integer eventCategoryID, Instant dateNow,
                         Pageable pageable);

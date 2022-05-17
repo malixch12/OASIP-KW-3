@@ -22,6 +22,7 @@ import sit.int204.classicmodelsservice2.services.EventService;
 import org.springframework.data.domain.PageRequest;
 
 import java.time.Instant;
+import java.util.List;
 
 @RestController
 
@@ -41,6 +42,11 @@ public class EventController {
     }
 
     // get all
+    @GetMapping("/get-all")
+    public List<SimpleEventDTO> getEventNoPage() {
+        return eventService.getEventAll();
+    }
+
     @GetMapping("")
     public Page<SimpleEventDTO> getEventByAll(
             @RequestParam(defaultValue = "eventStartTime") String sortBy,
@@ -57,14 +63,13 @@ public class EventController {
 
     @GetMapping("/date")
     public Page<SimpleEventDTO> getEventDate(
-            @RequestParam Instant date,
+         @RequestParam Instant date,
             @RequestParam(defaultValue = "eventStartTime") String sortBy,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "8") Integer pageSize) {
-        Sort sort = Sort.by(sortBy);
-        return eventService.getSimpleEventDate(date,PageRequest.of(page, pageSize, sort));
+        return eventService.getSimpleEventDate(date,PageRequest.of(page, pageSize, Sort.by(sortBy)));
     }
-
+    
     @GetMapping("/past")
     public Page<SimpleEventDTO> getEventPastDate(
             @RequestParam(defaultValue = "eventStartTime") String sortBy,
@@ -83,13 +88,12 @@ public class EventController {
 
     // get event by category
     @GetMapping("/category/{eventCategoryID}")
-    public Page<Event> getEventByCategory(
+    public Page<SimpleEventDTO> getEventByCategory(
             @PathVariable Integer eventCategoryID,
             @RequestParam(defaultValue = "eventStartTime") String sortBy,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "8") Integer pageSize) {
-        Sort sort = Sort.by(sortBy);
-        return repository.findByEventCategoryID(eventCategoryID, PageRequest.of(page, pageSize, sort));
+        return eventService.getEventByCatetory(eventCategoryID,PageRequest.of(page, pageSize,  Sort.by(sortBy)));
     }
 
     @GetMapping("/category/date/{eventCategoryID}")

@@ -19,6 +19,19 @@ const getLinkAll = async () => {
   }
 };
 
+const getLinkAllNoPage = async () => {
+  // const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events`);
+
+  const res = await fetch(
+    `${import.meta.env.VITE_APP_TITLE}/api/events?page=${page.value}&pageSize=100000`
+  );
+  if (res.status === 200) {
+    eventLists.value = await res.json();
+    numPage.value = Math.ceil(eventLists.value.totalElements / 8);
+  }
+};
+
+
 onBeforeMount(async () => {
   getLinkAll();
 });
@@ -68,50 +81,24 @@ function futureFilter() {
 
 function allFilter() {
   getLinkAll();
+ 
 }
 
-const test = ref()
-const now_date = ref()
-function dateFilter (FilterDate) {
+function dateFilter (FilterDate)  {
+
 console.log(FilterDate)
-test.value =   new Date(FilterDate)
-now_date.value =
-  test.value.getDate() +
-  "/" +
-  (test.value.getMonth() + 1) +
-  "/" +
-  (test.value.getFullYear() + 543);
-
-
   let dateArrayFilter = eventLists.value.content.filter((event)=>{
-  return event.eventStartTime == "2022-05-18T20:17:00Z"
+  return event.date == FilterDate
 })
-console.log(dateArrayFilter)
+  eventLists.value.content = dateArrayFilter
+numPage.value = Math.ceil(dateArrayFilter.length / 8);
 }
-
-
-  const eventLists2 = ref([])
-
-//   function test () {
-
-//     eventLists2.value = eventLists.value.content.filter((event)=>{
-//   return event.bookingId = 23
-
-// })
-//   }
-
 
     
 </script>
 
 <template>
   <div>
-   back : {{ new Date(eventLists.content[0].eventStartTime).toLocaleDateString("th-TH")}} <br>
-    {{dateArrayFilter}}
-     <br>
-      {{eventLists.content}} 
-
-   choose :  {{now_date}}
     <Navbar />
     <ShowList
       :eventLists="eventLists.content"

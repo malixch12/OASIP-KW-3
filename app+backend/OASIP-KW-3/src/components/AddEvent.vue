@@ -126,17 +126,21 @@ setInterval(setTime, 1000);
       <h2 class="text-2xl font-semibold text-center">
          Booking {{ categoryDetail.categoryName }}
       </h2>
-      <p>
+     
         Name :
+        
         <input
         maxlength="100"
           type="text"
           v-model="dataBooking.bookingName"
           placeholder="Please enter your name"
-          class="border-2 pl-2 border-sky-200 w-8/12 rounded-lg" 
-        />
-      </p>
-      <span v-show="!NameCheck"  class="text-red-600"> กรุณาใส่ชื่อ</span>
+          class="border-2 pl-2 border-sky-200 w-8/12 rounded-lg col-span-5" 
+        />  
+<br>
+
+            <span class=" font-bold text-gray-600 text-xs"> *คุณสามารถกรอกได้เพียง 100 ตัวอักษร</span> <span  class=" font-bold text-gray-600 text-xs">--> เหลืออีก {{100-dataBooking.bookingName.length}} ตัว</span><br>
+      <span class=" font-bold text-red-600 text-xs" v-if="dataBooking.bookingName.length==100"> ตอนนี้คุณไม่สามารถเพิ่มข้อความได้มากกว่านี้ กรุณาตรวจความถูกต้องของข้อความทั้งหมด</span>
+       <span v-show="!NameCheck"  class="text-red-600"> กรุณาใส่ชื่อ</span>
       <p>
         Email :
         <input
@@ -146,7 +150,7 @@ setInterval(setTime, 1000);
           class="pl-2 border-2 border-sky-200 w-8/12 rounded-lg" maxlength="100"
         />
       </p>
-    <span v-show="!EmailCheck"  class="text-red-600"> กรุณาใส่อีเมล</span>
+    <span v-show="!EmailCheck"  class="text-red-600"> กรุณาใส่อีเมล</span><br>
     <span v-show="!EmailValidation"  class="text-red-600"> กรุณากรอกอีเมลล์ให้ถูกต้อง</span>
       <hr />
       <p class="text-2xl font-semibold text-center">
@@ -159,16 +163,12 @@ setInterval(setTime, 1000);
           v-model="dataBooking.eventStartTime"
           class="border-2 border-sky-200 w-9/12 rounded-lg"
         />
-        {{new Date(dataBooking.eventStartTime)}}<br>
-        <br>
-       
-        <br>
-         time now--> {{countTime}}
-         
       </p>
       <div v-show="DateTimeCheck" class="text-red-600"> กรุณาเลือกวันที่ในอนาคตเท่านั้น </div>
       <p>Duration {{ categoryDetail.categoryDuration }} minutes</p>
       <p>Message to Advisor</p>
+      <span class=" font-bold text-gray-600 text-xs"> *คุณสามารถกรอกได้เพียง 500 ตัวอักษร</span> <span  class=" font-bold text-gray-600 text-xs">--> เหลืออีก {{500-dataBooking.eventNotes.length}} ตัว</span><br>
+      <span class=" font-bold text-red-600 text-xs" v-if="dataBooking.eventNotes.length==500"> ตอนนี้คุณไม่สามารถเพิ่มข้อความได้มากกว่านี้ กรุณาตรวจความถูกต้องของข้อความทั้งหมด</span>
       <textarea
        maxlength="500"
         type="text"

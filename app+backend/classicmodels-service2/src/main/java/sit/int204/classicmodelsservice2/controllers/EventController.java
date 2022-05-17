@@ -21,12 +21,7 @@ import sit.int204.classicmodelsservice2.repositories.EventRepository;
 import sit.int204.classicmodelsservice2.services.EventService;
 import org.springframework.data.domain.PageRequest;
 
-import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.List;
 
 @RestController
 
@@ -61,13 +56,13 @@ public class EventController {
     }
 
     @GetMapping("/date")
-    public Page<Event> getEventDate(
+    public Page<SimpleEventDTO> getEventDate(
             @RequestParam Instant date,
             @RequestParam(defaultValue = "eventStartTime") String sortBy,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "8") Integer pageSize) {
         Sort sort = Sort.by(sortBy);
-        return repository.findByEventStartTimeEquals(date, PageRequest.of(page, pageSize, sort));
+        return eventService.getSimpleEventDate(date,PageRequest.of(page, pageSize, sort));
     }
 
     @GetMapping("/past")

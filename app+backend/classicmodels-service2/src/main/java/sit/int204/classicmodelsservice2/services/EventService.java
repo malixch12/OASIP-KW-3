@@ -1,5 +1,6 @@
 package sit.int204.classicmodelsservice2.services;
 
+import java.time.Instant;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -8,10 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import sit.int204.classicmodelsservice2.dtos.SimpleEventDTO;
@@ -48,6 +46,15 @@ public class EventService {
 
         return modelMapper.map(event, SimpleEventDTO.class);
 
+    }
+
+    public Page<SimpleEventDTO> getSimpleEventDate(Instant date,Pageable pageable) {
+        List<SimpleEventDTO> listEventDTO = listMapper.mapList(repository.findByEventStartTimeEquals(date), SimpleEventDTO.class, modelMapper);
+        int start = (int) pageable.getOffset();
+        int end = (int) ((start + pageable.getPageSize()) > listEventDTO.size() ? listEventDTO.size()
+                : (start + pageable.getPageSize()));
+        Page<SimpleEventDTO> pageEvent = new PageImpl<SimpleEventDTO>(listEventDTO.subList(start, end), pageable, listEventDTO.size());
+        return pageEvent;
     }
 
     // public List<SimpleEventDTO> getEventByCatetory(Integer eventCategoryID ) {

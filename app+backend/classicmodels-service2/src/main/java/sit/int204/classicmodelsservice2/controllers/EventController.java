@@ -78,7 +78,7 @@ public class EventController {
             @RequestParam(defaultValue = "eventStartTime") String sortBy,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "8") Integer pageSize) {
-        return repository.findByEventStartTimeGreaterThan(PageRequest.of(page, pageSize,  Sort.by(sortBy)));
+        return eventService.getSimpleEventFutureDate(PageRequest.of(page, pageSize,  Sort.by(sortBy)));
     }
 
     // get event by category

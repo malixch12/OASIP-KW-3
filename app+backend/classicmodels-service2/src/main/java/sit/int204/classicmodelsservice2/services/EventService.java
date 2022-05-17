@@ -5,12 +5,15 @@ import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 import sit.int204.classicmodelsservice2.dtos.SimpleEventDTO;
 import sit.int204.classicmodelsservice2.entities.Event;
 import sit.int204.classicmodelsservice2.repositories.EventRepository;
@@ -24,16 +27,20 @@ public class EventService {
     private ListMapper listMapper = new ListMapper();
     @Autowired
     private ModelMapper modelMapper;
+
     @Autowired
     public EventService(EventRepository repository) {
         this.repository = repository;
     }
 
-    // public List<SimpleEventDTO> getSimpleEventAll(String sortBy,int page, int pageSize) {
-    //     Sort sort = Sort.by(sortBy);
-    //     // List<SimpleEventDTO> e = listMapper.mapList(repository.findAll(),SimpleEventDTO.class,modelMapper);
-    //     return listMapper.mapList(repository.findAll(PageRequest.of(page, pageSize, sort)), SimpleEventDTO.class,modelMapper);
-    // }
+    public Page<SimpleEventDTO> getSimpleEventAll(Pageable pageable) {
+        List<SimpleEventDTO> listEventDTO = listMapper.mapList(repository.findAll(), SimpleEventDTO.class, modelMapper);
+        int start = (int) pageable.getOffset();
+        int end = (int) ((start + pageable.getPageSize()) > listEventDTO.size() ? listEventDTO.size()
+                : (start + pageable.getPageSize()));
+        Page<SimpleEventDTO> pageEvent = new PageImpl<SimpleEventDTO>(listEventDTO.subList(start, end), pageable, listEventDTO.size());
+        return pageEvent;
+    }
 
     public SimpleEventDTO getSimpleEventById(Integer id) {
         Event event = repository.findById(id)
@@ -44,14 +51,14 @@ public class EventService {
     }
 
     // public List<SimpleEventDTO> getEventByCatetory(Integer eventCategoryID ) {
-    //     return listMapper.mapList(repository.findByEventCategoryID(eventCategoryID),SimpleEventDTO.class,modelMapper);
+    // return
+    // listMapper.mapList(repository.findByEventCategoryID(eventCategoryID),SimpleEventDTO.class,modelMapper);
     // }
 
     public void delete(Integer eventID) {
         repository.findById(eventID).orElseThrow(() -> new RuntimeException(eventID + "Does not exit !!!"));
         repository.deleteById(eventID);
     }
-
 
     public Event save(SimpleEventDTO newEvent) {
         Event e = modelMapper.map(newEvent, Event.class);

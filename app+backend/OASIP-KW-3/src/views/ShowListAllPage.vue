@@ -4,7 +4,7 @@ import { useRoute } from "vue-router";
 import ShowList from "../components/ShowList.vue";
 import Navbar from "../components/Navbar.vue";
 const route = useRoute();
-const eventLists = ref();
+const eventLists = ref({content:[{test:"test"}]});
 const page = ref(0);
 const numPage = ref();
 const getLinkAll = async () => {
@@ -69,10 +69,49 @@ function futureFilter() {
 function allFilter() {
   getLinkAll();
 }
+
+const test = ref()
+const now_date = ref()
+function dateFilter (FilterDate) {
+console.log(FilterDate)
+test.value =   new Date(FilterDate)
+now_date.value =
+  test.value.getDate() +
+  "/" +
+  (test.value.getMonth() + 1) +
+  "/" +
+  (test.value.getFullYear() + 543);
+
+
+  let dateArrayFilter = eventLists.value.content.filter((event)=>{
+  return event.eventStartTime == "2022-05-18T20:17:00Z"
+})
+console.log(dateArrayFilter)
+}
+
+
+  const eventLists2 = ref([])
+
+//   function test () {
+
+//     eventLists2.value = eventLists.value.content.filter((event)=>{
+//   return event.bookingId = 23
+
+// })
+//   }
+
+
+    
 </script>
 
 <template>
   <div>
+   back : {{ new Date(eventLists.content[0].eventStartTime).toLocaleDateString("th-TH")}} <br>
+    {{dateArrayFilter}}
+     <br>
+      {{eventLists.content}} 
+
+   choose :  {{now_date}}
     <Navbar />
     <ShowList
       :eventLists="eventLists.content"
@@ -82,6 +121,7 @@ function allFilter() {
       @pastFilter="pastFilter"
       @futureFilter="futureFilter"
       @allFilter="allFilter"
+      @dateFilter="dateFilter"
     />
   </div>
 </template>

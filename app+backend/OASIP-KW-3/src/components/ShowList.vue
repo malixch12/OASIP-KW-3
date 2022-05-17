@@ -15,6 +15,7 @@ const props = defineProps({
   },
   name: {
     type: String,
+    default : "All Appointments"
   },
   numPage: {
     type: Number,
@@ -31,6 +32,8 @@ onBeforeUpdate(async () => {
   if (props.eventLists.length > 0) {
     check.value = true;
   }
+
+  //filter.value = 3
 });
 
 const page = ref();
@@ -52,59 +55,73 @@ const showDet = (BookingId) => {
 const style = "flex justify-between grid gap-4";
 
 // filter
-const filter = ref();
+const filter = ref(3);
+const test2 = ref("2022-05-04")
+var today = ref(new Date("2022-05-04"));
+var now_date =
+  today.value.getDate() +
+  "/" +
+  (today.value.getMonth() + 1) +
+  "/" +
+  (today.value.getFullYear() + 543);
 
-// http://localhost:8080/api/events/past/?pageSize=8&page=0
-// const getLink = async () => {
-//   const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events/past/?pageSize=8`);
-//   if (res.status === 200) {
-//     props.eventLists = await res.json();
+const FilterDate = ref();
+const FilterDate2 = ref();
+const FilterDate3 = ref();
 
-//   }
-// };
+function test () {
+
+}
 </script>
 
 <template>
   <div>
-    <div class="bg-white shadow-xl ml-24 mr-24 p-12">
-      <div class="grid grid-cols-3 place-items-center mb-12">
-        <div >
-          <input
-            type="radio"
-            id="all"
-            value="3"
-            v-model="filter"
-            @click="$emit('allFilter')"
-            
-          />
-          <label for="all" class="p-2">All Appointments</label>
-        </div>
+    <div class="bg-white shadow-xl ml-24 mr-24 p-12 grid grid-cols-1">
+      <h1 class="text-4xl pb-5 text-center font-bold">{{ name }}</h1>
+
+      <!-- filter  -->
+      <div  class="flex justify-center py-5">
         <div>
-          <input
-            type="radio"
-            id="past"
-            value="1"
-            v-model="filter"
-            @click="$emit('pastFilter')"
+          <span>Event Status : </span>
+          <RoundButton
+            class="pr-2 "
+            bg-color="bg-slate-100 hover:bg-slate-600 hover:text-slate-100 active:bg-slate-700 focus:outline-none focus:ring focus:ring-slate-200 focus:text-slate-100 focus:bg-slate-600 text-slate-600"
+            button-name="All"
+            @click="$emit('allFilter')" 
           />
-          <label for="past" class="p-2">Past Appointments</label>
-        </div>
-        <div>
-          <input
-            type="radio"
-            id="future"
-            value="2"
-            v-model="filter"
-            @click="$emit('futureFilter')"
+          <RoundButton
+            class="pr-2"
+            bg-color="bg-slate-100 hover:bg-slate-600 hover:text-slate-100 active:bg-slate-700 focus:outline-none focus:ring focus:ring-slate-200 focus:text-slate-100 focus:bg-slate-600 text-slate-600"
+            button-name="Past"
+            @click="
+              $emit('pastFilter')
+            "
           />
-          <label for="future" class="p-2">Next Appointments</label>
+          <RoundButton
+            bg-color="bg-slate-100 hover:bg-slate-600 hover:text-slate-100 active:bg-slate-700 focus:outline-none focus:ring focus:ring-slate-200 focus:text-slate-100 focus:bg-slate-600 text-slate-600"
+            button-name="Upcoming"
+            @click="
+              $emit('futureFilter')
+            "
+          />
+          <span class="text-slate-400 px-3">|</span>
+          <span> Select Date : </span>
+          <span>
+            <input
+              type="date"
+              class="border-2 pl-2 border-slate-200 w-82 rounded-full"
+              v-model="FilterDate"
+            />
+            <button @click="$emit('dateFilter',FilterDate)">ok</button>
+          </span>
         </div>
       </div>
-      <h1 class="text-4xl pb-5 text-center font-bold">{{ name }}</h1>
+
+      <!-- event list -->
       <div v-if="check" :class="[style, colNum]">
         <div v-for="(event, index) in props.eventLists" :key="index">
           <div
-            class="bg-red-100 shadow-xl ring-1 ring-red-900/5 sm:rounded-lg mt-4 p-6 space-y-3"
+            class="bg-rose-200 shadow-xl ring-1 ring-red-900/5 sm:rounded-lg mt-4 p-6 space-y-3 hover:bg-orange-300 "
           >
             <p>Name : {{ event.bookingName }}</p>
             <p>
@@ -115,9 +132,9 @@ const filter = ref();
               Time :
               {{ new Date(event.eventStartTime).toLocaleTimeString("th-TH") }}
             </p>
-            <p class="font-semibold">{{ event.eventCategory }}</p>
+            <p class="font-semibold pb-3">{{ event.eventCategory }}</p>
             <RoundButton
-              bg-color="bg-rose-300"
+              bg-color="bg-red-700 text-white"
               button-name="Show detail >>"
               @click="showDet(event.bookingId)"
             />
@@ -130,11 +147,13 @@ const filter = ref();
         Empty schedule ! ! !
       </div>
     </div>
+
+    <!-- page -->
     <div class="bg-rose-300 shadow-xl rounded-b-lg ml-24 mr-24 text-center">
       <span
         v-for="(e, index) in numPage"
         :key="index"
-        class="p-5 text-white hover:text-rose-400"
+        class="p-5 text-white hover:text-orange-600"
       >
         <button @click="$emit('paging', index, filter)">
           {{ index + 1 }}

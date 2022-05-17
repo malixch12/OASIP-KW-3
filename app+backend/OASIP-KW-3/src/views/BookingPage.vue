@@ -5,7 +5,7 @@ import ShowList from "../components/ShowList.vue";
 import { useRoute } from "vue-router";
 const route = useRoute();
 
-const eventLists = ref();
+const eventLists = ref({content:null});
 const id = ref();
 const page = ref(0)
 const numPage = ref( )
@@ -18,11 +18,7 @@ const getLinkAll = async () => {
 };
 
 onBeforeUpdate(() => {
-  // if (eventLists.value.length > 0) {
-  //   id.value = eventLists.value[eventLists.value.length - 1].bookingId;
-  // } else {
-  //   id.value = 0;
-  // }
+
 });
 
 onBeforeMount(() => {
@@ -37,10 +33,6 @@ onBeforeMount(() => {
 const addEvent = async (dataBooking , AllDataCheck) => {
   if(AllDataCheck == true) {
  dataBooking.eventStartTime=new Date(dataBooking.eventStartTime).toISOString();
-  getLinkAll();
-  // if(dataBooking.bookingName == ''){
-  //   console.log('empty')
-  // }
   const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events`, {
     method: "POST",
     headers: {
@@ -49,9 +41,9 @@ const addEvent = async (dataBooking , AllDataCheck) => {
     body: JSON.stringify(dataBooking),
   });
   
-  getLinkAll();
+  
   }
- 
+ getLinkAll();
 };
 
 const categoryDetail = {
@@ -60,11 +52,13 @@ const categoryDetail = {
   categoryDuration: route.query.eventDuration,
 };
 
+
+
 function paging(index , filter) {
   page.value = index;
 
   if (filter == 3) {
-    getLink();
+    getLinkAll();
   }
   if (filter == 2) {
     getLinkFuture();
@@ -73,7 +67,7 @@ function paging(index , filter) {
     getLinkPast();
   }
 }
-//http://localhost:8080/api/events/category/1?pageSize=4
+
 
 const getLinkPast = async () => {
   const res = await fetch(
@@ -100,16 +94,17 @@ const getLinkFuture = async () => {
   }
 };
 
+   
 function pastFilter() {
-  getLinkPast();
+  getLinkPast();  
 }
 
 function futureFilter() {
-  getLinkFuture();
+  getLinkFuture();   
 }
 
 function allFilter() {
-  getLink();
+  getLinkAll();
 }
 
 </script>
@@ -117,7 +112,7 @@ function allFilter() {
 <template>
   <div>
     <div class="flex justify-between grid grid-cols-3 gap-2">
-        <AddEvent  @addEvent="addEvent" @click="getLinkAll" :categoryDetail="categoryDetail"/>
+        <AddEvent  @addEvent="addEvent"  :categoryDetail="categoryDetail"/>
 
   <!-- <AddEvent :id="id" @addEvent="addEvent" @click="getLinkAll" :categoryDetail="categoryDetail"/> -->
       <ShowList

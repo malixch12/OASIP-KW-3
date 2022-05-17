@@ -103,27 +103,14 @@ const reSet = () => {
   }
 };
 
-
-
-
-
-
-const isActivePopup = ref(false)
-
-
 const countTime = ref('');
 function setTime() {
 var today = new Date()
 var now_date = (today.getDate() + '/' + (today.getMonth()+1) + '/' + (today.getFullYear()+543 ));
 var now_time = (today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()).toString("th-TH")
-
   countTime.value = today
-
 }
 setInterval(setTime, 1000);
-
-
-    
 
 </script>
 
@@ -131,20 +118,22 @@ setInterval(setTime, 1000);
   <div>
     <div class="space-y-7 bg-white shadow-xl rounded-lg ml-24 p-10">
       <RoundButton
-        bg-color="bg-slate-400 text-sm"
+        bg-color="bg-slate-400 text-sm text-white"
         button-name="<< go back"
         @click="goBack"
       />
+      
       <h2 class="text-2xl font-semibold text-center">
-        Information for booking {{ categoryDetail.categoryName }}
+         Booking {{ categoryDetail.categoryName }}
       </h2>
       <p>
         Name :
         <input
+        maxlength="100"
           type="text"
           v-model="dataBooking.bookingName"
           placeholder="Please enter your name"
-          class="border-2 pl-2 border-sky-200 w-8/12 rounded-lg"
+          class="border-2 pl-2 border-sky-200 w-8/12 rounded-lg" 
         />
       </p>
       <span v-show="!NameCheck"  class="text-red-600"> กรุณาใส่ชื่อ</span>
@@ -154,7 +143,7 @@ setInterval(setTime, 1000);
           type="text"
           v-model="dataBooking.bookingEmail"
           placeholder="Please enter your email"
-          class="pl-2 border-2 border-sky-200 w-8/12 rounded-lg"
+          class="pl-2 border-2 border-sky-200 w-8/12 rounded-lg" maxlength="100"
         />
       </p>
     <span v-show="!EmailCheck"  class="text-red-600"> กรุณาใส่อีเมล</span>
@@ -181,6 +170,7 @@ setInterval(setTime, 1000);
       <p>Duration {{ categoryDetail.categoryDuration }} minutes</p>
       <p>Message to Advisor</p>
       <textarea
+       maxlength="500"
         type="text"
         v-model="dataBooking.eventNotes"
         class="border-2 border-sky-200 w-11/12 h-56 rounded-lg"
@@ -192,7 +182,7 @@ setInterval(setTime, 1000);
           button-name="add"
           @click="$emit('addEvent', dataBooking , AllDataCheck ), reSet()"
         />
-      {{AllDataCheck}}
+     
         <!-- <RoundButton
           bg-color="bg-rose-400"
           button-name="cancel"

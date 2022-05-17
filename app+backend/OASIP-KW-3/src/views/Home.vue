@@ -16,7 +16,7 @@ import ButtonLink from "../components/ButtonLink.vue";
       <br />
 
       <div class="text-white font-bold col-span-1 grid grid-cols-3 place-items-center mt-0 ">
-        <ButtonLink name="Book a clinic" link="BookingEventByCate" />
+        <ButtonLink name="Book a Clinic" link="BookingEventByCate" />
         <ButtonLink name="Check Appointments" link="ListAllByCate"/>
         <ButtonLink name="Check All Appointments" link="ListAllEvent" />
       </div>

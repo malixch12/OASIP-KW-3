@@ -2,6 +2,8 @@ package sit.int204.classicmodelsservice2.entities;
 
 import javax.persistence.*;
 
+import org.hibernate.validator.constraints.Email;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,6 +22,7 @@ public class Event {
     @Column(name = "BookingName", nullable = false, length = 100)
     private String bookingName;
 
+    @Email
     @Column(name = "BookingEmail", nullable = false, length = 100)
     private String bookingEmail;
 

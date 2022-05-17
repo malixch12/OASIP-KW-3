@@ -26,7 +26,6 @@ public class EventCategoryService {
         this.repository = repository;
     }
 
-
     public List<SimpleEventcategoryDTO> getSimpleEventcategoryAll() {
         return listMapper.mapList(repository.findAll(), SimpleEventcategoryDTO.class,modelMapper);
     }

@@ -2,13 +2,17 @@ package sit.int204.classicmodelsservice2.dtos;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import lombok.Getter;
 import lombok.Setter;
+import sit.int204.classicmodelsservice2.entities.Event;
 
 import javax.swing.text.DateFormatter;
+
+import org.springframework.data.domain.Page;
 
 @Getter
 @Setter
@@ -22,11 +26,8 @@ public class SimpleEventDTO {
     private String EventNotes;
     private Integer EventCategoryID;
 
-    // public String getEventDate(){
-    //     return EventStartTime.format(DateTimeFormatter.ofPattern("dd MMM YYYY"));
-    // }
-
-    // public String getEventTime(){
-    //     return EventStartTime.format(DateTimeFormatter.ofPattern("HH:mm"));
-    // }
+    public String getDate() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.systemDefault());
+        return formatter.format(EventStartTime);
+    }
 }

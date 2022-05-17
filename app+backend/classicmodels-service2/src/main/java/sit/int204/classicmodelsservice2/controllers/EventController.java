@@ -25,6 +25,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -44,21 +45,14 @@ public class EventController {
         this.repository = repository;
     }
 
-    // @GetMapping("")
-    // public List<SimpleEventDTO> getEventByAll( @RequestParam(defaultValue =
-    // "eventStartTime") String sortBy,
-    // @RequestParam(defaultValue = "0") Integer page,
-    // @RequestParam(defaultValue = "8") Integer pageSize) {
-    // return eventService.getSimpleEventAll(sortBy, page, pageSize);
-    // }
-
+    // get all
     @GetMapping("")
-    public Page<Event> getEventByAll(
+    public Page<SimpleEventDTO> getEventByAll(
             @RequestParam(defaultValue = "eventStartTime") String sortBy,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "8") Integer pageSize) {
         Sort sort = Sort.by(sortBy);
-        return repository.findAll(PageRequest.of(page, pageSize, sort));
+        return eventService.getSimpleEventAll(PageRequest.of(page, pageSize, sort));
     }
 
     @GetMapping("/{id}")
@@ -66,11 +60,15 @@ public class EventController {
         return eventService.getSimpleEventById(id);
     }
 
-    // @GetMapping("/category/{eventCategoryID}")
-    // public List<SimpleEventDTO> getEventByCatetory(@PathVariable Integer
-    // eventCategoryID) {
-    // return eventService.getEventByCatetory(eventCategoryID);
-    // }
+    @GetMapping("/date")
+    public Page<Event> getEventDate(
+            @RequestParam Instant date,
+            @RequestParam(defaultValue = "eventStartTime") String sortBy,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "8") Integer pageSize) {
+        Sort sort = Sort.by(sortBy);
+        return repository.findByEventStartTimeEquals(date, PageRequest.of(page, pageSize, sort));
+    }
 
     @GetMapping("/past")
     public Page<Event> getEventPastDate(
@@ -96,6 +94,7 @@ public class EventController {
         return repository.findByEventStartTimeGreaterThan(dateNow, PageRequest.of(page, pageSize, sort));
     }
 
+    // get event by category
     @GetMapping("/category/{eventCategoryID}")
     public Page<Event> getEventByCategory(
             @PathVariable Integer eventCategoryID,
@@ -104,6 +103,18 @@ public class EventController {
             @RequestParam(defaultValue = "8") Integer pageSize) {
         Sort sort = Sort.by(sortBy);
         return repository.findByEventCategoryID(eventCategoryID, PageRequest.of(page, pageSize, sort));
+    }
+
+    @GetMapping("/category/date/{eventCategoryID}")
+    public Page<Event> getEventDateByCategory(
+            @PathVariable Integer eventCategoryID,
+            @RequestParam Instant date,
+            @RequestParam(defaultValue = "eventStartTime") String sortBy,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "8") Integer pageSize) {
+        Sort sort = Sort.by(sortBy);
+        return repository.findByEventCategoryIDAndEventStartTimeEquals(eventCategoryID, date,
+                PageRequest.of(page, pageSize, sort));
     }
 
     @GetMapping("/category/past/{eventCategoryID}")
@@ -119,6 +130,7 @@ public class EventController {
         return repository.findByEventCategoryIDAndEventStartTimeLessThan(eventCategoryID, dateNow,
                 PageRequest.of(page, pageSize, sort));
     }
+
     @GetMapping("/category/future/{eventCategoryID}")
     public Page<Event> getEventFutureDateByCategory(
             @PathVariable Integer eventCategoryID,

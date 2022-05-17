@@ -24,7 +24,6 @@ const eventLists = ref({
 });
 const hideEdit = ref(true);
 
-
 const getLinkAll = async () => {
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/events/${myRouter.query.BookingId}`
@@ -64,34 +63,69 @@ const toEditMode = (editNote) => {
 
 const updateNote = async () => {
   //eventLists.value.eventStartTime = await new Date(eventLists.value.eventStartTime).toISOString();
-
-  const res = await fetch(
-    `${import.meta.env.VITE_APP_TITLE}/api/events/${myRouter.query.BookingId}`,
-    {
-      method: "PUT",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        eventDuration: eventLists.value.eventDuration,
-        bookingEmail: eventLists.value.bookingEmail,
-        eventCategoryID: eventLists.value.eventCategoryID,
-        eventCategory: eventLists.value.eventCategory,
-        bookingId: eventLists.value.bookingId,
-        eventNotes: eventLists.value.eventNotes,
-        bookingName: eventLists.value.bookingName,
-        eventStartTime: new Date(eventLists.value.eventStartTime).toISOString(),
-      }),
-    }
-  );
-  if (res.status === 200) {
-    console.log(eventLists.value.eventStartTime);
-    isActivePopup.value = false;
-    hideEdit.value = true;
-    getLinkAll();
-    console.log("edited successfully");
-  } else console.log("error, cannot be added");
+  if (DateTimeCheck.value == true) {
+    const res = await fetch(
+      `${import.meta.env.VITE_APP_TITLE}/api/events/${
+        myRouter.query.BookingId
+      }`,
+      {
+        method: "PUT",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          eventDuration: eventLists.value.eventDuration,
+          bookingEmail: eventLists.value.bookingEmail,
+          eventCategoryID: eventLists.value.eventCategoryID,
+          eventCategory: eventLists.value.eventCategory,
+          bookingId: eventLists.value.bookingId,
+          eventNotes: eventLists.value.eventNotes,
+          bookingName: eventLists.value.bookingName,
+          eventStartTime: new Date(
+            eventLists.value.eventStartTime
+          ).toISOString(),
+        }),
+      }
+    );
+    if (res.status === 200) {
+      console.log(eventLists.value.eventStartTime);
+      isActivePopup.value = false;
+      hideEdit.value = true;
+      getLinkAll();
+      console.log("edited successfully");
+    } else console.log("error, cannot be added");
+  }
 };
+
+const countTime = ref("");
+function setTime() {
+  var today = new Date();
+  var now_date =
+    today.getDate() +
+    "/" +
+    (today.getMonth() + 1) +
+    "/" +
+    (today.getFullYear() + 543);
+  var now_time = (
+    today.getHours() +
+    ":" +
+    today.getMinutes() +
+    ":" +
+    today.getSeconds()
+  ).toString("th-TH");
+  countTime.value = today;
+}
+setInterval(setTime, 1000);
+
+const DateTimeCheck = ref(false);
+
+onBeforeUpdate(() => {
+  if (countTime.value > new Date(eventLists.value.eventStartTime)) {
+    DateTimeCheck.value = false;
+  } else {
+    DateTimeCheck.value = true;
+  }
+});
 
 const isActivePopup = ref(false);
 </script>
@@ -100,7 +134,7 @@ const isActivePopup = ref(false);
   <div class="flex justify-center">
     <div class="bg-white space-y-7 shadow-xl rounded-lg ml-48 mr-48 p-12 w-2/5">
       <RoundButton
-        bg-color="bg-slate-400 text-sm"
+        bg-color="bg-slate-400 text-white text-sm"
         button-name="<< go back"
         @click="goBack"
       />
@@ -110,6 +144,7 @@ const isActivePopup = ref(false);
           <p class="text-3xl font-bold text-rose-400">
             {{ eventLists.eventCategory }}
           </p>
+
           <p>
             <span class="font-bold text-slate-600">Booking Name : </span>
             {{ eventLists.bookingName }}
@@ -122,22 +157,36 @@ const isActivePopup = ref(false);
 
           <p v-show="hideEdit">
             <span class="text-slate-600 font-bold"> Date : </span>
-            {{ new Date(eventLists.eventStartTime).toLocaleDateString("th-TH") }}
+            {{
+              new Date(eventLists.eventStartTime).toLocaleDateString("th-TH")
+            }}
           </p>
           <p v-show="hideEdit">
             <span class="text-slate-600 font-bold"> Time : </span>
-            {{ new Date(eventLists.eventStartTime).toLocaleTimeString("th-TH") }}
+            {{
+              new Date(eventLists.eventStartTime).toLocaleTimeString("th-TH")
+            }}
           </p>
+          <span v-if="!hideEdit" class="text-slate-600 font-bold">
+            Date Time :
+          </span>
+          <input
+            v-if="!hideEdit"
+            type="datetime-local"
+            class="border-2 border-sky-200 w-8/12 rounded-lg"
+            v-model="eventLists.eventStartTime"
+          />
+          <div v-if="DateTimeCheck" v-show="!hideEdit" class="text-slate-600 font-bold text-xs">
+            * If you leave it blank, the old date will be used.
+          </div>
+          <div
+            v-if="!DateTimeCheck"
+            v-show="!hideEdit"
+            class=" font-bold text-red-600 text-xs"
+          >
+            * Please select future dates only.
+          </div>
 
-          <p>
-            <span class="text-slate-600 font-bold"> Date Time : </span>
-            <input
-              v-show="!hideEdit"
-              type="datetime-local"
-              class="border-2 border-sky-200 w-8/12 rounded-lg"
-              v-model="eventLists.eventStartTime"
-            />
-          </p>
           <p>
             <span class="text-slate-600 font-bold">Duration </span>
             {{ eventLists.eventDuration }}
@@ -163,7 +212,7 @@ const isActivePopup = ref(false);
 
           <div v-show="hideEdit" class="grid grid-cols-2 pt-3">
             <RoundButton
-              bg-color="bg-emerald-400"
+              bg-color="bg-emerald-400 text-white"
               button-name="edit"
               @click="
                 () => {
@@ -172,7 +221,7 @@ const isActivePopup = ref(false);
               "
             />
             <RoundButton
-              bg-color="bg-rose-400"
+              bg-color="bg-rose-400 text-white"
               button-name="delete"
               @click="removeEvent"
             />
@@ -180,13 +229,13 @@ const isActivePopup = ref(false);
 
           <div v-show="!hideEdit" class="grid grid-cols-2 pt-3">
             <RoundButton
-              bg-color="bg-emerald-400"
+              bg-color="bg-emerald-400 text-white"
               button-name="save"
               @click="() => (isActivePopup = true)"
             />
 
             <RoundButton
-              bg-color="bg-rose-400"
+              bg-color="bg-rose-400 text-white"
               button-name="cancel"
               @click="
                 () => {
@@ -199,25 +248,44 @@ const isActivePopup = ref(false);
       </div>
       <!-- popup -->
       <PopupPage v-show="isActivePopup" :dim-background="true">
-        <p class="text-3xl font-semibold text-slate-600 tracking-wide pb-16">
-          Do you want to update?
-        </p>
-        <div class="flex justify-between max-w-lg mx-auto">
-          <RoundButton
-            bg-color="bg-emerald-400"
-            button-name="Yes"
-            @click="updateNote"
-          />
+        <div v-if="DateTimeCheck == true">
+          <p class="text-3xl font-semibold text-slate-600 tracking-wide pb-16">
+            Do you want to update?
+          </p>
+          <div class="flex justify-between max-w-lg mx-auto">
+            <RoundButton
+              bg-color="bg-emerald-400 text-white"
+              button-name="Yes"
+              @click="updateNote"
+            />
 
-          <RoundButton
-            bg-color="bg-rose-400"
-            button-name="No"
-            @click="
-              () => {
-                isActivePopup = false;
-              }
-            "
-          />
+            <RoundButton
+              bg-color="bg-rose-400 text-white"
+              button-name="No"
+              @click="
+                () => {
+                  isActivePopup = false;
+                }
+              "
+            />
+          </div>
+        </div>
+
+        <div v-if="DateTimeCheck == false">
+          <p class="text-3xl font-semibold text-slate-600 tracking-wide pb-16">
+            Please check the date to make sure you haven't booked in the past.
+          </p>
+          <div class="flex justify-center max-w-lg mx-auto">
+            <RoundButton
+              bg-color="bg-rose-400 text-white"
+              button-name="Ok"
+              @click="
+                () => {
+                  isActivePopup = false;
+                }
+              "
+            />
+          </div>
         </div>
       </PopupPage>
     </div>

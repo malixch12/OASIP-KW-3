@@ -4,7 +4,7 @@ import ShowList from "../components/ShowList.vue";
 import Navbar from "../components/Navbar.vue";
 import { useRoute } from "vue-router";
 const route = useRoute();
-const eventLists = ref();
+const eventLists = ref({content:null});
 const page = ref(0);
 const numPage = ref();
 const getLink = async () => {
@@ -22,6 +22,7 @@ const getLink = async () => {
 onBeforeMount(async () => {
   getLink();
 });
+
 
 function paging(index , filter) {
   page.value = index;

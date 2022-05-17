@@ -66,15 +66,11 @@ public class EventController {
     }
 
     @GetMapping("/past")
-    public Page<Event> getEventPastDate(
+    public Page<SimpleEventDTO> getEventPastDate(
             @RequestParam(defaultValue = "eventStartTime") String sortBy,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "8") Integer pageSize) {
-        Sort sort = Sort.by(sortBy);
-        long now = System.currentTimeMillis();
-        now = now / 1000;
-        Instant dateNow = Instant.now().ofEpochSecond(now);
-        return repository.findByEventStartTimeLessThan(dateNow, PageRequest.of(page, pageSize, sort));
+        return eventService.getSimpleEventPastDate(PageRequest.of(page, pageSize, Sort.by(sortBy)));
     }
 
     @GetMapping("/future")

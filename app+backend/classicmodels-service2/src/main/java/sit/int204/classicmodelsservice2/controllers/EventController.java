@@ -74,15 +74,11 @@ public class EventController {
     }
 
     @GetMapping("/future")
-    public Page<Event> getEventFutureDate(
+    public Page<SimpleEventDTO> getEventFutureDate(
             @RequestParam(defaultValue = "eventStartTime") String sortBy,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "8") Integer pageSize) {
-        Sort sort = Sort.by(sortBy);
-        long now = System.currentTimeMillis();
-        now = now / 1000;
-        Instant dateNow = Instant.now().ofEpochSecond(now);
-        return repository.findByEventStartTimeGreaterThan(dateNow, PageRequest.of(page, pageSize, sort));
+        return repository.findByEventStartTimeGreaterThan(PageRequest.of(page, pageSize,  Sort.by(sortBy)));
     }
 
     // get event by category

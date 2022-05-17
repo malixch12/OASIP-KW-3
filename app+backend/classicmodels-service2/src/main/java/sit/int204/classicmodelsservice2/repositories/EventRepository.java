@@ -22,7 +22,7 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
 
         List<Event> findByEventStartTimeLessThan(Instant dateNow);
 
-        Page<Event> findByEventStartTimeGreaterThan(Instant dateNow, Pageable pageable);
+        List<Event> findByEventStartTimeGreaterThan(Instant dateNow);
 
         List<Event> findByEventStartTimeEquals(Instant date);
 }

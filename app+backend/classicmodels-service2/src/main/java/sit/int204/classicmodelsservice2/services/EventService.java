@@ -43,14 +43,10 @@ public class EventService {
         return pageEvent;
     }
 
-    
+    // get event
     public Page<SimpleEventDTO> getSimpleEventAll(Pageable pageable) {
         List<SimpleEventDTO> listEventDTO = listMapper.mapList(repository.findAll(), SimpleEventDTO.class, modelMapper);
-        int start = (int) pageable.getOffset();
-        int end = (int) ((start + pageable.getPageSize()) > listEventDTO.size() ? listEventDTO.size()
-                : (start + pageable.getPageSize()));
-        Page<SimpleEventDTO> pageEvent = new PageImpl<SimpleEventDTO>(listEventDTO.subList(start, end), pageable, listEventDTO.size());
-        return pageEvent;
+        return getPage(pageable,listEventDTO);
     }
 
     public SimpleEventDTO getSimpleEventById(Integer id) {
@@ -65,14 +61,15 @@ public class EventService {
     }
     
     public Page<SimpleEventDTO> getSimpleEventPastDate(Pageable pageable) {
-        
         List<SimpleEventDTO> listEventDTO = listMapper.mapList(repository.findByEventStartTimeLessThan(dateNow), SimpleEventDTO.class, modelMapper);
-        int start = (int) pageable.getOffset();
-        int end = (int) ((start + pageable.getPageSize()) > listEventDTO.size() ? listEventDTO.size()
-                : (start + pageable.getPageSize()));
-        Page<SimpleEventDTO> pageEvent = new PageImpl<SimpleEventDTO>(listEventDTO.subList(start, end), pageable, listEventDTO.size());
-        return pageEvent;
-    }    
+        return getPage(pageable,listEventDTO);
+    }   
+    
+    public Page<SimpleEventDTO> getSimpleEventFutureDate(Pageable pageable) {
+        List<SimpleEventDTO> listEventDTO = listMapper.mapList(repository.findByEventStartTimeGreaterThan(dateNow), SimpleEventDTO.class, modelMapper);
+        return getPage(pageable,listEventDTO);
+    } 
+    
     // public List<SimpleEventDTO> getEventByCatetory(Integer eventCategoryID ) {
     // return
     // listMapper.mapList(repository.findByEventCategoryID(eventCategoryID),SimpleEventDTO.class,modelMapper);

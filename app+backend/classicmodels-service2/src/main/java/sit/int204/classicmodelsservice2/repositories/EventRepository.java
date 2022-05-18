@@ -8,6 +8,7 @@ import sit.int204.classicmodelsservice2.entities.Event;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 public interface EventRepository extends JpaRepository<Event, Integer> {
         List<Event> findByEventCategoryID(Integer eventCategoryID);
@@ -23,4 +24,6 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
         List<Event> findByEventStartTimeGreaterThan(Instant dateNow);
 
         List<Event> findByEventStartTimeEquals(Instant date);
+
+        Optional<Event> saveAndFlush(Optional<Event> event);
 }

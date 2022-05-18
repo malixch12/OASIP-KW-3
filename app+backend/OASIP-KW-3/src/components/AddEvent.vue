@@ -127,8 +127,8 @@ setInterval(setTime, 1000);
          Booking {{ categoryDetail.categoryName }}
       </h2>
      
-        Name :
-        
+      <span class="after:content-['*'] after:ml-0.5 after:text-red-500"> Name
+        </span> :
         <input
         maxlength="100"
           type="text"
@@ -138,33 +138,68 @@ setInterval(setTime, 1000);
         />  
 <br>
 
-            <span class=" font-bold text-gray-600 text-xs"> *คุณสามารถกรอกได้เพียง 100 ตัวอักษร</span> <span  class=" font-bold text-gray-600 text-xs">--> เหลืออีก {{100-dataBooking.bookingName.length}} ตัว</span><br>
-      <span class=" font-bold text-red-600 text-xs" v-if="dataBooking.bookingName.length==100"> ตอนนี้คุณไม่สามารถเพิ่มข้อความได้มากกว่านี้ กรุณาตรวจความถูกต้องของข้อความทั้งหมด</span>
-       <span v-show="!NameCheck"  class="text-red-600"> กรุณาใส่ชื่อ</span>
-      <p>
-        Email :
+            <span class=" font-bold text-gray-600 text-xs"> *คุณสามารถกรอกได้เพียง 100 ตัวอักษร</span> <span  class=" font-bold text-gray-600 text-xs">--> เหลืออีก {{100-dataBooking.bookingName.length}} ตัว 
+            
+               <details class="" v-if="!NameCheck">
+    <summary class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400">
+     invalid 
+    </summary>
+    <div class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
+      <span v-show="!NameCheck"  class="text-red-600"> กรุณาใส่ชื่อ</span>
+    </div>
+  </details>
+            </span>
+      <div class=" font-bold text-red-600 text-xs" v-if="dataBooking.bookingName.length==100"> ตอนนี้คุณไม่สามารถเพิ่มข้อความได้มากกว่านี้ กรุณาตรวจความถูกต้องของข้อความทั้งหมด</div>
+      <div>
+        <span class="after:content-['*'] after:ml-0.5 after:text-red-500"> Email
+        </span>  :
+       
         <input
           type="text"
           v-model="dataBooking.bookingEmail"
           placeholder="Please enter your email"
           class="pl-2 border-2 border-sky-200 w-8/12 rounded-lg" maxlength="100"
         />
-      </p>
-    <span v-show="!EmailCheck"  class="text-red-600"> กรุณาใส่อีเมล</span><br>
-    <span v-show="!EmailValidation"  class="text-red-600"> กรุณากรอกอีเมลล์ให้ถูกต้อง</span>
+          <details class="" v-show="!EmailValidation || !EmailCheck ">
+    <summary class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400">
+     invalid 
+    </summary>
+    <div class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
+       <span v-show="!EmailCheck"  class="text-red-600"> กรุณาใส่อีเมล</span>
+    <span v-show="!EmailValidation & EmailCheck "  class="text-red-600"> กรุณากรอกอีเมลล์ให้ถูกต้อง</span>
+    </div>
+  </details>
+      </div>
+      
+   
       <hr />
       <p class="text-2xl font-semibold text-center">
         Date and Time for Booking
       </p>
-      <p>
-       Date Time :
+      <div>
+      
+       <span class="after:content-['*'] after:ml-0.5 after:text-red-500"> Date Time
+        </span>  :
         <input
           type="datetime-local"
           v-model="dataBooking.eventStartTime"
           class="border-2 border-sky-200 w-9/12 rounded-lg"
         />
-      </p>
-      <div v-show="DateTimeCheck" class="text-red-600"> กรุณาเลือกวันที่ในอนาคตเท่านั้น </div>
+          <details class="" v-show="DateTimeCheck  ">
+    <summary class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400">
+     invalid 
+    </summary>
+    <div class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
+           <div v-show="DateTimeCheck" class="text-red-600"> กรุณาเลือกวันที่ในอนาคตเท่านั้น </div>
+    </div>
+  </details>
+      </div>
+
+     
+
+
+
+
       <p>Duration {{ categoryDetail.categoryDuration }} minutes</p>
       <p>Message to Advisor</p>
       <span class=" font-bold text-gray-600 text-xs"> *คุณสามารถกรอกได้เพียง 500 ตัวอักษร</span> <span  class=" font-bold text-gray-600 text-xs">--> เหลืออีก {{500-dataBooking.eventNotes.length}} ตัว</span><br>

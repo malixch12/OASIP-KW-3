@@ -19,7 +19,7 @@ const getLinkAll = async () => {
   }
 };
 
-const getLinkAllNoPage = async () => {
+const getLinkAllNoPage = async (FilterDate) => {
   // const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events`);
 
   const res = await fetch(
@@ -27,7 +27,12 @@ const getLinkAllNoPage = async () => {
   );
   if (res.status === 200) {
     eventLists.value = await res.json();
-    numPage.value = Math.ceil(eventLists.value.totalElements / 8);
+
+    let dateArrayFilter = eventLists.value.content.filter((event)=>{
+  return event.date == FilterDate
+})
+  eventLists.value.content = dateArrayFilter
+      numPage.value = Math.ceil(eventLists.value.content.length / 8);
   }
 };
 
@@ -84,14 +89,9 @@ function allFilter() {
  
 }
 
-function dateFilter (FilterDate)  {
 
-console.log(FilterDate)
-  let dateArrayFilter = eventLists.value.content.filter((event)=>{
-  return event.date == FilterDate
-})
-  eventLists.value.content = dateArrayFilter
-numPage.value = Math.ceil(dateArrayFilter.length / 8);
+const dateFilter =  (FilterDate) =>  {
+getLinkAllNoPage(FilterDate);
 }
 
     
@@ -99,6 +99,7 @@ numPage.value = Math.ceil(dateArrayFilter.length / 8);
 
 <template>
   <div>
+    
     <Navbar />
     <ShowList
       :eventLists="eventLists.content"

@@ -13,13 +13,16 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.data.domain.Pageable;
 
 import sit.int204.classicmodelsservice2.dtos.SimpleEventDTO;
+import sit.int204.classicmodelsservice2.dtos.SimpleEventcategoryDTO;
 import sit.int204.classicmodelsservice2.entities.Event;
+import sit.int204.classicmodelsservice2.entities.Eventcategory;
 import sit.int204.classicmodelsservice2.repositories.EventRepository;
+import sit.int204.classicmodelsservice2.repositories.EventcategoryRepository;
 import sit.int204.classicmodelsservice2.utils.ListMapper;
 
 @Service
 public class EventService {
-
+    private final EventcategoryRepository cateRepository;
     private final EventRepository repository;
     private ListMapper listMapper = new ListMapper();
 
@@ -27,8 +30,9 @@ public class EventService {
     private ModelMapper modelMapper;
 
     @Autowired
-    public EventService(EventRepository repository) {
+    public EventService(EventRepository repository, EventcategoryRepository cateRepository) {
         this.repository = repository;
+        this.cateRepository = cateRepository;
     }
 
     long now = (System.currentTimeMillis()) / 1000;
@@ -84,51 +88,61 @@ public class EventService {
                 SimpleEventDTO.class, modelMapper);
         return getPage(pageable, listEventDTO);
     }
-    public Page<SimpleEventDTO> getEventDateByCatetory(Integer eventCategoryID, Instant date,Pageable pageable) {
-        List<SimpleEventDTO> listEventDTO = listMapper.mapList(repository.findByEventCategoryIDAndEventStartTimeEquals(eventCategoryID,date),
-                SimpleEventDTO.class, modelMapper);
-        return getPage(pageable, listEventDTO);
-    }
-    public Page<SimpleEventDTO> getEventPastDateByCategory(Integer eventCategoryID,Pageable pageable) {
-        List<SimpleEventDTO> listEventDTO = listMapper.mapList(repository.findByEventCategoryIDAndEventStartTimeLessThan(eventCategoryID,dateNow),
-                SimpleEventDTO.class, modelMapper);
-        return getPage(pageable, listEventDTO);
-    }
-    public Page<SimpleEventDTO> getEventFutureDateByCategory(Integer eventCategoryID,Pageable pageable) {
-        List<SimpleEventDTO> listEventDTO = listMapper.mapList(repository.findByEventCategoryIDAndEventStartTimeGreaterThan(eventCategoryID,dateNow),
+
+    public Page<SimpleEventDTO> getEventDateByCatetory(Integer eventCategoryID, Instant date, Pageable pageable) {
+        List<SimpleEventDTO> listEventDTO = listMapper.mapList(
+                repository.findByEventCategoryIDAndEventStartTimeEquals(eventCategoryID, date),
                 SimpleEventDTO.class, modelMapper);
         return getPage(pageable, listEventDTO);
     }
 
+    public Page<SimpleEventDTO> getEventPastDateByCategory(Integer eventCategoryID, Pageable pageable) {
+        List<SimpleEventDTO> listEventDTO = listMapper.mapList(
+                repository.findByEventCategoryIDAndEventStartTimeLessThan(eventCategoryID, dateNow),
+                SimpleEventDTO.class, modelMapper);
+        return getPage(pageable, listEventDTO);
+    }
+
+    public Page<SimpleEventDTO> getEventFutureDateByCategory(Integer eventCategoryID, Pageable pageable) {
+        List<SimpleEventDTO> listEventDTO = listMapper.mapList(
+                repository.findByEventCategoryIDAndEventStartTimeGreaterThan(eventCategoryID, dateNow),
+                SimpleEventDTO.class, modelMapper);
+        return getPage(pageable, listEventDTO);
+    }
 
     public void delete(Integer eventID) {
         repository.findById(eventID).orElseThrow(() -> new RuntimeException(eventID + "Does not exit !!!"));
         repository.deleteById(eventID);
     }
 
-    public Event save(SimpleEventDTO newEvent) {
-        Event e = modelMapper.map(newEvent, Event.class);
-        return repository.saveAndFlush(e);
+    public SimpleEventDTO save(Event newEvent) {
+        Eventcategory eventcategory = cateRepository.findById(newEvent.getEventCategoryID())
+                .orElseThrow(() -> new RuntimeException(newEvent.getEventCategoryID() + "Does not exit !!!"));
+        newEvent.setEventDuration(eventcategory.getEventDuration());
+        newEvent.setEventCategory(eventcategory.getEventCategoryName());
+        Event event = modelMapper.map(newEvent, Event.class);
+        repository.saveAndFlush(newEvent);
+        return modelMapper.map(event, SimpleEventDTO.class);
     }
 
-    public Event update(Event updateEvent, Integer BookingId) {
-        Event event = repository.findById(BookingId).map(o -> mapEvent(o, updateEvent))
-                .orElseGet(() -> {
-                    updateEvent.setBookingId(BookingId);
-                    return updateEvent;
-                });
-        return repository.saveAndFlush(event);
-    }
+    public SimpleEventDTO update(SimpleEventDTO updateEvent, Integer BookingId) {
+        Event event = repository.findById(BookingId).map(e -> {
+            if (updateEvent.getEventStartTime() != null && updateEvent.getEventNotes() != null) {
+                e.setEventStartTime(updateEvent.getEventStartTime());
+                e.setEventNotes(updateEvent.getEventNotes());
+                return repository.saveAndFlush(e);
+            } else if (updateEvent.getEventNotes() != null) {
+                e.setEventStartTime(e.getEventStartTime());
+                e.setEventNotes(updateEvent.getEventNotes());
+                return repository.saveAndFlush(e);
+            } else if (updateEvent.getEventStartTime() != null) {
+                e.setEventStartTime(updateEvent.getEventStartTime());
+                return repository.saveAndFlush(e);
+            } else {
+                return repository.saveAndFlush(e);
+            }
+        }).orElseThrow(() -> new AssertionError("Can not update !!!"));
 
-    private Event mapEvent(Event existingEvent, Event updateEvent) {
-        existingEvent.setBookingId(updateEvent.getBookingId());
-        existingEvent.setBookingName(updateEvent.getBookingName());
-        existingEvent.setBookingEmail(updateEvent.getBookingEmail());
-        existingEvent.setEventCategory(updateEvent.getEventCategory());
-        existingEvent.setEventDuration(updateEvent.getEventDuration());
-        existingEvent.setEventNotes(updateEvent.getEventNotes());
-        existingEvent.setEventCategoryID(updateEvent.getEventCategoryID());
-        existingEvent.setEventStartTime(updateEvent.getEventStartTime());
-        return existingEvent;
+        return modelMapper.map(event, SimpleEventDTO.class);
     }
 }

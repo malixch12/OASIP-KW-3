@@ -35,6 +35,16 @@ public class EventCategoryService {
                 ->new ResponseStatusException(HttpStatus.NOT_FOUND,  id +" Does Not Exist !!!" ));
 
         return modelMapper.map(eventcategory,SimpleEventcategoryDTO.class);
-    
+    }
+
+    public SimpleEventcategoryDTO update(SimpleEventcategoryDTO updateCategory,Integer id){
+        Eventcategory eventCate = repository.findById(id).map(c -> {
+            c.setEventCategoryName(updateCategory.getEventCategoryName());
+            c.setEventDuration(updateCategory.getEventDuration());
+            c.setEventCategoryDescription(updateCategory.getEventCategoryDescription());
+            return repository.saveAndFlush(c);
+
+        }).orElseThrow(() -> new RuntimeException("Can not update !!!"));
+        return modelMapper.map(eventCate, SimpleEventcategoryDTO.class);
     }
 }

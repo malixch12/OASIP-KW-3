@@ -108,16 +108,21 @@ const PageIndexCurrent = ref(1)
               class="border-2 pl-2 border-slate-200 w-82 rounded-full"
               v-model="FilterDate"
             />
-            <button @click="$emit('dateFilter',FilterDate)">ok</button>
-          </span>
+                <RoundButton
+            bg-color="bg-red-400    ml-2 text-white"
+            button-name="search"
+           @click="$emit('dateFilter',FilterDate)"
+          />
+         </span>
         </div>
       </div>
 
       <!-- event list -->
       <div v-if="check" :class="[style, colNum]">
         <div v-for="(event, index) in props.eventLists" :key="index">
+        <div className="rounded-xl  mx-auto bg-gradient-to-r p-[3px] from-[#F9B1C0] via-[#8CC0F4] to-[#A9F7B8]">
           <div
-            class="bg-rose-200 shadow-xl ring-1 ring-red-900/5 sm:rounded-lg mt-4 p-6 space-y-3 hover:bg-orange-300 "
+            className="flex flex-col justify-between h-full bg-gray-200 text-black rounded-lg p-4"
           >
           <p class="font-semibold ">{{ event.eventCategory }}</p>
             <p>Name : {{ event.bookingName }}</p>
@@ -131,13 +136,13 @@ const PageIndexCurrent = ref(1)
             </p>
             
             <RoundButton
-              bg-color="bg-red-700 text-white"
+              bg-color="bg-rose-400 text-white"
               button-name="Show detail ->"
               @click="showDet(event.bookingId)"
             />
             
           </div>
-
+      </div>
           <br />
           
         </div>

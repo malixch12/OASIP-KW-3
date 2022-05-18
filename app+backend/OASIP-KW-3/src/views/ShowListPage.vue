@@ -75,6 +75,28 @@ function futureFilter() {
 function allFilter() {
   getLink();
 }
+
+
+const dateFilter =  (FilterDate) =>  {
+getLinkAllNoPage(FilterDate);
+}
+
+const getLinkAllNoPage = async (FilterDate) => {
+  // const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events`);
+
+  const res = await fetch(
+    `${import.meta.env.VITE_APP_TITLE}/api/events?page=${page.value}&pageSize=100000`
+  );
+  if (res.status === 200) {
+    eventLists.value = await res.json();
+
+    let dateArrayFilter = eventLists.value.content.filter((event)=>{
+  return event.date == FilterDate
+})
+  eventLists.value.content = dateArrayFilter
+      numPage.value = Math.ceil(eventLists.value.content.length / 8);
+  }
+};
 </script>
 
 <template>
@@ -90,6 +112,7 @@ function allFilter() {
        @pastFilter="pastFilter"
       @futureFilter="futureFilter"
       @allFilter="allFilter"
+      @dateFilter="dateFilter"
     />
     {{ page }}
   </div>

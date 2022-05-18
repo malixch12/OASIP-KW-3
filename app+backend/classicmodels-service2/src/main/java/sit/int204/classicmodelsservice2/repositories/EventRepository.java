@@ -12,13 +12,11 @@ import java.util.List;
 public interface EventRepository extends JpaRepository<Event, Integer> {
         List<Event> findByEventCategoryID(Integer eventCategoryID);
 
-        Page<Event> findByEventCategoryIDAndEventStartTimeLessThan(Integer eventCategoryID, Instant dateNow,
-                        Pageable pageable);
+        List<Event> findByEventCategoryIDAndEventStartTimeLessThan(Integer eventCategoryID, Instant dateNow);
 
-        Page<Event> findByEventCategoryIDAndEventStartTimeGreaterThan(Integer eventCategoryID, Instant dateNow,
-                        Pageable pageable);
+        List<Event> findByEventCategoryIDAndEventStartTimeGreaterThan(Integer eventCategoryID, Instant dateNow);
 
-        Page<Event> findByEventCategoryIDAndEventStartTimeEquals(Integer eventCategoryID,Instant date, Pageable pageable);
+        List<Event> findByEventCategoryIDAndEventStartTimeEquals(Integer eventCategoryID,Instant date);
 
         List<Event> findByEventStartTimeLessThan(Instant dateNow);
 

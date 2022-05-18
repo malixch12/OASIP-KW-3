@@ -94,7 +94,7 @@ const cancelBooking = () => {
 };
 
 const reSet = () => {
-  if(AllDataCheck.value = true) {
+  if(AllDataCheck.value == true) {
   dataBooking.value.bookingId = "";
   dataBooking.value.bookingName = '';
   dataBooking.value.bookingEmail = '';
@@ -182,7 +182,7 @@ setInterval(setTime, 1000);
           button-name="add"
           @click="$emit('addEvent', dataBooking , AllDataCheck ), reSet()"
         />
-     
+    
         <!-- <RoundButton
           bg-color="bg-rose-400"
           button-name="cancel"

@@ -84,16 +84,22 @@ public class EventService {
                 SimpleEventDTO.class, modelMapper);
         return getPage(pageable, listEventDTO);
     }
-     public Page<SimpleEventDTO> getEventDateByCatetory(Integer eventCategoryID, Pageable pageable) {
-        List<SimpleEventDTO> listEventDTO = listMapper.mapList(repository.findByEventCategoryID(eventCategoryID),
+    public Page<SimpleEventDTO> getEventDateByCatetory(Integer eventCategoryID, Instant date,Pageable pageable) {
+        List<SimpleEventDTO> listEventDTO = listMapper.mapList(repository.findByEventCategoryIDAndEventStartTimeEquals(eventCategoryID,date),
+                SimpleEventDTO.class, modelMapper);
+        return getPage(pageable, listEventDTO);
+    }
+    public Page<SimpleEventDTO> getEventPastDateByCategory(Integer eventCategoryID,Pageable pageable) {
+        List<SimpleEventDTO> listEventDTO = listMapper.mapList(repository.findByEventCategoryIDAndEventStartTimeLessThan(eventCategoryID,dateNow),
+                SimpleEventDTO.class, modelMapper);
+        return getPage(pageable, listEventDTO);
+    }
+    public Page<SimpleEventDTO> getEventFutureDateByCategory(Integer eventCategoryID,Pageable pageable) {
+        List<SimpleEventDTO> listEventDTO = listMapper.mapList(repository.findByEventCategoryIDAndEventStartTimeGreaterThan(eventCategoryID,dateNow),
                 SimpleEventDTO.class, modelMapper);
         return getPage(pageable, listEventDTO);
     }
 
-    // public List<SimpleEventDTO> getEventByCatetory(Integer eventCategoryID ) {
-    // return
-    // listMapper.mapList(repository.findByEventCategoryID(eventCategoryID),SimpleEventDTO.class,modelMapper);
-    // }
 
     public void delete(Integer eventID) {
         repository.findById(eventID).orElseThrow(() -> new RuntimeException(eventID + "Does not exit !!!"));

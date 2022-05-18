@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 import NotFound from "../views/NotFound.vue";
 import ShowListAll from "../views/ShowListAllPage.vue";
 import Home from "../views/Home.vue";
@@ -9,7 +9,7 @@ import ShowDetails from "../views/ShowDetails.vue"
 import BookingEventByCate from "../views/BookingEventByCategory.vue"
 
 //const history = createWebHistory();
-const history = createWebHistory('/kw3/');
+const history = createWebHashHistory('/kw3/');
 const routes = [
   {
     path: "/",

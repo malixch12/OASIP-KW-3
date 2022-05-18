@@ -44,6 +44,7 @@ const pic2 = ["../../public/backend.png"];
 <template>
   <div>
     <div class="bg-white shadow-xl rounded-b-lg ml-24 mr-24 p-12">
+      
       <div class="text-3xl font-bold text-center mb-6">
         {{ name }}
       </div>
@@ -52,6 +53,7 @@ const pic2 = ["../../public/backend.png"];
           Check All Appointment
         </div></router-link
       >
+      
       
       <div class="grid grid-cols-3 gap-6 place-items-center mb-12">
         <div v-for="category in categorys" :key="category.eventCategoryID">

@@ -3,7 +3,9 @@ package sit.int204.classicmodelsservice2.controllers;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,14 +17,20 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 import sit.int204.classicmodelsservice2.dtos.SimpleEventDTO;
 import sit.int204.classicmodelsservice2.entities.Event;
 import sit.int204.classicmodelsservice2.repositories.EventRepository;
 import sit.int204.classicmodelsservice2.services.EventService;
 import org.springframework.data.domain.PageRequest;
-
+import org.springframework.validation.*;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.validation.Valid;
 
 @RestController
 
@@ -63,13 +71,13 @@ public class EventController {
 
     @GetMapping("/date")
     public Page<SimpleEventDTO> getEventDate(
-         @RequestParam Instant date,
+            @RequestParam Instant date,
             @RequestParam(defaultValue = "eventStartTime") String sortBy,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "8") Integer pageSize) {
-        return eventService.getSimpleEventDate(date,PageRequest.of(page, pageSize, Sort.by(sortBy)));
+        return eventService.getSimpleEventDate(date, PageRequest.of(page, pageSize, Sort.by(sortBy)));
     }
-    
+
     @GetMapping("/past")
     public Page<SimpleEventDTO> getEventPastDate(
             @RequestParam(defaultValue = "eventStartTime") String sortBy,
@@ -83,7 +91,7 @@ public class EventController {
             @RequestParam(defaultValue = "eventStartTime") String sortBy,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "8") Integer pageSize) {
-        return eventService.getSimpleEventFutureDate(PageRequest.of(page, pageSize,  Sort.by(sortBy)));
+        return eventService.getSimpleEventFutureDate(PageRequest.of(page, pageSize, Sort.by(sortBy)));
     }
 
     // get event by category
@@ -93,47 +101,38 @@ public class EventController {
             @RequestParam(defaultValue = "eventStartTime") String sortBy,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "8") Integer pageSize) {
-        return eventService.getEventByCatetory(eventCategoryID,PageRequest.of(page, pageSize,  Sort.by(sortBy)));
+        return eventService.getEventByCatetory(eventCategoryID, PageRequest.of(page, pageSize, Sort.by(sortBy)));
     }
 
     @GetMapping("/category/date/{eventCategoryID}")
-    public Page<Event> getEventDateByCategory(
+    public Page<SimpleEventDTO> getEventDateByCategory(
             @PathVariable Integer eventCategoryID,
             @RequestParam Instant date,
             @RequestParam(defaultValue = "eventStartTime") String sortBy,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "8") Integer pageSize) {
-        Sort sort = Sort.by(sortBy);
-        return repository.findByEventCategoryIDAndEventStartTimeEquals(eventCategoryID, date,
-                PageRequest.of(page, pageSize, sort));
+        return eventService.getEventDateByCatetory(eventCategoryID, date,
+                PageRequest.of(page, pageSize, Sort.by(sortBy)));
     }
 
     @GetMapping("/category/past/{eventCategoryID}")
-    public Page<Event> getEventPastDateByCategory(
+    public Page<SimpleEventDTO> getEventPastDateByCategory(
             @PathVariable Integer eventCategoryID,
             @RequestParam(defaultValue = "eventStartTime") String sortBy,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "8") Integer pageSize) {
-        Sort sort = Sort.by(sortBy);
-        long now = System.currentTimeMillis();
-        now = now / 1000;
-        Instant dateNow = Instant.now().ofEpochSecond(now);
-        return repository.findByEventCategoryIDAndEventStartTimeLessThan(eventCategoryID, dateNow,
-                PageRequest.of(page, pageSize, sort));
+        return eventService.getEventPastDateByCategory(eventCategoryID,
+                PageRequest.of(page, pageSize, Sort.by(sortBy)));
     }
 
     @GetMapping("/category/future/{eventCategoryID}")
-    public Page<Event> getEventFutureDateByCategory(
+    public Page<SimpleEventDTO> getEventFutureDateByCategory(
             @PathVariable Integer eventCategoryID,
             @RequestParam(defaultValue = "eventStartTime") String sortBy,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "8") Integer pageSize) {
-        Sort sort = Sort.by(sortBy);
-        long now = System.currentTimeMillis();
-        now = now / 1000;
-        Instant dateNow = Instant.now().ofEpochSecond(now);
-        return repository.findByEventCategoryIDAndEventStartTimeGreaterThan(eventCategoryID, dateNow,
-                PageRequest.of(page, pageSize, sort));
+        return eventService.getEventFutureDateByCategory(eventCategoryID,
+                PageRequest.of(page, pageSize, Sort.by(sortBy)));
     }
 
     @DeleteMapping("/{eventID}")
@@ -141,10 +140,32 @@ public class EventController {
         eventService.delete(eventID);
     }
 
+    // @PostMapping("")
+    // // @ResponseStatus(HttpStatus.CREATED)
+    // public ResponseEntity<Event> create(@Valid @RequestBody SimpleEventDTO
+    // newEvent) {
+    // Event event = eventService.save(newEvent);
+    // return new ResponseEntity<Event>(event, HttpStatus.CREATED);
+    // }
+
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public Event create(@RequestBody SimpleEventDTO newEvent) {
-        return eventService.save(newEvent);
+        Event event = eventService.save(newEvent);
+        return event;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
     }
 
     @PutMapping("/{BookingId}")

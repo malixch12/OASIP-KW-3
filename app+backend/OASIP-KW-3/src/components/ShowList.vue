@@ -65,13 +65,9 @@ var now_date =
   "/" +
   (today.value.getFullYear() + 543);
 
-const FilterDate = ref();
-const FilterDate2 = ref();
-const FilterDate3 = ref();
 
-function test () {
+const PageIndexCurrent = ref(1)
 
-}
 </script>
 
 <template>
@@ -123,25 +119,29 @@ function test () {
           <div
             class="bg-rose-200 shadow-xl ring-1 ring-red-900/5 sm:rounded-lg mt-4 p-6 space-y-3 hover:bg-orange-300 "
           >
+          <p class="font-semibold ">{{ event.eventCategory }}</p>
             <p>Name : {{ event.bookingName }}</p>
             <p>
               Date :
               {{ new Date(event.eventStartTime).toLocaleDateString("th-TH") }}
             </p>
-            <p>
+            <p class="pb-6">
               Time :
               {{ new Date(event.eventStartTime).toLocaleTimeString("th-TH") }}
             </p>
-            <p class="font-semibold pb-3">{{ event.eventCategory }}</p>
+            
             <RoundButton
               bg-color="bg-red-700 text-white"
-              button-name="Show detail >>"
+              button-name="Show detail ->"
               @click="showDet(event.bookingId)"
             />
+            
           </div>
 
           <br />
+          
         </div>
+         
       </div>
       <div v-if="check == false" class="text-slate-400 text-center">
         Empty schedule ! ! !
@@ -149,8 +149,8 @@ function test () {
     </div>
 
     <!-- page -->
-    <div class="bg-rose-300 shadow-xl rounded-b-lg ml-24 mr-24 text-center">
-      <span
+     <div class="bg-white shadow-xl rounded-b-lg p-8 ml-24 mr-24 text-center">
+      <!-- <span
         v-for="(e, index) in numPage"
         :key="index"
         class="p-5 text-white hover:text-orange-600"
@@ -158,9 +158,19 @@ function test () {
         <button @click="$emit('paging', index, filter)">
           {{ index + 1 }}
         </button>
-      </span>
+      </span> --> 
+       <nav aria-label="Page navigation example">
+    <ul class="inline-flex -space-x-px" v-for="(e, index) in numPage"
+        :key="index">   
+           
+      <button @click="$emit('paging', index, filter)" class="py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 focus:bg-gray-200 focus:text-red-600 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{index+1}}</button>
+   
+    </ul>
+</nav>
+</div>
+
     </div>
-  </div>
+  
 </template>
 
 <style>

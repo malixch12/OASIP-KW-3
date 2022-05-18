@@ -115,12 +115,13 @@ public class EventService {
         repository.deleteById(eventID);
     }
 
-    public SimpleEventDTO save(Event newEvent) {
+    public SimpleEventDTO add(Event newEvent) {
+        Event event = new Event();
         Eventcategory eventcategory = cateRepository.findById(newEvent.getEventCategoryID())
                 .orElseThrow(() -> new RuntimeException(newEvent.getEventCategoryID() + "Does not exit !!!"));
         newEvent.setEventDuration(eventcategory.getEventDuration());
         newEvent.setEventCategory(eventcategory.getEventCategoryName());
-        Event event = modelMapper.map(newEvent, Event.class);
+        event = modelMapper.map(newEvent, Event.class);
         repository.saveAndFlush(newEvent);
         return modelMapper.map(event, SimpleEventDTO.class);
     }

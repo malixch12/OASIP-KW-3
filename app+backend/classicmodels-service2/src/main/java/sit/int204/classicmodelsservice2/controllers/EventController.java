@@ -130,7 +130,7 @@ public class EventController {
     @PostMapping("")
     @ResponseStatus(HttpStatus.OK)
     public SimpleEventDTO create(@Valid @RequestBody Event newEvent) {
-        return eventService.save(newEvent);
+        return eventService.add(newEvent);
     }
 
     @PutMapping("/{BookingId}")

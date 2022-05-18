@@ -2,6 +2,7 @@ package sit.int204.classicmodelsservice2.entities;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Future;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -40,6 +41,8 @@ public class Event {
     @Length(min = 1, max = 100, message="size must be between 1 and 100")
     @Column(name = "EventCategory", nullable = false, length = 100)
     private String eventCategory;
+
+    @Future(message = "Start Time must be future")
     @NotNull(message = "Time is not null")
     @Column(name = "EventStartTime", nullable = false)
     private Instant eventStartTime;

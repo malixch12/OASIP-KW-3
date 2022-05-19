@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.data.domain.Pageable;
-
+import org.springframework.data.domain.Sort;
 import sit.int204.classicmodelsservice2.dtos.SimpleEventDTO;
 import sit.int204.classicmodelsservice2.dtos.SimpleEventcategoryDTO;
 import sit.int204.classicmodelsservice2.entities.Event;
@@ -54,7 +54,7 @@ public class EventService {
     }
 
     public Page<SimpleEventDTO> getSimpleEventAll(Pageable pageable) {
-        List<SimpleEventDTO> listEventDTO = listMapper.mapList(repository.findAll(), SimpleEventDTO.class, modelMapper);
+        List<SimpleEventDTO> listEventDTO = listMapper.mapList(repository.findAll(Sort.by("eventStartTime").descending()), SimpleEventDTO.class, modelMapper);
         return getPage(pageable, listEventDTO);
     }
 
@@ -65,19 +65,19 @@ public class EventService {
     }
 
     public Page<SimpleEventDTO> getSimpleEventDate(Instant date, Pageable pageable) {
-        List<SimpleEventDTO> listEventDTO = listMapper.mapList(repository.findByEventStartTimeEquals(date),
+        List<SimpleEventDTO> listEventDTO = listMapper.mapList(repository.findByEventStartTimeEquals(date,Sort.by("eventStartTime").ascending()),
                 SimpleEventDTO.class, modelMapper);
         return getPage(pageable, listEventDTO);
     }
 
     public Page<SimpleEventDTO> getSimpleEventPastDate(Pageable pageable) {
-        List<SimpleEventDTO> listEventDTO = listMapper.mapList(repository.findByEventStartTimeLessThan(dateNow),
+        List<SimpleEventDTO> listEventDTO = listMapper.mapList(repository.findByEventStartTimeLessThan(dateNow,Sort.by("eventStartTime").descending()),
                 SimpleEventDTO.class, modelMapper);
         return getPage(pageable, listEventDTO);
     }
 
     public Page<SimpleEventDTO> getSimpleEventFutureDate(Pageable pageable) {
-        List<SimpleEventDTO> listEventDTO = listMapper.mapList(repository.findByEventStartTimeGreaterThan(dateNow),
+        List<SimpleEventDTO> listEventDTO = listMapper.mapList(repository.findByEventStartTimeGreaterThan(dateNow,Sort.by("eventStartTime").ascending()),
                 SimpleEventDTO.class, modelMapper);
         return getPage(pageable, listEventDTO);
     }

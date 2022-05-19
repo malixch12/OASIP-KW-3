@@ -46,11 +46,9 @@ public class EventController {
     // get all
     @GetMapping("")
     public Page<SimpleEventDTO> getEventByAll(
-            @RequestParam(defaultValue = "eventStartTime") String sortBy,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "8") Integer pageSize) {
-        Sort sort = Sort.by(sortBy);
-        return eventService.getSimpleEventAll(PageRequest.of(page, pageSize, sort));
+        return eventService.getSimpleEventAll(PageRequest.of(page, pageSize));
     }
 
     @GetMapping("/{id}")
@@ -61,27 +59,23 @@ public class EventController {
     @GetMapping("/date")
     public Page<SimpleEventDTO> getEventDate(
             @RequestParam Instant date,
-            @RequestParam(defaultValue = "eventStartTime") String sortBy,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "8") Integer pageSize) {
-        Sort sort = Sort.by(sortBy);
-        return eventService.getSimpleEventDate(date,PageRequest.of(page, pageSize, sort));
+        return eventService.getSimpleEventDate(date,PageRequest.of(page, pageSize));
     }
 
     @GetMapping("/past")
     public Page<SimpleEventDTO> getEventPastDate(
-            @RequestParam(defaultValue = "eventStartTime") String sortBy,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "8") Integer pageSize) {
-        return eventService.getSimpleEventPastDate(PageRequest.of(page, pageSize, Sort.by(sortBy)));
+        return eventService.getSimpleEventPastDate(PageRequest.of(page, pageSize));
     }
 
     @GetMapping("/future")
     public Page<SimpleEventDTO> getEventFutureDate(
-            @RequestParam(defaultValue = "eventStartTime") String sortBy,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "8") Integer pageSize) {
-        return eventService.getSimpleEventFutureDate(PageRequest.of(page, pageSize,  Sort.by(sortBy)));
+        return eventService.getSimpleEventFutureDate(PageRequest.of(page, pageSize));
     }
 
     // get event by category

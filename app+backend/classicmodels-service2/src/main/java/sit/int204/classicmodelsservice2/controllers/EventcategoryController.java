@@ -47,7 +47,7 @@ public class EventcategoryController {
     }
 
     @PutMapping("/{id}")
-    public SimpleEventcategoryDTO edit(@Valid @RequestBody SimpleEventcategoryDTO updateCategory, @PathVariable Integer id) {
+    public SimpleEventcategoryDTO edit(@RequestBody SimpleEventcategoryDTO updateCategory, @PathVariable Integer id) {
        return eventcategoryService.update(updateCategory,id);
     }
 

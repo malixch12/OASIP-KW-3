@@ -26,7 +26,7 @@ public class Eventcategory {
     @Column(name = "EventCategoryDescription", length = 500)
     private String eventCategoryDescription;
 
-    @Size(min = 1, max = 480, message = "size must be between 1 and 480")
+    // @Size(min = 1, max = 480, message = "size must be between 1 and 480")
     @Column(name = "EventDuration", nullable = false)
     private Integer eventDuration;
 }

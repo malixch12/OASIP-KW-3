@@ -46,10 +46,12 @@ const addList = (categoryId, eventCategoryName, eventDuration) => {
 const isActivePopup = ref(false);
 const eventDuration = ref(0);
 const eventCategoryDescription = ref()
-function test(Duration,Description) {
+const eventCategoryID = ref();
+function test(Duration,Description,id) {
     console.log(eventDuration)
    isActivePopup.value = true
    eventDuration.value = Duration
+   eventCategoryID.value = id
    if(Description == null) {
      eventCategoryDescription.value= "ไม่มีคำอธิบาย"
      console.log(Description)
@@ -57,21 +59,38 @@ function test(Duration,Description) {
    eventCategoryDescription.value = Description
 }
 
+const goEdit = (categoryId) => {
+ 
+    router.push({
+      name: "EditCatePage",
+      query: { categoryId: categoryId },
+    });
+
+};
+
 </script>
 
 <template>
   <div>
     <!-- popup -->
       <PopupPage v-show="isActivePopup" :dim-background="true">
-        
+        <div class="flex justify-center " @click="goEdit(eventCategoryID)">
+          <span class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-gray-400 text-center">edit </span>
+  <svg width="1em" height="1em" viewBox="0 0 24 24"><path fill="#888888" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83l3.75 3.75l1.83-1.83z"></path></svg>
+</div>
+<br>
           <div class="mb-2">
             <span class="text-2xl font-semibold text-slate-600 tracking-wide pb-16 ">
             duration :
           </span>  {{eventDuration  }} นาที  
           </div>
-<div class="text-2xl font-semibold text-slate-600 tracking-wide ">
-Description :       </div> <div class="w-64" >{{ eventCategoryDescription}} </div>
+<div class="text-2xl font-semibold text-slate-600 tracking-wide  ">
+Description :       </div> <div class="w-64 text-lg mt-3" >{{ eventCategoryDescription}} </div>
 <br>
+      
+
+
+
           <div class="flex justify-center max-w-lg mx-auto">
             <RoundButton
               bg-color="bg-green-400 text-white"
@@ -109,7 +128,7 @@ Description :       </div> <div class="w-64" >{{ eventCategoryDescription}} </di
             " class="w-64" />
             <div class="text-center  ">{{ category.eventCategoryName }}
             </div>
-            <div @click="test(category.eventDuration , category.eventCategoryDescription)" class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-sky-600 text-center"> show detail </div>
+            <div @click="test(category.eventDuration , category.eventCategoryDescription , category.eventCategoryID)" class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-sky-600 text-center"> show detail </div>
             <br>
        
 
@@ -118,7 +137,10 @@ Description :       </div> <div class="w-64" >{{ eventCategoryDescription}} </di
           </div>
         </div>
       </div>
-    </div>
+
+
+
+  </div>
   </div>
 </template>
 

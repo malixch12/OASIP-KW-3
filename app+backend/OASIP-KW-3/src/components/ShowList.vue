@@ -120,9 +120,9 @@ const PageIndexCurrent = ref(1)
       <!-- event list -->
       <div v-if="check" :class="[style, colNum]">
         <div v-for="(event, index) in props.eventLists" :key="index">
-        <div className="rounded-xl  mx-auto bg-gradient-to-r p-[3px] from-[#F9B1C0] via-[#8CC0F4] to-[#A9F7B8]">
+        <div className="rounded-xl  mx-auto bg-gradient-to-r p-[3px] from-[#F9B1C0] via-[#A9F7B8] to-[#8CC0F4]">
           <div
-            className="flex flex-col justify-between h-full bg-gray-200 text-black rounded-lg p-4"
+            className="flex flex-col justify-between h-full bg-gray-200 text-black rounded-lg p-4 hover:bg-rose-100"
           >
           <p class="font-semibold ">{{ event.eventCategory }}</p>
             <p>Name : {{ event.bookingName }}</p>

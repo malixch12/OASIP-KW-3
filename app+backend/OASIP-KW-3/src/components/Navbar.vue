@@ -11,7 +11,7 @@ function push() {
   <nav class="bg-white border-gray-200 rounded-t-lg dark:bg-gray-800 ml-24 mr-24">
     <div class="container flex flex-wrap justify-between items-center pr-20 pl-12 py-5">
       <router-link :to="{ name: 'Home' }" class="flex items-center">
-        <div class="w-16 "><img src="../assets/logo.png" /></div>
+        <div class="w-20 "><img src="../assets/logotest.gif" /></div>
       </router-link>
 
       <div class="w-full md:block md:w-auto">

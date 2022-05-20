@@ -117,6 +117,7 @@ public class EventService {
 
     public SimpleEventDTO add(Event newEvent) {
         Event event = new Event();
+        
         Eventcategory eventcategory = cateRepository.findById(newEvent.getEventCategoryID())
                 .orElseThrow(() -> new RuntimeException(newEvent.getEventCategoryID() + "Does not exit !!!"));
         newEvent.setEventDuration(eventcategory.getEventDuration());

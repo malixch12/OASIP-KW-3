@@ -10,6 +10,8 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Length;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +20,6 @@ import java.time.Instant;
 
 @Getter
 @Setter
-
 @Entity
 @Table(name = "event")
 public class Event {

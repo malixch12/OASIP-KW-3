@@ -76,7 +76,6 @@ const updateNote = async () => {
           "content-type": "application/json",
         },
         body: JSON.stringify({
-
           eventNotes: eventLists.value.eventNotes,
           eventStartTime: new Date(
             eventLists.value.eventStartTime

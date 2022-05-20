@@ -15,9 +15,9 @@ import ButtonLink from "../components/ButtonLink.vue";
       <div class="col-span-1 grid grid-cols-1 place-items-center pt-5"><img src="../assets/logoHome.gif" class="w-2/5" /></div>
       <br />
 
-      <div class="text-white font-bold col-span-1 grid grid-cols-11 gap-4 place-items-center mt-0 ">
-        <ButtonLink name="Book a Clinic" link="BookingEventByCate" class="col-start-5 mr-8 " />
-        <ButtonLink name="Check Appointments" link="ListAllByCate" class="col-start-7 ml-8"/>
+      <div class="text-white font-bold grid grid-cols-2">
+        <ButtonLink name="Book a Clinic" link="BookingEventByCate" class="justify-self-end"/>
+        <ButtonLink name="Check Appointments" link="ListAllByCate" class="justify-self-start"/>
         
       </div>
     </div>

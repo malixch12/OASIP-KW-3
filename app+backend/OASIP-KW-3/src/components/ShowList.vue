@@ -83,23 +83,24 @@ const PageIndexCurrent = ref(1)
             class="pr-2 "
             bg-color="bg-slate-100 hover:bg-slate-600 hover:text-slate-100 active:bg-slate-700 focus:outline-none focus:ring focus:ring-slate-200 focus:text-slate-100 focus:bg-slate-600 text-slate-600"
             button-name="All"
-            @click="$emit('allFilter')" 
+            @click="$emit('allFilter') , filter = 3" 
           />
           <RoundButton
             class="pr-2"
             bg-color="bg-slate-100 hover:bg-slate-600 hover:text-slate-100 active:bg-slate-700 focus:outline-none focus:ring focus:ring-slate-200 focus:text-slate-100 focus:bg-slate-600 text-slate-600"
             button-name="Past"
             @click="
-              $emit('pastFilter')
+              $emit('pastFilter' , filter = 1)
             "
           />
           <RoundButton
             bg-color="bg-slate-100 hover:bg-slate-600 hover:text-slate-100 active:bg-slate-700 focus:outline-none focus:ring focus:ring-slate-200 focus:text-slate-100 focus:bg-slate-600 text-slate-600"
             button-name="Upcoming"
             @click="
-              $emit('futureFilter')
+              $emit('futureFilter', filter =2)
             "
           />
+         
           <span class="text-slate-400 px-3">|</span>
           <span> Select Date : </span>
           <span>
@@ -109,7 +110,7 @@ const PageIndexCurrent = ref(1)
               v-model="FilterDate"
             />
                 <RoundButton
-            bg-color="bg-red-400    ml-2 text-white"
+            bg-color="bg-red-400  ml-2 text-white hover:bg-red-600"
             button-name="search"
            @click="$emit('dateFilter',FilterDate)"
           />
@@ -122,7 +123,7 @@ const PageIndexCurrent = ref(1)
         <div v-for="(event, index) in props.eventLists" :key="index">
         <div className="rounded-xl  mx-auto bg-gradient-to-r p-[3px] from-[#F9B1C0] via-[#A9F7B8] to-[#8CC0F4]">
           <div
-            className="flex flex-col justify-between h-full bg-gray-200 text-black rounded-lg p-4 hover:bg-rose-100"
+            className="flex flex-col justify-between h-full bg-rose-100 text-black rounded-lg p-4 hover:bg-red-200"
           >
           <p class="font-semibold ">{{ event.eventCategory }}</p>
             <p>Name : {{ event.bookingName }}</p>
@@ -136,7 +137,7 @@ const PageIndexCurrent = ref(1)
             </p>
             
             <RoundButton
-              bg-color="bg-rose-400 text-white"
+              bg-color="bg-rose-400 text-white transition ease-in-out delay-75  hover:-translate-y-1 hover:scale-110  duration-150"
               button-name="Show detail ->"
               @click="showDet(event.bookingId)"
             />

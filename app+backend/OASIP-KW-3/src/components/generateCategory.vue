@@ -47,24 +47,26 @@ const isActivePopup = ref(false);
 const eventDuration = ref(0);
 const eventCategoryDescription = ref()
 const eventCategoryID = ref();
-function test(Duration,Description,id) {
-    console.log(eventDuration)
-   isActivePopup.value = true
-   eventDuration.value = Duration
-   eventCategoryID.value = id
-   if(Description == null) {
-     eventCategoryDescription.value= "ไม่มีคำอธิบาย"
-     console.log(Description)
-   }else
-   eventCategoryDescription.value = Description
+const eventCategoryName = ref();
+function test(Duration, Description, id, name) {
+  console.log(eventDuration)
+  isActivePopup.value = true
+  eventDuration.value = Duration
+  eventCategoryID.value = id
+  eventCategoryName.value = name
+  if (Description == null) {
+    eventCategoryDescription.value = "ไม่มีคำอธิบาย"
+    console.log(Description)
+  } else
+    eventCategoryDescription.value = Description
 }
 
 const goEdit = (categoryId) => {
- 
-    router.push({
-      name: "EditCatePage",
-      query: { categoryId: categoryId },
-    });
+
+  router.push({
+    name: "EditCatePage",
+    query: { categoryId: categoryId },
+  });
 
 };
 
@@ -73,44 +75,43 @@ const goEdit = (categoryId) => {
 <template>
   <div>
     <!-- popup -->
-      <PopupPage v-show="isActivePopup" :dim-background="true">
-        <div class="flex justify-center " @click="goEdit(eventCategoryID)">
-          <span class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-gray-400 text-center">edit </span>
-  <svg width="1em" height="1em" viewBox="0 0 24 24"><path fill="#888888" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83l3.75 3.75l1.83-1.83z"></path></svg>
-</div>
-<br>
-          <div class="mb-2">
-            <span class="text-2xl font-semibold text-slate-600 tracking-wide pb-16 ">
-            duration :
-          </span>  {{eventDuration  }} นาที  
-          </div>
-<div class="text-2xl font-semibold text-slate-600 tracking-wide  ">
-Description :       </div> <div class="w-64 text-lg mt-3" >{{ eventCategoryDescription}} </div>
-<br>
-      
+    <PopupPage v-show="isActivePopup" :dim-background="true">
+      <div class="flex justify-end p-5" @click="() => isActivePopup = false">
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img"
+          class="iconify iconify--iconoir" width="32" height="32" preserveAspectRatio="xMidYMid meet"
+          viewBox="0 0 24 24">
+          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+            d="M6.758 17.243L12.001 12m5.243-5.243L12 12m0 0L6.758 6.757M12.001 12l5.243 5.243"></path>
+        </svg>
 
+      </div>
 
+      <div class="mb-2 px-10 pb-10">
+        {{ eventCategoryName }} <br>
+        <span class="text-2xl font-semibold text-slate-600 tracking-wide pb-16 ">
+          Duration :
+        </span> {{ eventDuration }} นาที
 
-          <div class="flex justify-center max-w-lg mx-auto">
-            <RoundButton
-              bg-color="bg-green-400 text-white"
-              button-name="Ok"
-              @click="
-                () => {
-                  isActivePopup = false;
-                }
-              "
-            />
-          </div>
-      </PopupPage>
-   
+        <div class="text-2xl font-semibold text-slate-600 tracking-wide py-5 ">
+          Description : </div>
+        <div class="w-64 text-lg">{{ eventCategoryDescription }} </div>
+        <div class="flex justify-center max-w-lg mx-auto mt-5">
+          <RoundButton bg-color="bg-green-400 text-white" button-name="edit" @click="
+            goEdit(eventCategoryID)
+          " />
+        </div>
+      </div>
+
+    </PopupPage>
+
     <div class="bg-white shadow-xl rounded-b-lg ml-24 mr-24 p-12">
-      <div class="text-3xl font-bold text-center mb-6">
+      <div class="text-3xl font-bold text-center mb-10">
         {{ name }}
       </div>
+
       <router-link :to="{ name: 'ListAllEvent', query: { categoryId: 0 } }" class="grid justify-items-center">
         <div v-if="type == `ShowList`"
-          class=" shadow-xl text-center font-semibold mb-6 bg-slate-100 text-slate-600 hover:bg-slate-600 hover:text-white rounded-full w-72 p-1 ">
+          class="transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 duration-100 shadow-xl text-center font-semibold mb-10 bg-slate-100 text-slate-600 hover:bg-slate-600 hover:text-white rounded-full w-72 p-1 ">
           Check All Appointment
         </div>
       </router-link>
@@ -118,29 +119,28 @@ Description :       </div> <div class="w-64 text-lg mt-3" >{{ eventCategoryDescr
 
       <div class="grid grid-cols-3 gap-6 place-items-center mb-12">
         <div v-for="category in categorys" :key="category.eventCategoryID">
-          <div>
+          <div class="grid justify-items-center">
             <img :src="`../../public/` + category.eventCategoryID + `.png`" @click="
               addList(
                 category.eventCategoryID,
                 category.eventCategoryName,
                 category.eventDuration
               )
-            " class="w-64" />
-            <div class="text-center  ">{{ category.eventCategoryName }}
-            </div>
-            <div @click="test(category.eventDuration , category.eventCategoryDescription , category.eventCategoryID)" class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-sky-600 text-center"> show detail </div>
+            " class="w-64 transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 duration-100" />
+            <div class="text-center py-3">{{ category.eventCategoryName }}</div>
+            <button
+              @click="test(category.eventDuration, category.eventCategoryDescription, category.eventCategoryID, category.eventCategoryName)"
+              class="transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110  duration-150 rounded-lg text-sm leading-6  font-semibold select-none text-sky-600 ">
+              show detail </button>
             <br>
-       
 
-            <!-- <div> <div @click="addList(category.eventCategoryID,category.eventCategoryName,category.eventDuration)"
- class="text-center mt-4">{{ category.eventCategoryName }}</div> -->
           </div>
         </div>
       </div>
 
 
 
-  </div>
+    </div>
   </div>
 </template>
 

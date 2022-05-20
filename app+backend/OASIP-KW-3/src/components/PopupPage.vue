@@ -34,8 +34,10 @@ const props = defineProps({
   transform: translate(-50%, -60%);
   border-radius: 8px;
   background-color: white;
-  padding: 70px;
-  padding-bottom: 60px;
+  /* padding-top: 20px;
+  padding-left: 70px;
+  padding-right: 70px;
+  padding-bottom: 60px; */
   margin: auto auto;
 }
 </style>

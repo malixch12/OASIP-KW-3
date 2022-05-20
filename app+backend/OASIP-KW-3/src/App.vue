@@ -19,6 +19,7 @@ import { ref, onBeforeMount } from "vue";
       bg-gray-50
       py-6
       sm:py-12
+      font-rubik
     "
   >
     
@@ -29,7 +30,8 @@ import { ref, onBeforeMount } from "vue";
 </template>
 
 <style>
-@import url("https://fonts.googleapis.com/css?family=Rubik");
+/* @import url("https://fonts.googleapis.com/css?family=Rubik"); */
+@import url('https://fonts.googleapis.com/css2?family=Itim&display=swap');
 
 html,
 body {

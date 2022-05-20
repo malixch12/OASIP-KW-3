@@ -32,7 +32,7 @@ const getLinkAllNoPage = async (FilterDate) => {
   return event.date == FilterDate
 })
   eventLists.value.content = dateArrayFilter
-      numPage.value = Math.ceil(eventLists.value.content.length / 8);
+      numPage.value = 0
   }
 };
 

@@ -118,6 +118,11 @@ public class EventService {
     public SimpleEventDTO add(Event newEvent) {
         Event event = new Event();
         
+        Instant newEventStartTime = newEvent.getEventStartTime();
+        Instant newEventEndTime = newEvent.getEventStartTime().plusSeconds(newEvent.getEventDuration()*60);
+        List<SimpleEventDTO> listAll = getEventAll();
+
+
         Eventcategory eventcategory = cateRepository.findById(newEvent.getEventCategoryID())
                 .orElseThrow(() -> new RuntimeException(newEvent.getEventCategoryID() + "Does not exit !!!"));
         newEvent.setEventDuration(eventcategory.getEventDuration());

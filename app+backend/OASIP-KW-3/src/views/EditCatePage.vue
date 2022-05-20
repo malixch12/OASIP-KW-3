@@ -12,16 +12,16 @@ import PopupPage from "../components/PopupPage.vue";
 
 const router = useRouter();
 const myRouter = useRoute();
-const eventLists = ref([  ])
+const eventLists = ref([])
 const getLinkAll = async () => {
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/eventcategorys/${myRouter.query.categoryId}`
   );
   if (res.status === 200) {
     eventLists.value = await res.json();
-     console.log("corret")
-  }else
-  console.log("cant fetch")
+    console.log("corret")
+  } else
+    console.log("cant fetch")
 };
 
 onBeforeMount(async () => {
@@ -35,10 +35,9 @@ const goBack = () => router.go(-1);
 
 const updateNote = async () => {
   //eventLists.value.eventStartTime = await new Date(eventLists.value.eventStartTime).toISOString();
-  if (1==1) {
+  if (1 == 1) {
     const res = await fetch(
-      `${import.meta.env.VITE_APP_TITLE}/api/eventcategorys/${
-        myRouter.query.categoryId
+      `${import.meta.env.VITE_APP_TITLE}/api/eventcategorys/${myRouter.query.categoryId
       }`,
       {
         method: "PUT",
@@ -47,10 +46,10 @@ const updateNote = async () => {
         },
         body: JSON.stringify({
 
-         eventCategoryName: eventLists.value.eventCategoryName,
-       eventCategoryDescription: eventLists.value.eventCategoryDescription, 
-         eventCategoryID:  myRouter.query.categoryId,
-        eventDuration: eventLists.value.eventDuration
+          eventCategoryName: eventLists.value.eventCategoryName,
+          eventCategoryDescription: eventLists.value.eventCategoryDescription,
+          eventCategoryID: myRouter.query.categoryId,
+          eventDuration: eventLists.value.eventDuration
         }),
       }
     );
@@ -68,7 +67,7 @@ const updateNote = async () => {
 
 
 onBeforeUpdate(() => {
-  
+
 });
 
 const isActivePopup = ref(false);
@@ -77,67 +76,51 @@ const isActivePopup = ref(false);
 <template>
 
   <div class="flex justify-center">
-    <PopupPage v-show="isActivePopup" :dim-background="true" class="">
-          <div class=" grid grid-cols-1">
-          <p class="text-3xl font-semibold text-slate-600 tracking-wide pb-8">
-            edit succeeded
-          </p>
-          <div class=" max-w-lg mx-auto  ">
-            <RoundButton
-              bg-color="bg-emerald-400 text-white flex justify-center"
-              button-name="ok"
-              @click="isActivePopup=false "
-            />
-        </div>
-        </div>
-      </PopupPage>
-    <div class="bg-white space-y-7 shadow-xl rounded-lg ml-48 mr-48 p-12 w-2/5">
-      <RoundButton
-        bg-color="bg-slate-400 text-white text-sm"
-        button-name="<< go back"
-        @click="goBack"
-      />
-
-      <div class="col-span-1 grid grid-cols-1 place-items-center">
-        <div class="space-y-5">
-          
-          <p>
-            <span class="font-bold text-slate-600 flex justify-center">category name : <input class="border-2 border-sky-200 rounded-lg w-72 ml-4" type="text" v-model="eventLists.eventCategoryName"> </span>
-         
-          </p>
-
-          <p>
-            <span class="text-slate-600 font-bold flex justify-center">Duration :  <input class="border-2 border-sky-200 rounded-lg w-9 ml-4" type="text" v-model="eventLists.eventDuration"> </span>
-          
-          </p>
-
-      
-            <span class="text-slate-600 font-bold flex justify-center"> eventCategoryDescription : </span>
-            
-            <textarea  
-              type="text"
-              class="border-2 border-sky-200 w-11/12 h-56 rounded-lg"
-              v-model="eventLists.eventCategoryDescription"
-            ></textarea>
-
-         
-          <div  class=" pt-3 flex justify-center ">
-            <RoundButton
-              bg-color="bg-emerald-400 text-white  place-items-center"
-              button-name="save"
-              @click="updateNote() , isActivePopup = true"
-            />
-         
-          </div>
-
-      
-         
+    <PopupPage v-show="isActivePopup" :dim-background="true">
+      <div class="grid grid-cols-1 p-12">
+        <p class="text-3xl font-semibold text-slate-600 tracking-wide pb-8">
+          edit succeeded
+        </p>
+        <div class=" max-w-lg mx-auto  ">
+          <RoundButton bg-color="bg-emerald-400 text-white flex justify-center" button-name="ok"
+            @click="isActivePopup = false" />
         </div>
       </div>
+    </PopupPage>
+    <div class="bg-white space-y-7 shadow-xl rounded-lg ml-48 mr-48 p-12 w-2/5">
+      <RoundButton bg-color="bg-slate-400 text-white text-sm" button-name="<< go back" @click="goBack" />
+
+
+      <div class="space-y-7">
+        <div class="py-5">
+          <span class="font-bold text-slate-600 ">Category Name :<input
+              class="border-2 border-sky-200 rounded-lg w-64 pl-2 ml-1" type="text"
+              v-model="eventLists.eventCategoryName">
+          </span>
+        </div>
+        <span class="text-slate-600 font-bold py-5">Duration : <input
+            class="border-2 border-sky-200 rounded-lg w-20 ml-1 pl-2" type="number" v-model="eventLists.eventDuration">
+          Minutes
+        </span>
+
+        <div class="text-slate-600 font-bold">Category's Description </div>
+
+        <textarea type="text" class="border-2 border-sky-200 p-2 w-11/12  h-56 rounded-lg"
+          v-model="eventLists.eventCategoryDescription"></textarea>
+        <div class=" pt-3 flex justify-center ">
+          <RoundButton bg-color="bg-emerald-400 text-white  place-items-center" button-name="save"
+            @click="updateNote(), isActivePopup = true" />
+
+        </div>
+
+
+
+      </div>
       <!-- popup -->
-     
+
     </div>
   </div>
 </template>
 
-<style></style>
+<style>
+</style>

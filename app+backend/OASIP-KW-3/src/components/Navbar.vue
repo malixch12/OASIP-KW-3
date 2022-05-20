@@ -1,10 +1,24 @@
 <script setup>
+import { ref , onBeforeMount } from "vue";
+
 function push() {
   router.push({
     name: "ShowList",
     query: { categoryId: categoryId },
   });
 }
+
+const countTime = ref('');
+function setTime() {
+var today = new Date()
+var now_date = (today.getDate() + '/' + (today.getMonth()+1) + '/' + (today.getFullYear()+543 ));
+var now_time = (today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()).toString("th-TH")
+  countTime.value = now_date + " - " + now_time
+}
+
+onBeforeMount(async () => {
+setInterval(setTime, 1);
+});
 </script>
  
 <template>
@@ -57,24 +71,20 @@ function push() {
                 text-gray-700
                 border-b border-gray-100
                 hover:bg-gray-50
-                md:hover:text-pink-500 md:p-0
+                md:hover:text-pink-500 md:p-0 
               "
               >Check Appointments
             </router-link>
           </li>
-          <!-- <li>
-            <router-link
-              :to="{ name: 'ListAllEvent', query: { categoryId: 0 } }"
+          <li>
+            <span
+              :to="{  }"
               class="
-                 block
-                text-gray-700
-                border-b border-gray-100
-                hover:bg-gray-50
-                md:hover:text-pink-500 md:p-0
+              text-gray-400 
               "
-              >Check all Appointments</router-link
+              >{{countTime}}</span
             >
-          </li> -->
+          </li>
         </ul>
       </div>
     </div>
@@ -84,6 +94,7 @@ function push() {
  
 <style scoped>
 .router-link-active {
-  color: skyblue;
+  color: rgb(93, 176, 209);
+  /* border-color: #0a0e0b; */
 }
 </style>

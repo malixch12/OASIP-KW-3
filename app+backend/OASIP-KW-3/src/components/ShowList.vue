@@ -15,7 +15,7 @@ const props = defineProps({
   },
   name: {
     type: String,
-    default : "All Appointments"
+    default: "All Appointments"
   },
   numPage: {
     type: Number,
@@ -76,78 +76,61 @@ const PageIndexCurrent = ref(1)
       <h1 class="text-4xl pb-5 text-center font-bold">{{ name }}</h1>
 
       <!-- filter  -->
-      <div  class="flex justify-center py-5">
+      <div class="flex justify-center py-5">
         <div>
           <span>Event Status : </span>
-          <RoundButton
-            class="pr-2 "
+          <RoundButton class="pr-2 "
             bg-color="bg-slate-100 hover:bg-slate-600 hover:text-slate-100 active:bg-slate-700 focus:outline-none focus:ring focus:ring-slate-200 focus:text-slate-100 focus:bg-slate-600 text-slate-600"
-            button-name="All"
-            @click="$emit('allFilter') , filter = 3" 
-          />
-          <RoundButton
-            class="pr-2"
+            button-name="All" @click="$emit('allFilter'), filter = 3" />
+          <RoundButton class="pr-2"
             bg-color="bg-slate-100 hover:bg-slate-600 hover:text-slate-100 active:bg-slate-700 focus:outline-none focus:ring focus:ring-slate-200 focus:text-slate-100 focus:bg-slate-600 text-slate-600"
-            button-name="Past"
-            @click="
-              $emit('pastFilter' , filter = 1)
-            "
-          />
+            button-name="Past" @click="
+              $emit('pastFilter', filter = 1)
+            " />
           <RoundButton
             bg-color="bg-slate-100 hover:bg-slate-600 hover:text-slate-100 active:bg-slate-700 focus:outline-none focus:ring focus:ring-slate-200 focus:text-slate-100 focus:bg-slate-600 text-slate-600"
-            button-name="Upcoming"
-            @click="
-              $emit('futureFilter', filter =2)
-            "
-          />
-         
+            button-name="Upcoming" @click="
+              $emit('futureFilter', filter = 2)
+            " />
+
           <span class="text-slate-400 px-3">|</span>
           <span> Select Date : </span>
           <span>
-            <input
-              type="date"
-              class="border-2 pl-2 border-slate-200 w-82 rounded-full"
-              v-model="FilterDate"
-            />
-                <RoundButton
-            bg-color="bg-red-400  ml-2 text-white hover:bg-red-600"
-            button-name="search"
-           @click="$emit('dateFilter',FilterDate)"
-          />
-         </span>
+            <input type="date" class="border-2 px-2 border-slate-200 w-82 rounded-full" v-model="FilterDate" />
+            <RoundButton bg-color="bg-red-400  ml-2 text-white hover:bg-red-600" button-name="search"
+              @click="$emit('dateFilter', FilterDate)" />
+          </span>
         </div>
       </div>
 
       <!-- event list -->
       <div v-if="check" :class="[style, colNum]">
         <div v-for="(event, index) in props.eventLists" :key="index">
-        <div className="rounded-xl  mx-auto bg-gradient-to-r p-[3px] from-[#F9B1C0] via-[#A9F7B8] to-[#8CC0F4]">
-          <div
-            className="flex flex-col justify-between h-full bg-rose-100 text-black rounded-lg p-4 hover:bg-red-200"
-          >
-          <p class="font-semibold ">{{ event.eventCategory }}</p>
-            <p>Name : {{ event.bookingName }}</p>
-            <p>
-              Date :
-              {{ new Date(event.eventStartTime).toLocaleDateString("th-TH") }}
-            </p>
-            <p class="pb-6">
-              Time :
-              {{ new Date(event.eventStartTime).toLocaleTimeString("th-TH") }}
-            </p>
-            
-            <RoundButton
-              bg-color="bg-rose-400 text-white transition ease-in-out delay-75  hover:-translate-y-1 hover:scale-110  duration-150"
-              button-name="Show detail ->"
-              @click="showDet(event.bookingId)"
-            />
-            
+          <div className="rounded-xl  mx-auto bg-gradient-to-r p-[3px] from-[#F9B1C0] via-[#A9F7B8] to-[#8CC0F4]">
+            <div
+              className="flex flex-col justify-between h-full bg-rose-100 text-black rounded-lg p-4 hover:bg-red-200">
+              <p class="font-semibold">{{ event.eventCategory }}</p>
+              
+              <p>Name : {{ event.bookingName }}</p>
+              <p>
+                Date :
+                {{ new Date(event.eventStartTime).toLocaleDateString("th-TH") }}
+              </p>
+              <p class="pb-6">
+                Time :
+                {{ new Date(event.eventStartTime).toLocaleTimeString("th-TH") }}
+              </p>
+
+              <RoundButton
+                bg-color="bg-rose-400 text-white transition ease-in-out delay-75  hover:-translate-y-1 hover:scale-110  duration-150"
+                button-name="Show detail ->" @click="showDet(event.bookingId)" />
+
+            </div>
           </div>
-      </div>
           <br />
-          
+
         </div>
-         
+
       </div>
       <div v-if="check == false" class="text-slate-400 text-center">
         Empty schedule ! ! !
@@ -155,7 +138,7 @@ const PageIndexCurrent = ref(1)
     </div>
 
     <!-- page -->
-     <div class="bg-white shadow-xl rounded-b-lg p-8 ml-24 mr-24 text-center">
+    <div class="bg-white shadow-xl rounded-b-lg p-8 ml-24 mr-24 text-center">
       <!-- <span
         v-for="(e, index) in numPage"
         :key="index"
@@ -164,19 +147,19 @@ const PageIndexCurrent = ref(1)
         <button @click="$emit('paging', index, filter)">
           {{ index + 1 }}
         </button>
-      </span> --> 
-       <nav aria-label="Page navigation example">
-    <ul class="inline-flex -space-x-px" v-for="(e, index) in numPage"
-        :key="index">   
-           
-      <button @click="$emit('paging', index, filter)" class="py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 focus:bg-gray-200 focus:text-red-600 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{index+1}}</button>
-   
-    </ul>
-</nav>
-</div>
+      </span> -->
+      <nav aria-label="Page navigation example">
+        <ul class="inline-flex -space-x-px" v-for="(e, index) in numPage" :key="index">
 
+          <button @click="$emit('paging', index, filter)"
+            class="py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 focus:bg-gray-200 focus:text-red-600 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{ index + 1 }}</button>
+
+        </ul>
+      </nav>
     </div>
-  
+
+  </div>
+
 </template>
 
 <style>

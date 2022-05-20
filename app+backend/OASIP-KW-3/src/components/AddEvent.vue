@@ -104,13 +104,15 @@ const reSet = () => {
 };
 
 const countTime = ref('');
+const currentTime = ref('')
 function setTime() {
 var today = new Date()
 var now_date = (today.getDate() + '/' + (today.getMonth()+1) + '/' + (today.getFullYear()+543 ));
 var now_time = (today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()).toString("th-TH")
   countTime.value = today
+  currentTime.value = now_date + " - " + now_time
 }
-setInterval(setTime, 1000);
+setInterval(setTime, 1);
 
 </script>
 
@@ -123,10 +125,11 @@ setInterval(setTime, 1000);
         @click="goBack"
       />
       
-      <h2 class="text-2xl font-semibold text-center">
+  
+      <h2 class="text-2xl font-semibold text-center ">
          Booking {{ categoryDetail.categoryName }}
       </h2>
-     
+    <span class="flex justify-center text-sm"> current time : {{currentTime}} </span> 
       <span class="after:content-['*'] after:ml-0.5 after:text-red-500"> Name
         </span> :
         <input

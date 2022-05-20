@@ -54,7 +54,8 @@ public class EventService {
     }
 
     public Page<SimpleEventDTO> getSimpleEventAll(Pageable pageable) {
-        List<SimpleEventDTO> listEventDTO = listMapper.mapList(repository.findAll(Sort.by("eventStartTime").descending()), SimpleEventDTO.class, modelMapper);
+        List<SimpleEventDTO> listEventDTO = listMapper
+                .mapList(repository.findAll(Sort.by("eventStartTime").descending()), SimpleEventDTO.class, modelMapper);
         return getPage(pageable, listEventDTO);
     }
 
@@ -65,19 +66,22 @@ public class EventService {
     }
 
     public Page<SimpleEventDTO> getSimpleEventDate(Instant date, Pageable pageable) {
-        List<SimpleEventDTO> listEventDTO = listMapper.mapList(repository.findByEventStartTimeEquals(date,Sort.by("eventStartTime").ascending()),
+        List<SimpleEventDTO> listEventDTO = listMapper.mapList(
+                repository.findByEventStartTimeEquals(date, Sort.by("eventStartTime").ascending()),
                 SimpleEventDTO.class, modelMapper);
         return getPage(pageable, listEventDTO);
     }
 
     public Page<SimpleEventDTO> getSimpleEventPastDate(Pageable pageable) {
-        List<SimpleEventDTO> listEventDTO = listMapper.mapList(repository.findByEventStartTimeLessThan(dateNow,Sort.by("eventStartTime").descending()),
+        List<SimpleEventDTO> listEventDTO = listMapper.mapList(
+                repository.findByEventStartTimeLessThan(dateNow, Sort.by("eventStartTime").descending()),
                 SimpleEventDTO.class, modelMapper);
         return getPage(pageable, listEventDTO);
     }
 
     public Page<SimpleEventDTO> getSimpleEventFutureDate(Pageable pageable) {
-        List<SimpleEventDTO> listEventDTO = listMapper.mapList(repository.findByEventStartTimeGreaterThan(dateNow,Sort.by("eventStartTime").ascending()),
+        List<SimpleEventDTO> listEventDTO = listMapper.mapList(
+                repository.findByEventStartTimeGreaterThan(dateNow, Sort.by("eventStartTime").ascending()),
                 SimpleEventDTO.class, modelMapper);
         return getPage(pageable, listEventDTO);
     }
@@ -117,18 +121,28 @@ public class EventService {
 
     public SimpleEventDTO add(Event newEvent) {
         Event event = new Event();
-        
-        Instant newEventStartTime = newEvent.getEventStartTime();
-        Instant newEventEndTime = newEvent.getEventStartTime().plusSeconds(newEvent.getEventDuration()*60);
-        List<SimpleEventDTO> listAll = getEventAll();
-
-
         Eventcategory eventcategory = cateRepository.findById(newEvent.getEventCategoryID())
-                .orElseThrow(() -> new RuntimeException(newEvent.getEventCategoryID() + "Does not exit !!!"));
-        newEvent.setEventDuration(eventcategory.getEventDuration());
-        newEvent.setEventCategory(eventcategory.getEventCategoryName());
-        event = modelMapper.map(newEvent, Event.class);
-        repository.saveAndFlush(newEvent);
+        .orElseThrow(() -> new RuntimeException(newEvent.getEventCategoryID() + "Does not exit !!!"));
+
+        Instant newEventStartTime = newEvent.getEventStartTime();
+        Instant newEventEndTime = newEvent.getEventStartTime().plusSeconds(eventcategory.getEventDuration() * 60);
+        List<SimpleEventDTO> listAll = getEventAll();
+        for (int i = 0; i < listAll.size(); i++) {
+            Instant startTime = listAll.get(i).getEventStartTime();
+            Instant endTime = listAll.get(i).getEventStartTime().plusSeconds(listAll.get(i).getEventDuration() * 60);
+
+            if (newEventStartTime.isBefore(startTime) && newEventEndTime.isAfter(startTime) ||
+                    newEventStartTime.isBefore(endTime) && newEventEndTime.isAfter(endTime) ||
+                    newEventStartTime.isBefore(startTime) && newEventEndTime.isAfter(endTime) ||
+                    newEventStartTime.isAfter(startTime) && newEventEndTime.isBefore(endTime)
+                    || newEventStartTime.equals(startTime)) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Time is overlapping");
+            }
+        }
+            newEvent.setEventDuration(eventcategory.getEventDuration());
+            newEvent.setEventCategory(eventcategory.getEventCategoryName());
+            event = modelMapper.map(newEvent, Event.class);
+            repository.saveAndFlush(newEvent);
         return modelMapper.map(event, SimpleEventDTO.class);
     }
 

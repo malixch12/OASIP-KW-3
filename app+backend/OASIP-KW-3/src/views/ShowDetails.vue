@@ -128,6 +128,48 @@ const isActivePopup = ref(false);
 
 <template>
   <div class="flex justify-center">
+     <!-- popup -->
+      <PopupPage v-show="isActivePopup" :dim-background="true">
+        <div v-if="DateTimeCheck == true">
+          <p class="text-3xl font-semibold text-slate-600 tracking-wide pb-16">
+            Do you want to update?
+          </p>
+          <div class="flex justify-between max-w-lg mx-auto">
+            <RoundButton
+              bg-color="bg-emerald-400 text-white"
+              button-name="Yes"
+              @click="updateNote"
+            />
+
+            <RoundButton
+              bg-color="bg-rose-400 text-white"
+              button-name="No"
+              @click="
+                () => {
+                  isActivePopup = false;
+                }
+              "
+            />
+          </div>
+        </div>
+
+        <div v-if="DateTimeCheck == false">
+          <p class="text-3xl font-semibold text-slate-600 tracking-wide pb-16">
+            Please check the date to make sure you haven't booked in the past.
+          </p>
+          <div class="flex justify-center max-w-lg mx-auto">
+            <RoundButton
+              bg-color="bg-rose-400 text-white"
+              button-name="Ok"
+              @click="
+                () => {
+                  isActivePopup = false;
+                }
+              "
+            />
+          </div>
+        </div>
+      </PopupPage>
     <div class="bg-white space-y-7 shadow-xl rounded-lg ml-48 mr-48 p-12 w-2/5">
       <RoundButton
         bg-color="bg-slate-400 text-white text-sm"
@@ -192,7 +234,7 @@ const isActivePopup = ref(false);
           <p class="text-slate-600 font-bold">Message to Advisor</p>
 
           <div v-show="hideEdit">
-            <p class="pl-5" v-if="eventLists.eventNotes.length > 0">
+            <p class="pl-5" v-if="eventLists.eventNotes == null">
               {{ eventLists.eventNotes }}
             </p>
             <p class="pl-5" v-else>-</p>
@@ -242,48 +284,7 @@ const isActivePopup = ref(false);
           </div>
         </div>
       </div>
-      <!-- popup -->
-      <PopupPage v-show="isActivePopup" :dim-background="true">
-        <div v-if="DateTimeCheck == true">
-          <p class="text-3xl font-semibold text-slate-600 tracking-wide pb-16">
-            Do you want to update?
-          </p>
-          <div class="flex justify-between max-w-lg mx-auto">
-            <RoundButton
-              bg-color="bg-emerald-400 text-white"
-              button-name="Yes"
-              @click="updateNote"
-            />
-
-            <RoundButton
-              bg-color="bg-rose-400 text-white"
-              button-name="No"
-              @click="
-                () => {
-                  isActivePopup = false;
-                }
-              "
-            />
-          </div>
-        </div>
-
-        <div v-if="DateTimeCheck == false">
-          <p class="text-3xl font-semibold text-slate-600 tracking-wide pb-16">
-            Please check the date to make sure you haven't booked in the past.
-          </p>
-          <div class="flex justify-center max-w-lg mx-auto">
-            <RoundButton
-              bg-color="bg-rose-400 text-white"
-              button-name="Ok"
-              @click="
-                () => {
-                  isActivePopup = false;
-                }
-              "
-            />
-          </div>
-        </div>
-      </PopupPage>
+     
     </div>
   </div>
 </template>

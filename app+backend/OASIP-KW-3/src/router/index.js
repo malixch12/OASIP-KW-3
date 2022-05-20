@@ -7,6 +7,7 @@ import ShowList from "../views/ShowListPage.vue";
 import Booking from "../views/BookingPage.vue";
 import ShowDetails from "../views/ShowDetails.vue"
 import BookingEventByCate from "../views/BookingEventByCategory.vue"
+import EditCatePage from "../views/EditCatePage.vue"
 
 //const history = createWebHistory();
 const history = createWebHashHistory('/kw3/');
@@ -50,6 +51,11 @@ const routes = [
     name: "BookingEventByCate",
     component: BookingEventByCate,
   },
+  {
+    path: "/EditCatePage",
+    name: "EditCatePage",
+    component: EditCatePage,
+  }
 ];
 
 const router = createRouter({ history, routes });

@@ -162,7 +162,7 @@ public class EventService {
             } else {
                 return repository.saveAndFlush(e);
             }
-        }).orElseThrow(() -> new AssertionError("Can not update !!!"));
+        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "test"));
 
         return modelMapper.map(event, SimpleEventDTO.class);
     }

@@ -11,7 +11,9 @@ import lombok.Setter;
 import sit.int204.classicmodelsservice2.entities.Event;
 
 import javax.swing.text.DateFormatter;
+import javax.validation.constraints.Future;
 
+import org.hibernate.validator.constraints.Length;
 import org.springframework.data.domain.Page;
 
 @Getter
@@ -21,8 +23,12 @@ public class SimpleEventDTO {
     private String BookingName;
     private String BookingEmail;
     private String EventCategory;
+
+    @Future(message = "Start Time must be future")
     private Instant EventStartTime;
     private Integer EventDuration;
+
+    @Length(min = 0, max = 500, message = "size must be between 0 and 500")
     private String EventNotes;
     private Integer EventCategoryID;
 

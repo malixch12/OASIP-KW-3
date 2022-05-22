@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
 import lombok.Getter;
@@ -26,7 +28,7 @@ public class Eventcategory {
     @Column(name = "EventCategoryDescription", length = 500)
     private String eventCategoryDescription;
 
-    // @Size(min = 1, max = 480, message = "size must be between 1 and 480")
+    
     @Column(name = "EventDuration", nullable = false)
     private Integer eventDuration;
 }

@@ -1,11 +1,14 @@
 <script setup>
 import ButtonLink from "../components/ButtonLink.vue";
+import Navbar from '../components/Navbar.vue'
 
 </script>
 
 <template>
   <div>
-    <div class="bg-white rounded-lg space-y-7 shadow-xl  ml-24 mr-24 p-12">
+   
+
+    <div class="bg-white  space-y-7 shadow-xl  ml-24 mr-24 p-12">
       <div class="text-7xl font-bold col-span-1 text-center">Clinic</div>
 
       <div class="col-span-1 text-center">

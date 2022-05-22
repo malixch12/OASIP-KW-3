@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
+
 import sit.int204.classicmodelsservice2.dtos.SimpleEventDTO;
 import sit.int204.classicmodelsservice2.entities.Event;
 import sit.int204.classicmodelsservice2.repositories.EventRepository;
@@ -123,12 +125,13 @@ public class EventController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public SimpleEventDTO create(@Valid @RequestBody Event newEvent) {
+    public SimpleEventDTO create(@Validated @RequestBody Event newEvent) {
         return eventService.add(newEvent);
     }
 
     @PutMapping("/{BookingId}")
-    public SimpleEventDTO update(@RequestBody SimpleEventDTO updateEvent, @PathVariable Integer BookingId) {
+    @ResponseStatus(HttpStatus.OK)
+    public SimpleEventDTO update(@Validated @RequestBody SimpleEventDTO updateEvent, @PathVariable Integer BookingId) {
         return eventService.update(updateEvent, BookingId);
     }
 

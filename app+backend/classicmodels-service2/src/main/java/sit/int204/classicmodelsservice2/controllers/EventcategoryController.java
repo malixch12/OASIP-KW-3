@@ -17,6 +17,7 @@ import sit.int204.classicmodelsservice2.entities.Eventcategory;
 import sit.int204.classicmodelsservice2.repositories.EventcategoryRepository;
 import sit.int204.classicmodelsservice2.services.EventCategoryService;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
@@ -47,7 +48,8 @@ public class EventcategoryController {
     }
 
     @PutMapping("/{id}")
-    public SimpleEventcategoryDTO edit(@RequestBody SimpleEventcategoryDTO updateCategory, @PathVariable Integer id) {
+    @ResponseStatus(HttpStatus.OK)
+    public SimpleEventcategoryDTO edit(@Valid @RequestBody SimpleEventcategoryDTO updateCategory, @PathVariable Integer id) {
        return eventcategoryService.update(updateCategory,id);
     }
 

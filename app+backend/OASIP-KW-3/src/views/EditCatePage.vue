@@ -58,13 +58,24 @@ const updateNote = async () => {
       // isActivePopup.value = false;
       // hideEdit.value = true;
       // getLinkAll();
+      statusTrue()
       console.log("edited successfully");
-    } else console.log("error, cannot be added");
+    } else statusFalse()
+
   }
 };
 
+const CheckStatusPut = ref(true)
 
+function statusTrue() {
 
+  CheckStatusPut.value = true
+}
+
+function statusFalse() {
+
+  CheckStatusPut.value = false
+}
 
 onBeforeUpdate(() => {
 
@@ -76,8 +87,9 @@ const isActivePopup = ref(false);
 <template>
 
   <div class="flex justify-center">
+
     <PopupPage v-show="isActivePopup" :dim-background="true">
-      <div class="grid grid-cols-1 p-12">
+      <div v-if="CheckStatusPut" class="grid grid-cols-1 p-12">
         <p class="text-3xl font-semibold text-slate-600 tracking-wide pb-8">
           edit succeeded
         </p>
@@ -86,7 +98,22 @@ const isActivePopup = ref(false);
             @click="isActivePopup = false" />
         </div>
       </div>
+
+      <div v-if="!CheckStatusPut" class="grid grid grid-cols-1 p-12 place-items-center">
+        <img src="../assets/error.png" class="w-24 " /> <br>
+        <p class="text-3xl font-semibold text-slate-600 tracking-wide pb-8">
+          edit fail pls check your data
+        </p>
+        <div class=" max-w-lg mx-auto  ">
+          <RoundButton bg-color="bg-emerald-400 text-white flex justify-center" button-name="ok"
+            @click="isActivePopup = false" />
+        </div>
+      </div>
     </PopupPage>
+
+
+
+
     <div class="bg-white space-y-7 shadow-xl rounded-lg ml-48 mr-48 p-12 w-2/5">
       <RoundButton bg-color="bg-slate-400 text-white text-sm" button-name="<< go back" @click="goBack" />
 
@@ -94,19 +121,28 @@ const isActivePopup = ref(false);
       <div class="space-y-7">
         <div class="py-5">
           <span class="font-bold text-slate-600 ">Category Name :<input
-              class="border-2 border-sky-200 rounded-lg w-64 pl-2 ml-1" type="text"
+              class="border-2 border-sky-200 rounded-lg w-64 pl-2 ml-1" type="text" maxlength="100"
               v-model="eventLists.eventCategoryName">
+          </span>
+          <br> <span class=" font-bold text-red-600 text-xs">*ชื่อห้ามเว้นว่าง </span><span
+            class=" font-bold text-gray-600 text-xs"> และ ยาวสุดไม่เกิน 100 ตัว</span> <span
+            class=" font-bold text-gray-600 text-xs">--> เหลืออีก {{ 100 - eventLists.eventCategoryName.length }} ตัว
           </span>
         </div>
         <span class="text-slate-600 font-bold py-5">Duration : <input
-            class="border-2 border-sky-200 rounded-lg w-20 ml-1 pl-2" type="number" v-model="eventLists.eventDuration">
+            class="border-2 border-sky-200 rounded-lg w-20 ml-1 pl-2" type="number" min="1" max="480"
+            v-model="eventLists.eventDuration">
           Minutes
         </span>
 
+        <span class=" font-bold text-red-600 text-xs">*duration ห้ามเว้นว่าง </span>
+        <span class=" font-bold text-gray-600 text-xs"> และ max duration is 480</span>
         <div class="text-slate-600 font-bold">Category's Description </div>
-
+        <span class=" font-bold text-gray-600 text-xs"> *คำอธิบายไม่เกิน 500 ตัวอักษร</span>
+        <span class=" font-bold text-gray-600 text-xs">--> เหลืออีก {{ 500 - eventLists.eventCategoryDescription.length
+        }} ตัว </span>
         <textarea type="text" class="border-2 border-sky-200 p-2 w-11/12  h-56 rounded-lg"
-          v-model="eventLists.eventCategoryDescription"></textarea>
+          v-model="eventLists.eventCategoryDescription" maxlength="500"></textarea>
         <div class=" pt-3 flex justify-center ">
           <RoundButton bg-color="bg-emerald-400 text-white  place-items-center" button-name="save"
             @click="updateNote(), isActivePopup = true" />

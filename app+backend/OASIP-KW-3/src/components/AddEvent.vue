@@ -14,6 +14,10 @@ const props = defineProps({
   categoryDetail: {
     type: Object,
   },
+  CheckOverlap : {
+    type: Boolean,
+    default: true
+  }
 });
 
 defineEmits(["addEvent"]);
@@ -23,6 +27,8 @@ onBeforeUpdate(() => {
   //dataBooking.value.bookingId = props.id + 1;
 
   CheckData()
+
+
 });
 
 function CheckData() {
@@ -53,11 +59,14 @@ function CheckData() {
   } else {
     EmailValidation.value = false
   }
+
   // All check
-  if (NameCheck.value == true && EmailCheck.value == true && DateTimeCheck.value == false && EmailValidation.value == true) {
+  if (NameCheck.value == true && EmailCheck.value == true && DateTimeCheck.value == false && EmailValidation.value == true ) {
     AllDataCheck.value = true
   } else {
     AllDataCheck.value = false
+
+
 
   }
 }
@@ -93,7 +102,7 @@ const cancelBooking = () => {
 };
 
 const reSet = () => {
-  if (AllDataCheck.value == true) {
+  if (AllDataCheck.value == true && props.CheckOverlap == false) {
     dataBooking.value.bookingId = "";
     dataBooking.value.bookingName = '';
     dataBooking.value.bookingEmail = '';
@@ -226,17 +235,18 @@ function eror() {
           </div>
         </div>
 
-        <div v-if="AllDataCheck">
+        <div v-if="AllDataCheck ==true">
           <div class="text-slate-700 font-semibold text-center p-10 space-y-5">
             <div> Do you want to add appointment?</div>
             <div class="grid grid-cols-2 place-items-center">
             <RoundButton bg-color="bg-green-400 text-white " button-name="YES"
-              @click="$emit('addEvent', dataBooking, AllDataCheck), reSet(), isActivePopup = false" />
+              @click="$emit('addEvent', dataBooking, AllDataCheck), isActivePopup = false" />
             <RoundButton bg-color="bg-red-400 text-white" button-name="NO" @click="isActivePopup = false" />
          </div>
          </div>
         </div>
 
+           
       </PopupPage>
 
 

@@ -83,6 +83,10 @@ const updateNote = async () => {
         }),
       }
     );
+     if (res.status === 400) {
+          test();
+    } 
+
     if (res.status === 200) {
       console.log(eventLists.value.eventStartTime);
       isActivePopup.value = false;
@@ -92,6 +96,13 @@ const updateNote = async () => {
     } else console.log("error, cannot be added");
   }
 };
+const testname = ref('')
+const isActivePopup = ref(false);
+const DateTimeCheck = ref(false);
+function test  () {
+ testname.value = 'เวลาที่คุณเลือกนั้นตรงกับอีเว้นอื่นๆ กรุณาเช็คเวลาใหม่'
+}
+
 
 const countTime = ref("");
 function setTime() {
@@ -113,7 +124,7 @@ function setTime() {
 }
 setInterval(setTime, 1000);
 
-const DateTimeCheck = ref(false);
+
 
 onBeforeUpdate(() => {
   if (countTime.value > new Date(eventLists.value.eventStartTime)) {
@@ -123,39 +134,45 @@ onBeforeUpdate(() => {
   }
 });
 
-const isActivePopup = ref(false);
+
 </script>
 
 <template>
   <div class="flex justify-center">
      <!-- popup -->
       <PopupPage v-show="isActivePopup" :dim-background="true">
-        <div v-if="DateTimeCheck == true">
-          <p class="text-3xl font-semibold text-slate-600 tracking-wide pb-16">
+      <div class="grid grid-cols-1 place-items-center  font-semibold text-center  p-10 space-y-5">
+        <div v-show="DateTimeCheck == true">
+          <p class="text-3xl font-semibold text-slate-600 tracking-wide pb-8">
             Do you want to update?
+           
           </p>
-          <div class="flex justify-between max-w-lg mx-auto">
+          <span class="text-red-600"> {{testname}} </span> <br>
+          <div class="flex justify-between max-w-lg mx-auto mt-6">
             <RoundButton
               bg-color="bg-emerald-400 text-white"
-              button-name="Yes"
-              @click="updateNote"
+              button-name="ok"
+              @click="updateNote "
             />
 
             <RoundButton
               bg-color="bg-rose-400 text-white"
-              button-name="No"
+              button-name="cancel"
               @click="
                 () => {
                   isActivePopup = false;
+                  testname = ''
                 }
               "
             />
           </div>
         </div>
 
-        <div v-if="DateTimeCheck == false">
+        <div v-show="DateTimeCheck == false">
           <p class="text-3xl font-semibold text-slate-600 tracking-wide pb-16">
             Please check the date to make sure you haven't booked in the past.
+
+          
           </p>
           <div class="flex justify-center max-w-lg mx-auto">
             <RoundButton
@@ -168,6 +185,7 @@ const isActivePopup = ref(false);
               "
             />
           </div>
+        </div>
         </div>
       </PopupPage>
     <div class="bg-white space-y-7 shadow-xl rounded-lg ml-48 mr-48 p-12 w-2/5">
@@ -234,10 +252,9 @@ const isActivePopup = ref(false);
           <p class="text-slate-600 font-bold">Message to Advisor</p>
 
           <div v-show="hideEdit">
-            <p class="pl-5" v-if="eventLists.eventNotes == null">
+          
               {{ eventLists.eventNotes }}
-            </p>
-            <p class="pl-5" v-else>-</p>
+         
           </div>
           <div>
             <textarea

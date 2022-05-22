@@ -119,28 +119,27 @@ const isActivePopup = ref(false);
 
 
       <div class="space-y-7">
-        <div class="py-5">
+        <div>
           <span class="font-bold text-slate-600 ">Category Name :<input
               class="border-2 border-sky-200 rounded-lg w-64 pl-2 ml-1" type="text" maxlength="100"
               v-model="eventLists.eventCategoryName">
           </span>
-          <br> <span class=" font-bold text-red-600 text-xs">*ชื่อห้ามเว้นว่างและห้ามซ้ำ </span><span
+          <br> <span class=" font-bold text-red-600 text-xs">*ชื่อห้ามเว้นว่างและห้ามซ้ำ</span><span
             class=" font-bold text-gray-600 text-xs"> และ ยาวสุดไม่เกิน 100 ตัว</span> <span
             class=" font-bold text-gray-600 text-xs">--> เหลืออีก {{ 100 - eventLists.eventCategoryName.length }} ตัว
           </span>
         </div>
-        <span class="text-slate-600 font-bold py-5">Duration : <input
+        <div class="text-slate-600 font-bold ">Duration : <input
             class="border-2 border-sky-200 rounded-lg w-20 ml-1 pl-2" type="number" min="1" max="480"
             v-model="eventLists.eventDuration">
           Minutes
-        </span>
+        </div>
 
         <span class=" font-bold text-red-600 text-xs">*duration ห้ามเว้นว่าง </span>
-        <span class=" font-bold text-gray-600 text-xs"> และ max duration is 480</span>
+        <span class=" font-bold text-gray-600 text-xs"> และ ห้ามจองเกิน 480 นาที</span>
         <div class="text-slate-600 font-bold">Category's Description </div>
         <span class=" font-bold text-gray-600 text-xs"> *คำอธิบายไม่เกิน 500 ตัวอักษร</span>
-        <span class=" font-bold text-gray-600 text-xs">--> เหลืออีก {{ 500 - eventLists.eventCategoryDescription.length
-        }} ตัว </span>
+        
         <textarea type="text" class="border-2 border-sky-200 p-2 w-11/12  h-56 rounded-lg"
           v-model="eventLists.eventCategoryDescription" maxlength="500"></textarea>
         <div class=" pt-3 flex justify-center ">

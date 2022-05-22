@@ -86,9 +86,11 @@ const goEdit = (categoryId) => {
 
       </div>
 
-      <div class="mb-2 px-10 pb-10">
-        {{ eventCategoryName }} <br>
-        <span class="text-2xl font-semibold text-slate-600 tracking-wide pb-16 ">
+      <div class="mb-2 px-10 pb-10 ">
+        <div class="text-2xl font-semibold text-rose-400 pb-5">
+        {{ eventCategoryName }}
+        </div>
+        <span class="text-2xl font-semibold text-slate-600 tracking-wide">
           Duration :
         </span> {{ eventDuration }} นาที
 

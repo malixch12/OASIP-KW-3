@@ -88,11 +88,11 @@ public class EventService {
 
     // get event by category
     public List<SimpleEventDTO> getEventAllByCategory(int eventCategoryID) {
-        return listMapper.mapList(repository.findByEventCategoryID(eventCategoryID), SimpleEventDTO.class, modelMapper);
+        return listMapper.mapList(repository.findByEventCategoryID(eventCategoryID, Sort.by("eventStartTime").descending()), SimpleEventDTO.class, modelMapper);
     }
 
     public Page<SimpleEventDTO> getEventByCatetory(int eventCategoryID, Pageable pageable) {
-        List<SimpleEventDTO> listEventDTO = listMapper.mapList(repository.findByEventCategoryID(eventCategoryID),
+        List<SimpleEventDTO> listEventDTO = listMapper.mapList(repository.findByEventCategoryID(eventCategoryID , Sort.by("eventStartTime").descending()),
                 SimpleEventDTO.class, modelMapper);
         return getPage(pageable, listEventDTO);
     }
@@ -106,7 +106,7 @@ public class EventService {
 
     public Page<SimpleEventDTO> getEventPastDateByCategory(int eventCategoryID, Pageable pageable) {
         List<SimpleEventDTO> listEventDTO = listMapper.mapList(
-                repository.findByEventCategoryIDAndEventStartTimeLessThan(eventCategoryID, dateNow),
+                repository.findByEventCategoryIDAndEventStartTimeLessThan(eventCategoryID, dateNow, Sort.by("eventStartTime").descending()),
                 SimpleEventDTO.class, modelMapper);
         return getPage(pageable, listEventDTO);
     }

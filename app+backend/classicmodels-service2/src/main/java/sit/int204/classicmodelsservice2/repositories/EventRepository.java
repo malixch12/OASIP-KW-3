@@ -13,9 +13,9 @@ import java.util.Optional;
 
 public interface EventRepository extends JpaRepository<Event, Integer> {
         List<Event> findAll(Sort sort);
-        List<Event> findByEventCategoryID(Integer eventCategoryID);
+        List<Event> findByEventCategoryID(Integer eventCategoryID,Sort sort);
 
-        List<Event> findByEventCategoryIDAndEventStartTimeLessThan(Integer eventCategoryID, Instant dateNow);
+        List<Event> findByEventCategoryIDAndEventStartTimeLessThan(Integer eventCategoryID, Instant dateNow,Sort sort);
 
         List<Event> findByEventCategoryIDAndEventStartTimeGreaterThan(Integer eventCategoryID, Instant dateNow);
 

@@ -124,7 +124,7 @@ const isActivePopup = ref(false);
               class="border-2 border-sky-200 rounded-lg w-64 pl-2 ml-1" type="text" maxlength="100"
               v-model="eventLists.eventCategoryName">
           </span>
-          <br> <span class=" font-bold text-red-600 text-xs">*ชื่อห้ามเว้นว่าง </span><span
+          <br> <span class=" font-bold text-red-600 text-xs">*ชื่อห้ามเว้นว่างและห้ามซ้ำ </span><span
             class=" font-bold text-gray-600 text-xs"> และ ยาวสุดไม่เกิน 100 ตัว</span> <span
             class=" font-bold text-gray-600 text-xs">--> เหลืออีก {{ 100 - eventLists.eventCategoryName.length }} ตัว
           </span>

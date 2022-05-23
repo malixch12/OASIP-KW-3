@@ -9,7 +9,7 @@ const page = ref(0);
 const numPage = ref();
 const getLink = async () => {
   const res = await fetch(
-    `${import.meta.env.VITE_APP_TITLE}/api/events/category/${
+    `${import.meta.env.VITE_APP_TITLE}/api/events/categories/${
       route.query.categoryId
     }?page=${page.value}&pageSize=8`
   );
@@ -41,7 +41,7 @@ function paging(index , filter) {
 
 const getLinkPast = async () => {
   const res = await fetch(
-    `${import.meta.env.VITE_APP_TITLE}/api/events/category/past/${
+    `${import.meta.env.VITE_APP_TITLE}/api/events/categories/pastdays/${
       route.query.categoryId
     }?page=${page.value}&pageSize=8`
   );
@@ -53,7 +53,7 @@ const getLinkPast = async () => {
 
 const getLinkFuture = async () => {
   const res = await fetch(
-    `${import.meta.env.VITE_APP_TITLE}/api/events/category/future/${
+    `${import.meta.env.VITE_APP_TITLE}/api/events/categories/futuredays/${
       route.query.categoryId
     }?page=${page.value}&pageSize=8`
   );

@@ -3,11 +3,11 @@ import generateCategory from '../components/generateCategory.vue'
 import Navbar from '../components/Navbar.vue'
 import { ref } from "vue";
 
-const eventLists = ref();
+const CateLists = ref();
 const getLinkAll = async () => {
   const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/eventcategorys`);
   if (res.status === 200) {
-    eventLists.value = await res.json();
+    CateLists.value = await res.json();
   }
 };
 getLinkAll()
@@ -16,7 +16,7 @@ getLinkAll()
 <template>
 <div>
 <Navbar/>
-<generateCategory name="Select a clinic to booking" :categorys="eventLists" type="Booking"/>
+<generateCategory name="Select a clinic to booking" :categorys="CateLists" type="Booking"/>
 
 
 </div>

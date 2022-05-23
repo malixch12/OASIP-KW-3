@@ -38,8 +38,6 @@ public class EventController {
     private EventService eventService;
     @Autowired
     private final EventRepository repository;
-    @Autowired
-    private ModelMapper modelMapper;
 
     @Autowired
     public EventController(EventRepository repository) {
@@ -59,7 +57,7 @@ public class EventController {
         return eventService.getSimpleEventById(id);
     }
 
-    @GetMapping("/date")
+    @GetMapping("/dates")
     public Page<SimpleEventDTO> getEventDate(
             @RequestParam Instant date,
             @RequestParam(defaultValue = "0") Integer page,
@@ -67,14 +65,14 @@ public class EventController {
         return eventService.getSimpleEventDate(date,PageRequest.of(page, pageSize));
     }
 
-    @GetMapping("/past")
+    @GetMapping("/pastdays")
     public Page<SimpleEventDTO> getEventPastDate(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "8") Integer pageSize) {
         return eventService.getSimpleEventPastDate(PageRequest.of(page, pageSize));
     }
 
-    @GetMapping("/future")
+    @GetMapping("/futuredays")
     public Page<SimpleEventDTO> getEventFutureDate(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "8") Integer pageSize) {
@@ -82,26 +80,26 @@ public class EventController {
     }
 
     // get event by category
-    @GetMapping("/category/{eventCategoryID}")
+    @GetMapping("/categories/{eventCategoryID}")
     public Page<SimpleEventDTO> getEventByCategory(
             @PathVariable Integer eventCategoryID,
             @RequestParam(defaultValue = "eventStartTime") String sortBy,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "8") Integer pageSize) {
-                return eventService.getEventByCatetory(eventCategoryID,PageRequest.of(page, pageSize,  Sort.by(sortBy)));
+                return eventService.getEventByCategory(eventCategoryID,PageRequest.of(page, pageSize,  Sort.by(sortBy)));
     }
 
-    @GetMapping("/category/date/{eventCategoryID}")
+    @GetMapping("/categories/dates/{eventCategoryID}")
     public Page<SimpleEventDTO> getEventDateByCategory(
             @PathVariable Integer eventCategoryID,
             @RequestParam Instant date,
             @RequestParam(defaultValue = "eventStartTime") String sortBy,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "8") Integer pageSize) {
-        return eventService.getEventDateByCatetory(eventCategoryID, date, PageRequest.of(page, pageSize,  Sort.by(sortBy)));
+        return eventService.getEventDateByCategory(eventCategoryID, date, PageRequest.of(page, pageSize,  Sort.by(sortBy)));
     }
 
-    @GetMapping("/category/past/{eventCategoryID}")
+    @GetMapping("/categories/pastdays/{eventCategoryID}")
     public Page<SimpleEventDTO> getEventPastDateByCategory(
             @PathVariable Integer eventCategoryID,
             @RequestParam(defaultValue = "eventStartTime") String sortBy,
@@ -110,7 +108,7 @@ public class EventController {
       return eventService.getEventPastDateByCategory(eventCategoryID, PageRequest.of(page, pageSize,  Sort.by(sortBy)));
     }
 
-    @GetMapping("/category/future/{eventCategoryID}")
+    @GetMapping("/categories/futuredays/{eventCategoryID}")
     public Page<SimpleEventDTO> getEventFutureDateByCategory(
             @PathVariable Integer eventCategoryID,
             @RequestParam(defaultValue = "eventStartTime") String sortBy,

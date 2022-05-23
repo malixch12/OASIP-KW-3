@@ -14,7 +14,7 @@ const id = ref();
 const page = ref(0)
 const numPage = ref( )
 const getLinkAll = async () => {
-  const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events/category/${route.query.categoryId}?page=${page.value}&pageSize=6`);
+  const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events/categories/${route.query.categoryId}?page=${page.value}&pageSize=6`);
   if (res.status === 200) {
     eventLists.value = await res.json();
       numPage.value = Math.ceil(eventLists.value.totalElements / 6)
@@ -100,7 +100,7 @@ function paging(index , filter) {
 
 const getLinkPast = async () => {
   const res = await fetch(
-    `${import.meta.env.VITE_APP_TITLE}/api/events/category/past/${
+    `${import.meta.env.VITE_APP_TITLE}/api/events/categories/pastdays/${
       route.query.categoryId
     }?page=${page.value}&pageSize=8`
   );
@@ -112,7 +112,7 @@ const getLinkPast = async () => {
 
 const getLinkFuture = async () => {
   const res = await fetch(
-    `${import.meta.env.VITE_APP_TITLE}/api/events/category/future/${
+    `${import.meta.env.VITE_APP_TITLE}/api/events/categories/futuredays/${
       route.query.categoryId
     }?page=${page.value}&pageSize=8`
   );

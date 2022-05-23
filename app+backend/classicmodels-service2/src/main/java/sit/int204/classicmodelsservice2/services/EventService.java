@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.data.domain.Pageable;
@@ -91,14 +92,14 @@ public class EventService {
                 SimpleEventDTO.class, modelMapper);
     }
 
-    public Page<SimpleEventDTO> getEventByCatetory(int eventCategoryID, Pageable pageable) {
+    public Page<SimpleEventDTO> getEventByCategory(int eventCategoryID, Pageable pageable) {
         List<SimpleEventDTO> listEventDTO = listMapper.mapList(
                 repository.findByEventCategoryID(eventCategoryID, Sort.by("eventStartTime").descending()),
                 SimpleEventDTO.class, modelMapper);
         return getPage(pageable, listEventDTO);
     }
 
-    public Page<SimpleEventDTO> getEventDateByCatetory(int eventCategoryID, Instant date, Pageable pageable) {
+    public Page<SimpleEventDTO> getEventDateByCategory(int eventCategoryID, Instant date, Pageable pageable) {
         List<SimpleEventDTO> listEventDTO = listMapper.mapList(
                 repository.findByEventCategoryIDAndEventStartTimeEquals(eventCategoryID, date),
                 SimpleEventDTO.class, modelMapper);
@@ -121,7 +122,7 @@ public class EventService {
     }
 
     public void delete(int eventID) {
-        repository.findById(eventID).orElseThrow(() -> new RuntimeException(eventID + "Does not exit !!!"));
+        repository.findById(eventID).orElseThrow(()-> new RuntimeException(eventID + "Does not exit !!!"));
         repository.deleteById(eventID);
     }
 
@@ -145,11 +146,9 @@ public class EventService {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Time is overlapping");
             }
         }
-        
     }
 
     public SimpleEventDTO add(Event newEvent) {
-        Event event = new Event();
         Eventcategory eventcategory = cateRepository.findById(newEvent.getEventCategoryID())
                 .orElseThrow(() -> new RuntimeException(newEvent.getEventCategoryID() + "Does not exit !!!"));
 
@@ -157,9 +156,8 @@ public class EventService {
 
         newEvent.setEventDuration(eventcategory.getEventDuration());
         newEvent.setEventCategory(eventcategory.getEventCategoryName());
-        event = modelMapper.map(newEvent, Event.class);
         repository.saveAndFlush(newEvent);
-        return modelMapper.map(event, SimpleEventDTO.class);
+        return modelMapper.map(newEvent, SimpleEventDTO.class);
     }
 
     public SimpleEventDTO update(SimpleEventDTO updateEvent, int BookingId) {
@@ -170,7 +168,7 @@ public class EventService {
             checkOverlapping(updateEvent.getEventStartTime(), event.getEventCategoryID());
         }
 
-        Event event2 = repository.findById(BookingId).map(e -> {
+        Event event = repository.findById(BookingId).map(e -> {
             if (updateEvent.getEventStartTime() != null && updateEvent.getEventNotes() != null) {
                 e.setEventStartTime(updateEvent.getEventStartTime());
                 e.setEventNotes(updateEvent.getEventNotes());
@@ -182,7 +180,7 @@ public class EventService {
             }
             return repository.saveAndFlush(e);
         }).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "test"));
-        return modelMapper.map(event2, SimpleEventDTO.class);
+        return modelMapper.map(event, SimpleEventDTO.class);
     }
 
 }

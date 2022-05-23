@@ -21,9 +21,39 @@ const props = defineProps({
   },
 });
 
+const isActivePopup = ref(false);  // pop up 
+
+const CateDetail = ref({          //เอาไว้เก็บดีเทล เอาไว้แสดงเมื่อยูสเชอร์ต้องการดู
+  eventCategoryID:0,
+  eventCategoryName:'',
+  eventCategoryDescription:'0',
+  eventDuration:0})
 
 
-const addList = (categoryId, eventCategoryName, eventDuration) => {
+function ShowDetailCate(Duration, Description, id, name) {    //เอาไว้โชว์
+
+  isActivePopup.value = true
+  CateDetail.value.eventDuration = Duration
+  CateDetail.value.eventCategoryID = id
+  CateDetail.value.eventCategoryName = name
+  if (Description == null) {
+    CateDetail.value.eventCategoryDescription = "ไม่มีคำอธิบาย"
+    console.log(Description)
+  } else
+    CateDetail.value.eventCategoryDescription = Description
+}
+
+const goEdit = (categoryId) => {
+
+  router.push({
+    name: "EditCatePage",
+    query: { categoryId: categoryId },
+  });
+
+};
+
+
+const SentToNextPage = (categoryId, eventCategoryName, eventDuration) => {
   if (props.type == "ShowList") {
     router.push({
       name: "ShowList",
@@ -43,32 +73,7 @@ const addList = (categoryId, eventCategoryName, eventDuration) => {
   }
 };
 
-const isActivePopup = ref(false);
-const eventDuration = ref(0);
-const eventCategoryDescription = ref()
-const eventCategoryID = ref();
-const eventCategoryName = ref();
-function test(Duration, Description, id, name) {
-  console.log(eventDuration)
-  isActivePopup.value = true
-  eventDuration.value = Duration
-  eventCategoryID.value = id
-  eventCategoryName.value = name
-  if (Description == null) {
-    eventCategoryDescription.value = "ไม่มีคำอธิบาย"
-    console.log(Description)
-  } else
-    eventCategoryDescription.value = Description
-}
 
-const goEdit = (categoryId) => {
-
-  router.push({
-    name: "EditCatePage",
-    query: { categoryId: categoryId },
-  });
-
-};
 
 </script>
 
@@ -88,24 +93,27 @@ const goEdit = (categoryId) => {
 
       <div class="mb-2 px-10 pb-10 ">
         <div class="text-2xl font-semibold text-rose-400 pb-5">
-        {{ eventCategoryName }}
+        {{ CateDetail.eventCategoryName }}
         </div>
         <span class="text-2xl font-semibold text-slate-600 tracking-wide">
           Duration :
-        </span> {{ eventDuration }} นาที
+        </span> {{ CateDetail.eventDuration }} นาที
 
         <div class="text-2xl font-semibold text-slate-600 tracking-wide py-5 ">
           Description : </div>
-        <div class="w-64 text-lg">{{ eventCategoryDescription }} </div>
+        <div class="w-64 text-lg">{{ CateDetail.eventCategoryDescription }} </div>
         <div class="flex justify-center max-w-lg mx-auto mt-5">
           <RoundButton bg-color="bg-gray-400 text-white" button-name="edit" @click="
-            goEdit(eventCategoryID)
+            goEdit(CateDetail.eventCategoryID)
           " />
         </div>
       </div>
 
     </PopupPage>
+ <!-- popup end -->
 
+
+ <!-- หัวข้อ -->
     <div class="bg-white shadow-xl rounded-b-lg ml-24 mr-24 p-12 ">
       <div class="text-3xl font-bold text-center mb-10 ">
         {{ name }}
@@ -193,6 +201,7 @@ const goEdit = (categoryId) => {
 
 
       </div>
+ <!-- หัวข้อ -->
 
 
       <router-link :to="{ name: 'ListAllEvent', query: { categoryId: 0 } }" class="grid justify-items-center">
@@ -207,7 +216,7 @@ const goEdit = (categoryId) => {
         <div v-for="category in categorys" :key="category.eventCategoryID">
           <div class="grid justify-items-center">
             <img :src="`../../public/` + category.eventCategoryID + `.png`" @click="
-              addList(
+              SentToNextPage(
                 category.eventCategoryID,
                 category.eventCategoryName,
                 category.eventDuration
@@ -215,7 +224,7 @@ const goEdit = (categoryId) => {
             " class="w-64 transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 duration-100" />
             <div class="text-center py-3">{{ category.eventCategoryName }}</div>
             <button
-              @click="test(category.eventDuration, category.eventCategoryDescription, category.eventCategoryID, category.eventCategoryName)"
+              @click="ShowDetailCate(category.eventDuration, category.eventCategoryDescription, category.eventCategoryID, category.eventCategoryName)"
               class="transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110  duration-150 rounded-lg text-sm leading-6  font-semibold select-none text-sky-600 ">
               show detail </button>
             <br>

@@ -57,7 +57,7 @@ getLinkPast()
 
 const getLinkPast = async () => {
   const res = await fetch(
-    `${import.meta.env.VITE_APP_TITLE}/api/events/past/?pageSize=8&page=${page.value}`
+    `${import.meta.env.VITE_APP_TITLE}/api/events/pastdays/?pageSize=8&page=${page.value}`
   );
   if (res.status === 200) {
     eventLists.value = await res.json();
@@ -67,7 +67,7 @@ const getLinkPast = async () => {
 
 const getLinkFuture = async () => {
   const res = await fetch(
-    `${import.meta.env.VITE_APP_TITLE}/api/events/future/?pageSize=8&page=${page.value}`
+    `${import.meta.env.VITE_APP_TITLE}/api/events/futuredays/?pageSize=8&page=${page.value}`
   );
   if (res.status === 200) {
     eventLists.value = await res.json();

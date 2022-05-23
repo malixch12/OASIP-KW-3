@@ -37,14 +37,8 @@ public class SimpleEventDTO {
         return formatter.format(EventStartTime);
     }
 
-    public String getStartTime() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm").withZone(ZoneId.systemDefault());
-        return formatter.format(EventStartTime);
-    }
-    public String getEndTime() {
-        Instant endTime = EventStartTime.plusSeconds(EventDuration * 60);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm").withZone(ZoneId.systemDefault());
-        return formatter.format(endTime);
+    public Instant getEndTime() {
+        return EventStartTime.plusSeconds(EventDuration * 60);
     }
 
 

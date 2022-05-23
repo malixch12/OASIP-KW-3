@@ -23,35 +23,26 @@ const props = defineProps({
 defineEmits(["addEvent"]);
 
 onBeforeUpdate(() => {
-
-  //dataBooking.value.bookingId = props.id + 1;
-
   CheckData()
-
-
 });
 
 function CheckData() {
   //check date and time
   if ((countTime.value > new Date(dataBooking.value.eventStartTime))) {
-
     DateTimeCheck.value = true
   } else {
     DateTimeCheck.value = false
   }
-
   //check name
   if (dataBooking.value.bookingName != "") {
     NameCheck.value = true
   } else {
     NameCheck.value = false
-
   }
 
   if (dataBooking.value.bookingEmail != "") {
     EmailCheck.value = true
   } else { EmailCheck.value = false }
-
 
   // Check Email validateEmail
   if (validateEmail(dataBooking.value.bookingEmail) == true) {
@@ -79,11 +70,11 @@ function validateEmail(email) {
 
 
 const AllDataCheck = ref(false)
-const DateTimeCheck = ref(false)
-const NameCheck = ref(false)
-const EmailCheck = ref(false)
-const EmailValidation = ref(false)
-const dataBooking = ref({
+const DateTimeCheck = ref(false)    
+const NameCheck = ref(false)     //เซ็คว่ากรอกรึยัง
+const EmailCheck = ref(false)   //เซ็คว่ากรอกรึยัง
+const EmailValidation = ref(false)  //ฟอแมท เมล
+const dataBooking = ref({    //สำหรับให้ ฟอม v-model
   bookingId: "",
   bookingName: "",
   bookingEmail: "",
@@ -95,11 +86,6 @@ const dataBooking = ref({
 });
 
 
-
-
-const cancelBooking = () => {
-  appRouter.push({ name: "Home" });
-};
 
 const reSet = () => {
   if (AllDataCheck.value == true && props.CheckOverlap == false) {

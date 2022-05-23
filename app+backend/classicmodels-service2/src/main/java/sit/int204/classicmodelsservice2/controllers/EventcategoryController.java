@@ -24,7 +24,6 @@ import java.util.List;
 import javax.validation.Valid;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000/", maxAge = 3600)
 @RequestMapping("/api/eventcategorys")
 public class EventcategoryController {
 

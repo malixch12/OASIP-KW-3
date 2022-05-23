@@ -215,7 +215,7 @@ const SentToNextPage = (categoryId, eventCategoryName, eventDuration) => {
       <div class="grid grid-cols-3 gap-6 place-items-center mb-12">
         <div v-for="category in categorys" :key="category.eventCategoryID">
           <div class="grid justify-items-center">
-            <img :src="`../../public/` + category.eventCategoryID + `.png`" @click="
+            <img :src="`/kw3/` + category.eventCategoryID + `.png`" @click="
               SentToNextPage(
                 category.eventCategoryID,
                 category.eventCategoryName,

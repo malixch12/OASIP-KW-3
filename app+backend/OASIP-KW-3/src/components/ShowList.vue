@@ -116,9 +116,9 @@ const PageIndexCurrent = ref(1)
                 Date :
                 {{ new Date(event.eventStartTime).toLocaleDateString("th-TH") }}
               </p>
-              <p class="pb-6 text-orange-400 font-semibold">
+              <p class="pb-6 text-rose-600 font-semibold">
                 
-               Time {{ event.startTime }} - {{event.endTime}}
+                {{ new Date(event.eventStartTime).toLocaleTimeString("th-TH") }} - {{new Date(event.endTime).toLocaleTimeString("th-TH")}}
               </p>
 
               <RoundButton

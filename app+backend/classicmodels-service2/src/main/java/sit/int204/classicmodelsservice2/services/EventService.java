@@ -125,14 +125,14 @@ public class EventService {
         repository.deleteById(eventID);
     }
 
-    public SimpleEventDTO add(Event newEvent) {
-        Event event = new Event();
-        Eventcategory eventcategory = cateRepository.findById(newEvent.getEventCategoryID())
-                .orElseThrow(() -> new RuntimeException(newEvent.getEventCategoryID() + "Does not exit !!!"));
+    // check overlapping
+    public void checkOverlapping(Instant startime, int categoryId) {
+        Eventcategory eventcategory = cateRepository.findById(categoryId)
+                .orElseThrow(() -> new RuntimeException(categoryId + "Does not exit !!!"));
+        List<SimpleEventDTO> listAll = getEventAllByCategory(categoryId);
 
-        Instant newEventStartTime = newEvent.getEventStartTime();
-        Instant newEventEndTime = newEvent.getEventStartTime().plusSeconds(eventcategory.getEventDuration() * 60);
-        List<SimpleEventDTO> listAll = getEventAllByCategory(eventcategory.getEventCategoryID());
+        Instant newEventStartTime = startime;
+        Instant newEventEndTime = startime.plusSeconds(eventcategory.getEventDuration() * 60);
         for (int i = 0; i < listAll.size(); i++) {
             Instant startTime = listAll.get(i).getEventStartTime();
             Instant endTime = listAll.get(i).getEventStartTime().plusSeconds(listAll.get(i).getEventDuration() * 60);
@@ -145,6 +145,16 @@ public class EventService {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Time is overlapping");
             }
         }
+        
+    }
+
+    public SimpleEventDTO add(Event newEvent) {
+        Event event = new Event();
+        Eventcategory eventcategory = cateRepository.findById(newEvent.getEventCategoryID())
+                .orElseThrow(() -> new RuntimeException(newEvent.getEventCategoryID() + "Does not exit !!!"));
+
+        checkOverlapping(newEvent.getEventStartTime(), newEvent.getEventCategoryID());
+
         newEvent.setEventDuration(eventcategory.getEventDuration());
         newEvent.setEventCategory(eventcategory.getEventCategoryName());
         event = modelMapper.map(newEvent, Event.class);
@@ -157,27 +167,7 @@ public class EventService {
             Event event = repository.findById(BookingId)
                     .orElseThrow(() -> new RuntimeException(BookingId + "Does not exit !!!"));
 
-            Eventcategory eventcategory = cateRepository.findById(event.getEventCategoryID())
-                    .orElseThrow(() -> new RuntimeException(event.getEventCategoryID() + "Does not exit !!!"));
-
-            Instant newEventStartTime = updateEvent.getEventStartTime();
-            Instant newEventEndTime = updateEvent.getEventStartTime()
-                    .plusSeconds(eventcategory.getEventDuration() * 60);
-            List<SimpleEventDTO> listAll = getEventAllByCategory(eventcategory.getEventCategoryID());
-        
-            for (int i = 0; i < listAll.size(); i++) {
-                Instant startTime = listAll.get(i).getEventStartTime();
-                Instant endTime = listAll.get(i).getEventStartTime()
-                        .plusSeconds(listAll.get(i).getEventDuration() * 60);
-
-                if (newEventStartTime.isBefore(startTime) && newEventEndTime.isAfter(startTime) ||
-                        newEventStartTime.isBefore(endTime) && newEventEndTime.isAfter(endTime) ||
-                        newEventStartTime.isBefore(startTime) && newEventEndTime.isAfter(endTime) ||
-                        newEventStartTime.isAfter(startTime) && newEventEndTime.isBefore(endTime)
-                        || newEventStartTime.equals(startTime)) {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Time is overlapping");
-                }
-            }
+            checkOverlapping(updateEvent.getEventStartTime(), event.getEventCategoryID());
         }
 
         Event event2 = repository.findById(BookingId).map(e -> {
@@ -192,7 +182,7 @@ public class EventService {
             }
             return repository.saveAndFlush(e);
         }).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "test"));
-
         return modelMapper.map(event2, SimpleEventDTO.class);
     }
+
 }

@@ -42,16 +42,18 @@ public class EventCategoryService {
     public SimpleEventcategoryDTO update(SimpleEventcategoryDTO updateCategory, Integer id) {
         List<Eventcategory> listCateAll = repository.findAll();
 
+        // category name unique
         for (int i = 0; i < listCateAll.size(); i++) {
             if (listCateAll.get(i).getEventCategoryID() != id) {
                 String cateName = listCateAll.get(i).getEventCategoryName().toLowerCase();
-                if (cateName.equals(updateCategory.getEventCategoryName().toLowerCase())) {
+                if (cateName.equals(updateCategory.getEventCategoryName().toLowerCase().trim())) {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is not unique");
                 }
             }
         }
+
         Eventcategory eventCate = repository.findById(id).map(c -> {
-            c.setEventCategoryName(updateCategory.getEventCategoryName());
+            c.setEventCategoryName(updateCategory.getEventCategoryName().trim());
             c.setEventDuration(updateCategory.getEventDuration());
             c.setEventCategoryDescription(updateCategory.getEventCategoryDescription());
             return repository.saveAndFlush(c);

@@ -25,6 +25,7 @@ import sit.int204.classicmodelsservice2.services.EventService;
 import org.springframework.data.domain.PageRequest;
 
 import java.time.Instant;
+import java.util.List;
 
 import javax.validation.Valid;
 

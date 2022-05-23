@@ -37,7 +37,5 @@ public class SimpleEventDTO {
         return formatter.format(EventStartTime);
     }
 
-    public Instant getEventEndTime() {
-        return EventStartTime.plusSeconds(EventDuration*60);
-    }
+
 }

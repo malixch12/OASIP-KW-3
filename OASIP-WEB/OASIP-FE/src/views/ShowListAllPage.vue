@@ -100,7 +100,7 @@ getLinkAllNoPage(FilterDate);
 <template>
   <div>
     
-    <Navbar />
+   
     <ShowList
       :eventLists="eventLists.content"
       colNum="grid-cols-4"

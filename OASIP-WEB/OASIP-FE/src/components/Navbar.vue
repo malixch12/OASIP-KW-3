@@ -22,10 +22,10 @@ setInterval(setTime, 1);
 </script>
  
 <template>
-  <nav class="bg-white border-gray-200 rounded-t-lg dark:bg-gray-800 ml-24 mr-24">
+  <nav class="">
     <div class="container flex flex-wrap justify-between items-center pr-20 pl-12 py-5">
       <router-link :to="{ name: 'Home' }" class="flex items-center">
-        <div class="w-20 "><img src="../assets/logotest.gif" /></div>
+        <div class="text-sky-500 "> Clinic Booking</div>
       </router-link>
 
       <div class="w-full md:block md:w-auto">
@@ -42,8 +42,6 @@ setInterval(setTime, 1);
                 block
 
                 text-gray-700
-                border-b border-gray-100
-                hover:bg-gray-50
                 md:hover:text-pink-500 md:p-0
               "
               >Home</router-link
@@ -55,8 +53,7 @@ setInterval(setTime, 1);
               class="
                  block
                 text-gray-700
-                border-b border-gray-100
-                hover:bg-gray-50
+                
                 md:hover:text-pink-500 md:p-0
               "
               >Booking</router-link
@@ -69,8 +66,7 @@ setInterval(setTime, 1);
               class="
                  block
                 text-gray-700
-                border-b border-gray-100
-                hover:bg-gray-50
+               
                 md:hover:text-pink-500 md:p-0 
               "
               >Check Appointments
@@ -88,7 +84,7 @@ setInterval(setTime, 1);
         </ul>
       </div>
     </div>
-    <hr style="height: 1px;  background-color: gray" />
+
   </nav>
 </template>
  

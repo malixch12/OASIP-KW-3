@@ -1,6 +1,7 @@
 <script setup>
 import ButtonLink from "../components/ButtonLink.vue";
 import Navbar from '../components/Navbar.vue'
+import Apple from '../components/Apple.vue'
 
 </script>
 
@@ -8,14 +9,14 @@ import Navbar from '../components/Navbar.vue'
   <div>
    
 
-    <div class="bg-white  space-y-7 shadow-xl  ml-24 mr-24 p-12">
-      <div class="text-7xl font-bold col-span-1 text-center">Clinic</div>
+    <div class=" space-y-7   mt-24 ml-24 mr-24 p-12">
+      <!-- <div class="text-7xl font-bold col-span-1 text-center">Clinic</div>
 
       <div class="col-span-1 text-center">
         Website for booking clinics of INT221 subject
 
-      </div>
-      <div class="col-span-1 grid grid-cols-1 place-items-center pt-5"><img src="../assets/logoHome.gif" class="w-2/5" /></div>
+      </div> -->
+      <Apple/>
       <br />
 
       <div class="text-white font-bold grid grid-cols-2">

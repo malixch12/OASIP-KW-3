@@ -114,7 +114,7 @@ const SentToNextPage = (categoryId, eventCategoryName, eventDuration) => {
 
 
  <!-- หัวข้อ -->
-    <div class="bg-white shadow-xl rounded-b-lg ml-24 mr-24 p-12 ">
+    <div class="bg-white shadow-xl rounded-b-lg ml-24 mr-24 p-12 rounded ">
       <div class="text-3xl font-bold text-center mb-10 ">
         {{ name }}
       </div>

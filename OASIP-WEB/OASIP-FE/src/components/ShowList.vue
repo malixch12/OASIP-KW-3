@@ -72,7 +72,7 @@ const PageIndexCurrent = ref(1)
 
 <template>
   <div>
-    <div class="bg-white shadow-xl ml-24 mr-24 p-12 grid grid-cols-1">
+    <div class="bg-white shadow-xl ml-24 mr-24 p-12 grid grid-cols-1 ">
       <h1 class="text-4xl pb-5 text-center font-bold">{{ name }}</h1>
 
       <!-- filter  -->

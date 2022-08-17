@@ -23,9 +23,9 @@ setInterval(setTime, 1);
  
 <template>
   <nav class="">
-    <div class="container flex flex-wrap justify-between items-center pr-20 pl-12 py-5">
+    <div class="container flex flex-wrap justify-between items-center  pl-12 py-5">
       <router-link :to="{ name: 'Home' }" class="flex items-center">
-        <div class="text-sky-500 "> Clinic Booking</div>
+      <img src="../assets/logo-removebg-preview.png" class="w-14"/>  <div class="text-black font-bold "> Clinic Booking</div>
       </router-link>
 
       <div class="w-full md:block md:w-auto">

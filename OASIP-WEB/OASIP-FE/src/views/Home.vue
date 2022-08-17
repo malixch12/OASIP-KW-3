@@ -1,7 +1,7 @@
 <script setup>
 import ButtonLink from "../components/ButtonLink.vue";
 import Navbar from '../components/Navbar.vue'
-import Apple from '../components/Apple.vue'
+import Apple from '../components/TextAnimation.vue'
 
 </script>
 
@@ -9,21 +9,27 @@ import Apple from '../components/Apple.vue'
   <div>
    
 
-    <div class=" space-y-7   mt-24 ml-24 mr-24 p-12">
+    <div class="grid grid-cols-2  text-gray-900 space-y-7  items-center  ml-36  p-12 relative">
       <!-- <div class="text-7xl font-bold col-span-1 text-center">Clinic</div>
 
       <div class="col-span-1 text-center">
         Website for booking clinics of INT221 subject
 
       </div> -->
-      <Apple/>
+          
+      <div class="mt-24"> <Apple/><p class="text-neutral-500 text-2xl	drop-shadow-lg">A website for booking and managing your clinic in 222 subjects.</p>
+
       <br />
 
       <div class="text-white font-bold grid grid-cols-2">
-        <ButtonLink name="Book a Clinic" link="BookingEventByCate" class="justify-self-end"/>
-        <ButtonLink name="Check Appointments" link="ListAllByCate" class="justify-self-start"/>
-        
-      </div>
+        <div class="grid grid-cols-2">
+        <ButtonLink name="Sign up ->" link="BookingEventByCate" addStyle="bg-red-400" class="justify-start"/>
+        <ButtonLink name="Appointments" link="ListAllByCate" addStyle="bg-white text-neutral-500" class="justify-self-start ml-8"/>
+        </div>
+      </div></div>
+     
+      <div class="ml-24">  <img src="../assets/logo-removebg-preview.png " class="drop-shadow-2xl"/></div>
+   
     </div>
   </div>
 </template>

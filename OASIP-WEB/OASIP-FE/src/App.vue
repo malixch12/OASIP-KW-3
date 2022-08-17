@@ -11,7 +11,7 @@ import Navbar from '../src/components/Navbar.vue'
       via-blue-200
       to-pink-200 to-pink-200
       relative
-    
+       
       min-h-screen
       flex-col
       justify-center

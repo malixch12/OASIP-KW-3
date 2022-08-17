@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { onBeforeMount, onBeforeUpdate, ref } from "vue";
 import { useRouter } from "vue-router";
 import PopupPage from "../components/PopupPage.vue";
 import RoundButton from "../components/RoundButton.vue";
@@ -73,12 +73,20 @@ const SentToNextPage = (categoryId, eventCategoryName, eventDuration) => {
   }
 };
 
+const askShowList = ref(true)
+
+
+  if(props.type == "ShowList") {
+askShowList.value = false
+  }
+
 
 
 </script>
 
 <template>
   <div>
+    
     <!-- popup -->
     <PopupPage v-show="isActivePopup" :dim-background="true">
       <div class="flex justify-end p-5" @click="() => isActivePopup = false">
@@ -114,7 +122,7 @@ const SentToNextPage = (categoryId, eventCategoryName, eventDuration) => {
 
 
  <!-- หัวข้อ -->
-    <div class="bg-white shadow-xl rounded-b-lg ml-24 mr-24 p-12 rounded ">
+    <div class=" rounded-b-lg ml-24 mr-24 p-5 rounded ">
       <div class="text-3xl font-bold text-center mb-10 ">
         {{ name }}
       </div>
@@ -124,7 +132,7 @@ const SentToNextPage = (categoryId, eventCategoryName, eventDuration) => {
           <li class="relative mb-6 sm:mb-0">
             <div class="flex items-center">
               <div
-                class="flex z-10 justify-center items-center w-6 h-6 bg-blue-300 rounded-full ring-0 ring-white dark:bg-blue-900 sm:ring-8 dark:ring-gray-900 shrink-0">
+                class="flex z-10 justify-center items-center w-6 h-6 bg-blue-300 rounded-full ring-0 ring-gray-200 dark:bg-blue-900 sm:ring-8 dark:ring-gray-900 shrink-0">
 
                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true"
                   role="img" class="iconify iconify--material-symbols" width="15" height="15"
@@ -134,7 +142,7 @@ const SentToNextPage = (categoryId, eventCategoryName, eventDuration) => {
                   </path>
                 </svg>
               </div>
-              <div class="hidden sm:flex w-48 bg-gray-200 h-0.5 dark:bg-gray-700"></div>
+              <div class="hidden sm:flex w-48 bg-gray-500 h-0.5 dark:bg-gray-700"></div>  
 
             </div>
             <div class="mt-3 sm:pr-8">
@@ -146,7 +154,7 @@ const SentToNextPage = (categoryId, eventCategoryName, eventDuration) => {
           <li class="relative mb-6 sm:mb-0">
             <div class="flex items-center">
               <div
-                class="flex z-10 justify-center items-center w-6 h-6 bg-blue-300 rounded-full ring-0 ring-white dark:bg-blue-900 sm:ring-8 dark:ring-gray-900 shrink-0">
+                class="flex z-10 justify-center items-center w-6 h-6 bg-blue-300 rounded-full ring-0 ring-gray-200 dark:bg-blue-900 sm:ring-8 dark:ring-gray-900 shrink-0">
                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true"
                   role="img" class="iconify iconify--mdi" width="15" height="15" preserveAspectRatio="xMidYMid meet"
                   viewBox="0 0 24 24">
@@ -155,7 +163,7 @@ const SentToNextPage = (categoryId, eventCategoryName, eventDuration) => {
                   </path>
                 </svg>
               </div>
-              <div class="hidden sm:flex w-48 bg-gray-200 h-0.5 dark:bg-gray-700"></div>
+              <div class="hidden sm:flex w-48 bg-gray-500 h-0.5 dark:bg-gray-700"></div>
 
             </div>
             <div class="mt-3 sm:pr-8">
@@ -167,7 +175,7 @@ const SentToNextPage = (categoryId, eventCategoryName, eventDuration) => {
           <li class="relative mb-6 sm:mb-0">
             <div class="flex items-center">
               <div
-                class="flex z-10 justify-center items-center w-6 h-6 bg-blue-300 rounded-full ring-0 ring-white dark:bg-blue-900 sm:ring-8 dark:ring-gray-900 shrink-0">
+                class="flex z-10 justify-center items-center w-6 h-6 bg-blue-300 rounded-full ring-0 ring-gray-200 dark:bg-blue-900 sm:ring-8 dark:ring-gray-900 shrink-0">
                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true"
                   role="img" class="iconify iconify--icon-park-outline" width="15" height="15"
                   preserveAspectRatio="xMidYMid meet" viewBox="0 0 48 48">
@@ -185,7 +193,7 @@ const SentToNextPage = (categoryId, eventCategoryName, eventDuration) => {
                   </g>
                 </svg>
               </div>
-              <div class="hidden sm:flex w-32 bg-gray-200 h-0.5 dark:bg-gray-700"></div>
+              <div class="hidden sm:flex w-32 bg-gray-500 h-0.5 dark:bg-gray-700"></div>
 
             </div>
             <div class="mt-3 sm:pr-8">
@@ -207,12 +215,25 @@ const SentToNextPage = (categoryId, eventCategoryName, eventDuration) => {
       <router-link :to="{ name: 'ListAllEvent', query: { categoryId: 0 } }" class="grid justify-items-center">
         <div v-if="type == `ShowList`"
           class="transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 duration-100 shadow-xl text-center font-semibold mb-10 bg-slate-100 text-slate-600 hover:bg-slate-600 hover:text-white rounded-full w-72 p-1 ">
-          Check All Appointment
+           check all
         </div>
       </router-link>
 
+<div class="grid justify-items-center">
+        <div v-if="type == `ShowList`" 
+          class="transition ease-in-out delay-150 
+           hover:-translate-y-1 hover:scale-110 duration-100 shadow-xl 
+           text-center font-semibold mb-10 bg-slate-100 text-slate-600 
+           hover:bg-slate-600 hover:text-white rounded-full w-72 p-1 "
+           @click="()=>askShowList=true" 
+           >
+          some  appointment
+          
+        </div>
+        <img src="../assets/ques.gif" v-if="!askShowList"/>
+    </div>  
 
-      <div class="grid grid-cols-3 gap-6 place-items-center mb-12">
+      <div class="grid grid-cols-3 gap-6 place-items-center mb-12" v-if="askShowList">
         <div v-for="category in categorys" :key="category.eventCategoryID">
           <div class="grid justify-items-center">
             <img :src="`/kw3/` + category.eventCategoryID + `.png`" @click="

@@ -6,10 +6,7 @@ import Navbar from '../src/components/Navbar.vue'
 <template>
   <div
     class="
-      bg-gradient-to-r
-      from-emerald-100
-      via-blue-200
-      to-pink-200 to-pink-200
+      bg-gray-200
       relative
        
       min-h-screen

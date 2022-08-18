@@ -93,7 +93,7 @@ setInterval(setTime, 1);
                
                 md:hover:text-pink-500 md:p-0 
               "
-              >SignUpPage
+              >sign up
             </router-link>
           </li>
           

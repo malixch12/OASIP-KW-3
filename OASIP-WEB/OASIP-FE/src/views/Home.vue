@@ -23,7 +23,7 @@ import Apple from '../components/TextAnimation.vue'
 
       <div class="text-white font-bold grid grid-cols-2">
         <div class="grid grid-cols-2">
-        <ButtonLink name="Sign up ->" link="BookingEventByCate" addStyle="bg-red-400" class="justify-start"/>
+        <ButtonLink name="Sign up ->" link="SignUpPage" addStyle="bg-red-400" class="justify-start"/>
         <ButtonLink name="Appointments" link="ListAllByCate" addStyle="bg-white text-neutral-500" class="justify-self-start ml-8"/>
         </div>
       </div></div>

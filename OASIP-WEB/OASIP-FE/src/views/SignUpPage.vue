@@ -8,10 +8,10 @@ const route = useRoute();
 </script>
 
 <template>
-  <div>
-    <section>
+  <div class="">
+    <section class="">
 
-        <div class="color"> asdasd</div>
+        <div class="color"> </div>
          <div class="color"></div>
           <div class="color"></div>
           
@@ -26,16 +26,20 @@ const route = useRoute();
 
             <div class="container2">
                 <div class="form">
-                    <h2>Login form</h2>
+                    <h2>Create account</h2>
+
                     <form>
                         <div class="inputBox">
                             <input type="text" placeholder="Username">
                         </div>
                          <div class="inputBox">
-                            <input type="password" placeholder="password">
+                            <input type="text" placeholder="email">
+                        </div>
+                         <div class="inputBox">
+                            <input type="text" placeholder="role">
                         </div>
                         <div class="inputBox">
-                            <input type="submit" value="Login">
+                            <input type="submit" value="Sign up">
                         </div>
 
                         <p class="forget">Dont have an account ?  Click here</p>
@@ -60,7 +64,7 @@ const route = useRoute();
     font-family: 'Poppins', sans-serif;
 }
 
-body { overflow: hidden; }
+body {}
 
 section
  {
@@ -68,20 +72,19 @@ section
     justify-content:center;
     align-items: center;
     min-height: 77vh;
-    background: linear-gradient(to bottom , #f1f4f9 , #dff1ff);
 }
 
 section .color
 {
     position:absolute;
-    filter: blur(150px);
+    filter: blur(250px);
 }
 
 section .color:nth-child(1)
 {
-    top: -350px;
-    width: 600px;
-    height: 600px;
+    
+    width: 400px;
+    height: 400px;
     background: #ff359b
 }
 
@@ -116,15 +119,59 @@ section .color:nth-child(3)
         border-right:1px solid rgba(255,255,255,0.2);
  border-bottom:1px solid rgba(255,255,255,0.2);
    background: rgba(255,255,255,0.1);
-
+    animation: animate 10s linear infinite;
    border-radius: 10px;
+   animation-delay: calc(-1s * var(--i));
 }
 
-.box .squareP:nth-child(1) {
+@keyframes animate
+{
+    0%,100%{
+        transform: translateY(-40px);
+    }
+    50% {
+        transform: translateY(40px);
+    }
+    
+}
+
+.box .square:nth-child(2) {
+    top: 150px;
+    left: -200px;
+    width:120px;
+    height:120px;
+    z-index: 2;
+}
+
+.box .square:nth-child(1) {
     top: -50px;
     right: -60px;
     width:100px;
     height:100px;
+}
+
+.box .square:nth-child(3) {
+    bottom: 50px;
+    right: -120px;
+    width:80px;
+    height:80px;
+    z-index: 2;
+}
+
+
+.box .square:nth-child(4) {
+    bottom: -80px;
+    left: 100px;
+    width:50px;
+    height:50px;
+ 
+}
+.box .square:nth-child(5) {
+    top: -80px;
+    left: 140px;
+    width:60px;
+    height:60px;
+ 
 }
 
 
@@ -132,12 +179,12 @@ section .color:nth-child(3)
     position: relative;
     width: 400px;
     min-height:400px;
-    background: rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.5);
     border-radius: 10px;
     display:flex;
     justify-content: center;
     align-items: center;
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(30px);
     box-shadow: 0 25px 45px rgba(0,0,0,0.1);
     border:1px solid rgba(255,255,255,0.5);
         border-right:1px solid rgba(255,255,255,0.2);
@@ -155,7 +202,7 @@ section .color:nth-child(3)
 
 .form h2{
     position: relative;
-    color: #fff;
+    color: rgb(0, 0, 0);
     font-size: 24px;
     font-weight: 600;
     letter-spacing:1px;
@@ -193,13 +240,13 @@ section .color:nth-child(3)
     border-bottom:1px solid rgba(255,255,255,0.2);
     font-size:16px;
     letter-spacing: 1px;
-    color: #fff;
+    color: rgb(111, 104, 104);
     box-shadow: 0 5px 15px rgba(0,0,0,0.05);
 
 }
 
 .form .inputBox input::placeholder {
-    color: #fff;
+    color: rgb(115, 109, 109);
 }
 
 .form .inputBox input[type="submit"] {
@@ -213,11 +260,12 @@ section .color:nth-child(3)
 
 .forget {
     margin-top:5px;
-    color: #fff;
+    color: rgb(81, 78, 78);
+    font-size: 15px;
 }
 
 .forget a {
-    color: #fff;
+    color: rgb(11, 8, 8);
     font-weight: 600;
 }
 

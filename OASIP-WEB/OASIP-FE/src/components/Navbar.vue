@@ -72,6 +72,31 @@ setInterval(setTime, 1);
               >Check Appointments
             </router-link>
           </li>
+             <li>
+            <router-link
+              :to="{ name: 'UserShowList' }"
+              class="
+                 block
+                text-gray-700
+               
+                md:hover:text-pink-500 md:p-0 
+              "
+              >user
+            </router-link>
+          </li>
+          <li>
+            <router-link
+              :to="{ name: 'SignUpPage' }"
+              class="
+                 block
+                text-gray-700
+               
+                md:hover:text-pink-500 md:p-0 
+              "
+              >SignUpPage
+            </router-link>
+          </li>
+          
           <li>
             <span
               :to="{  }"

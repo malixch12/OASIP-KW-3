@@ -15,6 +15,7 @@ import Navbar from '../src/components/Navbar.vue'
       overflow-hidden
       bg-gray-50
       font-rubik
+      scroll-smooth
     "
   >
     

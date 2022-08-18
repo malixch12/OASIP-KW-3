@@ -9,7 +9,7 @@ import Apple from '../components/TextAnimation.vue'
   <div>
    
 
-    <div class="grid grid-cols-2  text-gray-900 space-y-7  items-center  ml-36  p-12 relative">
+    <div class="grid grid-cols-2  text-gray-900 space-y-7  items-center  ml-36  relative">
       <!-- <div class="text-7xl font-bold col-span-1 text-center">Clinic</div>
 
       <div class="col-span-1 text-center">
@@ -28,7 +28,7 @@ import Apple from '../components/TextAnimation.vue'
         </div>
       </div></div>
      
-      <div class="ml-24">  <img src="../assets/logo-removebg-preview.png " class="drop-shadow-2xl"/></div>
+      <div class="ml-24">  <img src="../assets/logo-removebg-preview.png " class="drop-shadow-2xl transition duration-700 ease-in-out hover:-translate-y-1 hover:scale-110 duration-700"/></div>
    
     </div>
   </div>

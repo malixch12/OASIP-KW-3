@@ -1,5 +1,8 @@
 package sit.oasip.entities;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
@@ -21,9 +24,11 @@ public class User {
     @Column(name = "Role", nullable = false)
     private String role;
 
+    @CreationTimestamp
     @Column(name = "CreateOn", nullable = false)
     private Timestamp createOn;
 
+    @UpdateTimestamp
     @Column(name = "UpdateOn", nullable = false)
     private Timestamp updateOn;
 

@@ -23,12 +23,18 @@ public class UserService {
     public List<UserDTO> getUserAll(){
         return listMapper.mapList(repository.findAll(), UserDTO.class, modelMapper);
     }
+
     public User add(AddUserDTO newUser){
        newUser.setUserName(newUser.getUserName().trim());
         newUser.setEmail(newUser.getEmail().trim());
         User user1 = modelMapper.map(newUser, User.class);
         repository.saveAndFlush(user1);
         return user1;
+    }
+
+    public void delete(int userId){
+        repository.findById(userId).orElseThrow(()-> new RuntimeException(userId + "Does not exit !!!"));
+        repository.deleteById(userId);
     }
 
 }

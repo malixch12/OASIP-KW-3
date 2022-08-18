@@ -5,88 +5,89 @@ import Navbar from "../components/Navbar.vue";
 import { useRoute } from "vue-router";
 const route = useRoute();
 
+
+const UserLists = ref()
+
+const getLinkAll = async () => {
+  const res = await fetch(
+    `${import.meta.env.VITE_APP_TITLE}/api/users`
+  );
+  if (res.status === 200) {
+    UserLists.value = await res.json();
+  }
+};
+
+onBeforeMount(async () => {
+  getLinkAll();
+});
+
+const removeEvent  = async (UserId) => {
+  if (confirm("Would you like to cancel your appointment?") == true) {
+    const res = await fetch(
+      `${import.meta.env.VITE_APP_TITLE}/api/users/${UserId}`,
+      {
+        method: "DELETE",
+      }
+    );
+  }getLinkAll()
+};
+
 </script>
 
 <template>
+
   <div class="flex justify-center grid grid-rows-1 mt-16">
-    <div class="text-center text-2xl font-bold drop-shadow-lg text-blue-700"> User list </div>
+   
+    <div class="text-3xl font-bold text-center   drop-shadow-md"> User list </div>
     <br>
-<div class="overflow-x-auto relative shadow-md sm:rounded-lg w-full ">
+<div class="overflow-x-auto relative shadow-md sm:rounded-lg w-full px-24 bg-white py-8 ">
     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <caption class="p-5 text-lg font-semibold text-left text-gray-900 bg-white dark:text-white dark:bg-gray-800">
-            Our products
-            <p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">Browse a list of Flowbite products designed to help you work and play, stay organized, get answers, keep in touch, grow your business, and more.</p>
+            show list all user in db
+            <p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">This is the table where all user information is stored. Each user's information includes username, email address, role, time of creation, last modified time.</p>
         </caption>
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-                <th scope="col" class="py-3 px-6">
-                    Product name
+                <th scope="col" class="py-3 px-14 ">
+                    User name
                 </th>
-                <th scope="col" class="py-3 px-6">
-                    Color
+                <th scope="col" class="py-3 px-14">
+                    Email
                 </th>
-                <th scope="col" class="py-3 px-6">
-                    Category
+                <th scope="col" class="py-3 px-14">
+                    role
                 </th>
-                <th scope="col" class="py-3 px-6">
-                    Price
+            
+                <th scope="col" class="py-3 px-14">
+                    <span class="sr-only">detail</span>
                 </th>
-                <th scope="col" class="py-3 px-6">
-                    <span class="sr-only">Edit</span>
+
+                <th>
+                    
                 </th>
             </tr>
         </thead>
         <tbody>
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <tr v-for="(user, index) in UserLists" :key="index" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+
                 <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    Apple MacBook Pro 17"
+                    {{user.userName}}
                 </th>
-                <td class="py-4 px-6">
-                    Sliver
+                <td class="py-4 px-14">
+                    {{user.email}}
                 </td>
-                <td class="py-4 px-6">
-                    Laptop
+                <td class="py-4 px-14">
+                    {{user.role}}
                 </td>
-                <td class="py-4 px-6">
-                    $2999
+              
+                <td class="py-4 px-14 text-right">
+                    <div class="font-medium text-blue-600  hover:underline">Edit</div>
                 </td>
-                <td class="py-4 px-6 text-right">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                  <td class="py-4 px-14 text-right">
+                    <div class="font-medium text-red-600  hover:underline" @click="removeEvent(user.userId)">delete</div>
                 </td>
-            </tr>
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    Microsoft Surface Pro
-                </th>
-                <td class="py-4 px-6">
-                    White
-                </td>
-                <td class="py-4 px-6">
-                    Laptop PC
-                </td>
-                <td class="py-4 px-6">
-                    $1999
-                </td>
-                <td class="py-4 px-6 text-right">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                </td>
-            </tr>
-            <tr class="bg-white dark:bg-gray-800">
-                <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    Magic Mouse 2
-                </th>
-                <td class="py-4 px-6">
-                    Black
-                </td>
-                <td class="py-4 px-6">
-                    Accessories
-                </td>
-                <td class="py-4 px-6">
-                    $99
-                </td>
-                <td class="py-4 px-6 text-right">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                </td>
+          
+           
             </tr>
         </tbody>
     </table>

@@ -3,12 +3,90 @@ import { onBeforeMount, ref, onBeforeUpdate } from "@vue/runtime-core";
 import ShowList from "../components/ShowList.vue";
 import Navbar from "../components/Navbar.vue";
 import { useRoute } from "vue-router";
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
+import PopupPage from "../components/PopupPage.vue";
+import RoundButton from "../components/RoundButton.vue";
+
+
+
 const route = useRoute();
+
+const addUser = async () => {
+
+  const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/users`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(dataUser.value),
+  });
+    if(res.status === 200) {
+       isActivePopup.value=true
+       CheckStatus.value=true
+    }else {
+        isActivePopup.value=true
+        CheckStatus.value=false
+    }
+      
+      
+};
+
+const dataUser = ref({    //สำหรับให้ ฟอม v-model
+  userName: "",
+  role: "Please select role",
+  email: ""
+});
+
+const isActivePopup = ref(false);
+const CheckStatus = ref()
 
 </script>
 
 <template>
   <div class="">
+    
+ <PopupPage v-show="isActivePopup" :dim-background="true">
+      <div v-if="CheckStatus" class="grid grid-cols-1 p-12">
+        <p class="text-3xl font-semibold text-green-600 tracking-wide pb-8">
+          sign up succeeded
+        </p>
+        <div class="success-checkmark">
+  <div class="check-icon">
+    <span class="icon-line line-tip"></span>
+    <span class="icon-line line-long"></span>
+    <div class="icon-circle"></div>
+    <div class="icon-fix"></div>
+  </div>
+</div>
+        <div class=" max-w-lg mx-auto  ">
+          <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
+            @click="isActivePopup = false" />
+        </div>
+      </div>
+
+
+    <div v-if="!CheckStatus" class="grid grid-cols-1 p-12">
+        <p class="text-3xl font-semibold text-red-600 tracking-wide pb-8">
+          sign up not succeeded
+        </p>
+        <div class="success-checkmark">
+  <div class="check-icon">
+    <span class="icon-line line-tip"></span>
+    <span class="icon-line line-long"></span>
+    <div class="icon-circle"></div>
+    <div class="icon-fix"></div>
+  </div>
+</div>
+        <div class=" max-w-lg mx-auto  ">
+          <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
+            @click="isActivePopup = false" />
+        </div>
+      </div>
+
+      
+    </PopupPage>
+
+
     <section class="">
 
         <div class="color"> </div>
@@ -30,16 +108,40 @@ const route = useRoute();
 
                     <form>
                         <div class="inputBox">
-                            <input type="text" placeholder="Username">
+                            <input type="text" placeholder="Username" v-model="dataUser.userName" >
                         </div>
                          <div class="inputBox">
-                            <input type="text" placeholder="email">
+                            <input type="text" placeholder="email" v-model="dataUser.email">
                         </div>
-                         <div class="inputBox">
-                            <input type="text" placeholder="role">
+                         <div class="inputBox ">
+                           <Menu as="div" class=" ">
+    <div>
+      <MenuButton class="text-left bg-transparent h-12 w-full rounded-full border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+        {{dataUser.role}}
+        <ChevronDownIcon class="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
+      </MenuButton>
+    </div>
+
+    <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
+      <MenuItems class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <div class="py-1">
+          <MenuItem v-slot="{ active }">
+            <div :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']" @click="dataUser.role=`Admin`">Admin</div>
+          </MenuItem>
+          <MenuItem v-slot="{ active }">
+            <div :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']" @click="dataUser.role=`Lecturer`">Lecturer</div>
+          </MenuItem>
+          <MenuItem v-slot="{ active }">
+            <div :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']" @click="dataUser.role=`Student`">Student</div>
+          </MenuItem>
+        
+        </div>
+      </MenuItems>
+    </transition>
+  </Menu>
                         </div>
                         <div class="inputBox">
-                            <input type="submit" value="Sign up">
+                            <input type="submit" value="Sign up" @click="addUser()">
                         </div>
 
                         <p class="forget">Dont have an account ?  Click here</p>
@@ -243,6 +345,10 @@ section .color:nth-child(3)
     color: rgb(111, 104, 104);
     box-shadow: 0 5px 15px rgba(0,0,0,0.05);
 
+}
+
+.MenuButton {
+    background:rgba(255,255,255,0.2);
 }
 
 .form .inputBox input::placeholder {

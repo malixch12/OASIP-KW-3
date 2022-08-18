@@ -14,7 +14,7 @@ public class AddUserDTO {
 
     @NotBlank(message = "please fill user name")
     @Length(min = 1, max = 100, message="size must be between 1 and 100")
-    private String UserNameว
+    private String UserName;
     
     @Email(message = "format is wrong")
     @NotBlank(message = "please fill user name")

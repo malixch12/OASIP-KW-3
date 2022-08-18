@@ -1,13 +1,16 @@
 package sit.oasip.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import sit.oasip.dtos.UserDTO.AddUserDTO;
 import sit.oasip.dtos.UserDTO.UserDTO;
+import sit.oasip.entities.User;
 import sit.oasip.repositories.UserRepository;
 import sit.oasip.services.UserService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -23,5 +26,16 @@ public class UserController {
     public List<UserDTO> getUserByAll(){
         return userService.getUserAll();
     }
+    @PostMapping("")
+    @ResponseStatus(HttpStatus.OK)
+    public User addUser(@Validated @RequestBody AddUserDTO newUser){
+        return userService.add(newUser);
+    }
+
+    @DeleteMapping("/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void delete(@PathVariable Integer userId){userService.delete(userId);}
+
+
 
 }

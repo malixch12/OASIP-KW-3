@@ -4,6 +4,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
 
 @Entity
@@ -14,10 +15,10 @@ public class User {
     @Column(name = "UserID", nullable = false)
     private Integer userId;
 
-    @Column(name = "UserName", nullable = false, length = 100)
+    @Column(name = "UserName", nullable = false, length = 100,unique = true)
     private String userName;
 
-    @Column(name = "Email", nullable = false, length = 50)
+    @Column(name = "Email", nullable = false, length = 50, unique = true)
     private String email;
 
     @Lob

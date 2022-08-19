@@ -1,16 +1,38 @@
 <script setup>
 import { ref, onBeforeMount, onBeforeUpdate, computed } from "vue";
 
+
+
+onBeforeMount( () => {
+ setInterval(function () {
+  const show = document.querySelector('span[data-show]')
+  const next = show.nextElementSibling || document.querySelector('span:first-child')
+  const up = document.querySelector('span[data-up]')
+  
+  if (up) {
+    up.removeAttribute('data-up')
+  }
+  
+  show.removeAttribute('data-show')
+  show.setAttribute('data-up', '')
+  
+  next.setAttribute('data-show', '')
+}, 2000)
+
+});
+
+
+const test = '#0e6ffc'
 </script>
  
 <template>
   <div >
  
-<div class="font-bold drop-shadow-lg">Select  clinics</div>
+<div >Clinic booking</div>
    <div class="wrapper">
        
        
-       <div class="words drop-shadow-lg">
+       <div class="words">
            <span>Server-side Clinic.</span>
            <span>Project Management</span>
            <span>DevOps/Infra Clinic.</span>
@@ -19,7 +41,7 @@ import { ref, onBeforeMount, onBeforeUpdate, computed } from "vue";
            <span>Project Management</span>
        </div>
    </div>
-<div class="font-bold drop-shadow-lg ">and booking</div>
+
   </div>
 </template>
  
@@ -28,24 +50,23 @@ import { ref, onBeforeMount, onBeforeUpdate, computed } from "vue";
 *:before,
 *:after{
     padding: 0;
-    margin: -5px;
+    margin: 0;
     box-sizing: border-box;
     font-family: Helvetica;
     width: 980px;
   font-size: 80px;
-    
+    font-weight: 500;
 }
 body{
     background-color: #0e6ffc;
     height: 100vh;
     display: grid;
     place-items: center;
-    
 }
 .wrapper{
     box-sizing: content-box;
    
-    height: 80px;
+    height: 125px;
    
     display: flex;
 

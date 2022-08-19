@@ -140,7 +140,7 @@ const isActivePopup = ref(false)
  
 <template>
   <div>
-    <div class="flex justify-between grid grid-cols-3 gap-2">
+    <div class="flex justify-between grid grid-cols-3 gap-2 rounded">
 
       <PopupPage v-show="isActivePopup == true" :dim-background="true">
        

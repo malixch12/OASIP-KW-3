@@ -6,16 +6,18 @@ import Navbar from '../src/components/Navbar.vue'
 <template>
   <div
     class="
-      bg-gray-200
+      bg-gradient-to-r
+      from-emerald-100
+      via-blue-200
+      to-pink-200 to-pink-200
       relative
-       
+    
       min-h-screen
       flex-col
       justify-center
       overflow-hidden
       bg-gray-50
       font-rubik
-      
     "
   >
     

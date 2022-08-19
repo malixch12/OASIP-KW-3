@@ -16,7 +16,7 @@ getLinkAll()
 <template>
 <div>
 
-<generateCategory name="Which kind of appointments would you like to see?" :categorys="eventLists" type="ShowList"/>
+<generateCategory name="Select a clinic to check all appointments." :categorys="eventLists" type="ShowList"/>
 
 
 </div>

@@ -23,9 +23,9 @@ setInterval(setTime, 1);
  
 <template>
   <nav class="">
-    <div class="container flex flex-wrap justify-between items-center pr-20 pl-12 py-5">
+    <div class="container flex flex-wrap justify-between items-center  pl-12 py-5">
       <router-link :to="{ name: 'Home' }" class="flex items-center">
-        <div class="text-sky-500 "> Clinic Booking</div>
+      <img src="../assets/logo-removebg-preview.png" class="w-14"/>  <div class="text-black font-bold "> Clinic Booking</div>
       </router-link>
 
       <div class="w-full md:block md:w-auto">
@@ -56,7 +56,7 @@ setInterval(setTime, 1);
                 
                 md:hover:text-pink-500 md:p-0
               "
-              >Booking</router-link
+              >booking</router-link
             >
           </li>
 
@@ -69,9 +69,34 @@ setInterval(setTime, 1);
                
                 md:hover:text-pink-500 md:p-0 
               "
-              >Check Appointments
+              >check appointments
             </router-link>
           </li>
+             <li>
+            <router-link
+              :to="{ name: 'UserShowList' }"
+              class="
+                 block
+                text-gray-700
+               
+                md:hover:text-pink-500 md:p-0 
+              "
+              >user list
+            </router-link>
+          </li>
+          <li>
+            <router-link
+              :to="{ name: 'SignUpPage' }"
+              class="
+                 block
+                text-transparent  bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 
+               
+                
+              "
+              >sign up
+            </router-link>
+          </li>
+          
           <li>
             <span
               :to="{  }"
@@ -93,4 +118,7 @@ setInterval(setTime, 1);
   color: rgb(93, 176, 209);
   /* border-color: #0a0e0b; */
 }
+
+
+
 </style>

@@ -14,21 +14,20 @@ services:
       - MYSQL_ROOT_PASSWORD=root
 
   backend:
-    build: "./OASIP-BE"
+    build: "./classicmodels-service2"
     depends_on:
       - db
     env_file:
-      - "./OASIP-BE/.env"
+      - "./classicmodels-service2/.env"
     restart: on-failure
     environment:
-      - MYSQL_USER=int222
-      - MYSQL_PASSWORD=int222
+      - MYSQL_USER=root
       - MYSQL_HOST=db
       - MYSQL_PORT=3306
-      - MYSQL_DATABASE=int222
+      - MYSQL_DATABASE=scheduledb
 
   frontend:
-    build: "./OASIP-FE"
+    build: "./OASIP-KW-3"
     depends_on:
       - backend
 

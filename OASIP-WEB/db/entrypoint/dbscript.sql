@@ -63,7 +63,7 @@ DROP TABLE IF EXISTS `User` ;
 
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `User` (
-  `UserID` INT NOT NULL AUTO_INCREMENT,
+  `UserID` INT NOT NULL,
   `UserName` VARCHAR(100) NOT NULL UNIQUE,
   `Email` VARCHAR(50) NOT NULL UNIQUE,
   `Role` ENUM('Admin','Lecturer','Student') DEFAULT 'Student' NOT NULL,
@@ -105,13 +105,3 @@ INSERT INTO event values (3,'สมเกียรติ ขยันเรี�
 
 INSERT INTO User(UserID,UserName,Email,Role)values(1,'สมส่วน สุขศรี','somsuan.s@kmutt.ac.th','Lecturer');
 INSERT INTO User(UserID,UserName,Email)values(2,'กัญญาพัขร','kanyapat.w@kmutt.ac.th');
-
-select * from user;
-
-
-
-
-
-
-
-

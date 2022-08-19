@@ -56,7 +56,7 @@ setInterval(setTime, 1);
                 
                 md:hover:text-pink-500 md:p-0
               "
-              >Booking</router-link
+              >booking</router-link
             >
           </li>
 
@@ -69,7 +69,7 @@ setInterval(setTime, 1);
                
                 md:hover:text-pink-500 md:p-0 
               "
-              >Check Appointments
+              >check appointments
             </router-link>
           </li>
              <li>
@@ -81,7 +81,7 @@ setInterval(setTime, 1);
                
                 md:hover:text-pink-500 md:p-0 
               "
-              >user
+              >user list
             </router-link>
           </li>
           <li>
@@ -89,9 +89,9 @@ setInterval(setTime, 1);
               :to="{ name: 'SignUpPage' }"
               class="
                  block
-                text-gray-700
+                text-transparent  bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 
                
-                md:hover:text-pink-500 md:p-0 
+                
               "
               >sign up
             </router-link>
@@ -118,4 +118,7 @@ setInterval(setTime, 1);
   color: rgb(93, 176, 209);
   /* border-color: #0a0e0b; */
 }
+
+
+
 </style>

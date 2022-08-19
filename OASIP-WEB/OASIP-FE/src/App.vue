@@ -1,26 +1,30 @@
 <script setup>
 import { ref, onBeforeMount } from "vue";
-import Navbar from '../src/components/Navbar.vue'
+
 </script>
 
 <template>
   <div
     class="
-      bg-gray-200
+      bg-gradient-to-r
+      from-emerald-100
+      via-blue-200
+      to-pink-200 to-pink-200
       relative
-       
+      flex
       min-h-screen
       flex-col
       justify-center
       overflow-hidden
       bg-gray-50
+      py-6
+      sm:py-12
       font-rubik
-      
     "
   >
     
-    <Navbar/>
-      <div class="mt-3"><router-view> </router-view> </div>
+    
+      <router-view> </router-view>
 
   </div>
 </template>

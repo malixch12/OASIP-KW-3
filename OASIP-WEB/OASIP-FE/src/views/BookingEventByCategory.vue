@@ -15,7 +15,7 @@ getLinkAll()
 
 <template>
 <div>
-  
+<Navbar/>
 <generateCategory name="Select a clinic to booking" :categorys="CateLists" type="Booking"/>
 
 

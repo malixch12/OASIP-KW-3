@@ -72,7 +72,7 @@ const PageIndexCurrent = ref(1)
 
 <template>
   <div>
-    <div class="ml-24 mr-24 p-12 grid grid-cols-1 ">
+    <div class="bg-white shadow-xl ml-24 mr-24 p-12 grid grid-cols-1">
       <h1 class="text-4xl pb-5 text-center font-bold">{{ name }}</h1>
 
       <!-- filter  -->
@@ -106,17 +106,11 @@ const PageIndexCurrent = ref(1)
       <!-- event list -->
       <div v-if="check" :class="[style, colNum]">
         <div v-for="(event, index) in props.eventLists" :key="index">
-          <div className="rounded-xl  mx-auto  drop-shadow-md ">
+          <div className="rounded-xl  mx-auto bg-gradient-to-r p-[3px] from-[#F9B1C0] via-[#A9F7B8] to-[#8CC0F4]">
             <div
-              className="flex flex-col justify-between h-full bg-neutral-200 text-black rounded-lg p-4 ">
-                
-              <p class=" drop-shadow-2xl  font-semibold  w-auto pr-2 mr-2 rounded-lg text-orange-900" v-if="event.eventCategoryID==3">{{ event.eventCategory }}</p>
-              <p class=" drop-shadow-2xl  font-semibold w-auto  pr-2  mr-2 rounded-lg text-sky-700" v-if="event.eventCategoryID==2">{{ event.eventCategory }}</p>
-              <p class=" drop-shadow-2xl  font-semibold  w-auto  pr-2  mr-2 rounded-lg text-rose-500" v-if="event.eventCategoryID==6">{{ event.eventCategory }}</p>
-              <p class=" drop-shadow-2xl  font-semibold  w-auto  pr-2 mr-2 rounded-lg text-green-600" v-if="event.eventCategoryID==5">{{ event.eventCategory }}</p>
-              <p class="drop-shadow-2xl  font-semibold   w-auto  pr-2  mr-2 rounded-lg text-violet-400" v-if="event.eventCategoryID==1">{{ event.eventCategory }}</p>
-              <p class="drop-shadow-2xl font-semibold  w-auto  pr-2  mr-2 rounded-lg text-gray-700" v-if="event.eventCategoryID==4">{{ event.eventCategory }}</p>
-
+              className="flex flex-col justify-between h-full bg-rose-100 text-black rounded-lg p-4 hover:bg-red-200">
+              <p class="font-semibold">{{ event.eventCategory }}</p>
+              
               <p>Name : {{ event.bookingName }}</p>
               <p>
                 Date :
@@ -144,7 +138,7 @@ const PageIndexCurrent = ref(1)
     </div>
 
     <!-- page -->
-    <div class="  rounded-b-lg p-8 ml-24 mr-24 text-center">
+    <div class="bg-white shadow-xl rounded-b-lg p-8 ml-24 mr-24 text-center">
       <!-- <span
         v-for="(e, index) in numPage"
         :key="index"

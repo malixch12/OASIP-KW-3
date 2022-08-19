@@ -101,7 +101,7 @@ const getLinkAllNoPage = async (FilterDate) => {
 
 <template>
   <div>
-    
+    <Navbar />
 
     <ShowList
       :eventLists="eventLists.content"

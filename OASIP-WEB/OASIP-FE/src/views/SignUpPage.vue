@@ -42,7 +42,7 @@ const route = useRoute();
                             <input type="submit" value="Sign up">
                         </div>
 
-                        <p class="forget">Dont have an account ?  Click here</p>
+                        <p class="forget">Dont have an account ?  Click here!</p>
 
                     </form>
                 </div>

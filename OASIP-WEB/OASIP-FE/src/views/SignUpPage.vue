@@ -21,6 +21,7 @@ const addUser = async () => {
     body: JSON.stringify(dataUser.value),
   });
     if(res.status === 200) {
+        console.log(dataUser.value);
        isActivePopup.value=true
        CheckStatus.value=true
     }else {
@@ -31,6 +32,8 @@ const addUser = async () => {
       
 };
 
+
+
 const dataUser = ref({    //สำหรับให้ ฟอม v-model
   userName: "",
   role: "Please select role",
@@ -39,6 +42,56 @@ const dataUser = ref({    //สำหรับให้ ฟอม v-model
 
 const isActivePopup = ref(false);
 const CheckStatus = ref()
+
+
+//validate
+
+function validateEmail(email) {
+  var re =  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email);
+}
+
+onBeforeUpdate(() => {
+  CheckData()
+});
+
+function CheckData() {
+ 
+  if (dataUser.value.email != "") {
+    EmailCheck.value = true
+  } else { EmailCheck.value = false }
+
+  // Check Email validateEmail
+  if (validateEmail(dataUser.value.email) == true) {
+    EmailValidation.value = true
+  } else {
+    EmailValidation.value = false
+  }
+
+  //check name
+   if (dataUser.value.userName != "") {
+    NameCheck.value = true
+  } else {
+    NameCheck.value = false
+  }
+
+
+  //check role
+
+  if(dataUser.value.role!="Admin" && dataUser.value.role!= "Lecturer" &&  dataUser.value.role!= "Student") {
+RoleCheck.value = false
+  } else {
+    RoleCheck.value = true
+    console.log("")
+
+  }
+
+}
+
+const EmailCheck = ref(true)   //เซ็คว่ากรอกรึยัง
+const EmailValidation = ref(true)  //ฟอแมท เมล
+const NameCheck = ref(true)     //เซ็คว่ากรอกรึยัง
+const RoleCheck = ref(true) //check role
 
 </script>
 
@@ -108,10 +161,27 @@ const CheckStatus = ref()
 
                     <form>
                         <div class="inputBox">
-                            <input type="text" placeholder="Username" v-model="dataUser.userName" >
+                            <input type="text" placeholder="Username" v-model.trim="dataUser.userName" >
+                              <details class="" v-if="!NameCheck">
+          <summary class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
+            invalid
+          </summary>
+          <div class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
+            <span v-show="!NameCheck" class="text-red-600"> กรุณาใส่ยูสเซอร์เนม</span>
+          </div>
+        </details>
                         </div>
                          <div class="inputBox">
-                            <input type="text" placeholder="email" v-model="dataUser.email">
+                            <input type="text" placeholder="email" v-model.trim="dataUser.email">
+                              <details class="" v-show="!EmailValidation || !EmailCheck">
+          <summary class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
+            invalid
+          </summary>
+          <div class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
+            <span v-show="!EmailCheck" class="text-red-600"> กรุณาใส่อีเมล</span>
+            <span v-show="!EmailValidation & EmailCheck" class="text-red-600"> กรุณากรอกอีเมลล์ให้ถูกต้อง</span>
+          </div>
+        </details>
                         </div>
                          <div class="inputBox ">
                            <Menu as="div" class=" ">
@@ -139,6 +209,15 @@ const CheckStatus = ref()
       </MenuItems>
     </transition>
   </Menu>
+   <details class="" v-if="!RoleCheck">
+          <summary class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
+            invalid
+          </summary>
+          <div class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
+            <span v-show="!RoleCheck" class="text-red-600"> กรุณาเลือก role</span>
+          </div>
+        </details>
+
                         </div>
                         <div class="inputBox">
                             <input type="submit" value="Sign up" @click="addUser()">

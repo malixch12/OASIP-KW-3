@@ -82,6 +82,7 @@ askShowList.value = false
 
 
 
+
 </script>
 
 <template>
@@ -121,7 +122,7 @@ askShowList.value = false
 
 <!-- หัวข้อ -->
 <div class=" rounded-b-lg ml-24 mr-24 p-5 rounded ">
-  <div class="text-3xl font-bold text-center mb-10  drop-shadow-md">
+  <div class="text-3xl font-bold text-center mb-10  drop-shadow-md" v-if="type == `Booking`">
         {{ name }}
   </div>
 
@@ -201,7 +202,13 @@ askShowList.value = false
   <!-- หัวข้อ -->
 
 
- <div class="grid justify-items-center"><router-link :to="{ name: 'ListAllEvent', query: { categoryId: 0 } }" class="">
+ <div class="grid justify-items-center ">
+  
+  <div class="text-3xl font-bold text-center mb-10  drop-shadow-md " v-if="type == `ShowList`">
+        {{ name }}
+  </div>
+
+  <router-link :to="{ name: 'ListAllEvent', query: { categoryId: 0 } }" class="">
     <div v-if="type == `ShowList`" class=" transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 duration-100 shadow-xl text-center font-semibold mb-10 bg-blue-400 text-white hover:bg-green-300 hover:text-black rounded-full w-72 p-1 ">
            check all   
     </div>

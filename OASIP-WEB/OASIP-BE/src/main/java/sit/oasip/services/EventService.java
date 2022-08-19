@@ -17,12 +17,14 @@ import sit.oasip.entities.Eventcategory;
 import sit.oasip.repositories.EventRepository;
 import sit.oasip.repositories.EventcategoryRepository;
 import sit.oasip.utils.ListMapper;
+import sit.oasip.utils.PageMapper;
 
 @Service
 public class EventService {
     private final EventcategoryRepository cateRepository;
     private final EventRepository repository;
     private ListMapper listMapper = new ListMapper();
+    private PageMapper pageMapper = new PageMapper();
 
     @Autowired
     private ModelMapper modelMapper;
@@ -36,15 +38,7 @@ public class EventService {
     long now = (System.currentTimeMillis()) / 1000;
     Instant dateNow = Instant.now().ofEpochSecond(now);
 
-    // list -> page
-    public Page<SimpleEventDTO> getPage(Pageable pageable, List<SimpleEventDTO> listEventDTO) {
-        int start = (int) pageable.getOffset();
-        int end = (int) ((start + pageable.getPageSize()) > listEventDTO.size() ? listEventDTO.size()
-                : (start + pageable.getPageSize()));
-        Page<SimpleEventDTO> pageEvent = new PageImpl<SimpleEventDTO>(listEventDTO.subList(start, end), pageable,
-                listEventDTO.size());
-        return pageEvent;
-    }
+
 
     // get event
     public List<SimpleEventDTO> getEventAll() {
@@ -54,7 +48,7 @@ public class EventService {
     public Page<SimpleEventDTO> getSimpleEventAll(Pageable pageable) {
         List<SimpleEventDTO> listEventDTO = listMapper
                 .mapList(repository.findAll(Sort.by("eventStartTime").descending()), SimpleEventDTO.class, modelMapper);
-        return getPage(pageable, listEventDTO);
+        return pageMapper.mapToPage(pageable, listEventDTO);
     }
 
     public SimpleEventDTO getSimpleEventById(int id) {
@@ -67,21 +61,21 @@ public class EventService {
         List<SimpleEventDTO> listEventDTO = listMapper.mapList(
                 repository.findByEventStartTimeEquals(date, Sort.by("eventStartTime").ascending()),
                 SimpleEventDTO.class, modelMapper);
-        return getPage(pageable, listEventDTO);
+        return pageMapper.mapToPage(pageable, listEventDTO);
     }
 
     public Page<SimpleEventDTO> getSimpleEventPastDate(Pageable pageable) {
         List<SimpleEventDTO> listEventDTO = listMapper.mapList(
                 repository.findByEventStartTimeLessThan(dateNow, Sort.by("eventStartTime").descending()),
                 SimpleEventDTO.class, modelMapper);
-        return getPage(pageable, listEventDTO);
+        return pageMapper.mapToPage(pageable, listEventDTO);
     }
 
     public Page<SimpleEventDTO> getSimpleEventFutureDate(Pageable pageable) {
         List<SimpleEventDTO> listEventDTO = listMapper.mapList(
                 repository.findByEventStartTimeGreaterThan(dateNow, Sort.by("eventStartTime").ascending()),
                 SimpleEventDTO.class, modelMapper);
-        return getPage(pageable, listEventDTO);
+        return pageMapper.mapToPage(pageable, listEventDTO);
     }
 
     // get event by category
@@ -95,14 +89,14 @@ public class EventService {
         List<SimpleEventDTO> listEventDTO = listMapper.mapList(
                 repository.findByEventCategoryID(eventCategoryID, Sort.by("eventStartTime").descending()),
                 SimpleEventDTO.class, modelMapper);
-        return getPage(pageable, listEventDTO);
+        return pageMapper.mapToPage(pageable, listEventDTO);
     }
 
     public Page<SimpleEventDTO> getEventDateByCategory(int eventCategoryID, Instant date, Pageable pageable) {
         List<SimpleEventDTO> listEventDTO = listMapper.mapList(
                 repository.findByEventCategoryIDAndEventStartTimeEquals(eventCategoryID, date),
                 SimpleEventDTO.class, modelMapper);
-        return getPage(pageable, listEventDTO);
+        return pageMapper.mapToPage(pageable, listEventDTO);
     }
 
     public Page<SimpleEventDTO> getEventPastDateByCategory(int eventCategoryID, Pageable pageable) {
@@ -110,14 +104,14 @@ public class EventService {
                 repository.findByEventCategoryIDAndEventStartTimeLessThan(eventCategoryID, dateNow,
                         Sort.by("eventStartTime").descending()),
                 SimpleEventDTO.class, modelMapper);
-        return getPage(pageable, listEventDTO);
+        return pageMapper.mapToPage(pageable, listEventDTO);
     }
 
     public Page<SimpleEventDTO> getEventFutureDateByCategory(int eventCategoryID, Pageable pageable) {
         List<SimpleEventDTO> listEventDTO = listMapper.mapList(
                 repository.findByEventCategoryIDAndEventStartTimeGreaterThan(eventCategoryID, dateNow),
                 SimpleEventDTO.class, modelMapper);
-        return getPage(pageable, listEventDTO);
+        return pageMapper.mapToPage(pageable, listEventDTO);
     }
 
     public void delete(int eventID) {

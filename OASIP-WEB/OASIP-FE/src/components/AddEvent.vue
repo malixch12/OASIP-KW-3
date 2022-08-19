@@ -117,7 +117,7 @@ function eror() {
 
 <template>
   <div>
-    <div class="space-y-7 bg-white shadow-xl rounded-lg ml-24 p-10">
+    <div class="space-y-7 bg-white shadow-xl rounded-lg ml-24 p-10 rounded">
       <RoundButton bg-color="bg-slate-400 text-sm text-white" button-name="<< go back" @click="goBack" />
 
 

@@ -56,6 +56,4 @@ public class UserController {
     public User edit(@Validated @RequestBody EditUserDTO editUserDTO, @PathVariable Integer userId){
         return userService.edit(editUserDTO,userId);
     }
-
-
 }

@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import org.springframework.web.server.ResponseStatusException;
-import sit.oasip.dtos.SimpleEventDTO;
+
 import sit.oasip.dtos.UserDTO.AddUserDTO;
 import sit.oasip.dtos.UserDTO.EditUserDTO;
 import sit.oasip.dtos.UserDTO.UserDTO;
@@ -109,7 +109,6 @@ public class UserService {
         repository.findById(userId).orElseThrow(()-> new RuntimeException(userId + "Does not exit !!!"));
         repository.deleteById(userId);
     }
-
 
 
 }

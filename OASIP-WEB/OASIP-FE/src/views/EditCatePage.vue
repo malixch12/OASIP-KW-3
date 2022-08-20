@@ -87,7 +87,6 @@ const isActivePopup = ref(false);
 <template>
 
   <div class="flex justify-center">
-
     <PopupPage v-show="isActivePopup" :dim-background="true">
       <div v-if="CheckStatusPut" class="grid grid-cols-1 p-12">
         <p class="text-3xl font-semibold text-slate-600 tracking-wide pb-8">

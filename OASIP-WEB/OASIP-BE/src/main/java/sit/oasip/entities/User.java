@@ -1,5 +1,7 @@
 package sit.oasip.entities;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -8,16 +10,17 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
 
+@Getter @Setter
 @Entity
 @Table(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "UserID", nullable = false)
-    private Integer userId;
+    private Integer ID;
 
     @Column(name = "UserName", nullable = false, length = 100,unique = true)
-    private String userName;
+    private String name;
 
     @Column(name = "Email", nullable = false, length = 50, unique = true)
     private String email;
@@ -28,57 +31,11 @@ public class User {
 
     @CreationTimestamp
     @Column(name = "CreateOn", nullable = false)
-    private Timestamp createOn;
+    private Timestamp createdOn;
 
     @UpdateTimestamp
     @Column(name = "UpdateOn", nullable = false)
-    private Timestamp updateOn;
+    private Timestamp updatedOn;
 
-    public Timestamp getUpdateOn() {
-        return updateOn;
-    }
 
-    public void setUpdateOn(Timestamp updateOn) {
-        this.updateOn = updateOn;
-    }
-
-    public Timestamp getCreateOn() {
-        return createOn;
-    }
-
-    public void setCreateOn(Timestamp createOn) {
-        this.createOn = createOn;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public Integer getId() {
-        return userId;
-    }
-
-    public void setId(Integer id) {
-        this.userId = id;
-    }
 }

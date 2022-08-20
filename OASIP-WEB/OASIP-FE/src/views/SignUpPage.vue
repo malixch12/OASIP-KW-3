@@ -27,6 +27,7 @@ const addUser = async () => {
     }else {
         isActivePopup.value=true
         CheckStatus.value=false
+        console.log("fail")
     }
       
       
@@ -35,7 +36,7 @@ const addUser = async () => {
 
 
 const dataUser = ref({    //สำหรับให้ ฟอม v-model
-  userName: "",
+  name: "",
   role: "Please select role",
   email: ""
 });
@@ -69,7 +70,7 @@ function CheckData() {
   }
 
   //check name
-   if (dataUser.value.userName != "") {
+   if (dataUser.value.name != "") {
     NameCheck.value = true
   } else {
     NameCheck.value = false
@@ -97,7 +98,7 @@ const RoleCheck = ref(true) //check role
 
 <template>
   <div class="">
-    
+<div class="text-white text-xs">{{dataUser.role}}</div>
  <PopupPage v-show="isActivePopup" :dim-background="true">
       <div v-if="CheckStatus" class="grid grid-cols-1 p-12">
         <p class="text-3xl font-semibold text-green-600 tracking-wide pb-8">
@@ -161,7 +162,7 @@ const RoleCheck = ref(true) //check role
 
                     <form>
                         <div class="inputBox">
-                            <input type="text" placeholder="Username" v-model.trim="dataUser.userName" >
+                            <input type="text" placeholder="Username" v-model.trim="dataUser.name" >
                               <details class="" v-if="!NameCheck">
           <summary class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
             invalid

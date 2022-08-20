@@ -10,10 +10,13 @@ import { useRouter } from "vue-router";
 import RoundButton from "../components/RoundButton.vue";
 import PopupPage from "../components/PopupPage.vue";
 
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
+
+
 const router = useRouter();
 const myRouter = useRoute();
 const User= ref({
-    userName : "" ,
+    name : "" ,
     role : "" ,
     email : ""
 })
@@ -53,9 +56,9 @@ const updateUser = async () => {
         },
         body: JSON.stringify({
 
-          userName: User.value.userName,
+          name: User.value.name,
           role: User.value.role,
-          email: User.query.email,
+          email: User.value.email,
         
         }),
       }
@@ -87,12 +90,101 @@ onBeforeUpdate(() => {
 });
 
 const isActivePopup = ref(false);
+
+
+function validateEmail(email) {
+  var re =  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email);
+}
+
+onBeforeUpdate(() => {
+  CheckData()
+});
+
+function CheckData() {
+ 
+  if (User.value.email != "") {
+    EmailCheck.value = true
+  } else { EmailCheck.value = false }
+
+  // Check Email validateEmail
+  if (validateEmail(User.value.email) == true) {
+    EmailValidation.value = true
+  } else {
+    EmailValidation.value = false
+  }
+
+  //check name
+   if (User.value.name != "") {
+    NameCheck.value = true
+  } else {
+    NameCheck.value = false
+  }
+
+
+  //check role
+
+  if(User.value.role!="Admin" && User.value.role!= "Lecturer" &&  User.value.role!= "Student") {
+RoleCheck.value = false
+  } else {
+    RoleCheck.value = true
+    console.log("")
+
+  }
+
+}
+
+const EmailCheck = ref(true)   //เซ็คว่ากรอกรึยัง
+const EmailValidation = ref(true)  //ฟอแมท เมล
+const NameCheck = ref(true)     //เซ็คว่ากรอกรึยัง
+const RoleCheck = ref(true) //check role
 </script>
 
 <template>
 
   <div class="flex justify-center">
-     
+      <PopupPage v-show="isActivePopup" :dim-background="true">
+      <div v-if="CheckStatus" class="grid grid-cols-1 p-12">
+        <p class="text-3xl font-semibold text-green-600 tracking-wide pb-8">
+          sign up succeeded
+        </p>
+        <div class="success-checkmark">
+  <div class="check-icon">
+    <span class="icon-line line-tip"></span>
+    <span class="icon-line line-long"></span>
+    <div class="icon-circle"></div>
+    <div class="icon-fix"></div>
+  </div>
+</div>
+        <div class=" max-w-lg mx-auto  ">
+          <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
+            @click="isActivePopup = false" />
+        </div>
+      </div>
+
+
+    <div v-if="!CheckStatus" class="grid grid-cols-1 p-12">
+        <p class="text-3xl font-semibold text-red-600 tracking-wide pb-8">
+          sign up not succeeded
+        </p>
+        <div class="success-checkmark">
+  <div class="check-icon">
+    <span class="icon-line line-tip"></span>
+    <span class="icon-line line-long"></span>
+    <div class="icon-circle"></div>
+    <div class="icon-fix"></div>
+  </div>
+</div>
+        <div class=" max-w-lg mx-auto  ">
+          <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
+            @click="isActivePopup = false" />
+        </div>
+      </div>
+
+      
+    </PopupPage>
+
+    
     <PopupPage v-show="isActivePopup" :dim-background="true">
       <div v-if="CheckStatusPut" class="grid grid-cols-1 p-12">
         <p class="text-3xl font-semibold text-slate-600 tracking-wide pb-8">
@@ -127,24 +219,47 @@ const isActivePopup = ref(false);
         <div>
           <span class="font-bold text-slate-600 ">User Name :<input
               class="border-2 border-sky-200 rounded-lg w-64 pl-2 ml-1" type="text" maxlength="100"
-              v-model="User.userName">
+              v-model="User.name">
           </span>
           <br> <span class=" font-bold text-red-600 text-xs">*ชื่อห้ามเว้นว่างและห้ามซ้ำ</span><span
             class=" font-bold text-gray-600 text-xs"> และ ยาวสุดไม่เกิน 100 ตัว</span> <span
             class=" font-bold text-gray-600 text-xs">--> เหลืออีก {{ 100 - User}} ตัว
           </span>
         </div>
-        <div class="text-slate-600 font-bold ">role : <input
-            class="border-2 border-sky-200 rounded-lg w-20 ml-1 pl-2" type="number" min="1" max="480"
-            v-model="User.role">
-          Minutes
+        <div class="text-slate-600 font-bold ">role : 
+              <Menu as="div" class=" ">
+    <div>
+      <MenuButton class="text-left bg-transparent h-12 w-full rounded-full border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+        {{User.role}}
+        <ChevronDownIcon class="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
+      </MenuButton>
+    </div>
+
+    <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
+      <MenuItems class="origin-top-right absolute  mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <div class="py-1">
+          <MenuItem v-slot="{ active }">
+            <div :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']" @click="User.role=`Admin`">Admin</div>
+          </MenuItem>
+          <MenuItem v-slot="{ active }">
+            <div :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']" @click="User.role=`Lecturer`">Lecturer</div>
+          </MenuItem>
+          <MenuItem v-slot="{ active }">
+            <div :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']" @click="User.role=`Student`">Student</div>
+          </MenuItem>
+        
+        </div>
+      </MenuItems>
+    </transition>
+  </Menu>
+          
         </div>
 
-        <span class=" font-bold text-red-600 text-xs">*duration ห้ามเว้นว่าง </span>
-        <span class=" font-bold text-gray-600 text-xs"> และ ห้ามจองเกิน 480 นาที</span>
+        <span class=" font-bold text-red-600 text-xs">*ห้ามเว้นว่าง </span>
+     
 
 
-        <div class="text-slate-600 font-bold">email </div>
+        <div class="text-slate-600 font-bold">email : </div>
         <input
               class="border-2 border-sky-200 rounded-lg w-64 pl-2 ml-1" type="text" maxlength="100"
               v-model="User.email">
@@ -152,7 +267,7 @@ const isActivePopup = ref(false);
 
 
           <RoundButton bg-color="bg-emerald-400 text-white  place-items-center" button-name="save"
-            @click="updateUser(), isActivePopup = true" />
+            @click="updateUser()" />
 
         </div>
 

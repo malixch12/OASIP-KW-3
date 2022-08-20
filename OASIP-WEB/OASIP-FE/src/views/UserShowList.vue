@@ -39,17 +39,17 @@ const removeEvent  = async (UserId) => {
 const isActivePopup = ref(false);
 const dataDetail = ref({
 
-        userName: "",
+        name: "",
         role: "",
         email: "",
-        updateOn: "",
-        createOn: ""
+        updatedOn: "",
+        createdOn: ""
 
 })
 
 
 const goEdit = (UserId) => {
-   
+   console.log(UserId)
   router.push({
     name: "EditUserPage",
     query: { UserId: UserId },
@@ -66,11 +66,11 @@ const goEdit = (UserId) => {
    <PopupPage v-show="isActivePopup" :dim-background="true">
       <div  class="grid grid-cols-1 p-12">
         <p class="">
-        <span class="font-bold">user name : </span>   {{dataDetail.userName}} </p>
+        <span class="font-bold">user name : </span>   {{dataDetail.name}} </p>
        <p>  <span class="font-bold"> role : </span>  {{dataDetail.role}} </p> 
          <p> <span class="font-bold">email : </span> {{dataDetail.email}} </p> 
-         <p>   <span class="font-bold">update on :</span>  {{dataDetail.updateOn}} </p> 
-          <p>  <span class="font-bold">create on :</span>   {{dataDetail.createOn}} </p> 
+         <p>   <span class="font-bold">update on :</span>  {{dataDetail.createdOn}} </p> 
+          <p>  <span class="font-bold">create on :</span>   {{dataDetail.updatedOn}} </p> 
        
         <div class="success-checkmark">
   <div class="check-icon">
@@ -125,7 +125,7 @@ const goEdit = (UserId) => {
             <tr v-for="(user, index) in UserLists.content" :key="index" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
 
                 <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {{user.userName}}
+                    {{user.name}}
                 </th>
                 <td class="py-4 px-14">
                     {{user.email}}
@@ -136,11 +136,11 @@ const goEdit = (UserId) => {
               
                 <td class="py-4 px-14 text-right">
                     <div class="font-medium text-blue-600  hover:underline" @click="isActivePopup=true
-                    , dataDetail.userName=user.userName ,
+                    , dataDetail.name=user.name ,
                     dataDetail.email=user.email ,
                      dataDetail.role=user.role ,
-                      dataDetail.updateOn = user.updateOn ,
-                      dataDetail.createOn = user.createOn
+                      dataDetail.updatedOn = user.updatedOn ,
+                      dataDetail.createdOn = user.createdOn
                     
                     ">detail</div>
                 </td>
@@ -150,7 +150,7 @@ const goEdit = (UserId) => {
 </td>
 <td class="py-4 text-right">
   <svg width="1em" height="1em" viewBox="0 0 24 24"><path fill="#888888" d="m19.3 8.925l-4.25-4.2l1.4-1.4q.575-.575 1.413-.575q.837 0 1.412.575l1.4 1.4q.575.575.6 1.388q.025.812-.55 1.387ZM17.85 10.4L7.25 21H3v-4.25l10.6-10.6Z"
-  @click="goEdit(user.userId)"
+  @click="goEdit(user.id)"
   ></path></svg> 
 </td>
 

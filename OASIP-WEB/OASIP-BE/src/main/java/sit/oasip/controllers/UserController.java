@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import sit.oasip.dtos.UserDTO.AddUserDTO;
+import sit.oasip.dtos.UserDTO.EditUserDTO;
 import sit.oasip.dtos.UserDTO.UserDTO;
 import sit.oasip.entities.User;
 import sit.oasip.repositories.UserRepository;
@@ -43,17 +44,11 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable Integer userId){userService.delete(userId);}
 
-
-
-    @PostMapping("")
+    @PutMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public User addUser(@Validated @RequestBody AddUserDTO newUser){
-        return userService.add(newUser);
+    public User edit(@Validated @RequestBody EditUserDTO editUserDTO, @PathVariable Integer userId){
+        return userService.edit(editUserDTO,userId);
     }
-
-    @DeleteMapping("/{userId}")
-    @ResponseStatus(HttpStatus.OK)
-    public void delete(@PathVariable Integer userId){userService.delete(userId);}
 
 
 }

@@ -12,20 +12,27 @@ import PopupPage from "../components/PopupPage.vue";
 
 const router = useRouter();
 const myRouter = useRoute();
-const eventLists = ref([])
+const User= ref({
+    userName : "" ,
+    role : "" ,
+    email : ""
+})
+
 const getLinkAll = async () => {
   const res = await fetch(
-    `${import.meta.env.VITE_APP_TITLE}/api/eventcategorys/${myRouter.query.categoryId}`
+    `${import.meta.env.VITE_APP_TITLE}/api/users/${myRouter.query.UserId}`
   );
   if (res.status === 200) {
-    eventLists.value = await res.json();
+   User.value = await res.json();
     console.log("corret")
   } else
     console.log("cant fetch")
 };
 
+console.log(myRouter.query.userId)
+
 onBeforeMount(async () => {
-  getLinkAll();
+// getLinkAll();
 });
 
 
@@ -33,11 +40,11 @@ const goBack = () => router.go(-1);
 
 
 
-const updateNote = async () => {
+const updateUser = async () => {
   //eventLists.value.eventStartTime = await new Date(eventLists.value.eventStartTime).toISOString();
   if (1 == 1) {
     const res = await fetch(
-      `${import.meta.env.VITE_APP_TITLE}/api/eventcategorys/${myRouter.query.categoryId
+      `${import.meta.env.VITE_APP_TITLE}/api/users/${myRouter.query.UserId
       }`,
       {
         method: "PUT",
@@ -46,22 +53,20 @@ const updateNote = async () => {
         },
         body: JSON.stringify({
 
-          eventCategoryName: eventLists.value.eventCategoryName,
-          eventCategoryDescription: eventLists.value.eventCategoryDescription,
-          eventCategoryID: myRouter.query.categoryId,
-          eventDuration: eventLists.value.eventDuration
+          userName: User.value.userName,
+          role: User.value.role,
+          email: User.query.email,
+        
         }),
       }
     );
     if (res.status === 200) {
-      // console.log(eventLists.value.eventStartTime);
-      // isActivePopup.value = false;
-      // hideEdit.value = true;
-      // getLinkAll();
-      statusTrue()
+   
+    //   statusTrue()
       console.log("edited successfully");
-    } else statusFalse()
-
+    } else 
+    // statusFalse()
+console.log("xxx")
   }
 };
 
@@ -87,6 +92,7 @@ const isActivePopup = ref(false);
 <template>
 
   <div class="flex justify-center">
+     
     <PopupPage v-show="isActivePopup" :dim-background="true">
       <div v-if="CheckStatusPut" class="grid grid-cols-1 p-12">
         <p class="text-3xl font-semibold text-slate-600 tracking-wide pb-8">
@@ -119,31 +125,34 @@ const isActivePopup = ref(false);
 
       <div class="space-y-7">
         <div>
-          <span class="font-bold text-slate-600 ">Category Name :<input
+          <span class="font-bold text-slate-600 ">User Name :<input
               class="border-2 border-sky-200 rounded-lg w-64 pl-2 ml-1" type="text" maxlength="100"
-              v-model="eventLists.eventCategoryName">
+              v-model="User.userName">
           </span>
           <br> <span class=" font-bold text-red-600 text-xs">*ชื่อห้ามเว้นว่างและห้ามซ้ำ</span><span
             class=" font-bold text-gray-600 text-xs"> และ ยาวสุดไม่เกิน 100 ตัว</span> <span
-            class=" font-bold text-gray-600 text-xs">--> เหลืออีก {{ 100 - eventLists.eventCategoryName.length }} ตัว
+            class=" font-bold text-gray-600 text-xs">--> เหลืออีก {{ 100 - User}} ตัว
           </span>
         </div>
-        <div class="text-slate-600 font-bold ">Duration : <input
+        <div class="text-slate-600 font-bold ">role : <input
             class="border-2 border-sky-200 rounded-lg w-20 ml-1 pl-2" type="number" min="1" max="480"
-            v-model="eventLists.eventDuration">
+            v-model="User.role">
           Minutes
         </div>
 
         <span class=" font-bold text-red-600 text-xs">*duration ห้ามเว้นว่าง </span>
         <span class=" font-bold text-gray-600 text-xs"> และ ห้ามจองเกิน 480 นาที</span>
-        <div class="text-slate-600 font-bold">Category's Description </div>
-        <span class=" font-bold text-gray-600 text-xs"> *คำอธิบายไม่เกิน 500 ตัวอักษร</span>
-        
-        <textarea type="text" class="border-2 border-sky-200 p-2 w-11/12  h-56 rounded-lg"
-          v-model="eventLists.eventCategoryDescription" maxlength="500"></textarea>
+
+
+        <div class="text-slate-600 font-bold">email </div>
+        <input
+              class="border-2 border-sky-200 rounded-lg w-64 pl-2 ml-1" type="text" maxlength="100"
+              v-model="User.email">
         <div class=" pt-3 flex justify-center ">
+
+
           <RoundButton bg-color="bg-emerald-400 text-white  place-items-center" button-name="save"
-            @click="updateNote(), isActivePopup = true" />
+            @click="updateUser(), isActivePopup = true" />
 
         </div>
 

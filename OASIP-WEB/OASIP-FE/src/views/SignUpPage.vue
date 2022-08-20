@@ -27,6 +27,7 @@ const addUser = async () => {
     }else {
         isActivePopup.value=true
         CheckStatus.value=false
+        console.log("fail")
     }
       
       
@@ -97,7 +98,7 @@ const RoleCheck = ref(true) //check role
 
 <template>
   <div class="">
-    
+<div class="text-white text-xs">{{dataUser.role}}</div>
  <PopupPage v-show="isActivePopup" :dim-background="true">
       <div v-if="CheckStatus" class="grid grid-cols-1 p-12">
         <p class="text-3xl font-semibold text-green-600 tracking-wide pb-8">

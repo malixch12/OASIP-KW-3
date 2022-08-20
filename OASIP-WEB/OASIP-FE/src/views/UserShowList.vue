@@ -2,11 +2,11 @@
 import { onBeforeMount, ref, onBeforeUpdate } from "@vue/runtime-core";
 import ShowList from "../components/ShowList.vue";
 import Navbar from "../components/Navbar.vue";
-import { useRoute } from "vue-router";
 import PopupPage from "../components/PopupPage.vue";
 import RoundButton from "../components/RoundButton.vue";
+import { useRouter } from "vue-router";
 
-const route = useRoute();
+const router = useRouter();
 
 
 const UserLists = ref()
@@ -17,6 +17,7 @@ const getLinkAll = async () => {
   );
   if (res.status === 200) {
     UserLists.value = await res.json();
+    console.log(UserLists.value)
   }
 };
 
@@ -45,6 +46,17 @@ const dataDetail = ref({
         createOn: ""
 
 })
+
+
+const goEdit = (UserId) => {
+   
+  router.push({
+    name: "EditUserPage",
+    query: { UserId: UserId },
+  });
+
+};
+
 </script>
 
 <template>
@@ -109,7 +121,8 @@ const dataDetail = ref({
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(user, index) in UserLists" :key="index" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+         
+            <tr v-for="(user, index) in UserLists.content" :key="index" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
 
                 <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                     {{user.userName}}
@@ -136,7 +149,9 @@ const dataDetail = ref({
               
 </td>
 <td class="py-4 text-right">
-  <svg width="1em" height="1em" viewBox="0 0 24 24"><path fill="#888888" d="m19.3 8.925l-4.25-4.2l1.4-1.4q.575-.575 1.413-.575q.837 0 1.412.575l1.4 1.4q.575.575.6 1.388q.025.812-.55 1.387ZM17.85 10.4L7.25 21H3v-4.25l10.6-10.6Z"></path></svg>
+  <svg width="1em" height="1em" viewBox="0 0 24 24"><path fill="#888888" d="m19.3 8.925l-4.25-4.2l1.4-1.4q.575-.575 1.413-.575q.837 0 1.412.575l1.4 1.4q.575.575.6 1.388q.025.812-.55 1.387ZM17.85 10.4L7.25 21H3v-4.25l10.6-10.6Z"
+  @click="goEdit(user.userId)"
+  ></path></svg> 
 </td>
 
 

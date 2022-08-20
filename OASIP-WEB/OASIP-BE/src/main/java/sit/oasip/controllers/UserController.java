@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import sit.oasip.dtos.SimpleEventDTO;
 import sit.oasip.dtos.UserDTO.AddUserDTO;
 import sit.oasip.dtos.UserDTO.EditUserDTO;
 import sit.oasip.dtos.UserDTO.UserDTO;
@@ -34,6 +35,12 @@ public class UserController {
     ){
         return userService.getUserAll(PageRequest.of(page, pageSize));
     }
+
+    @GetMapping("/{userId}")
+    public UserDTO getEventById(@PathVariable Integer userId) {
+        return userService.getUserById(userId);
+    }
+
     @PostMapping("")
     @ResponseStatus(HttpStatus.OK)
     public User addUser(@Validated @RequestBody AddUserDTO newUser){
@@ -46,9 +53,7 @@ public class UserController {
 
     @PutMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public User edit(@Validated @RequestBody EditUserDTO editUserDTO,@PathVariable Integer userId){
+    public User edit(@Validated @RequestBody EditUserDTO editUserDTO, @PathVariable Integer userId){
         return userService.edit(editUserDTO,userId);
     }
-
-
 }

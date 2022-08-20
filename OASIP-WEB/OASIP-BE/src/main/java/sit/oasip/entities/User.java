@@ -22,6 +22,7 @@ public class User {
     @Column(name = "UserName", nullable = false, length = 100,unique = true)
     private String name;
 
+    @Email(message = "format is wrong")
     @Column(name = "Email", nullable = false, length = 50, unique = true)
     private String email;
 

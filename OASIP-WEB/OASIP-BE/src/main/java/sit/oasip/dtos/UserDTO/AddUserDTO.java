@@ -20,10 +20,10 @@ public class AddUserDTO {
     @Length(min = 1, max = 100, message="size must be between 1 and 100")
     private String Name;
 
-    @Email(message = "format is wrong")
     @NotBlank(message = "please fill user name")
     @Length(min = 1, max = 50, message="size must be between 1 and 50")
     private String Email;
     private String Role = "Student";
+
 
 }

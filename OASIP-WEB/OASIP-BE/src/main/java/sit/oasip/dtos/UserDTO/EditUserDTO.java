@@ -12,10 +12,9 @@ import javax.validation.constraints.Email;
 public class EditUserDTO {
 
     @Length(max = 100, message="size must be between 1 and 100")
-
     private String Name;
 
-    @Email(message = "format is wrong")
+
     @Length(max = 50, message="size must be between 1 and 50")
     private String Email;
 

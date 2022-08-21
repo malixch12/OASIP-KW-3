@@ -10,6 +10,6 @@ import sit.oasip.entities.User;
 import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
-
-
+    User findByEmail(String email);
+    User findByName(String email);
 }

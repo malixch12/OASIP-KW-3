@@ -64,27 +64,26 @@ public class UserService {
 
 
         User user = repository.findById(userId).map(e -> {
-            if (editUserDTO.getRole() != null) {
+
 
                 RoleAttribute roleAttribute = new RoleAttribute();
-                String role = roleAttribute.roleChoice(editUserDTO.getRole().toString());
 
 
                 if (editUserDTO.getName() != null && editUserDTO.getEmail() != null && editUserDTO.getRole() != null) {
                     e.setName(editUserDTO.getName().trim());
                     e.setEmail(editUserDTO.getEmail().trim());
-                    e.setRole(role);
+                    e.setRole( roleAttribute.roleChoice(editUserDTO.getRole().toString()));
                 } else if (editUserDTO.getName() != null && editUserDTO.getEmail() != null) {
                     e.setName(editUserDTO.getName().trim());
                     e.setEmail(editUserDTO.getEmail().trim());
                     e.setRole(e.getRole().toString());
                 } else if (editUserDTO.getName() != null && editUserDTO.getRole() != null) {
                     e.setName(editUserDTO.getName().trim());
-                    e.setRole(role);
+                    e.setRole( roleAttribute.roleChoice(editUserDTO.getRole().toString()));
                     e.setEmail(e.getEmail());
                 } else if (editUserDTO.getEmail() != null && editUserDTO.getRole() != null) {
                     e.setEmail(editUserDTO.getEmail().trim());
-                    e.setRole(role);
+                    e.setRole( roleAttribute.roleChoice(editUserDTO.getRole().toString()));
                     e.setName(e.getName());
                 } else if (editUserDTO.getName() != null) {
                     e.setName(editUserDTO.getName().trim());
@@ -97,8 +96,8 @@ public class UserService {
                 } else if (editUserDTO.getRole() != null) {
                     e.setEmail(e.getEmail());
                     e.setName(e.getName());
-                    e.setRole(role);
-                }
+                    e.setRole( roleAttribute.roleChoice(editUserDTO.getRole().toString()));
+
             }
             return repository.saveAndFlush(e);
         }).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "test"));

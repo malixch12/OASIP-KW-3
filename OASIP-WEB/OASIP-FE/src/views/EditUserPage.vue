@@ -21,13 +21,21 @@ const User= ref({
     email : ""
 })
 
+const UserOld= ({
+    name : "" ,
+    role : "" ,
+    email : ""
+})
+
 const getLinkAll = async () => {
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/users/${myRouter.query.UserId}`
   );
   if (res.status === 200) {
    User.value = await res.json();
+   UserOld.value = { ...User.value }
     console.log("corret")
+    
   } else
     console.log("cant fetch")
 };
@@ -35,7 +43,7 @@ const getLinkAll = async () => {
 console.log(myRouter.query.userId)
 
 onBeforeMount(async () => {
-// getLinkAll();
+getLinkAll();
 });
 
 
@@ -44,8 +52,9 @@ const goBack = () => router.go(-1);
 
 
 const updateUser = async () => {
-  //eventLists.value.eventStartTime = await new Date(eventLists.value.eventStartTime).toISOString();
-  if (1 == 1) {
+  
+  if(UserOld.value.name != User.value.name || UserOld.value.email != User.value.email || UserOld.value.role != User.value.role  ) {
+   if (User.value.name!="" && User.value.email!="") {
     const res = await fetch(
       `${import.meta.env.VITE_APP_TITLE}/api/users/${myRouter.query.UserId
       }`,
@@ -64,29 +73,32 @@ const updateUser = async () => {
       }
     );
     if (res.status === 200) {
-   
+   isActivePopup.value=true
+   CheckStatus.value=false
     //   statusTrue()
       console.log("edited successfully");
     } else 
-    // statusFalse()
+     CheckStatus.value=true
+    isActivePopup.value=true
+      
 console.log("xxx")
+  }else
+  {
+    CheckStatus.value=true
+ isActivePopup.value=true
+       
+
+  }}else {
+    isActivePopup.value=true
+   CheckStatus.value=false
   }
+
+
 };
 
-const CheckStatusPut = ref(true)
-
-function statusTrue() {
-
-  CheckStatusPut.value = true
-}
-
-function statusFalse() {
-
-  CheckStatusPut.value = false
-}
 
 onBeforeUpdate(() => {
-
+CheckData()
 });
 
 const isActivePopup = ref(false);
@@ -138,15 +150,18 @@ const EmailCheck = ref(true)   //เซ็คว่ากรอกรึยั�
 const EmailValidation = ref(true)  //ฟอแมท เมล
 const NameCheck = ref(true)     //เซ็คว่ากรอกรึยัง
 const RoleCheck = ref(true) //check role
+
+const CheckStatus = ref(true) //check edit
 </script>
 
 <template>
 
   <div class="flex justify-center">
+
       <PopupPage v-show="isActivePopup" :dim-background="true">
-      <div v-if="CheckStatus" class="grid grid-cols-1 p-12">
+      <div v-if="!CheckStatus" class="grid grid-cols-1 p-12">
         <p class="text-3xl font-semibold text-green-600 tracking-wide pb-8">
-          sign up succeeded
+          edit succeeded
         </p>
         <div class="success-checkmark">
   <div class="check-icon">
@@ -163,9 +178,9 @@ const RoleCheck = ref(true) //check role
       </div>
 
 
-    <div v-if="!CheckStatus" class="grid grid-cols-1 p-12">
+    <div v-if="CheckStatus" class="grid grid-cols-1 p-12">
         <p class="text-3xl font-semibold text-red-600 tracking-wide pb-8">
-          sign up not succeeded
+         edit not succeeded
         </p>
         <div class="success-checkmark">
   <div class="check-icon">
@@ -185,28 +200,7 @@ const RoleCheck = ref(true) //check role
     </PopupPage>
 
     
-    <PopupPage v-show="isActivePopup" :dim-background="true">
-      <div v-if="CheckStatusPut" class="grid grid-cols-1 p-12">
-        <p class="text-3xl font-semibold text-slate-600 tracking-wide pb-8">
-          edit succeeded
-        </p>
-        <div class=" max-w-lg mx-auto  ">
-          <RoundButton bg-color="bg-emerald-400 text-white flex justify-center" button-name="ok"
-            @click="isActivePopup = false" />
-        </div>
-      </div>
-
-      <div v-if="!CheckStatusPut" class="grid grid grid-cols-1 p-12 place-items-center">
-        <img src="../assets/error.png" class="w-24 " /> <br>
-        <p class="text-3xl font-semibold text-slate-600 tracking-wide pb-8">
-          edit fail pls check your data
-        </p>
-        <div class=" max-w-lg mx-auto  ">
-          <RoundButton bg-color="bg-emerald-400 text-white flex justify-center" button-name="ok"
-            @click="isActivePopup = false" />
-        </div>
-      </div>
-    </PopupPage>
+  
 
 
 
@@ -221,11 +215,24 @@ const RoleCheck = ref(true) //check role
               class="border-2 border-sky-200 rounded-lg w-64 pl-2 ml-1" type="text" maxlength="100"
               v-model="User.name">
           </span>
-          <br> <span class=" font-bold text-red-600 text-xs">*ชื่อห้ามเว้นว่างและห้ามซ้ำ</span><span
-            class=" font-bold text-gray-600 text-xs"> และ ยาวสุดไม่เกิน 100 ตัว</span> <span
-            class=" font-bold text-gray-600 text-xs">--> เหลืออีก {{ 100 - User}} ตัว
+          <br> <span v-if="!NameCheck" class=" font-bold text-red-600 text-xs">*ชื่อห้ามเว้นว่างและห้ามซ้ำ</span><span
+            class=" font-bold text-gray-600 text-xs"> ความยาวห้ามเกิน 100 ตัว</span> <span
+            class=" font-bold text-gray-600 text-xs">--> เหลืออีก {{ 100 - User.name.length}} ตัว
           </span>
         </div>
+
+
+
+        <span class="text-slate-600 font-bold">email : </span>
+        <input
+              class="border-2 border-sky-200 rounded-lg w-64 pl-2 ml-1" type="text" maxlength="100"
+              v-model="User.email">
+
+               <span v-show="!EmailCheck" class="text-red-600"> กรุณาใส่อีเมล</span>
+            <span v-show="!EmailValidation & EmailCheck" class="text-red-600"> กรุณากรอกอีเมลล์ให้ถูกต้อง</span>
+      
+
+
         <div class="text-slate-600 font-bold ">role : 
               <Menu as="div" class=" ">
     <div>
@@ -255,15 +262,9 @@ const RoleCheck = ref(true) //check role
           
         </div>
 
-        <span class=" font-bold text-red-600 text-xs">*ห้ามเว้นว่าง </span>
+  
      
-
-
-        <div class="text-slate-600 font-bold">email : </div>
-        <input
-              class="border-2 border-sky-200 rounded-lg w-64 pl-2 ml-1" type="text" maxlength="100"
-              v-model="User.email">
-        <div class=" pt-3 flex justify-center ">
+  <div class=" pt-3 flex justify-center ">
 
 
           <RoundButton bg-color="bg-emerald-400 text-white  place-items-center" button-name="save"

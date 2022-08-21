@@ -13,6 +13,10 @@ const route = useRoute();
 
 const addUser = async () => {
 
+        if(dataUser.value.role== "Please select role") {
+            dataUser.value.role="Student"
+        }
+
   const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/users`, {
     method: "POST",
     headers: {
@@ -24,10 +28,12 @@ const addUser = async () => {
         console.log(dataUser.value);
        isActivePopup.value=true
        CheckStatus.value=true
+       console.log(res.status, res.statusText);
     }else {
         isActivePopup.value=true
         CheckStatus.value=false
         console.log("fail")
+        console.log(res.status, err.res.data);
     }
       
       
@@ -70,7 +76,7 @@ function CheckData() {
   }
 
   //check name
-   if (dataUser.value.name != "") {
+   if (dataUser.value.name != "" && dataUser.value.name.length < 100) {
     NameCheck.value = true
   } else {
     NameCheck.value = false
@@ -168,7 +174,7 @@ const RoleCheck = ref(true) //check role
             invalid
           </summary>
           <div class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
-            <span v-show="!NameCheck" class="text-red-600"> กรุณาใส่ยูสเซอร์เนม</span>
+            <span v-show="!NameCheck" class="text-red-600"> ยูสเซอร์เนมห้ามเว้นว่างและห้ามเกิน 100 ตัว</span>
           </div>
         </details>
                         </div>
@@ -216,6 +222,8 @@ const RoleCheck = ref(true) //check role
           </summary>
           <div class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
             <span v-show="!RoleCheck" class="text-red-600"> กรุณาเลือก role</span>
+                     <br>   <span v-show="!RoleCheck" class="text-gray-600"> **หากไม่เลือกจะถูกเลือกเป็น student </span>
+
           </div>
         </details>
 
@@ -224,7 +232,7 @@ const RoleCheck = ref(true) //check role
                             <input type="submit" value="Sign up" @click="addUser()">
                         </div>
 
-                        <p class="forget">Dont have an account ?  Click here!</p>
+                        <p class="forget">Do you have an account ?  Click here!</p>
 
                     </form>
                 </div>

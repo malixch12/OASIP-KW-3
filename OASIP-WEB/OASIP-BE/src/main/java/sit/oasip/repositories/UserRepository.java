@@ -10,7 +10,6 @@ import sit.oasip.entities.User;
 import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
-    User saveAndFlush (AddUserDTO newUser);
-//    User saveAndFlush2 (User editUser);
-
+    User findByEmail(String email);
+    User findByName(String email);
 }

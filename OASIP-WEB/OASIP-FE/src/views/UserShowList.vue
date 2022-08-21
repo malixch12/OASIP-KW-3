@@ -145,7 +145,7 @@ const goEdit = (UserId) => {
                     ">detail</div>
                 </td>
                   <td class="py-4 px-14 text-right">
-                    <div class="font-medium text-red-600  hover:underline" @click="removeEvent(user.userId)">delete</div>
+                    <div class="font-medium text-red-600  hover:underline" @click="removeEvent(user.id)">delete</div>
               
 </td>
 <td class="py-4 text-right">

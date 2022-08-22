@@ -25,19 +25,16 @@ const addUser = async () => {
       "content-type": "application/json",
     },
     body: JSON.stringify(dataUser.value),
-  }).catch((err) => {
-      console.log(res.json())
-    
   })
+    
     if(res.status === 200) {
         console.log(dataUser.value);
        isActivePopup.value=true
        CheckStatus.value=true
-       console.log(res.status, res.statusText);
     }else {
         isActivePopup.value=true
         CheckStatus.value=false
-        console.log("fail")
+    
        // console.log(await res.json());
         errorStatus.value = await res.json()
     }
@@ -245,10 +242,11 @@ const RoleCheck = ref(true) //check role
         </details>
 
                         </div>
-                        <div class="inputBox">
-                            <input type="submit" value="Sign up" @click="addUser()">
-                        </div>
 
+                        <div class="inputBox">
+                          
+                        </div>
+       <input  class="test rounded-full px-8 py-1 drop-shadow-lg" value="Sign up" @click="addUser()">
                         <p class="forget">Do you have an account ?  Click here!</p>
 
                     </form>
@@ -258,7 +256,7 @@ const RoleCheck = ref(true) //check role
 
           </div>
     </section>
-
+ 
   </div>
 </template>
 
@@ -267,11 +265,10 @@ const RoleCheck = ref(true) //check role
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
 }
 
-body {}
+
 
 section
  {
@@ -460,13 +457,15 @@ section .color:nth-child(3)
     color: rgb(115, 109, 109);
 }
 
-.form .inputBox input[type="submit"] {
+.test {
     background: #fff;
     color: #666;
-    max-width: 100px;
+    max-width: 130px;
     cursor: pointer;
     margin-bottom: 20px;
     font-weight: 600;
+    font-size: 15px;
+    
 }
 
 .forget {

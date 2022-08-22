@@ -10,8 +10,14 @@ import RoundButton from "../components/RoundButton.vue";
 
 
 const route = useRoute();
+const errorStatus = ref({Name : null,
+Email : null})
 
 const addUser = async () => {
+
+        if(dataUser.value.role== "Please select role") {
+            dataUser.value.role="Student"
+        }
 
   const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/users`, {
     method: "POST",
@@ -19,26 +25,33 @@ const addUser = async () => {
       "content-type": "application/json",
     },
     body: JSON.stringify(dataUser.value),
-  });
+  }).catch((err) => {
+      console.log(res.json())
+    
+  })
     if(res.status === 200) {
         console.log(dataUser.value);
        isActivePopup.value=true
        CheckStatus.value=true
+       console.log(res.status, res.statusText);
     }else {
         isActivePopup.value=true
         CheckStatus.value=false
         console.log("fail")
+       // console.log(await res.json());
+        errorStatus.value = await res.json()
     }
       
-      
+    
+
 };
 
 
 
 const dataUser = ref({    //สำหรับให้ ฟอม v-model
-  name: "",
+  name: null,
   role: "Please select role",
-  email: ""
+  email: null
 });
 
 const isActivePopup = ref(false);
@@ -58,7 +71,7 @@ onBeforeUpdate(() => {
 
 function CheckData() {
  
-  if (dataUser.value.email != "") {
+  if (dataUser.value.email != null) {
     EmailCheck.value = true
   } else { EmailCheck.value = false }
 
@@ -70,7 +83,7 @@ function CheckData() {
   }
 
   //check name
-   if (dataUser.value.name != "") {
+   if (dataUser.value.name != null && dataUser.value.name.length < 101) {
     NameCheck.value = true
   } else {
     NameCheck.value = false
@@ -98,6 +111,7 @@ const RoleCheck = ref(true) //check role
 
 <template>
   <div class="">
+ 
 <div class="text-white text-xs">{{dataUser.role}}</div>
  <PopupPage v-show="isActivePopup" :dim-background="true">
       <div v-if="CheckStatus" class="grid grid-cols-1 p-12">
@@ -120,9 +134,18 @@ const RoleCheck = ref(true) //check role
 
 
     <div v-if="!CheckStatus" class="grid grid-cols-1 p-12">
-        <p class="text-3xl font-semibold text-red-600 tracking-wide pb-8">
+        <p class="text-3xl font-semibold text-red-600 tracking-wide pb-8">        
+         <br>    
           sign up not succeeded
+
         </p>
+            <div> name :<span class="text-red-500"> {{errorStatus.Name}}</span>  <span v-if="errorStatus.Name==null" class="text-green-500">correct
+</span></div>
+           
+              <div> email : <span class="text-red-500"> {{errorStatus.Email}}</span>  <span v-if="errorStatus.Email==null" class="text-green-500">correct
+</span></div>
+            
+
         <div class="success-checkmark">
   <div class="check-icon">
     <span class="icon-line line-tip"></span>
@@ -132,7 +155,7 @@ const RoleCheck = ref(true) //check role
   </div>
 </div>
         <div class=" max-w-lg mx-auto  ">
-          <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
+          <RoundButton bg-color="bg-gray-400 text-white flex justify-center mt-5" button-name="ok"
             @click="isActivePopup = false" />
         </div>
       </div>
@@ -168,7 +191,7 @@ const RoleCheck = ref(true) //check role
             invalid
           </summary>
           <div class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
-            <span v-show="!NameCheck" class="text-red-600"> กรุณาใส่ยูสเซอร์เนม</span>
+            <span v-show="!NameCheck" class="text-red-600"> ยูสเซอร์เนมห้ามเว้นว่างและห้ามเกิน 100 ตัว</span>
           </div>
         </details>
                         </div>
@@ -216,6 +239,8 @@ const RoleCheck = ref(true) //check role
           </summary>
           <div class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
             <span v-show="!RoleCheck" class="text-red-600"> กรุณาเลือก role</span>
+                     <br>   <span v-show="!RoleCheck" class="text-gray-600"> **หากไม่เลือกจะถูกเลือกเป็น student </span>
+
           </div>
         </details>
 
@@ -224,7 +249,7 @@ const RoleCheck = ref(true) //check role
                             <input type="submit" value="Sign up" @click="addUser()">
                         </div>
 
-                        <p class="forget">Dont have an account ?  Click here!</p>
+                        <p class="forget">Do you have an account ?  Click here!</p>
 
                     </form>
                 </div>

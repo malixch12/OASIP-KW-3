@@ -11,13 +11,17 @@ const router = useRouter();
 
 const UserLists = ref()
 
+const page = ref(0);
+const numPage = ref();
+
 const getLinkAll = async () => {
   const res = await fetch(
-    `${import.meta.env.VITE_APP_TITLE}/api/users`
+    `${import.meta.env.VITE_APP_TITLE}/api/users?page=${page.value}&pageSize=8`
   );
   if (res.status === 200) {
     UserLists.value = await res.json();
     console.log(UserLists.value)
+    numPage.value = Math.ceil(UserLists.value.totalElements / 8);
   }
 };
 
@@ -57,20 +61,24 @@ const goEdit = (UserId) => {
 
 };
 
+
+
+
 </script>
 
 <template>
 
-  <div class="flex justify-center grid grid-rows-1 mt-16">
-
+  <div class="flex justify-center grid grid-rows-1  mb-16">
+        
    <PopupPage v-show="isActivePopup" :dim-background="true">
       <div  class="grid grid-cols-1 p-12">
-        <p class="">
-        <span class="font-bold">user name : </span>   {{dataDetail.name}} </p>
-       <p>  <span class="font-bold"> role : </span>  {{dataDetail.role}} </p> 
-         <p> <span class="font-bold">email : </span> {{dataDetail.email}} </p> 
-         <p>   <span class="font-bold">update on :</span>  {{dataDetail.createdOn}} </p> 
-          <p>  <span class="font-bold">create on :</span>   {{dataDetail.updatedOn}} </p> 
+       
+          <div class="text-3xl font-bold text-rose-400 mb-3">USER DETAIL</div>
+      <p>  <span class="font-bold mr-1">NAME : </span>   {{dataDetail.name}} </p>
+       <p>  <span class="font-bold mr-1"> ROLE : </span>  {{dataDetail.role}} </p> 
+         <p> <span class="font-bold mr-1">EMAIL : </span> {{dataDetail.email}} </p> 
+         <p>   <span class="font-bold mr-1"> CREATE ON :</span>  {{new Date(dataDetail.createdOn).toLocaleDateString("th-TH")}} {{new Date(dataDetail.createdOn).toLocaleTimeString("th-TH")}} </p> 
+          <p>  <span class="font-bold mr-1">UPDATE ON:</span>     {{new Date(dataDetail.updatedOn).toLocaleDateString("th-TH")}} {{new Date(dataDetail.updatedOn).toLocaleTimeString("th-TH")}}</p> 
        
         <div class="success-checkmark">
   <div class="check-icon">
@@ -81,15 +89,17 @@ const goEdit = (UserId) => {
   </div>
 </div>
         <div class=" max-w-lg mx-auto  ">
+          <br>
           <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
             @click="isActivePopup = false" />
         </div>
       </div>
     </PopupPage>
 
-    <div class="text-3xl font-bold text-center   drop-shadow-md"> User list </div>
+  
     <br>
 <div class="overflow-x-auto relative shadow-md sm:rounded-lg w-full px-24 bg-white py-8 ">
+    <div class="text-3xl font-bold text-center   drop-shadow-md"> USER LIST </div>
     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <caption class="p-5 text-lg font-semibold text-left text-gray-900 bg-white dark:text-white dark:bg-gray-800">
             show list all user in db
@@ -148,9 +158,9 @@ const goEdit = (UserId) => {
                     <div class="font-medium text-red-600  hover:underline" @click="removeEvent(user.id)">delete</div>
               
 </td>
-<td class="py-4 text-right">
+<td class="py-4 text-right "  @click="goEdit(user.id)">
   <svg width="1em" height="1em" viewBox="0 0 24 24"><path fill="#888888" d="m19.3 8.925l-4.25-4.2l1.4-1.4q.575-.575 1.413-.575q.837 0 1.412.575l1.4 1.4q.575.575.6 1.388q.025.812-.55 1.387ZM17.85 10.4L7.25 21H3v-4.25l10.6-10.6Z"
-  @click="goEdit(user.id)"
+ 
   ></path></svg> 
 </td>
 
@@ -161,6 +171,27 @@ const goEdit = (UserId) => {
             </tr>
         </tbody>
     </table>
+
+    <div class="text-center mt-10" v-if="UserLists.content.length==0">-------------no user------------</div> 
+    <div class="  rounded-b-lg p-8 ml-24 mr-24 text-center">
+      <!-- <span
+        v-for="(e, index) in numPage"
+        :key="index"
+        class="p-5 text-white hover:text-orange-600"
+      >
+        <button @click="$emit('paging', index, filter)">
+          {{ index + 1 }}
+        </button>
+      </span> -->
+      <nav aria-label="Page navigation example">
+        <ul class="inline-flex -space-x-px" v-for="(e, index) in numPage" :key="index">
+
+          <button @click="page=index , getLinkAll() "
+            class="py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 focus:bg-gray-200 focus:text-red-600 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{ index + 1 }}</button>
+
+        </ul>
+      </nav>
+    </div>
 </div>
 
 

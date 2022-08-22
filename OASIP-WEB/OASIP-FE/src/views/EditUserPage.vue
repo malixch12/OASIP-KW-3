@@ -21,13 +21,21 @@ const User= ref({
     email : ""
 })
 
+const UserOld= ({
+    name : "" ,
+    role : "" ,
+    email : ""
+})
+
 const getLinkAll = async () => {
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/users/${myRouter.query.UserId}`
   );
   if (res.status === 200) {
    User.value = await res.json();
+   UserOld.value = { ...User.value }
     console.log("corret")
+    
   } else
     console.log("cant fetch")
 };
@@ -35,7 +43,7 @@ const getLinkAll = async () => {
 console.log(myRouter.query.userId)
 
 onBeforeMount(async () => {
-// getLinkAll();
+getLinkAll();
 });
 
 
@@ -44,8 +52,14 @@ const goBack = () => router.go(-1);
 
 
 const updateUser = async () => {
-  //eventLists.value.eventStartTime = await new Date(eventLists.value.eventStartTime).toISOString();
-  if (1 == 1) {
+
+  if(UserOld.value.name == User.value.name && UserOld.value.email == User.value.email && UserOld.value.role == User.value.role) {
+   isActivePopup.value=true
+   CheckStatus.value=false
+  }
+  
+  if(UserOld.value.name != User.value.name   ) {
+   if (User.value.email!="" && EmailValidation.value != false && User.value.name!=""  ) {
     const res = await fetch(
       `${import.meta.env.VITE_APP_TITLE}/api/users/${myRouter.query.UserId
       }`,
@@ -55,38 +69,107 @@ const updateUser = async () => {
           "content-type": "application/json",
         },
         body: JSON.stringify({
+            
+          name: User.value.name,    
+        }),
+      }
+    );
+    if (res.status === 200) {
+   isActivePopup.value=true
+   CheckStatus.value=false
+    //   statusTrue()
+      console.log("edited successfully");
+    } else 
+     CheckStatus.value=true
+    isActivePopup.value=true
+      
+console.log("xxx")
+  }else
+  {
+    CheckStatus.value=true
+ isActivePopup.value=true
+       
+  }} 
 
-          name: User.value.name,
-          role: User.value.role,
+ if( UserOld.value.email != User.value.email   ) {
+   if (User.value.email!="" && EmailValidation.value != false && User.value.name!="" ) {
+    const res = await fetch(
+      `${import.meta.env.VITE_APP_TITLE}/api/users/${myRouter.query.UserId
+      }`,
+      {
+        method: "PUT",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+            
           email: User.value.email,
         
         }),
       }
     );
     if (res.status === 200) {
-   
+   isActivePopup.value=true
+   CheckStatus.value=false
     //   statusTrue()
       console.log("edited successfully");
     } else 
-    // statusFalse()
+     CheckStatus.value=false
+    isActivePopup.value=true
+      
 console.log("xxx")
-  }
+  }else
+  {
+    CheckStatus.value=true
+ isActivePopup.value=true
+       
+
+  }}
+
+
+
+
+ if( UserOld.value.role != User.value.role  ) {
+   if ( User.value.email!="" && EmailValidation.value != false && User.value.name!=""  ) {
+    const res = await fetch(
+      `${import.meta.env.VITE_APP_TITLE}/api/users/${myRouter.query.UserId
+      }`,
+      {
+        method: "PUT",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+            
+        
+          role: User.value.role
+      
+        }),
+      }
+    );
+    if (res.status === 200) {
+   isActivePopup.value=true
+   CheckStatus.value=false
+    //   statusTrue()
+      console.log("edited successfully");
+    } else 
+     CheckStatus.value=true
+    isActivePopup.value=true
+      
+console.log("xxx")
+  }else
+  {
+    CheckStatus.value=true
+ isActivePopup.value=true
+       
+
+  }}
+
 };
 
-const CheckStatusPut = ref(true)
-
-function statusTrue() {
-
-  CheckStatusPut.value = true
-}
-
-function statusFalse() {
-
-  CheckStatusPut.value = false
-}
 
 onBeforeUpdate(() => {
-
+CheckData()
 });
 
 const isActivePopup = ref(false);
@@ -112,6 +195,7 @@ function CheckData() {
     EmailValidation.value = true
   } else {
     EmailValidation.value = false
+    
   }
 
   //check name
@@ -138,15 +222,18 @@ const EmailCheck = ref(true)   //เซ็คว่ากรอกรึยั�
 const EmailValidation = ref(true)  //ฟอแมท เมล
 const NameCheck = ref(true)     //เซ็คว่ากรอกรึยัง
 const RoleCheck = ref(true) //check role
+
+const CheckStatus = ref(true) //check edit
 </script>
 
 <template>
 
   <div class="flex justify-center">
+
       <PopupPage v-show="isActivePopup" :dim-background="true">
-      <div v-if="CheckStatus" class="grid grid-cols-1 p-12">
+      <div v-if="!CheckStatus" class="grid grid-cols-1 p-12">
         <p class="text-3xl font-semibold text-green-600 tracking-wide pb-8">
-          sign up succeeded
+          edit succeeded
         </p>
         <div class="success-checkmark">
   <div class="check-icon">
@@ -158,14 +245,14 @@ const RoleCheck = ref(true) //check role
 </div>
         <div class=" max-w-lg mx-auto  ">
           <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
-            @click="isActivePopup = false" />
+            @click="goBack()" />
         </div>
       </div>
 
 
-    <div v-if="!CheckStatus" class="grid grid-cols-1 p-12">
+    <div v-if="CheckStatus" class="grid grid-cols-1 p-12">
         <p class="text-3xl font-semibold text-red-600 tracking-wide pb-8">
-          sign up not succeeded
+         edit not succeeded
         </p>
         <div class="success-checkmark">
   <div class="check-icon">
@@ -185,28 +272,7 @@ const RoleCheck = ref(true) //check role
     </PopupPage>
 
     
-    <PopupPage v-show="isActivePopup" :dim-background="true">
-      <div v-if="CheckStatusPut" class="grid grid-cols-1 p-12">
-        <p class="text-3xl font-semibold text-slate-600 tracking-wide pb-8">
-          edit succeeded
-        </p>
-        <div class=" max-w-lg mx-auto  ">
-          <RoundButton bg-color="bg-emerald-400 text-white flex justify-center" button-name="ok"
-            @click="isActivePopup = false" />
-        </div>
-      </div>
-
-      <div v-if="!CheckStatusPut" class="grid grid grid-cols-1 p-12 place-items-center">
-        <img src="../assets/error.png" class="w-24 " /> <br>
-        <p class="text-3xl font-semibold text-slate-600 tracking-wide pb-8">
-          edit fail pls check your data
-        </p>
-        <div class=" max-w-lg mx-auto  ">
-          <RoundButton bg-color="bg-emerald-400 text-white flex justify-center" button-name="ok"
-            @click="isActivePopup = false" />
-        </div>
-      </div>
-    </PopupPage>
+  
 
 
 
@@ -219,17 +285,30 @@ const RoleCheck = ref(true) //check role
         <div>
           <span class="font-bold text-slate-600 ">User Name :<input
               class="border-2 border-sky-200 rounded-lg w-64 pl-2 ml-1" type="text" maxlength="100"
-              v-model="User.name">
+              v-model.trim="User.name">
           </span>
-          <br> <span class=" font-bold text-red-600 text-xs">*ชื่อห้ามเว้นว่างและห้ามซ้ำ</span><span
-            class=" font-bold text-gray-600 text-xs"> และ ยาวสุดไม่เกิน 100 ตัว</span> <span
-            class=" font-bold text-gray-600 text-xs">--> เหลืออีก {{ 100 - User}} ตัว
+          <br> <span v-if="!NameCheck" class=" font-bold text-red-600 text-xs">*ชื่อห้ามเว้นว่างและห้ามซ้ำ</span><span
+            class=" font-bold text-gray-600 text-xs"> ความยาวห้ามเกิน 100 ตัว</span> <span
+            class=" font-bold text-gray-600 text-xs">--> เหลืออีก {{ 100 - User.name.length}} ตัว
           </span>
         </div>
+
+
+
+        <span class="text-slate-600 font-bold">email : </span>
+        <input
+              class="border-2 border-sky-200 rounded-lg w-64 pl-2 ml-1" type="text" maxlength="100"
+              v-model.trim="User.email">
+<br>
+               <span v-show="!EmailCheck" class="text-red-600"> กรุณาใส่อีเมล</span>
+            <span v-show="!EmailValidation & EmailCheck" class="text-red-600"> กรุณากรอกอีเมลล์ให้ถูกต้อง</span>
+      
+
+
         <div class="text-slate-600 font-bold ">role : 
               <Menu as="div" class=" ">
     <div>
-      <MenuButton class="text-left bg-transparent h-12 w-full rounded-full border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+      <MenuButton class="text-left bg-transparent h-12 w-44 mt-4 rounded-full border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
         {{User.role}}
         <ChevronDownIcon class="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
       </MenuButton>
@@ -255,15 +334,9 @@ const RoleCheck = ref(true) //check role
           
         </div>
 
-        <span class=" font-bold text-red-600 text-xs">*ห้ามเว้นว่าง </span>
+  
      
-
-
-        <div class="text-slate-600 font-bold">email : </div>
-        <input
-              class="border-2 border-sky-200 rounded-lg w-64 pl-2 ml-1" type="text" maxlength="100"
-              v-model="User.email">
-        <div class=" pt-3 flex justify-center ">
+  <div class=" pt-3 flex justify-center ">
 
 
           <RoundButton bg-color="bg-emerald-400 text-white  place-items-center" button-name="save"

@@ -108,7 +108,7 @@ const PageIndexCurrent = ref(1)
         <div v-for="(event, index) in props.eventLists" :key="index">
           <div className="rounded-xl  mx-auto  drop-shadow-md ">
             <div
-              className="flex flex-col justify-between h-full bg-neutral-200 text-black rounded-lg p-4 ">
+              className="flex flex-col justify-between h-full bg-white text-black rounded-lg p-4 ">
                 
               <p class=" drop-shadow-2xl  font-semibold  w-auto pr-2 mr-2 rounded-lg text-orange-900" v-if="event.eventCategoryID==3">{{ event.eventCategory }}</p>
               <p class=" drop-shadow-2xl  font-semibold w-auto  pr-2  mr-2 rounded-lg text-sky-700" v-if="event.eventCategoryID==2">{{ event.eventCategory }}</p>

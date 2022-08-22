@@ -82,6 +82,7 @@ const updateUser = async () => {
     } else 
      CheckStatus.value=true
     isActivePopup.value=true
+     StatusNameError.value = await res.json();
       
 console.log("xxx")
   }else
@@ -91,9 +92,11 @@ console.log("xxx")
        
   }} 
 
+
+
  if( UserOld.value.email != User.value.email   ) {
    if (User.value.email!="" && EmailValidation.value != false && User.value.name!="" ) {
-    const res = await fetch(
+    const res2 = await fetch(
       `${import.meta.env.VITE_APP_TITLE}/api/users/${myRouter.query.UserId
       }`,
       {
@@ -108,20 +111,22 @@ console.log("xxx")
         }),
       }
     );
-    if (res.status === 200) {
+    if (res2.status === 200) {
    isActivePopup.value=true
    CheckStatus.value=false
     //   statusTrue()
       console.log("edited successfully");
     } else 
-     CheckStatus.value=false
+     CheckStatus.value=true
     isActivePopup.value=true
+       StatusEmailError.value = await res2.json()
       
 console.log("xxx")
   }else
   {
     CheckStatus.value=true
  isActivePopup.value=true
+
        
 
   }}
@@ -155,6 +160,7 @@ console.log("xxx")
     } else 
      CheckStatus.value=true
     isActivePopup.value=true
+    console.log(await res.json());
       
 console.log("xxx")
   }else
@@ -222,6 +228,8 @@ const EmailCheck = ref(true)   //เซ็คว่ากรอกรึยั�
 const EmailValidation = ref(true)  //ฟอแมท เมล
 const NameCheck = ref(true)     //เซ็คว่ากรอกรึยัง
 const RoleCheck = ref(true) //check role
+let StatusEmailError = ref({error:"",Email:""})
+let StatusNameError = ref({error:"",Name:""})
 
 const CheckStatus = ref(true) //check edit
 </script>
@@ -251,9 +259,13 @@ const CheckStatus = ref(true) //check edit
 
 
     <div v-if="CheckStatus" class="grid grid-cols-1 p-12">
-        <p class="text-3xl font-semibold text-red-600 tracking-wide pb-8">
+        <p class="text-3xl font-semibold text-red-600 tracking-wide ">
          edit not succeeded
         </p>
+        <div class="mb-8">
+        {{StatusEmailError.Email}} <br/>
+        {{StatusNameError.Name}}
+        </div>
         <div class="success-checkmark">
   <div class="check-icon">
     <span class="icon-line line-tip"></span>

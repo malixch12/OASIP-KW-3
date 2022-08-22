@@ -69,12 +69,12 @@ const goEdit = (UserId) => {
 <template>
 
   <div class="flex justify-center grid grid-rows-1  mb-16">
-
+        
    <PopupPage v-show="isActivePopup" :dim-background="true">
       <div  class="grid grid-cols-1 p-12">
-        <p class="">
+       
           <div class="text-3xl font-bold text-rose-400 mb-3">USER DETAIL</div>
-        <span class="font-bold mr-1">NAME : </span>   {{dataDetail.name}} </p>
+      <p>  <span class="font-bold mr-1">NAME : </span>   {{dataDetail.name}} </p>
        <p>  <span class="font-bold mr-1"> ROLE : </span>  {{dataDetail.role}} </p> 
          <p> <span class="font-bold mr-1">EMAIL : </span> {{dataDetail.email}} </p> 
          <p>   <span class="font-bold mr-1"> CREATE ON :</span>  {{new Date(dataDetail.createdOn).toLocaleDateString("th-TH")}} {{new Date(dataDetail.createdOn).toLocaleTimeString("th-TH")}} </p> 
@@ -171,6 +171,8 @@ const goEdit = (UserId) => {
             </tr>
         </tbody>
     </table>
+
+    <div class="text-center mt-10" v-if="UserLists.content.length==0">-------------no user------------</div> 
     <div class="  rounded-b-lg p-8 ml-24 mr-24 text-center">
       <!-- <span
         v-for="(e, index) in numPage"

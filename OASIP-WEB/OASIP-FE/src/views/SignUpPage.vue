@@ -10,6 +10,8 @@ import RoundButton from "../components/RoundButton.vue";
 
 
 const route = useRoute();
+const errorStatus = ref({Name : null,
+Email : null})
 
 const addUser = async () => {
 
@@ -23,7 +25,10 @@ const addUser = async () => {
       "content-type": "application/json",
     },
     body: JSON.stringify(dataUser.value),
-  });
+  }).catch((err) => {
+      console.log(res.json())
+    
+  })
     if(res.status === 200) {
         console.log(dataUser.value);
        isActivePopup.value=true
@@ -33,18 +38,20 @@ const addUser = async () => {
         isActivePopup.value=true
         CheckStatus.value=false
         console.log("fail")
-        console.log(res.status, err.res.data);
+       // console.log(await res.json());
+        errorStatus.value = await res.json()
     }
       
-      
+    
+
 };
 
 
 
 const dataUser = ref({    //สำหรับให้ ฟอม v-model
-  name: "",
+  name: null,
   role: "Please select role",
-  email: ""
+  email: null
 });
 
 const isActivePopup = ref(false);
@@ -64,7 +71,7 @@ onBeforeUpdate(() => {
 
 function CheckData() {
  
-  if (dataUser.value.email != "") {
+  if (dataUser.value.email != null) {
     EmailCheck.value = true
   } else { EmailCheck.value = false }
 
@@ -76,7 +83,7 @@ function CheckData() {
   }
 
   //check name
-   if (dataUser.value.name != "" && dataUser.value.name.length < 100) {
+   if (dataUser.value.name != null && dataUser.value.name.length < 101) {
     NameCheck.value = true
   } else {
     NameCheck.value = false
@@ -104,6 +111,7 @@ const RoleCheck = ref(true) //check role
 
 <template>
   <div class="">
+ 
 <div class="text-white text-xs">{{dataUser.role}}</div>
  <PopupPage v-show="isActivePopup" :dim-background="true">
       <div v-if="CheckStatus" class="grid grid-cols-1 p-12">
@@ -126,9 +134,18 @@ const RoleCheck = ref(true) //check role
 
 
     <div v-if="!CheckStatus" class="grid grid-cols-1 p-12">
-        <p class="text-3xl font-semibold text-red-600 tracking-wide pb-8">
+        <p class="text-3xl font-semibold text-red-600 tracking-wide pb-8">        
+         <br>    
           sign up not succeeded
+
         </p>
+            <div> name :<span class="text-red-500"> {{errorStatus.Name}}</span>  <span v-if="errorStatus.Name==null" class="text-green-500">correct
+</span></div>
+           
+              <div> email : <span class="text-red-500"> {{errorStatus.Email}}</span>  <span v-if="errorStatus.Email==null" class="text-green-500">correct
+</span></div>
+            
+
         <div class="success-checkmark">
   <div class="check-icon">
     <span class="icon-line line-tip"></span>
@@ -138,7 +155,7 @@ const RoleCheck = ref(true) //check role
   </div>
 </div>
         <div class=" max-w-lg mx-auto  ">
-          <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
+          <RoundButton bg-color="bg-gray-400 text-white flex justify-center mt-5" button-name="ok"
             @click="isActivePopup = false" />
         </div>
       </div>

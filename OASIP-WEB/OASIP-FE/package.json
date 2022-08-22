@@ -9,7 +9,10 @@
   },
   "dependencies": {
     "@headlessui/vue": "^1.6.7",
+    "axios": "^0.27.2",
+    "gsap": "^3.11.0",
     "vue": "^3.2.25",
+    "vue-axios": "^3.4.1",
     "vue-router": "^4.0.14"
   },
   "devDependencies": {
@@ -18,5 +21,10 @@
     "postcss": "^8.4.12",
     "tailwindcss": "^3.0.24",
     "vite": "^2.9.8"
-  }
+  },
+  "description": "This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.",
+  "main": "postcss.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

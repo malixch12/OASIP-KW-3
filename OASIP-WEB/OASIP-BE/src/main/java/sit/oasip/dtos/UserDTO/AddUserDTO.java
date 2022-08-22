@@ -22,7 +22,9 @@ public class AddUserDTO {
 
 
     @UniqueEmail
+
     @Email(message="please check email format")
+
     @NotBlank(message = "please fill email")
     @Length(min = 1, max = 50, message="size must be between 1 and 50")
     private String Email;

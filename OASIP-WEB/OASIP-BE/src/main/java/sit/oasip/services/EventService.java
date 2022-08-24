@@ -23,9 +23,10 @@ import sit.oasip.utils.PageMapper;
 public class EventService {
     private final EventcategoryRepository cateRepository;
     private final EventRepository repository;
-    private ListMapper listMapper = new ListMapper();
-    private PageMapper pageMapper = new PageMapper();
-
+    @Autowired
+    private ListMapper listMapper;
+    @Autowired
+    private PageMapper pageMapper ;
     @Autowired
     private ModelMapper modelMapper;
 

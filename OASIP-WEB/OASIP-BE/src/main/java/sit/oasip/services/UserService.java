@@ -9,6 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import org.springframework.web.server.ResponseStatusException;
@@ -23,7 +26,9 @@ import sit.oasip.utils.PageMapper;
 
 import sit.oasip.utils.RoleAttribute;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserService {
@@ -37,6 +42,10 @@ public class UserService {
     private PageMapper pageMapper;
     @Autowired
     private Argon2PasswordEncoder argon2PasswordEncoder;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+
 
 
     public Page<UserDTO> getUserAll(Pageable pageable) {
@@ -57,15 +66,13 @@ public class UserService {
         User user = new User();
         RoleAttribute roleAttribute = new RoleAttribute();
 
-
-//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(16);
-        String result = argon2PasswordEncoder.encode("newUser.getPassword()");
-
+        String password = argon2PasswordEncoder.encode(newUser.getPassword());
         String role = roleAttribute.roleChoice(newUser.getRole().toString());
+
         user.setRole(role);
         user.setName(newUser.getName().trim());
         user.setEmail(newUser.getEmail().trim());
-        user.setPassword(result);
+        user.setPassword(password);
 
         User user1 = modelMapper.map(user, User.class);
         repository.saveAndFlush(user1);

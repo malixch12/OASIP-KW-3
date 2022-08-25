@@ -5,6 +5,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import sit.oasip.utils.ListMapper;
@@ -26,7 +28,27 @@ public class ApplicationConfig {
 
     @Bean
     public Argon2PasswordEncoder argon2PasswordEncoder(){
-        return new Argon2PasswordEncoder(16,29,1,16,2);
+        return new Argon2PasswordEncoder(16,29,1,16,1);
     }
+
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder(){return new BCryptPasswordEncoder();}
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new PasswordEncoder() {
+            @Override
+            public String encode(CharSequence charSequence) {
+                return null;
+            }
+
+            @Override
+            public boolean matches(CharSequence charSequence, String s) {
+                return false;
+            }
+        };
+    }
+
+
 
 }

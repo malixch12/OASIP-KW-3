@@ -394,8 +394,8 @@ section .color:nth-child(3)
 }
 
 .box .square:nth-child(1) {
-    top: -50px;
-    right: -60px;
+    top: -20px;
+    right: -150px;
     width:100px;
     height:100px;
 }
@@ -417,8 +417,8 @@ section .color:nth-child(3)
  
 }
 .box .square:nth-child(5) {
-    top: -80px;
-    left: 140px;
+    top: -20px;
+    left: -50px;
     width:60px;
     height:60px;
  

@@ -87,19 +87,7 @@ setInterval(setTime, 1);
               >user list
             </router-link>
           </li>
-          <li>
-            <router-link
-              :to="{ name: 'SignUpPage' }"
-              class="
-                 block
-                text-transparent  bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 
-               
-                
-              "
-              >sign up
-            </router-link>
-          </li>
-             <li>
+              <li>
             <router-link
               :to="{ name: 'Login' }"
               class="
@@ -113,6 +101,19 @@ setInterval(setTime, 1);
               >Login
             </router-link>
           </li>
+          <li>
+            <router-link
+              :to="{ name: 'SignUpPage' }"
+              class="
+                 block
+                text-transparent  bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 
+               
+                
+              "
+              >sign up
+            </router-link>
+          </li>
+         
           
           <li>
             <span

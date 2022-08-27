@@ -37,7 +37,6 @@ CheckData()
     
        // console.log(await res.json());
         errorStatus.value = await res.json()
-        console.log(errorStatus.value)
     }
       
     
@@ -187,10 +186,10 @@ const PasswordCheck =ref(true) //check password
 
             <div class="container2">
                 <div class="form">
-                    <h2>Create account</h2>
+                    <h2>Login</h2>
 
                     <form>
-                        <div class="inputBox">
+                        <!-- <div class="inputBox">
                             <input type="text" placeholder="Username" v-model.trim="dataUser.name" >
                               <details class="" v-if="!NameCheck">
           <summary class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
@@ -200,7 +199,7 @@ const PasswordCheck =ref(true) //check password
             <span v-show="!NameCheck" class="text-red-600"> ยูสเซอร์เนมห้ามเว้นว่างและห้ามเกิน 100 ตัว</span>
           </div>
         </details>
-                        </div>
+                        </div> -->
                          <div class="inputBox ">
                             <input type="text" class="" placeholder="email" v-model.trim="dataUser.email">
                               <details class="" v-show="!EmailValidation || !EmailCheck">
@@ -217,64 +216,24 @@ const PasswordCheck =ref(true) //check password
                          <div class="inputBox">
                        
                             <input type="password" placeholder="password" v-model.trim="dataUser.password">
-                        <input class="mt-4" type="password" placeholder="Confirm password" v-model.trim="dataUser.passwordConfirm">
-                         <details class="" v-if="!PasswordCheck">
+                         <!-- <details class="" v-if="!PasswordCheck">
           <summary class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
             invalid
           </summary>
           <div class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
             <span v-show="!PasswordCheck" class="text-red-600"> password not match</span>
           </div>
-        </details>
+        </details> -->
                         </div>
 
 
 
 
-                         <div class="inputBox ">
-                           <Menu as="div" class=" ">
-    <div>
-      <MenuButton class="text-left bg-transparent h-12 w-full rounded-full border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
-        {{dataUser.role}}
-        <ChevronDownIcon class="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
-      </MenuButton>
-    </div>
+                        
 
-    <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
-      <MenuItems class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-        <div class="py-1">
-          <MenuItem v-slot="{ active }">
-            <div :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']" @click="dataUser.role=`Admin`">Admin</div>
-          </MenuItem>
-          <MenuItem v-slot="{ active }">
-            <div :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']" @click="dataUser.role=`Lecturer`">Lecturer</div>
-          </MenuItem>
-          <MenuItem v-slot="{ active }">
-            <div :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']" @click="dataUser.role=`Student`">Student</div>
-          </MenuItem>
-        
-        </div>
-      </MenuItems>
-    </transition>
-  </Menu>
-   <details class="" v-if="!RoleCheck">
-          <summary class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
-            invalid
-          </summary>
-          <div class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
-            <span v-show="!RoleCheck" class="text-red-600"> กรุณาเลือก role</span>
-                     <br>   <span v-show="!RoleCheck" class="text-gray-600"> **หากไม่เลือกจะถูกเลือกเป็น student </span>
-
-          </div>
-        </details>
-
-                        </div>
-
-                        <div class="inputBox">
-                          
-                        </div>
-       <input  class="test rounded-full px-8 py-1 drop-shadow-lg" value="Sign up" @click="addUser()">
-                        <p class="forget">Do you have an account ?  Click here!</p>
+                    
+       <input  class="mt-4 test rounded-full px-8 py-1 drop-shadow-lg" value="Login" @click="addUser()">
+                        <p class="forget">dont have  account ?  Click here!</p>
 
                     </form>
                 </div>

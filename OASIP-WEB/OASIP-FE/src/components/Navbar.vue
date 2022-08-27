@@ -99,6 +99,20 @@ setInterval(setTime, 1);
               >sign up
             </router-link>
           </li>
+             <li>
+            <router-link
+              :to="{ name: 'Login' }"
+              class="
+                  block
+                text-gray-700
+               
+                md:hover:text-pink-500 md:p-0  
+               
+                
+              "
+              >Login
+            </router-link>
+          </li>
           
           <li>
             <span

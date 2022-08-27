@@ -15,6 +15,9 @@ Email : null})
 
 const addUser = async () => {
 
+CheckData()
+
+if(PasswordCheck.value == true) {
         if(dataUser.value.role== "Please select role") {
             dataUser.value.role="Student"
         }
@@ -37,9 +40,14 @@ const addUser = async () => {
     
        // console.log(await res.json());
         errorStatus.value = await res.json()
+        console.log(errorStatus.value)
     }
       
-    
+    }else {
+       isActivePopup.value=true
+        CheckStatus.value=false
+        console.log("xx")
+    }
 
 };
 
@@ -48,7 +56,9 @@ const addUser = async () => {
 const dataUser = ref({    //สำหรับให้ ฟอม v-model
   name: null,
   role: "Please select role",
-  email: null
+  email: null,
+  password: null ,
+  passwordConfirm : null
 });
 
 const isActivePopup = ref(false);
@@ -63,7 +73,7 @@ function validateEmail(email) {
 }
 
 onBeforeUpdate(() => {
-  CheckData()
+  
 });
 
 function CheckData() {
@@ -97,13 +107,19 @@ RoleCheck.value = false
 
   }
 
+  if(dataUser.value.password == dataUser.value.passwordConfirm) {
+      PasswordCheck.value = true 
+  } else {
+    PasswordCheck.value = false
+  }
+
 }
 
 const EmailCheck = ref(true)   //เซ็คว่ากรอกรึยัง
 const EmailValidation = ref(true)  //ฟอแมท เมล
 const NameCheck = ref(true)     //เซ็คว่ากรอกรึยัง
 const RoleCheck = ref(true) //check role
-
+const PasswordCheck =ref(true) //check password
 </script>
 
 <template>
@@ -141,7 +157,11 @@ const RoleCheck = ref(true) //check role
            
               <div> email : <span class="text-red-500"> {{errorStatus.Email}}</span>  <span v-if="errorStatus.Email==null" class="text-green-500">correct
 </span></div>
-            
+              <div> password : <span class="text-red-500"> {{errorStatus.Password}}</span>  <span v-if="errorStatus.Password==null && PasswordCheck != false" class="text-green-500">correct
+</span>
+<span v-if="errorStatus.Password==null && PasswordCheck == false" class="text-red-500">password not match
+</span>
+</div>
 
         <div class="success-checkmark">
   <div class="check-icon">
@@ -192,8 +212,8 @@ const RoleCheck = ref(true) //check role
           </div>
         </details>
                         </div>
-                         <div class="inputBox">
-                            <input type="text" placeholder="email" v-model.trim="dataUser.email">
+                         <div class="inputBox ">
+                            <input type="text" class="" placeholder="email" v-model.trim="dataUser.email">
                               <details class="" v-show="!EmailValidation || !EmailCheck">
           <summary class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
             invalid
@@ -204,6 +224,26 @@ const RoleCheck = ref(true) //check role
           </div>
         </details>
                         </div>
+
+                         <div class="inputBox">
+                       
+                            <input type="password" placeholder="password" v-model.trim="dataUser.password">
+                        <input class="mt-4" type="password" placeholder="Confirm password" v-model.trim="dataUser.passwordConfirm">
+                           <span class="text-sm ml-4 text-gray-400">password size must be between 8 and 14</span>
+                         <details class="" v-if="!PasswordCheck">
+          <summary class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
+            invalid
+          </summary>
+          <div class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
+         
+            <span v-show="!PasswordCheck" class="text-red-600"> password not match</span>
+          </div>
+        </details>
+                        </div>
+
+
+
+
                          <div class="inputBox ">
                            <Menu as="div" class=" ">
     <div>
@@ -247,7 +287,13 @@ const RoleCheck = ref(true) //check role
                           
                         </div>
        <input  class="test rounded-full px-8 py-1 drop-shadow-lg" value="Sign up" @click="addUser()">
-                        <p class="forget">Do you have an account ?  Click here!</p>
+                        <p class="forget">Do you have an account ?   <router-link
+              :to="{ name: 'Login' }"
+              class="
+            
+              "
+              >Click here!</router-link
+            > </p>
 
                     </form>
                 </div>
@@ -348,8 +394,8 @@ section .color:nth-child(3)
 }
 
 .box .square:nth-child(1) {
-    top: -50px;
-    right: -60px;
+    top: -20px;
+    right: -150px;
     width:100px;
     height:100px;
 }
@@ -371,8 +417,8 @@ section .color:nth-child(3)
  
 }
 .box .square:nth-child(5) {
-    top: -80px;
-    left: 140px;
+    top: -20px;
+    left: -50px;
     width:60px;
     height:60px;
  
@@ -444,7 +490,7 @@ section .color:nth-child(3)
     border-bottom:1px solid rgba(255,255,255,0.2);
     font-size:16px;
     letter-spacing: 1px;
-    color: rgb(111, 104, 104);
+    /* color: rgb(5, 78, 6); */
     box-shadow: 0 5px 15px rgba(0,0,0,0.05);
 
 }
@@ -454,7 +500,8 @@ section .color:nth-child(3)
 }
 
 .form .inputBox input::placeholder {
-    color: rgb(115, 109, 109);
+    color: rgb(164, 160, 160);
+
 }
 
 .test {
@@ -465,6 +512,7 @@ section .color:nth-child(3)
     margin-bottom: 20px;
     font-weight: 600;
     font-size: 15px;
+
     
 }
 

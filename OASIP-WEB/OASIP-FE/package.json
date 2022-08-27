@@ -10,6 +10,7 @@
   "dependencies": {
     "@headlessui/vue": "^1.6.7",
     "axios": "^0.27.2",
+    "flowbite": "^1.5.2",
     "gsap": "^3.11.0",
     "vue": "^3.2.25",
     "vue-axios": "^3.4.1",

@@ -17,7 +17,8 @@ public class EventCategoryService {
 
     private final EventcategoryRepository repository;
 
-    private ListMapper listMapper = new ListMapper();
+    @Autowired
+    private ListMapper listMapper;
     @Autowired
     private ModelMapper modelMapper;
 

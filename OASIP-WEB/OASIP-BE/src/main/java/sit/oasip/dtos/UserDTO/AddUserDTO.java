@@ -19,8 +19,6 @@ public class AddUserDTO {
     @Length(min = 1, max = 100, message="size must be between 1 and 100")
     private String Name;
 
-
-
     @UniqueEmail
 
     @Email(message="please check email format")
@@ -28,6 +26,10 @@ public class AddUserDTO {
     @NotBlank(message = "please fill email")
     @Length(min = 1, max = 50, message="size must be between 1 and 50")
     private String Email;
+
+    @NotBlank(message = "please fill password")
+    @Length(min = 8, max = 14, message="size must be between 8 and 14")
+    private String Password;
     private String Role = "Student";
 
 

@@ -22,6 +22,9 @@ setInterval(setTime, 1);
 </script>
  
 <template>
+<div>
+  
+</div>
   <nav class="">
     <div class="container flex flex-wrap justify-between items-center  pl-12 py-5">
       <router-link :to="{ name: 'Home' }" class="flex items-center">
@@ -84,6 +87,20 @@ setInterval(setTime, 1);
               >user list
             </router-link>
           </li>
+              <li>
+            <router-link
+              :to="{ name: 'Login' }"
+              class="
+                  block
+                text-gray-700
+               
+                md:hover:text-pink-500 md:p-0  
+               
+                
+              "
+              >Login
+            </router-link>
+          </li>
           <li>
             <router-link
               :to="{ name: 'SignUpPage' }"
@@ -96,6 +113,7 @@ setInterval(setTime, 1);
               >sign up
             </router-link>
           </li>
+         
           
           <li>
             <span

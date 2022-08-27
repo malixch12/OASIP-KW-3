@@ -15,11 +15,8 @@ Email : null})
 
 const addUser = async () => {
 CheckData()
-        if(dataUser.value.role== "Please select role") {
-            dataUser.value.role="Student"
-        }
-
-  const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/users`, {
+    
+  const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/match`, {
     method: "POST",
     headers: {
       "content-type": "application/json",
@@ -31,6 +28,7 @@ CheckData()
         console.log(dataUser.value);
        isActivePopup.value=true
        CheckStatus.value=true
+       console.log(await res.json())
     }else {
         isActivePopup.value=true
         CheckStatus.value=false
@@ -46,11 +44,10 @@ CheckData()
 
 
 const dataUser = ref({    //สำหรับให้ ฟอม v-model
-  name: null,
-  role: "Please select role",
+ 
   email: null,
   password: null ,
-  passwordConfirm : null
+
 });
 
 const isActivePopup = ref(false);
@@ -81,36 +78,18 @@ function CheckData() {
     EmailValidation.value = false
   }
 
-  //check name
-   if (dataUser.value.name != null && dataUser.value.name.length < 101) {
-    NameCheck.value = true
-  } else {
-    NameCheck.value = false
-  }
 
-
-  //check role
-
-  if(dataUser.value.role!="Admin" && dataUser.value.role!= "Lecturer" &&  dataUser.value.role!= "Student") {
-RoleCheck.value = false
-  } else {
-    RoleCheck.value = true
-    console.log("")
-
-  }
-
-  if(dataUser.value.password == dataUser.value.passwordConfirm) {
-      PasswordCheck.value = true 
+if (dataUser.value.password != null) {
+    PasswordCheck.value = true
   } else {
     PasswordCheck.value = false
   }
+
 
 }
 
 const EmailCheck = ref(true)   //เซ็คว่ากรอกรึยัง
 const EmailValidation = ref(true)  //ฟอแมท เมล
-const NameCheck = ref(true)     //เซ็คว่ากรอกรึยัง
-const RoleCheck = ref(true) //check role
 const PasswordCheck =ref(true) //check password
 </script>
 
@@ -121,7 +100,7 @@ const PasswordCheck =ref(true) //check password
  <PopupPage v-show="isActivePopup" :dim-background="true">
       <div v-if="CheckStatus" class="grid grid-cols-1 p-12">
         <p class="text-3xl font-semibold text-green-600 tracking-wide pb-8">
-          sign up succeeded
+          Login succeeded
         </p>
         <div class="success-checkmark">
   <div class="check-icon">
@@ -139,17 +118,27 @@ const PasswordCheck =ref(true) //check password
 
 
     <div v-if="!CheckStatus" class="grid grid-cols-1 p-12">
-        <p class="text-3xl font-semibold text-red-600 tracking-wide pb-8">        
+        <p class="text-3xl font-semibold text-red-600 tracking-wide ">        
          <br>    
-          sign up not succeeded
+          Login not succeeded !!! 
 
         </p>
-            <div> name :<span class="text-red-500"> {{errorStatus.Name}}</span>  <span v-if="errorStatus.Name==null" class="text-green-500">correct
-</span></div>
-           
-              <div> email : <span class="text-red-500"> {{errorStatus.Email}}</span>  <span v-if="errorStatus.Email==null" class="text-green-500">correct
-</span></div>
+
+          <div >
+            <p class="text-xl text-red-600 text-center">           
+          please check your email or password
+
+        </p>
+    <p class="forget text-center">dont have  account ?     <router-link
+              :to="{ name: 'SignUpPage' }"
+              class="
             
+              "
+              >Click here!</router-link
+            > </p>
+        </div>
+
+
 
         <div class="success-checkmark">
   <div class="check-icon">
@@ -201,7 +190,7 @@ const PasswordCheck =ref(true) //check password
         </details>
                         </div> -->
                          <div class="inputBox ">
-                            <input type="text" class="" placeholder="email" v-model.trim="dataUser.email">
+                            <input type="text" class="" placeholder="email" v-model.trim="dataUser.email" required>
                               <details class="" v-show="!EmailValidation || !EmailCheck">
           <summary class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
             invalid
@@ -216,14 +205,14 @@ const PasswordCheck =ref(true) //check password
                          <div class="inputBox">
                        
                             <input type="password" placeholder="password" v-model.trim="dataUser.password">
-                         <!-- <details class="" v-if="!PasswordCheck">
+                         <details class="" v-if="!PasswordCheck">
           <summary class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
             invalid
           </summary>
           <div class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
-            <span v-show="!PasswordCheck" class="text-red-600"> password not match</span>
+            <span v-show="!PasswordCheck" class="text-red-600"> กรุณาใส่รหัส</span>
           </div>
-        </details> -->
+        </details>
                         </div>
 
 
@@ -233,7 +222,14 @@ const PasswordCheck =ref(true) //check password
 
                     
        <input  class="mt-4 test rounded-full px-8 py-1 drop-shadow-lg" value="Login" @click="addUser()">
-                        <p class="forget">dont have  account ?  Click here!</p>
+                        <p class="forget">dont have  account ?     <router-link
+              :to="{ name: 'SignUpPage' }"
+              class="
+            
+              "
+              >Click here!</router-link
+            >
+            </p>
 
                     </form>
                 </div>

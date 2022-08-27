@@ -14,7 +14,10 @@ const errorStatus = ref({Name : null,
 Email : null})
 
 const addUser = async () => {
+
 CheckData()
+
+if(PasswordCheck.value == true) {
         if(dataUser.value.role== "Please select role") {
             dataUser.value.role="Student"
         }
@@ -40,7 +43,11 @@ CheckData()
         console.log(errorStatus.value)
     }
       
-    
+    }else {
+       isActivePopup.value=true
+        CheckStatus.value=false
+        console.log("xx")
+    }
 
 };
 
@@ -150,7 +157,11 @@ const PasswordCheck =ref(true) //check password
            
               <div> email : <span class="text-red-500"> {{errorStatus.Email}}</span>  <span v-if="errorStatus.Email==null" class="text-green-500">correct
 </span></div>
-            
+              <div> password : <span class="text-red-500"> {{errorStatus.Password}}</span>  <span v-if="errorStatus.Password==null && PasswordCheck != false" class="text-green-500">correct
+</span>
+<span v-if="errorStatus.Password==null && PasswordCheck == false" class="text-red-500">password not match
+</span>
+</div>
 
         <div class="success-checkmark">
   <div class="check-icon">
@@ -218,11 +229,13 @@ const PasswordCheck =ref(true) //check password
                        
                             <input type="password" placeholder="password" v-model.trim="dataUser.password">
                         <input class="mt-4" type="password" placeholder="Confirm password" v-model.trim="dataUser.passwordConfirm">
+                           <span class="text-sm ml-4 text-gray-400">password size must be between 8 and 14</span>
                          <details class="" v-if="!PasswordCheck">
           <summary class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
             invalid
           </summary>
           <div class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
+         
             <span v-show="!PasswordCheck" class="text-red-600"> password not match</span>
           </div>
         </details>
@@ -274,7 +287,13 @@ const PasswordCheck =ref(true) //check password
                           
                         </div>
        <input  class="test rounded-full px-8 py-1 drop-shadow-lg" value="Sign up" @click="addUser()">
-                        <p class="forget">Do you have an account ?  Click here!</p>
+                        <p class="forget">Do you have an account ?   <router-link
+              :to="{ name: 'Login' }"
+              class="
+            
+              "
+              >Click here!</router-link
+            > </p>
 
                     </form>
                 </div>

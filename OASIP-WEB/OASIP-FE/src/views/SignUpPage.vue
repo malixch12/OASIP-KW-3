@@ -14,7 +14,7 @@ const errorStatus = ref({Name : null,
 Email : null})
 
 const addUser = async () => {
-
+CheckData()
         if(dataUser.value.role== "Please select role") {
             dataUser.value.role="Student"
         }
@@ -48,7 +48,9 @@ const addUser = async () => {
 const dataUser = ref({    //สำหรับให้ ฟอม v-model
   name: null,
   role: "Please select role",
-  email: null
+  email: null,
+  password: null ,
+  passwordConfirm : null
 });
 
 const isActivePopup = ref(false);
@@ -63,7 +65,7 @@ function validateEmail(email) {
 }
 
 onBeforeUpdate(() => {
-  CheckData()
+  
 });
 
 function CheckData() {
@@ -97,13 +99,19 @@ RoleCheck.value = false
 
   }
 
+  if(dataUser.value.password == dataUser.value.passwordConfirm) {
+      PasswordCheck.value = true 
+  } else {
+    PasswordCheck.value = false
+  }
+
 }
 
 const EmailCheck = ref(true)   //เซ็คว่ากรอกรึยัง
 const EmailValidation = ref(true)  //ฟอแมท เมล
 const NameCheck = ref(true)     //เซ็คว่ากรอกรึยัง
 const RoleCheck = ref(true) //check role
-
+const PasswordCheck =ref(true) //check password
 </script>
 
 <template>
@@ -192,8 +200,8 @@ const RoleCheck = ref(true) //check role
           </div>
         </details>
                         </div>
-                         <div class="inputBox">
-                            <input type="text" placeholder="email" v-model.trim="dataUser.email">
+                         <div class="inputBox ">
+                            <input type="text" class="" placeholder="email" v-model.trim="dataUser.email">
                               <details class="" v-show="!EmailValidation || !EmailCheck">
           <summary class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
             invalid
@@ -204,6 +212,24 @@ const RoleCheck = ref(true) //check role
           </div>
         </details>
                         </div>
+
+                         <div class="inputBox">
+                       
+                            <input type="password" placeholder="password" v-model.trim="dataUser.password">
+                        <input class="mt-4" type="password" placeholder="Confirm password" v-model.trim="dataUser.passwordConfirm">
+                         <details class="" v-if="!PasswordCheck">
+          <summary class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
+            invalid
+          </summary>
+          <div class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
+            <span v-show="!PasswordCheck" class="text-red-600"> password not match</span>
+          </div>
+        </details>
+                        </div>
+
+
+
+
                          <div class="inputBox ">
                            <Menu as="div" class=" ">
     <div>
@@ -444,7 +470,7 @@ section .color:nth-child(3)
     border-bottom:1px solid rgba(255,255,255,0.2);
     font-size:16px;
     letter-spacing: 1px;
-    color: rgb(111, 104, 104);
+    /* color: rgb(5, 78, 6); */
     box-shadow: 0 5px 15px rgba(0,0,0,0.05);
 
 }
@@ -454,7 +480,8 @@ section .color:nth-child(3)
 }
 
 .form .inputBox input::placeholder {
-    color: rgb(115, 109, 109);
+    color: rgb(164, 160, 160);
+
 }
 
 .test {
@@ -465,6 +492,7 @@ section .color:nth-child(3)
     margin-bottom: 20px;
     font-weight: 600;
     font-size: 15px;
+
     
 }
 

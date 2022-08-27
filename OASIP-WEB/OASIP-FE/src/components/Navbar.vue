@@ -22,6 +22,9 @@ setInterval(setTime, 1);
 </script>
  
 <template>
+<div>
+  
+</div>
   <nav class="">
     <div class="container flex flex-wrap justify-between items-center  pl-12 py-5">
       <router-link :to="{ name: 'Home' }" class="flex items-center">

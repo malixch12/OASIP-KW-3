@@ -3,6 +3,7 @@
 -- grant all privileges on int222.*to'int222'@'%';
 
 use int222;
+
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
@@ -65,6 +66,7 @@ CREATE TABLE IF NOT EXISTS `User` (
  `UserID` INT NOT NULL AUTO_INCREMENT,
   `UserName` VARCHAR(100) NOT NULL UNIQUE,
   `Email` VARCHAR(50) NOT NULL UNIQUE,
+`Password` VARCHAR(90) NOT NULL,
   `Role` ENUM('Admin','Lecturer','Student') DEFAULT 'Student' NOT NULL,
   `CreateOn` TIMESTAMP NOT NULL  DEFAULT CURRENT_TIMESTAMP,
   `UpdateOn` TIMESTAMP NOT NULL  DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
@@ -78,6 +80,9 @@ CREATE TABLE IF NOT EXISTS `Enrollment` (
   `EventCategoryID` INT NOT NULL,
   PRIMARY KEY (`EnrollmenID`))
 ENGINE = InnoDB;
+
+
+
 
 
 SHOW WARNINGS;
@@ -99,8 +104,6 @@ INSERT INTO event values (3,'สมเกียรติ ขยันเรี�
 
 
 
-INSERT INTO User(UserID,UserName,Email,Role)values(1,'สมส่วน สุขศรี','somsuan.s@kmutt.ac.th','Lecturer');
-INSERT INTO User(UserID,UserName,Email)values(2,'กัญญาพัขร','kanyapat.w@kmutt.ac.th');
-
-
+INSERT INTO User(UserID,UserName,Email,Password,Role)values(1,'สมส่วน สุขศรี','somsuan.s@kmutt.ac.th','somsuans','Lecturer');
+INSERT INTO User(UserID,UserName,Email,Password)values(2,'กัญญาพัขร','kanyapat.w@kmutt.ac.th','kanyapatw');
 

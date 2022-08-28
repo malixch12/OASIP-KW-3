@@ -53,7 +53,7 @@ public class MatchUserController {
             }
 
         }else if(user == null) {
-           throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"A user with the specified email DOES NOT exist");
+           throw new ResponseStatusException(HttpStatus.NOT_FOUND,"A user with the specified email DOES NOT exist");
         }
 
     }

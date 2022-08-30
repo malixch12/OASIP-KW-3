@@ -99,9 +99,13 @@ const PasswordCheck =ref(true) //check password
 <div class="text-white text-xs">{{dataUser.role}}</div>
  <PopupPage v-show="isActivePopup" :dim-background="true">
       <div v-if="CheckStatus" class="grid grid-cols-1 p-12">
-        <p class="text-3xl font-semibold text-green-600 tracking-wide pb-8">
+        <p class="text-3xl font-semibold text-green-600 tracking-wide">
           Login succeeded
         </p>
+<p class="text-xl font-semibold text-gray-600 tracking-wide pb-5 text-center mt-3">
+          password match
+        </p>
+
         <div class="success-checkmark">
   <div class="check-icon">
     <span class="icon-line line-tip"></span>

@@ -42,10 +42,6 @@ public class UserService {
     private PageMapper pageMapper;
     @Autowired
     private Argon2PasswordEncoder argon2PasswordEncoder;
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-
 
 
     public Page<UserDTO> getUserAll(Pageable pageable) {

@@ -18,6 +18,7 @@ import sit.oasip.dtos.UserDTO.AddUserDTO;
 import sit.oasip.dtos.UserDTO.MatchUserDTO;
 import sit.oasip.entities.User;
 import sit.oasip.repositories.UserRepository;
+import sit.oasip.services.UserService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,32 +28,10 @@ import java.util.Map;
 public class MatchUserController {
 
     @Autowired
-    private Argon2PasswordEncoder argon2PasswordEncoder;
-
-    @Autowired
-    private UserRepository repository;
+    private UserService userService;
 
     @PostMapping("")
     public void matchUser(@RequestBody MatchUserDTO matchUser){
-        User user = repository.findByEmail(matchUser.getEmail());
-
-        String message = "";
-        if(user != null){
-
-            boolean isMatchPassword = argon2PasswordEncoder.matches(matchUser.getPassword(),user.getPassword());
-
-            if(isMatchPassword){
-
-                throw new ResponseStatusException(HttpStatus.OK,"Password Match");
-            }
-            else if(!isMatchPassword){
-
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Password NOT Match");
-            }
-
-        }else if(user == null) {
-           throw new ResponseStatusException(HttpStatus.NOT_FOUND,"A user with the specified email DOES NOT exist");
-        }
-
+        userService.match(matchUser);
     }
 }

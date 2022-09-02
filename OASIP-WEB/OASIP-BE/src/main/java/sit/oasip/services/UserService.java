@@ -18,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import sit.oasip.dtos.UserDTO.AddUserDTO;
 import sit.oasip.dtos.UserDTO.EditUserDTO;
+import sit.oasip.dtos.UserDTO.MatchUserDTO;
 import sit.oasip.dtos.UserDTO.UserDTO;
 import sit.oasip.entities.User;
 import sit.oasip.repositories.UserRepository;
@@ -73,6 +74,24 @@ public class UserService {
         User user1 = modelMapper.map(user, User.class);
         repository.saveAndFlush(user1);
         return user1;
+    }
+
+    public void match(MatchUserDTO matchUser){
+        User user = repository.findByEmail(matchUser.getEmail());
+
+        if(user != null){
+            boolean isMatchPassword = argon2PasswordEncoder.matches(matchUser.getPassword(),user.getPassword());
+
+            if(isMatchPassword){
+                throw new ResponseStatusException(HttpStatus.OK,"Password Match");
+            }
+            else if(!isMatchPassword){
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Password NOT Match");
+            }
+
+        }else if(user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"A user with the specified email DOES NOT exist");
+        }
     }
 
     public User edit(EditUserDTO editUserDTO, int userId) {

@@ -25,8 +25,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/match")
 public class MatchUserController {
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     private Argon2PasswordEncoder argon2PasswordEncoder;

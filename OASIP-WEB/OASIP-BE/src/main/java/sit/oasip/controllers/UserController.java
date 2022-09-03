@@ -38,8 +38,10 @@ public class UserController {
         return userService.getUserById(userId);
     }
 
-    @PostMapping("")
-    @ResponseStatus(HttpStatus.OK )
+
+    @PostMapping("/signup")
+    @ResponseStatus(HttpStatus.OK)
+
     public User addUser(@Validated @RequestBody AddUserDTO newUser){
         return userService.add(newUser);
     }

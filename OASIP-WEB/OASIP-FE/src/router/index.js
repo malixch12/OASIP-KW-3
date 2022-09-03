@@ -10,6 +10,9 @@ import BookingEventByCate from "../views/BookingEventByCategory.vue"
 import EditCatePage from "../views/EditCatePage.vue"
 import UserShowList from "../views/UserShowList.vue"
 import SignUpPage from "../views/SignUpPage.vue"
+import EditUserPage from "../views/EditUserPage.vue"
+import Login from "../views/Login.vue"
+
 //const history = createWebHistory();
 const history = createWebHashHistory('/kw3/');
 const routes = [
@@ -67,6 +70,16 @@ const routes = [
     path: "/SignUpPage",
     name: "SignUpPage",
     component: SignUpPage,
+  } ,
+  {
+    path: "/EditUserPage",
+    name: "EditUserPage",
+    component: EditUserPage,
+  } ,
+  {
+    path: "/Login",
+    name: "Login",
+    component: Login,
   }
 ];
 

@@ -25,9 +25,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private UserRepository repository;
-
     @GetMapping("")
     public Page<UserDTO> getUserByAll(
             @RequestParam(defaultValue = "0") Integer page,

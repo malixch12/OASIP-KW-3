@@ -22,7 +22,7 @@ import sit.oasip.services.UserService;
 @RestController
 @CrossOrigin
 @RequestMapping("/api/login")
-public class AuthenticateController{
+public class AuthenticateController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -38,16 +38,16 @@ public class AuthenticateController{
     @PostMapping("")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody MatchUserDTO matchUserDTO) throws Exception {
         User user = repository.findByEmail(matchUserDTO.getEmail());
-        if (user != null){
+        if (user != null) {
             authenticate(matchUserDTO.getEmail(), matchUserDTO.getPassword());
 
             final UserDetails userDetails = userDetailsService
                     .loadUserByUsername(matchUserDTO.getEmail());
             final String token = jwtTokenUtil.generateToken(userDetails);
-
-            return ResponseEntity.ok(new JwtResponse(token));
-        }else{
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"A user with the specified email DOES NOT exist");
+            JwtResponse response = new JwtResponse("Login Successfull", token);
+            return ResponseEntity.ok().body(response);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "A user with the specified email DOES NOT exist");
         }
     }
 

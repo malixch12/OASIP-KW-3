@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,9 +17,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import org.springframework.web.server.ResponseStatusException;
 import sit.oasip.Component.JwtTokenUtil;
-import sit.oasip.dtos.UserDTO.UserDTO;
-import sit.oasip.entities.User;
 import sit.oasip.javainuse.services.JWTUserDetailsService;
 import sit.oasip.repositories.UserRepository;
 
@@ -27,9 +27,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Autowired
     private  JWTUserDetailsService jwtUserDetailsService;
-
-    @Autowired
-    private UserRepository repository;
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
@@ -45,22 +42,23 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         // JWT Token is in the form "Bearer token". Remove Bearer word and get
         // only the Token
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
-            jwtToken = requestTokenHeader.substring(7);
+                jwtToken = requestTokenHeader.substring(7);
             try {
                 userName = jwtTokenUtil.getUsernameFromToken(jwtToken);
             } catch (IllegalArgumentException e) {
                 System.out.println("Unable to get JWT Token");
+
             } catch (ExpiredJwtException e) {
                 System.out.println("JWT Token has expired");
             }
+
         } else {
             logger.warn("JWT Token does not begin with Bearer String");
+//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"test");
         }
 
         // Once we get the token validate it.
         if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-
-//            User userDetails = repository.findByEmail(email);
             UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(userName);
 
             // if token is valid configure Spring Security to manually set
@@ -77,7 +75,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         }
+
         chain.doFilter(request, response);
+
     }
 
 }

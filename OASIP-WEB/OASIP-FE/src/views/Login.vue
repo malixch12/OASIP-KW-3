@@ -16,7 +16,7 @@ Email : null})
 const addUser = async () => {
 CheckData()
     
-  const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/match`, {
+  const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/login`, {
     method: "POST",
     headers: {
       "content-type": "application/json",
@@ -25,19 +25,37 @@ CheckData()
   })
     
     if(res.status === 200) {
+    const test = await res.json()
+      localStorage.setItem('jwtToken',test.token);
         console.log(dataUser.value);
        isActivePopup.value=true
        CheckStatus.value=true
-       console.log(await res.json())
-    }else {
-        isActivePopup.value=true
-        CheckStatus.value=false
+       
+    }
     
-       // console.log(await res.json());
+    // else {
+    //     isActivePopup.value=true
+    //     CheckStatus.value=false
+    
+    //    // console.log(await res.json());
+    //     errorStatus.value = await res.json()
+    // }
+
+    if(res.status === 404) {
+        messageError.value = "the specified email DOES NOT exist"
+      isActivePopup.value=true
+        CheckStatus.value=false
+        console.log(await res.json());
         errorStatus.value = await res.json()
     }
       
-    
+    if(res.status === 401) {
+        messageError.value = "the password incorrect "
+      isActivePopup.value=true
+        CheckStatus.value=false
+        console.log(await res.json());
+        errorStatus.value = await res.json()
+    }
 
 };
 
@@ -88,6 +106,7 @@ if (dataUser.value.password != null) {
 
 }
 
+const messageError = ref("")
 const EmailCheck = ref(true)   //เซ็คว่ากรอกรึยัง
 const EmailValidation = ref(true)  //ฟอแมท เมล
 const PasswordCheck =ref(true) //check password
@@ -129,11 +148,11 @@ const PasswordCheck =ref(true) //check password
         </p>
 
           <div >
-            <p class="text-xl text-red-600 text-center">           
-          please check your email or password
+            <p class="text-xl text-red-600 text-center mb-8">           
+          {{messageError}}
 
         </p>
-    <p class="forget text-center">dont have  account ?     <router-link
+    <p class="forget text-center ">dont have  account ?     <router-link
               :to="{ name: 'SignUpPage' }"
               class="
             

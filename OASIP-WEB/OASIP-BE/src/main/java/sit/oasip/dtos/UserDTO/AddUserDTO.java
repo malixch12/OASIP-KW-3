@@ -30,6 +30,7 @@ public class AddUserDTO {
     @NotBlank(message = "please fill password")
     @Length(min = 8, max = 14, message="size must be between 8 and 14")
     private String Password;
+
     private String Role = "Student";
 
 

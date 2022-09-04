@@ -6,17 +6,28 @@ import PopupPage from "../components/PopupPage.vue";
 import RoundButton from "../components/RoundButton.vue";
 import { useRouter } from "vue-router";
 
+
 const router = useRouter();
 
 
-const UserLists = ref()
+const UserLists = ref({content:""})
 
 const page = ref(0);
 const numPage = ref();
 
+const cat = ref()
 const getLinkAll = async () => {
+  console.log(cat.value)
   const res = await fetch(
-    `${import.meta.env.VITE_APP_TITLE}/api/users?page=${page.value}&pageSize=8`
+    `${import.meta.env.VITE_APP_TITLE}/api/users` ,
+    {
+      mode: 'no-cors',
+        method: 'get',
+        headers: {
+          'Accept': 'application/json, text/plain, */*',
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + cat
+        }}
   );
   if (res.status === 200) {
     UserLists.value = await res.json();
@@ -26,6 +37,7 @@ const getLinkAll = async () => {
 };
 
 onBeforeMount(async () => {
+  cat.value = localStorage.getItem('jwtToken');
   getLinkAll();
 });
 
@@ -69,7 +81,7 @@ const goEdit = (UserId) => {
 <template>
 
   <div class="flex justify-center grid grid-rows-1  mb-16">
-        
+       {{cat}} 
    <PopupPage v-show="isActivePopup" :dim-background="true">
       <div  class="grid grid-cols-1 p-12">
        

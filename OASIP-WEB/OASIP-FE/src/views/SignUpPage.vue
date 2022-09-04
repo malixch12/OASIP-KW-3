@@ -25,7 +25,7 @@ if( PasswordCheck.value == true) {
       dataUser.value.role = "Student"
     }
 
-    const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/users`, {
+    const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/users/signup`, {
       method: "POST",
       headers: {
         "content-type": "application/json",

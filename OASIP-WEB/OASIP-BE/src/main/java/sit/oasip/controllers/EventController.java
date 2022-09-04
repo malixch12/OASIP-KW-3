@@ -31,13 +31,6 @@ public class EventController {
 
     @Autowired
     private EventService eventService;
-    @Autowired
-    private final EventRepository repository;
-
-    @Autowired
-    public EventController(EventRepository repository) {
-        this.repository = repository;
-    }
 
     // get all
     @GetMapping("")
@@ -123,10 +116,10 @@ public class EventController {
         return eventService.add(newEvent);
     }
 
-    @PutMapping("/{BookingId}")
+    @PutMapping("/{bookingId}")
     @ResponseStatus(HttpStatus.OK)
-    public SimpleEventDTO update(@Validated @RequestBody SimpleEventDTO updateEvent, @PathVariable Integer BookingId) {
-        return eventService.update(updateEvent, BookingId);
+    public SimpleEventDTO update(@Validated @RequestBody SimpleEventDTO updateEvent, @PathVariable Integer bookingId) {
+        return eventService.update(updateEvent, bookingId);
     }
 
 }

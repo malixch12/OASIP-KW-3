@@ -14,18 +14,19 @@ const UserLists = ref({content:""})
 
 const page = ref(0);
 const numPage = ref();
-const cat = localStorage.getItem('jwtToken');
 
+const cat = ref()
 const getLinkAll = async () => {
-  
+  console.log(cat.value)
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/users` ,
     {
       mode: 'no-cors',
         method: 'get',
         headers: {
-  
-          'Authorization': 'Bearer' + cat
+          'Accept': 'application/json, text/plain, */*',
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + cat
         }}
   );
   if (res.status === 200) {
@@ -36,6 +37,7 @@ const getLinkAll = async () => {
 };
 
 onBeforeMount(async () => {
+  cat.value = localStorage.getItem('jwtToken');
   getLinkAll();
 });
 

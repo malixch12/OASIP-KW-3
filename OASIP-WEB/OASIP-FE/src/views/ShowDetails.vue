@@ -30,9 +30,7 @@ const getLinkAll = async () => {
   );
   if (res.status === 200) {
     eventLists.value = await res.json();
-     console.log("ssssssssssssssssssssssssssssss")
-  }else
-  console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+  }
 };
 
 onBeforeMount(async () => {

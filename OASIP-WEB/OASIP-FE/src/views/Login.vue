@@ -26,7 +26,7 @@ CheckData()
     
     if(res.status === 200) {
     const test = await res.json()
-      localStorage.setItem('jwtToken',test.token);
+      localStorage.setItem('jwtToken',test.jwttoken);
         console.log(dataUser.value);
        isActivePopup.value=true
        CheckStatus.value=true
@@ -122,7 +122,7 @@ const PasswordCheck =ref(true) //check password
           Login succeeded
         </p>
 <p class="text-xl font-semibold text-gray-600 tracking-wide pb-5 text-center mt-3">
-          password match
+          welcome to clinic booking 🥳 
         </p>
 
         <div class="success-checkmark">

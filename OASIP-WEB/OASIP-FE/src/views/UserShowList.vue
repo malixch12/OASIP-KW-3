@@ -21,12 +21,12 @@ const getLinkAll = async () => {
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/users` ,
     {
-      mode: 'no-cors',
+     
         method: 'get',
         headers: {
-          'Accept': 'application/json, text/plain, */*',
+          
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + cat
+          'Authorization': 'Bearer ' + cat.value
         }}
   );
   if (res.status === 200) {
@@ -81,7 +81,6 @@ const goEdit = (UserId) => {
 <template>
 
   <div class="flex justify-center grid grid-rows-1  mb-16">
-       {{cat}} 
    <PopupPage v-show="isActivePopup" :dim-background="true">
       <div  class="grid grid-cols-1 p-12">
        

@@ -12,7 +12,7 @@ import PopupPage from "../components/PopupPage.vue";
 
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 
-const cat = ref()
+const jwtToken = ref()
 const router = useRouter();
 const myRouter = useRoute();
 const User= ref({
@@ -35,7 +35,7 @@ const getLinkAll = async () => {
       headers: {
           
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + cat.value
+          'Authorization': 'Bearer ' + jwtToken.value
         }
     }
   );
@@ -52,7 +52,7 @@ console.log(myRouter.query.userId)
 
 onBeforeMount(async () => {
 
-cat.value = localStorage.getItem('jwtToken');
+  jwtToken.value = localStorage.getItem('jwtToken');
 getLinkAll();
 });
 

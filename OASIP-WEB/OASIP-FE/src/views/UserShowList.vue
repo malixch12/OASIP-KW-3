@@ -15,9 +15,9 @@ const UserLists = ref({content:""})
 const page = ref(0);
 const numPage = ref();
 
-const cat = ref()
+const jwtToken = ref()
 const getLinkAll = async () => {
-  console.log(cat.value)
+  console.log(jwtToken.value)
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/users` ,
     {
@@ -26,7 +26,7 @@ const getLinkAll = async () => {
         headers: {
           
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + cat.value
+          'Authorization': 'Bearer ' + jwtToken.value
         }}
   );
   if (res.status === 200) {
@@ -37,7 +37,7 @@ const getLinkAll = async () => {
 };
 
 onBeforeMount(async () => {
-  cat.value = localStorage.getItem('jwtToken');
+  jwtToken.value = localStorage.getItem('jwtToken');
   getLinkAll();
 });
 
@@ -183,7 +183,14 @@ const goEdit = (UserId) => {
         </tbody>
     </table>
 
-    <div class="text-center mt-10" v-if="UserLists.content.length==0">-------------no user------------</div> 
+    <div class="text-center mt-10" v-if="UserLists.content.length==0 && jwtToken !=null">-------------no user------------</div> 
+
+    <div class="text-center mt-10 text-red-500" v-if="jwtToken ==null">-------------cant watch user list pls login------------</div> 
+    <div class="text-center text-sm underline underline-offset-4 text-gray-400" v-if="jwtToken ==null"> <router-link :to="{ name: 'Login' }" class="
+            
+                ">Click here to login page!</router-link></div> 
+
+   
     <div class="  rounded-b-lg p-8 ml-24 mr-24 text-center">
       <!-- <span
         v-for="(e, index) in numPage"

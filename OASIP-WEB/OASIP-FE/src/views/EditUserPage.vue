@@ -12,7 +12,7 @@ import PopupPage from "../components/PopupPage.vue";
 
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 
-
+const jwtToken = ref()
 const router = useRouter();
 const myRouter = useRoute();
 const User= ref({
@@ -29,7 +29,15 @@ const UserOld= ({
 
 const getLinkAll = async () => {
   const res = await fetch(
-    `${import.meta.env.VITE_APP_TITLE}/api/users/${myRouter.query.UserId}`
+    `${import.meta.env.VITE_APP_TITLE}/api/users/${myRouter.query.UserId}` , { 
+      
+      method: 'get',
+      headers: {
+          
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + jwtToken.value
+        }
+    }
   );
   if (res.status === 200) {
    User.value = await res.json();
@@ -43,6 +51,8 @@ const getLinkAll = async () => {
 console.log(myRouter.query.userId)
 
 onBeforeMount(async () => {
+
+  jwtToken.value = localStorage.getItem('jwtToken');
 getLinkAll();
 });
 
@@ -67,6 +77,7 @@ const updateUser = async () => {
         method: "PUT",
         headers: {
           "content-type": "application/json",
+          'Authorization': 'Bearer ' + cat.value
         },
         body: JSON.stringify({
             

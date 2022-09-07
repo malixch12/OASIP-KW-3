@@ -394,9 +394,10 @@ section .color:nth-child(3) {
   border-right: 1px solid rgba(255, 255, 255, 0.2);
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   background: rgba(255, 255, 255, 0.1);
-  animation: animate 10s linear infinite;
+  
   border-radius: 10px;
   animation-delay: calc(-1s * var(--i));
+  animation: animate 10s linear infinite;
 }
 
 @keyframes animate {

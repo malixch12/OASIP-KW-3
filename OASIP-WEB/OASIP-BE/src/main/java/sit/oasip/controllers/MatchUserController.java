@@ -33,5 +33,6 @@ public class MatchUserController {
     @PostMapping("")
     public void matchUser(@RequestBody MatchUserDTO matchUser){
         userService.match(matchUser);
+
     }
 }

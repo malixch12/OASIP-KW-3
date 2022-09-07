@@ -77,7 +77,7 @@ const updateUser = async () => {
         method: "PUT",
         headers: {
           "content-type": "application/json",
-          'Authorization': 'Bearer ' + cat.value
+          'Authorization': 'Bearer ' + jwtToken.value
         },
         body: JSON.stringify({
             

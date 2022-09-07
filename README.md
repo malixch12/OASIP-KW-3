@@ -9,7 +9,7 @@ This website can contain multiple components such as CRUD , router , validate da
 
 | No  | role  | Student Name         |
 | --- | ----------- | ------------------   |
-| 1.  | backend |    winner  |
+| 1.  | backend |    Kanyapat Wittayamanitkul  |
 | 2.  | frontend |  Nuttawat Rodsomboon |
 | 3.  | devop  |  ploy  |
 

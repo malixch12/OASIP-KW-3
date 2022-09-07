@@ -19,6 +19,7 @@ import sit.oasip.services.UserService;
 import javax.validation.Valid;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/users")
 public class UserController {

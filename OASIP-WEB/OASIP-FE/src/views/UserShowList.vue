@@ -47,6 +47,11 @@ const removeEvent  = async (UserId) => {
       `${import.meta.env.VITE_APP_TITLE}/api/users/${UserId}`,
       {
         method: "DELETE",
+        headers: {
+          
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + jwtToken.value
+        }
       }
     );
   }getLinkAll()

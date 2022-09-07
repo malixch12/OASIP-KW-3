@@ -8,9 +8,13 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
-public class MatchUserDTO {
+public class MatchUserDTO   {
+
+
     @Email(message="please check email format")
     @NotBlank(message = "please fill email")
     @Length(min = 1, max = 50, message="size must be between 1 and 50")

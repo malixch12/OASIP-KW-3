@@ -6,17 +6,28 @@ import PopupPage from "../components/PopupPage.vue";
 import RoundButton from "../components/RoundButton.vue";
 import { useRouter } from "vue-router";
 
+
 const router = useRouter();
 
 
-const UserLists = ref()
+const UserLists = ref({content:""})
 
 const page = ref(0);
 const numPage = ref();
 
+const jwtToken = ref()
 const getLinkAll = async () => {
+  console.log(jwtToken.value)
   const res = await fetch(
-    `${import.meta.env.VITE_APP_TITLE}/api/users?page=${page.value}&pageSize=8`
+    `${import.meta.env.VITE_APP_TITLE}/api/users` ,
+    {
+     
+        method: 'get',
+        headers: {
+          
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + jwtToken.value
+        }}
   );
   if (res.status === 200) {
     UserLists.value = await res.json();
@@ -26,6 +37,7 @@ const getLinkAll = async () => {
 };
 
 onBeforeMount(async () => {
+  jwtToken.value = localStorage.getItem('jwtToken');
   getLinkAll();
 });
 
@@ -69,7 +81,6 @@ const goEdit = (UserId) => {
 <template>
 
   <div class="flex justify-center grid grid-rows-1  mb-16">
-        
    <PopupPage v-show="isActivePopup" :dim-background="true">
       <div  class="grid grid-cols-1 p-12">
        
@@ -172,7 +183,14 @@ const goEdit = (UserId) => {
         </tbody>
     </table>
 
-    <div class="text-center mt-10" v-if="UserLists.content.length==0">-------------no user------------</div> 
+    <div class="text-center mt-10" v-if="UserLists.content.length==0 && jwtToken !=null">-------------no user------------</div> 
+
+    <div class="text-center mt-10 text-red-500" v-if="jwtToken ==null">-------------cant watch user list pls login------------</div> 
+    <div class="text-center text-sm underline underline-offset-4 text-gray-400" v-if="jwtToken ==null"> <router-link :to="{ name: 'Login' }" class="
+            
+                ">Click here to login page!</router-link></div> 
+
+   
     <div class="  rounded-b-lg p-8 ml-24 mr-24 text-center">
       <!-- <span
         v-for="(e, index) in numPage"

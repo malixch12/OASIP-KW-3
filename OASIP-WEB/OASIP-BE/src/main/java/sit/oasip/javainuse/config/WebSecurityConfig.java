@@ -15,6 +15,7 @@ import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -56,14 +57,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
 
         // We don't need CSRF for this example
-        httpSecurity.csrf().disable()
+        httpSecurity.csrf().disable().cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()).and()
                 // dont authenticate this particular request
-<<<<<<< HEAD
-                .authorizeRequests().antMatchers("/api/login").permitAll().
-=======
-                .authorizeRequests().antMatchers("/api/login","/api/users/signup").permitAll().
 
->>>>>>> BACKEND
+
+                .authorizeRequests().antMatchers("/api/login","/api/users/signup" ).permitAll().
+
                 // all other requests need to be authenticated
                         anyRequest().authenticated().and().
                 // make sure we use stateless session; session won't be used to

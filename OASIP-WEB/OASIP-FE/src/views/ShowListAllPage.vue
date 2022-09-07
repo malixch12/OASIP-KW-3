@@ -9,9 +9,13 @@ const page = ref(0);
 const numPage = ref();
 const getLinkAll = async () => {
   // const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events`);
+  const cat = ref()
 
   const res = await fetch(
-    `${import.meta.env.VITE_APP_TITLE}/api/events?page=${page.value}&pageSize=8`
+    `${import.meta.env.VITE_APP_TITLE}/api/events?page=${page.value}&pageSize=8`,
+
+   
+
   );
   if (res.status === 200) {
     eventLists.value = await res.json();

@@ -16,9 +16,23 @@ var now_time = (today.getHours() + ":" + today.getMinutes() + ":" + today.getSec
   countTime.value = now_date + " - " + now_time
 }
 
+const loginCheck = ref()
+const jwtToken = ref()
 onBeforeMount(async () => {
 setInterval(setTime, 1);
+jwtToken.value = localStorage.getItem('jwtToken');
+if(jwtToken.value != null) {
+  loginCheck.value = false
+}else
+loginCheck.value = true
 });
+
+function logout () {
+  localStorage.removeItem('jwtToken')
+  window.location.reload()
+
+}
+
 </script>
  
 <template>
@@ -88,7 +102,7 @@ setInterval(setTime, 1);
             </router-link>
           </li>
               <li>
-            <router-link
+            <router-link v-show="loginCheck"
               :to="{ name: 'Login' }"
               class="
                   block
@@ -102,7 +116,7 @@ setInterval(setTime, 1);
             </router-link>
           </li>
           <li>
-            <router-link
+            <router-link v-show="loginCheck"
               :to="{ name: 'SignUpPage' }"
               class="
                  block
@@ -113,7 +127,18 @@ setInterval(setTime, 1);
               >sign up
             </router-link>
           </li>
-         
+          <li>
+            <div v-show="!loginCheck"  @click="logout()"
+             
+              class="
+                 block
+                text-transparent  bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 
+               
+                
+              "
+              >     Log out
+            </div>
+          </li>
           
           <li>
             <span

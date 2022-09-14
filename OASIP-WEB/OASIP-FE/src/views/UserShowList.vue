@@ -41,12 +41,17 @@ onBeforeMount(async () => {
   getLinkAll();
 });
 
-const removeEvent  = async (UserId) => {
+const removeUser  = async (UserId) => {
   if (confirm("Would you like to cancel your appointment?") == true) {
     const res = await fetch(
       `${import.meta.env.VITE_APP_TITLE}/api/users/${UserId}`,
       {
         method: "DELETE",
+        headers: {
+          
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + jwtToken.value
+        }
       }
     );
   }getLinkAll()
@@ -166,7 +171,7 @@ const goEdit = (UserId) => {
                     ">detail</div>
                 </td>
                   <td class="py-4 px-14 text-right">
-                    <div class="font-medium text-red-600  hover:underline" @click="removeEvent(user.id)">delete</div>
+                    <div class="font-medium text-red-600  hover:underline" @click="removeUser(user.id)">delete</div>
               
 </td>
 <td class="py-4 text-right "  @click="goEdit(user.id)">

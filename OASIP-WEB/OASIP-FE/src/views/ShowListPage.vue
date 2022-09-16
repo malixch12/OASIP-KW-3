@@ -11,7 +11,8 @@ const getLink = async () => {
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/events/categories/${
       route.query.categoryId
-    }?page=${page.value}&pageSize=8`
+    }?page=${page.value}&pageSize=8` ,
+    
   );
   if (res.status === 200) {
     eventLists.value = await res.json();
@@ -114,7 +115,7 @@ const getLinkAllNoPage = async (FilterDate) => {
       @allFilter="allFilter"
       @dateFilter="dateFilter"
     />
-    {{ page }}
+    
   </div>
 </template>
 

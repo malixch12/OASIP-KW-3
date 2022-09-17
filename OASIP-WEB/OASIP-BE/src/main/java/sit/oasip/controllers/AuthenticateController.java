@@ -12,8 +12,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-//import sit.oasip.Component.JwtTokenUtil;
-import sit.oasip.Component.JwtUtil;
+import sit.oasip.Component.JwtTokenUtil;
+//import sit.oasip.Component.JwtUtil;
 import sit.oasip.dtos.UserDTO.MatchUserDTO;
 import sit.oasip.entities.User;
 import sit.oasip.javainuse.models.JwtResponse;
@@ -27,17 +27,13 @@ import java.util.Map;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/login")
+@RequestMapping("/api")
 public class AuthenticateController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-//    @Autowired
-//    private JwtTokenUtil jwtTokenUtil;
-
     @Autowired
-    private JwtUtil jwtUtil;
-
+    private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
     private JWTUserDetailsService userDetailsService;
@@ -45,7 +41,7 @@ public class AuthenticateController {
     @Autowired
     private UserRepository repository;
 
-    @PostMapping("")
+    @PostMapping("/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody MatchUserDTO matchUserDTO) throws Exception {
         User user = repository.findByEmail(matchUserDTO.getEmail());
         if (user != null) {
@@ -53,7 +49,7 @@ public class AuthenticateController {
 
             final UserDetails userDetails = userDetailsService
                     .loadUserByUsername(matchUserDTO.getEmail());
-            final String token = jwtUtil.generateToken(userDetails);
+            final String token = jwtTokenUtil.generateToken(userDetails);
             JwtResponse response = new JwtResponse("Login Successfull", token);
             return ResponseEntity.ok().body(response);
         } else {
@@ -71,13 +67,13 @@ public class AuthenticateController {
         }
     }
 
-    @GetMapping("/refresh")
+    @GetMapping("/refreshtoken")
     public ResponseEntity<?> refreshtoken(HttpServletRequest request) throws Exception {
         // From the HttpRequest get the claims
         DefaultClaims claims = (io.jsonwebtoken.impl.DefaultClaims) request.getAttribute("claims");
 
         Map<String, Object> expectedMap = getMapFromIoJsonwebtokenClaims(claims);
-        String token = jwtUtil.doGenerateRefreshToken(expectedMap, expectedMap.get("sub").toString());
+        String token = jwtTokenUtil.doGenerateRefreshToken(expectedMap, expectedMap.get("sub").toString());
         return ResponseEntity.ok(token);
     }
 

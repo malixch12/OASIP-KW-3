@@ -42,7 +42,6 @@ public class UserController {
 
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.OK)
-
     public User addUser(@Validated @RequestBody AddUserDTO newUser){
         return userService.add(newUser);
     }

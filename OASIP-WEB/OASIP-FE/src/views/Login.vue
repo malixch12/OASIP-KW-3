@@ -13,13 +13,15 @@ import jwt_decode from "jwt-decode";
 
 const router = useRouter();
 const route = useRoute();
-const errorStatus = ref({Name : null,
-Email : null})
-const decoded = ref({sub:""})
+const errorStatus = ref({
+  Name: null,
+  Email: null
+})
+const decoded = ref({ sub: "" })
 
 const addUser = async () => {
-CheckData()
-    
+  CheckData()
+
   const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/login`, {
     method: "POST",
     headers: {
@@ -27,50 +29,44 @@ CheckData()
     },
     body: JSON.stringify(dataUser.value),
   })
-    
-    if(res.status === 200) {
-    const test = await res.json()
-      localStorage.setItem('jwtToken',test.jwttoken);
-        console.log(dataUser.value);
-       isActivePopup.value=true
-       CheckStatus.value=true
-       jwtToken.value = localStorage.getItem('jwtToken');
-     
-;
-    }
-   
-    // else {
-    //     isActivePopup.value=true
-    //     CheckStatus.value=false
-    
-    //    // console.log(await res.json());
-    //     errorStatus.value = await res.json()
-    // }
 
-    if(res.status === 404) {
-        messageError.value = "the specified email DOES NOT exist"
-      isActivePopup.value=true
-        CheckStatus.value=false
-        console.log(await res.json());
-        errorStatus.value = await res.json()
-    }
-      
-    if(res.status === 401) {
-        messageError.value = "the password incorrect "
-      isActivePopup.value=true
-        CheckStatus.value=false
-        console.log(await res.json());
-        errorStatus.value = await res.json()
-    }
+  if (res.status === 200) {
+    const test = await res.json()
+    localStorage.setItem('jwtToken', test.jwttoken);
+    console.log(dataUser.value);
+    isActivePopup.value = true
+    CheckStatus.value = true
+    jwtToken.value = localStorage.getItem('jwtToken');
+
+    var today = new Date()
+    localStorage.setItem('time', today.getTime());
+  }
+
+  if (res.status === 404) {
+    messageError.value = "the specified email DOES NOT exist"
+    isActivePopup.value = true
+    CheckStatus.value = false
+    console.log(await res.json());
+    errorStatus.value = await res.json()
+  }
+
+  if (res.status === 401) {
+    messageError.value = "the password incorrect "
+    isActivePopup.value = true
+    CheckStatus.value = false
+    console.log(await res.json());
+    errorStatus.value = await res.json()
+  }
 
 };
 
 
 
+
 const dataUser = ref({    //สำหรับให้ ฟอม v-model
- 
+
   email: null,
-  password: null ,
+  password: null,
 
 });
 
@@ -81,20 +77,21 @@ const CheckStatus = ref()
 //validate
 
 function validateEmail(email) {
-  var re =  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(email);
 }
 const jwtToken = ref(null)
 onBeforeMount(() => {
+  
   jwtToken.value = localStorage.getItem('jwtToken');
-  if(jwtToken.value!=null) {
-    decoded.value =  jwt_decode(jwtToken.value);
+  if (jwtToken.value != null) {
+    decoded.value = jwt_decode(jwtToken.value);
 
   }
 });
 
 function CheckData() {
- 
+
   if (dataUser.value.email != null) {
     EmailCheck.value = true
   } else { EmailCheck.value = false }
@@ -107,7 +104,7 @@ function CheckData() {
   }
 
 
-if (dataUser.value.password != null) {
+  if (dataUser.value.password != null) {
     PasswordCheck.value = true
   } else {
     PasswordCheck.value = false
@@ -119,12 +116,12 @@ if (dataUser.value.password != null) {
 const messageError = ref("")
 const EmailCheck = ref(true)   //เซ็คว่ากรอกรึยัง
 const EmailValidation = ref(true)  //ฟอแมท เมล
-const PasswordCheck =ref(true) //check password
+const PasswordCheck = ref(true) //check password
 
 const goHome = () => {
 
-   window.location.reload()
-  
+  window.location.reload()
+
 };
 
 
@@ -205,19 +202,19 @@ const goHome = () => {
 
       <div class="box"></div>
 
-        <div class="square" style="--i:0;"></div>
-        <div class="square" style="--i:1;"></div>
-        <div class="square" style="--i:2;"></div>
-        <div class="square" style="--i:3;"></div>
-        <div class="square" style="--i:4;"></div>
+      <div class="square" style="--i:0;"></div>
+      <div class="square" style="--i:1;"></div>
+      <div class="square" style="--i:2;"></div>
+      <div class="square" style="--i:3;"></div>
+      <div class="square" style="--i:4;"></div>
 
 
-        <div class="container2" v-if="jwtToken==null">
-          <div class="form">
-            <h2>Login</h2>
+      <div class="container2" v-if="jwtToken==null">
+        <div class="form">
+          <h2>Login</h2>
 
-            <form>
-              <!-- <div class="inputBox">
+          <form>
+            <!-- <div class="inputBox">
                             <input type="text" placeholder="Username" v-model.trim="dataUser.name" >
                               <details class="" v-if="!NameCheck">
           <summary class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
@@ -228,52 +225,52 @@ const goHome = () => {
           </div>
         </details>
                         </div> -->
-              <div class="inputBox ">
-                <input type="text" class="" placeholder="email" v-model.trim="dataUser.email" required>
-                <details class="" v-show="!EmailValidation || !EmailCheck">
-                  <summary
-                    class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
-                    invalid
-                  </summary>
-                  <div class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
-                    <span v-show="!EmailCheck" class="text-red-600"> กรุณาใส่อีเมล</span>
-                    <span v-show="!EmailValidation & EmailCheck" class="text-red-600"> กรุณากรอกอีเมลล์ให้ถูกต้อง</span>
-                  </div>
-                </details>
-              </div>
+            <div class="inputBox ">
+              <input type="text" class="" placeholder="email" v-model.trim="dataUser.email" required>
+              <details class="" v-show="!EmailValidation || !EmailCheck">
+                <summary
+                  class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
+                  invalid
+                </summary>
+                <div class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
+                  <span v-show="!EmailCheck" class="text-red-600"> กรุณาใส่อีเมล</span>
+                  <span v-show="!EmailValidation & EmailCheck" class="text-red-600"> กรุณากรอกอีเมลล์ให้ถูกต้อง</span>
+                </div>
+              </details>
+            </div>
 
-              <div class="inputBox">
+            <div class="inputBox">
 
-                <input type="password" placeholder="password" v-model.trim="dataUser.password">
-                <details class="" v-if="!PasswordCheck">
-                  <summary
-                    class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
-                    invalid
-                  </summary>
-                  <div class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
-                    <span v-show="!PasswordCheck" class="text-red-600"> กรุณาใส่รหัส</span>
-                  </div>
-                </details>
-              </div>
-
-
+              <input type="password" placeholder="password" v-model.trim="dataUser.password">
+              <details class="" v-if="!PasswordCheck">
+                <summary
+                  class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
+                  invalid
+                </summary>
+                <div class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
+                  <span v-show="!PasswordCheck" class="text-red-600"> กรุณาใส่รหัส</span>
+                </div>
+              </details>
+            </div>
 
 
 
 
 
-              <input class="mt-4 test rounded-full px-8 py-1 drop-shadow-lg" value="Login" @click="addUser()">
-              <p class="forget">dont have account ? <router-link :to="{ name: 'SignUpPage' }" class="
+
+
+            <input class="mt-4 test rounded-full px-8 py-1 drop-shadow-lg" value="Login" @click="addUser()">
+            <p class="forget">dont have account ? <router-link :to="{ name: 'SignUpPage' }" class="
             
               ">Click here!</router-link>
-              </p>
+            </p>
 
-            </form>
-          </div>
-
+          </form>
         </div>
-        <div class="" v-if="jwtToken!=null">
-     Welcome <span class="font-bold underline underline-offset-4">{{decoded.sub}}</span> to Clinic Booking
+
+      </div>
+      <div class="" v-if="jwtToken!=null">
+        Welcome <span class="font-bold underline underline-offset-4">{{decoded.sub}}</span> to Clinic Booking
       </div>
     </section>
 
@@ -281,4 +278,5 @@ const goHome = () => {
 </template>
 
 <style>
+
 </style>

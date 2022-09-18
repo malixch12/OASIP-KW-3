@@ -44,8 +44,38 @@ const getLinkAll = async () => {
    UserOld.value = { ...User.value }
     console.log("corret")
     
-  } else
-    console.log("cant fetch")
+  } else if(res.status === 401){
+    const test = ref(await (await res.text()))
+    console.log("status from backend = " + test.value)
+      if( test.value.length == 18 ) {
+      
+        RefreshToken()
+      }
+  }
+};
+
+const RefreshToken = async () => {
+  
+  const res = await fetch(
+    `${import.meta.env.VITE_APP_TITLE}/api/refresh` ,
+    {
+     
+        method: 'get',
+        headers: {
+          'IsRefreshToken' : 'true' ,
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + jwtToken.value
+        }}
+  );
+  if (res.status === 200) {
+    console.log("โทเค้นหมดอายุ")
+    localStorage.setItem('jwtToken',await res.text());
+    jwtToken.value = localStorage.getItem('jwtToken');
+    getLinkAll()
+  }
+
+
+
 };
 
 console.log(myRouter.query.userId)

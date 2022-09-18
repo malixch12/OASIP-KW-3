@@ -20,9 +20,7 @@ public class AddUserDTO {
     private String Name;
 
     @UniqueEmail
-
     @Email(message="please check email format")
-
     @NotBlank(message = "please fill email")
     @Length(min = 1, max = 50, message="size must be between 1 and 50")
     private String Email;
@@ -33,5 +31,10 @@ public class AddUserDTO {
 
     private String Role = "Student";
 
-
+    public void setName(String name) {
+        Name = name.trim();
+    }
+    public void setEmail(String email) {
+        Email = email.trim();
+    }
 }

@@ -22,10 +22,12 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
     public void commence(HttpServletRequest request, HttpServletResponse response,
                                                 AuthenticationException authException) throws IOException {
 
-        response.setStatus(401);
         String message = (String) request.getAttribute("message");
-        response.getOutputStream().println("{ \n\tstatus : \"" + response.getStatus() + "\",\n\t" +
-                    "error message : " + message + " \n}");
+//        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "message");
+
+        response.setStatus(401);
+        response.getOutputStream().println(message);
+
 
     }
 }

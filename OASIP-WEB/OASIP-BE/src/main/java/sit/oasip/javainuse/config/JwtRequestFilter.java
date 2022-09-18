@@ -59,7 +59,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 System.out.println("Cannot set the Security Context");
             }
         } catch (ExpiredJwtException ex) {
-            request.setAttribute("message", "Token is expired, please refresh token. You must add 'isRefreshToken' header and value is 'true'");
+            request.setAttribute("message", "Token is expired");
             String isRefreshToken = request.getHeader("isRefreshToken");
             String requestURL = request.getRequestURL().toString();
             // allow for Refresh Token creation if following conditions are true.

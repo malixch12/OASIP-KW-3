@@ -98,6 +98,7 @@ onBeforeMount(async () => {
 
 });
 
+
 function removeToken() {
   localStorage.removeItem('jwtToken')
   window.location.reload()
@@ -105,6 +106,7 @@ function removeToken() {
 
 
 const removeUser = async (UserId) => {
+
   if (confirm("Would you like to cancel your appointment?") == true) {
     const res = await fetch(
       `${import.meta.env.VITE_APP_TITLE}/api/users/${UserId}`,
@@ -252,6 +254,7 @@ const goEdit = (UserId) => {
                       dataDetail.createdOn = user.createdOn
                     
                     ">detail</div>
+
             </td>
             <td class="py-4 px-14 text-right">
               <div class="font-medium text-red-600  hover:underline" @click="removeUser(user.id)">delete</div>
@@ -270,6 +273,7 @@ const goEdit = (UserId) => {
 
 
           </tr>
+
         </tbody>
       </table>
 

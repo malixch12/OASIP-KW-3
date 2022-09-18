@@ -62,7 +62,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
+
+        corsConfiguration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type" , "IsRefreshToken"));
+
         corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PUT","OPTIONS","PATCH", "DELETE"));
         corsConfiguration.setAllowCredentials(true);
@@ -71,11 +73,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.csrf().disable().cors().configurationSource(request -> corsConfiguration).and()
                 // dont authenticate this particular request
 
-
-                .authorizeRequests().antMatchers("/api/login","/api/users/signup" , "/api/events" ,"/api/eventcategorys" , "/api/events/categories/*"
+                .authorizeRequests().antMatchers("/api/login","/api/users/signup" , "/api/events" , "/api/events/*" ,"/api/eventcategorys/*", "/api/eventcategorys" , "/api/events/categories/*"
                         ,"/api/events/futuredays/*" ,"/api/events/dates/*" , "/api/events/pastdays/*",
-                        "/api/events/categories/futuredays/*" ,"/api/events/categories/dates/*" ,"/api/events/categories/pastdays/*"
-                        ).permitAll().
+                        "/api/events/categories/futuredays/*" ,"/api/events/categories/dates/*" ,"/api/events/categories/pastdays/*").permitAll().
+
 
                 // all other requests need to be authenticated
                         anyRequest().authenticated().and().

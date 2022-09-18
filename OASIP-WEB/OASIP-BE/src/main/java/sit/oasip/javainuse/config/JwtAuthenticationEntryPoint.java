@@ -22,15 +22,11 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
     public void commence(HttpServletRequest request, HttpServletResponse response,
                                                 AuthenticationException authException) throws IOException {
 
-        response.setStatus(401);
+        String message = (String) request.getAttribute("message");
+//        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "message");
 
-        if(request.getHeader("Authorization") == null){
-            response.getOutputStream().println("{ \"status\": \"" + response.getStatus() + "\",\n\t" +
-                    " error message : Please check your header \" }");
-        }else{
-            response.getOutputStream().println("{ \"status\": \"" + response.getStatus() + "\",\n\t" +
-                    " error message : JWT incorrect \" }");
-        }
+        response.setStatus(401);
+        response.getOutputStream().println(message);
 
 
     }

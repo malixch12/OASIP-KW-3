@@ -55,6 +55,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 // Spring Security Configurations successfully.
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             } else {
+                request.setAttribute("message", "Please log in for get Token again.");
                 System.out.println("Cannot set the Security Context");
             }
         } catch (ExpiredJwtException ex) {
@@ -62,10 +63,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             String isRefreshToken = request.getHeader("isRefreshToken");
             String requestURL = request.getRequestURL().toString();
             // allow for Refresh Token creation if following conditions are true.
-            if (isRefreshToken != null && isRefreshToken.equals("true") && requestURL.contains("refreshtoken")) {
+            if (isRefreshToken != null && isRefreshToken.equals("true") && requestURL.contains("refresh")) {
                 allowForRefreshToken(ex, request);
-            } else
-                request.setAttribute("exception", ex);
+            } else request.setAttribute("exception", ex);
 
         } catch (BadCredentialsException ex) {
             request.setAttribute("message", "Token incorrect");

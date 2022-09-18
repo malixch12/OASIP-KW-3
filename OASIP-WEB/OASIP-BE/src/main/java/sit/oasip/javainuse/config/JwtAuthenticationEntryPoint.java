@@ -23,19 +23,9 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
                                                 AuthenticationException authException) throws IOException {
 
         response.setStatus(401);
-
-//        if(request.getHeader("Authorization") == null){
-//            response.getOutputStream().println("{ \"status\": \"" + response.getStatus() + "\",\n\t" +
-//                    " error message : Please check your header \" }");
-//        }else{
-//            response.getOutputStream().println("{ \"status\": \"" + response.getStatus() + "\",\n\t" +
-//                    " error message : JWT incorrect \" }");
-//        }
         String message = (String) request.getAttribute("message");
-        response.getOutputStream().println("{ \"status\": \"" + response.getStatus() + "\",\n\t" +
-                    " error message : " + message + " \n}");
-
-
+        response.getOutputStream().println("{ \n\tstatus : \"" + response.getStatus() + "\",\n\t" +
+                    "error message : " + message + " \n}");
 
     }
 }

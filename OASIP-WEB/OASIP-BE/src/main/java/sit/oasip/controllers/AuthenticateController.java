@@ -53,7 +53,7 @@ public class AuthenticateController {
             JwtResponse response = new JwtResponse("Login Successfull", token);
             return ResponseEntity.ok().body(response);
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "A user with the specified email DOES NOT exist");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with email: " + matchUserDTO.getEmail());
         }
     }
 
@@ -67,8 +67,8 @@ public class AuthenticateController {
         }
     }
 
-    @GetMapping("/refreshtoken")
-    public ResponseEntity<?> refreshtoken(HttpServletRequest request) throws Exception {
+    @GetMapping("/refresh")
+    public ResponseEntity<?> refreshtoken(HttpServletRequest request){
         // From the HttpRequest get the claims
         DefaultClaims claims = (io.jsonwebtoken.impl.DefaultClaims) request.getAttribute("claims");
 

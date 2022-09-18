@@ -26,9 +26,9 @@ public class JwtTokenUtil {
         this.secret = secret;
     }
 
-    @Value("${jwt.expirationDateInMinuit}")
-    public void setExpirationDateInMinuit(int expirationDateInMinuit) {
-        this.jwtExpirationInMs = expirationDateInMinuit*1000*60;
+    @Value("${jwt.expirationDateInMinute}")
+    public void setExpirationDateInMinuit(int expirationDateInMinute) {
+        this.jwtExpirationInMs = expirationDateInMinute*1000*60;
     }
 
     public String generateToken(UserDetails userDetails) {

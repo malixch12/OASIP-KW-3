@@ -31,5 +31,10 @@ public class AddUserDTO {
 
     private String Role = "Student";
 
-
+    public void setName(String name) {
+        Name = name.trim();
+    }
+    public void setEmail(String email) {
+        Email = email.trim();
+    }
 }

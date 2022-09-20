@@ -32,16 +32,33 @@ const getLinkAll = async () => {
   );
   if (res.status === 200) {
     UserLists.value = await res.json();
-    console.log(UserLists.value)
     numPage.value = Math.ceil(UserLists.value.totalElements / 8);
 
   } else if (res.status === 401) {
-    const test = ref(await (await res.text()))
-    console.log("status from backend = " + test.value)
-    if (test.value.length == 18) {
+    const TokenValue = ref(await (await res.text()))
+    console.log("status from backend = " +  TokenValue.value + TokenValue.value.length )
+    if (TokenValue.value.length == 18) {
 
       RefreshToken()
     }
+    if (TokenValue.value.length == 17 & jwtToken.value != null) {
+
+      localStorage.removeItem('jwtToken')
+    localStorage.removeItem('time')
+    TokenValue.value = "x"
+    TokenTimeOut.value = true
+    isActivePopup.value = true
+
+    }
+    if (TokenValue.value.length == 101 || TokenValue.value.length == 100) {
+
+localStorage.removeItem('jwtToken')
+localStorage.removeItem('time')
+TokenValue.value = "x"
+TokenTimeOut.value = true
+isActivePopup.value = true
+
+}
   }
 
 
@@ -66,7 +83,14 @@ const RefreshToken = async () => {
     localStorage.setItem('jwtToken', await res.text());
     jwtToken.value = localStorage.getItem('jwtToken');
     getLinkAll()
-  }
+  } else
+    if(res.status === 401) {
+    
+     
+    }
+ 
+
+
 
 
 
@@ -78,8 +102,8 @@ const TokenTimeOut = ref(false)
 function CheckTokenTimeOut() {
   const TimeNow = new Date();
   const TimeLogin = localStorage.getItem('time');
-  console.log(TimeNow.getTime() - TimeLogin)
-  if ((TimeNow.getTime() - TimeLogin) > 86400000) {   //60000 = 1 min 86400000 = 24 hour
+  console.log((TimeNow.getTime() - TimeLogin )/100)
+  if ((TimeNow.getTime() - TimeLogin) > 30000) {   //60000 = 1 min 86400000 = 24 hour
     localStorage.removeItem('jwtToken')
     localStorage.removeItem('time')
     TokenTimeOut.value = true
@@ -140,7 +164,6 @@ const goEdit = (UserId) => {
     name: "EditUserPage",
     query: { UserId: UserId },
   });
-  window.location.reload()
 
 };
 
@@ -152,7 +175,6 @@ const goEdit = (UserId) => {
 <template>
 
   <div class="flex justify-center grid grid-rows-1  mb-16">
-
     <PopupPage v-show="isActivePopup" :dim-background="true">
 
       <div v-if="TokenTimeOut==false" class="grid grid-cols-1 p-12">
@@ -184,7 +206,7 @@ const goEdit = (UserId) => {
       </div>
 
       <div class="grid grid-cols-1 p-12" v-if="TokenTimeOut==true">
-        หมดเวลาการล็อกอิน โปรดเข้าสู่ระบบใหม่
+        โปรดเข้าสู่ระบบใหม่
         <div class=" max-w-lg mx-auto  ">
           <br>
           <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
@@ -199,13 +221,13 @@ const goEdit = (UserId) => {
     <div class="overflow-x-auto relative shadow-md sm:rounded-lg w-full px-24 bg-white py-8 ">
       <div class="text-3xl font-bold text-center   drop-shadow-md"> USER LIST </div>
       <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-        <caption class="p-5 text-lg font-semibold text-left text-gray-900 bg-white dark:text-white dark:bg-gray-800">
+        <caption class="p-5 text-lg font-semibold text-left text-gray-900 bg-white ">
           show list all user in db
-          <p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">This is the table where all user
+          <p class="mt-1 text-sm font-normal text-gray-500 ">This is the table where all user
             information is stored. Each user's information includes username, email address, role, time of creation,
             last modified time.</p>
         </caption>
-        <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-100 ">
           <tr>
             <th scope="col" class="py-3 px-14 ">
               User name
@@ -233,9 +255,9 @@ const goEdit = (UserId) => {
         <tbody>
 
           <tr v-for="(user, index) in UserLists.content" :key="index"
-            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            class="bg-white border-b ">
 
-            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap ">
               {{user.name}}
             </th>
             <td class="py-4 px-14">
@@ -302,7 +324,7 @@ const goEdit = (UserId) => {
           <ul class="inline-flex -space-x-px" v-for="(e, index) in numPage" :key="index">
 
             <button @click="page=index , getLinkAll() "
-              class="py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 focus:bg-gray-200 focus:text-red-600 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{
+              class="py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 focus:bg-gray-200 focus:text-red-600 ">{{
               index + 1 }}</button>
 
           </ul>

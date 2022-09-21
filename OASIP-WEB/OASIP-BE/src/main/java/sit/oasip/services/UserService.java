@@ -1,11 +1,13 @@
 package sit.oasip.services;
 
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -67,8 +69,8 @@ public class UserService {
         String role = roleAttribute.roleChoice(newUser.getRole().toString());
 
         user.setRole(role);
-        user.setName(newUser.getName().trim());
-        user.setEmail(newUser.getEmail().trim());
+        user.setName(newUser.getName());
+        user.setEmail(newUser.getEmail());
         user.setPassword(password);
 
         User user1 = modelMapper.map(user, User.class);
@@ -134,14 +136,15 @@ public class UserService {
 
             }
             return repository.saveAndFlush(e);
-        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "test"));
+        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,"ID "+ userId + " does not exit !!!"));
         return modelMapper.map(user, User.class);
 
     }
 
     public void delete(int userId) {
-        repository.findById(userId).orElseThrow(() -> new RuntimeException(userId + "Does not exit !!!"));
+        User user = repository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,"ID "+ userId + " does not exit !!!"));
         repository.deleteById(userId);
+        throw new ResponseStatusException(HttpStatus.OK,"Email : "+ user.getEmail() + " have been deleted");
     }
 
 

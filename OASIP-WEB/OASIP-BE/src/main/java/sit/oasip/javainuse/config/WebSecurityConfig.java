@@ -20,6 +20,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import sit.oasip.utils.Role;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
@@ -32,6 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
 
     @Autowired
     private UserDetailsService jwtUserDetailsService;
@@ -67,22 +69,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PUT","OPTIONS","PATCH", "DELETE"));
         corsConfiguration.setAllowCredentials(true);
         corsConfiguration.setExposedHeaders(List.of("Authorization"));
-        // We don't need CSRF for this example
+
         httpSecurity.csrf().disable().cors().configurationSource(request -> corsConfiguration).and()
-                // dont authenticate this particular request
-                .authorizeRequests().antMatchers("/api/login","/api/users/signup").permitAll().
+                .authorizeRequests()
+                    .antMatchers("/api/login","/api/users/signup").permitAll()
 
-                // all other requests need to be authenticated
-                        anyRequest().authenticated().and().
-                // make sure we use stateless session; session won't be used to
-                // store user's state.
-                        exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
+                //grant permission for Admin
+                    .antMatchers ("/api/users/**","/api/match","/api/events/**").hasAuthority(Role.Admin.name())
+
+                    .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-        // Add a filter to validate the tokens with every request
 
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
-
 
 }

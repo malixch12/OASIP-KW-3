@@ -7,6 +7,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import sit.oasip.javainuse.models.JwtResponse;
 import sit.oasip.utils.ListMapper;
 import sit.oasip.utils.PageMapper;
 
@@ -19,13 +22,13 @@ public class ApplicationConfig {
     }
     @Bean
     public ListMapper listMapper(){ return new ListMapper();}
-
     @Bean
     public PageMapper pageMapper(){ return new PageMapper();}
-
     @Bean
     public Argon2PasswordEncoder argon2PasswordEncoder(){
         return new Argon2PasswordEncoder(16,29,1,16,1);
     }
+    @Bean
+    public JwtResponse jwtResponse(){return new JwtResponse();}
 
 }

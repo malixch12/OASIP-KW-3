@@ -10,24 +10,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 import sit.oasip.javainuse.models.JwtResponse;
 
 @Component
-public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Serializable {
-
-    private static final long serialVersionUID = -7858869558953243875L;
+public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
                                                 AuthenticationException authException) throws IOException {
-
-        String message = (String) request.getAttribute("message");
-//        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "message");
-
-        response.setStatus(401);
-        response.getOutputStream().println(message);
+        String errorMsg = (String) request.getAttribute("message");
+    if (errorMsg != null){
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED,errorMsg);
+        response.getOutputStream().println(errorMsg);
+    }else {
+        response.sendError(HttpServletResponse.SC_FORBIDDEN,"No permission");
+    }
 
 
     }
+
 }

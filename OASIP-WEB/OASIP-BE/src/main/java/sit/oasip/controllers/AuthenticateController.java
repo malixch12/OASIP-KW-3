@@ -49,9 +49,9 @@ public class AuthenticateController {
 
             final UserDetails userDetails = userDetailsService
                     .loadUserByUsername(matchUserDTO.getEmail());
-            final String token = jwtTokenUtil.generateToken(userDetails);
-            JwtResponse response = new JwtResponse("Login Successfull", token);
-            return ResponseEntity.ok().body(response);
+            System.out.println(userDetails.getAuthorities());
+            final String token = jwtTokenUtil.generateToken(user);
+            return ResponseEntity.ok().body(new JwtResponse(token));
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with email: " + matchUserDTO.getEmail());
         }
@@ -74,7 +74,7 @@ public class AuthenticateController {
 
         Map<String, Object> expectedMap = getMapFromIoJsonwebtokenClaims(claims);
         String token = jwtTokenUtil.doGenerateRefreshToken(expectedMap, expectedMap.get("sub").toString());
-        return ResponseEntity.ok(token);
+        return ResponseEntity.ok().body(new JwtResponse(token));
     }
 
     public Map<String, Object> getMapFromIoJsonwebtokenClaims(DefaultClaims claims) {

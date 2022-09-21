@@ -15,7 +15,9 @@ import sit.oasip.dtos.UserDTO.UserDTO;
 import sit.oasip.entities.User;
 import sit.oasip.repositories.UserRepository;
 import sit.oasip.services.UserService;
+import sit.oasip.utils.Role;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import java.util.List;
 

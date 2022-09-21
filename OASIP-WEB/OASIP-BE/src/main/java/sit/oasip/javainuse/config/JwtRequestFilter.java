@@ -23,12 +23,12 @@ import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.web.server.ResponseStatusException;
 //import sit.oasip.Component.JwtTokenUtil;
 import sit.oasip.Component.JwtTokenUtil;
+import sit.oasip.javainuse.models.JwtResponse;
 import sit.oasip.javainuse.services.JWTUserDetailsService;
 import sit.oasip.repositories.UserRepository;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
-
     @Autowired
     private  JWTUserDetailsService jwtUserDetailsService;
 
@@ -46,8 +46,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
             if (StringUtils.hasText(jwtToken) && jwtTokenUtil.validateToken(jwtToken)) {
 
+                UserDetails userDetails = new User(jwtTokenUtil.getUsernameFromToken(jwtToken), "",
+                        jwtTokenUtil.getRolesFromToken(jwtToken));
                 String userName = jwtTokenUtil.getUsernameFromToken(jwtToken);
-                UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(userName);
+                UserDetails userDetail = this.jwtUserDetailsService.loadUserByUsername(userName);
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 // After setting the Authentication in the context, we specify
@@ -82,9 +84,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         // create a UsernamePasswordAuthenticationToken with null values.
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                 null, null, null);
-        // After setting the Authentication in the context, we specify
-        // that the current user is authenticated. So it passes the
-        // Spring Security Configurations successfully.
+        /*
+         After setting the Authentication in the context, we specify
+         that the current user is authenticated. So it passes the
+         Spring Security Configurations successfully.
+         */
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
         // Set the claims so that in controller we will be using it to create
         // new JWT

@@ -11,7 +11,7 @@ This website can contain multiple components such as CRUD , router , validate da
 | --- | ----------- | ------------------   |
 | 1.  | backend |    Kanyapat Wittayamanitkul  |
 | 2.  | frontend |  Nuttawat Rodsomboon |
-| 3.  | devop  |  ploy  |
+| 3.  | devop  |  Charidaporn Chuangdonphai  |
 
 
 ### FEATURE 

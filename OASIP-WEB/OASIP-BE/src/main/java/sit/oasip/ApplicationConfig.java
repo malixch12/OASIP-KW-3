@@ -10,6 +10,7 @@ import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import sit.oasip.javainuse.models.JwtResponse;
+import sit.oasip.services.AuthenticationService;
 import sit.oasip.utils.ListMapper;
 import sit.oasip.utils.PageMapper;
 
@@ -30,5 +31,6 @@ public class ApplicationConfig {
     }
     @Bean
     public JwtResponse jwtResponse(){return new JwtResponse();}
-
+    @Bean
+    public AuthenticationService authenticationService(){return  new AuthenticationService();}
 }

@@ -40,8 +40,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         try {
-            // JWT Token is in the form "Bearer token". Remove Bearer word and
-            // get only the Token
+            // JWT Token is in the form "Bearer token". Remove Bearer word and get only the Token
             String jwtToken = extractJwtFromRequest(request);
 
             if (StringUtils.hasText(jwtToken) && jwtTokenUtil.validateToken(jwtToken)) {
@@ -52,9 +51,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 UserDetails userDetail = this.jwtUserDetailsService.loadUserByUsername(userName);
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
-                // After setting the Authentication in the context, we specify
-                // that the current user is authenticated. So it passes the
-                // Spring Security Configurations successfully.
+                /*
+                 After setting the Authentication in the context, we specify
+                 that the current user is authenticated. So it passes the
+                 Spring Security Configurations successfully.
+                 */
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             } else {
                 request.setAttribute("message", "Please log in for get Token again.");
@@ -90,8 +91,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
          Spring Security Configurations successfully.
          */
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-        // Set the claims so that in controller we will be using it to create
-        // new JWT
+
+        // Set the claims so that in controller we will be using it to create new JWT
         request.setAttribute("claims", ex.getClaims());
 
     }

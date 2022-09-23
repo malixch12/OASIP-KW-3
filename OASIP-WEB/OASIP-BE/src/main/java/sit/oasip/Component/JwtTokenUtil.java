@@ -1,6 +1,7 @@
 package sit.oasip.Component;
 
 import java.io.Serializable;
+import java.net.http.HttpRequest;
 import java.util.*;
 import java.util.function.Function;
 
@@ -15,12 +16,12 @@ import org.springframework.stereotype.Component;
 import sit.oasip.entities.User;
 import sit.oasip.utils.Role;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Component
 public class JwtTokenUtil {
-    public static final long JWT_TOKEN_VALIDITY = 60;
     private String secret;
     private int jwtExpirationInMs;
-    private int refreshExpirationDateInMs;
 
     @Value("${jwt.secret}")
     public void setSecret(String secret) {
@@ -32,43 +33,27 @@ public class JwtTokenUtil {
         this.jwtExpirationInMs = expirationDateInMinute*1000*60;
     }
 
-//    public String generateToken(UserDetails userDetails) {
-//        Map<String, Object> claims = new HashMap<>();
-//        Collection<? extends GrantedAuthority> roles = userDetails.getAuthorities();
-//        System.out.println(roles.contains(new SimpleGrantedAuthority(Role.Admin.name())));
-//        if (roles.contains(new SimpleGrantedAuthority(Role.Admin.name()))) {
-//            claims.put("isAdmin", true);
-//        }
-//        if (roles.contains(new SimpleGrantedAuthority(Role.Student.name()))) {
-//            claims.put("isStudent", true);
-//        }
-//        return doGenerateToken(claims, userDetails.getUsername());
-//    }
-
     public String generateToken(User userDetails) {
         Map<String, Object> claims = new HashMap<>();
         if(userDetails.getRole().equals(Role.Admin.name())){
-            System.out.println("claims.put(\"isAdmin\", true);");
-            claims.put("isAdmin", true);
+            claims.put("role", Role.Admin.name());
         }else if(userDetails.getRole().equals(Role.Student.name())){
-            System.out.println(" claims.put(\"isStudent\", true);");
-            claims.put("isStudent", true);
+            claims.put("role", Role.Student.name());
         }
-
         return doGenerateToken(claims, userDetails.getEmail());
     }
 
     private String doGenerateToken(Map<String, Object> claims, String subject) {
-
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationInMs))
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
 
     }
 
-    public String doGenerateRefreshToken(Map<String, Object> claims, String subject) {
-
-        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
+    public String doGenerateRefreshToken(String claims, String subject) {
+        Map<String, Object> claim = new HashMap<>();
+        claim.put("role",claims);
+        return Jwts.builder().setClaims(claim).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationInMs))
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
 
@@ -113,17 +98,15 @@ public class JwtTokenUtil {
 
         List<SimpleGrantedAuthority> roles = null;
 
-        Boolean isAdmin = claims.get("isAdmin", Boolean.class);
-        Boolean isStudent = claims.get("isStudent", Boolean.class);
+        String role = claims.get("role", String.class);
 
-        System.out.println(isAdmin +" "+ isStudent);
+        if (role != null ) {
+            if(role.equals(Role.Admin.name())){
+                roles = Arrays.asList(new SimpleGrantedAuthority(Role.Admin.name()));
+            }else if(role.equals(Role.Student.name())){
+                roles = Arrays.asList(new SimpleGrantedAuthority(Role.Student.name()));
+            }
 
-        if (isAdmin != null && isAdmin) {
-            roles = Arrays.asList(new SimpleGrantedAuthority(Role.Admin.name()));
-        }
-
-        if (isStudent != null && isAdmin) {
-            roles = Arrays.asList(new SimpleGrantedAuthority(Role.Student.name()));
         }
         return roles;
 

@@ -14,12 +14,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import sit.oasip.Component.JwtTokenUtil;
 //import sit.oasip.Component.JwtUtil;
-import sit.oasip.dtos.UserDTO.MatchUserDTO;
+import sit.oasip.dtos.UserDTOs.MatchUserDTO;
 import sit.oasip.entities.User;
 import sit.oasip.javainuse.models.JwtResponse;
 import sit.oasip.javainuse.services.JWTUserDetailsService;
 import sit.oasip.repositories.UserRepository;
-import sit.oasip.services.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;

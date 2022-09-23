@@ -8,18 +8,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import sit.oasip.dtos.SimpleEventDTO;
-import sit.oasip.dtos.UserDTO.AddUserDTO;
-import sit.oasip.dtos.UserDTO.EditUserDTO;
-import sit.oasip.dtos.UserDTO.UserDTO;
+import sit.oasip.dtos.UserDTOs.AddUserDTO;
+import sit.oasip.dtos.UserDTOs.EditUserDTO;
+import sit.oasip.dtos.UserDTOs.GetUserDTO;
 import sit.oasip.entities.User;
-import sit.oasip.repositories.UserRepository;
 import sit.oasip.services.UserService;
-import sit.oasip.utils.Role;
-
-import javax.annotation.security.RolesAllowed;
-import javax.validation.Valid;
-import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -29,7 +22,7 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("")
-    public Page<UserDTO> getUserByAll(
+    public Page<GetUserDTO> getUserByAll(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "8") Integer pageSize
     ){
@@ -37,7 +30,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public UserDTO getEventById(@PathVariable Integer userId) {
+    public GetUserDTO getEventById(@PathVariable Integer userId) {
         return userService.getUserById(userId);
     }
 

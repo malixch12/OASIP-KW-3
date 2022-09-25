@@ -64,15 +64,39 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
+<<<<<<< b4baf820f05ac37732fcd2a5c7192c8d31a6136f
         corsConfiguration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type" , "IsRefreshToken"));
+=======
+
+        corsConfiguration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type" , "IsRefreshToken"));
+
+>>>>>>> Revert "Revert "Merge branch 'develop' into BACKEND""
         corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PUT","OPTIONS","PATCH", "DELETE"));
         corsConfiguration.setAllowCredentials(true);
         corsConfiguration.setExposedHeaders(List.of("Authorization"));
 
         httpSecurity.csrf().disable().cors().configurationSource(request -> corsConfiguration).and()
+<<<<<<< b4baf820f05ac37732fcd2a5c7192c8d31a6136f
                 .authorizeRequests()
                 .antMatchers("/api/login","/api/users/signup").permitAll()
+=======
+
+                // dont authenticate this particular request
+
+                .authorizeRequests().antMatchers("/api/login","/api/users/signup" , "/api/events" , "/api/events/*" ,"/api/eventcategorys/*", "/api/eventcategorys" , "/api/events/categories/*"
+                        ,"/api/events/futuredays/*" ,"/api/events/dates/*" , "/api/events/pastdays/*",
+                        "/api/events/categories/futuredays/*" ,"/api/events/categories/dates/*" ,"/api/events/categories/pastdays/*").permitAll().
+
+
+                // all other requests need to be authenticated
+                        anyRequest().authenticated().and().
+                // make sure we use stateless session; session won't be used to
+                // store user's state.
+                        exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+>>>>>>> Revert "Revert "Merge branch 'develop' into BACKEND""
 
                 //grant permission for Admin
                 .antMatchers ("/api/users/**","/api/match","/api/events/**").hasAuthority(Role.Admin.name())

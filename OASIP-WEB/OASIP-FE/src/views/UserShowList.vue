@@ -35,6 +35,7 @@ const getLinkAll = async () => {
     numPage.value = Math.ceil(UserLists.value.totalElements / 8);
 
   } else if (res.status === 401) {
+<<<<<<< b4baf820f05ac37732fcd2a5c7192c8d31a6136f
     const TokenValue = ref( await res.json())
     console.log("status from backend = " +  TokenValue.value.message )
     if (TokenValue.value.message == "Token is expired") {
@@ -42,6 +43,15 @@ const getLinkAll = async () => {
       RefreshToken()
     }
     if (TokenValue.value.message == "Token incorrect" & jwtToken.value != null) {
+=======
+    const TokenValue = ref(await (await res.text()))
+    console.log("status from backend = " +  TokenValue.value + TokenValue.value.length )
+    if (TokenValue.value.length == 18) {
+
+      RefreshToken()
+    }
+    if (TokenValue.value.length == 17 & jwtToken.value != null) {
+>>>>>>> Revert "Revert "Merge branch 'develop' into BACKEND""
 
       localStorage.removeItem('jwtToken')
     localStorage.removeItem('time')
@@ -50,7 +60,11 @@ const getLinkAll = async () => {
     isActivePopup.value = true
 
     }
+<<<<<<< b4baf820f05ac37732fcd2a5c7192c8d31a6136f
     if (TokenValue.value.message == "Please log in for get Token again." ) {
+=======
+    if (TokenValue.value.length == 101 || TokenValue.value.length == 100) {
+>>>>>>> Revert "Revert "Merge branch 'develop' into BACKEND""
 
 localStorage.removeItem('jwtToken')
 localStorage.removeItem('time')
@@ -59,6 +73,7 @@ TokenTimeOut.value = true
 isActivePopup.value = true
 
 }
+<<<<<<< b4baf820f05ac37732fcd2a5c7192c8d31a6136f
   }
   if (res.status === 403) {
     textShow.value = "You are not an admin There is no right to view this information."
@@ -96,6 +111,45 @@ const RefreshToken = async () => {
 
 };
 
+=======
+  }
+
+
+};
+
+const RefreshToken = async () => {
+
+  const res = await fetch(
+    `${import.meta.env.VITE_APP_TITLE}/api/refresh`,
+    {
+
+      method: 'get',
+      headers: {
+        'IsRefreshToken': 'true',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + jwtToken.value
+      }
+    }
+  );
+  if (res.status === 200) {
+    console.log("โทเค้นหมดอายุ")
+    localStorage.setItem('jwtToken', await res.text());
+    jwtToken.value = localStorage.getItem('jwtToken');
+    getLinkAll()
+  } else
+    if(res.status === 401) {
+    
+     
+    }
+ 
+
+
+
+
+
+};
+
+>>>>>>> Revert "Revert "Merge branch 'develop' into BACKEND""
 const TokenTimeOut = ref(false)
 
 
@@ -103,7 +157,11 @@ function CheckTokenTimeOut() {
   const TimeNow = new Date();
   const TimeLogin = localStorage.getItem('time');
   console.log((TimeNow.getTime() - TimeLogin )/100)
+<<<<<<< b4baf820f05ac37732fcd2a5c7192c8d31a6136f
   if ((TimeNow.getTime() - TimeLogin) > 86400000) {   //60000 = 1 min 86400000 = 24 hour
+=======
+  if ((TimeNow.getTime() - TimeLogin) > 30000) {   //60000 = 1 min 86400000 = 24 hour
+>>>>>>> Revert "Revert "Merge branch 'develop' into BACKEND""
     localStorage.removeItem('jwtToken')
     localStorage.removeItem('time')
     TokenTimeOut.value = true
@@ -298,7 +356,12 @@ const goEdit = (UserId) => {
         </tbody>
       </table>
 
+<<<<<<< b4baf820f05ac37732fcd2a5c7192c8d31a6136f
       <div class="text-center mt-10" v-if="UserLists.content.length==0 && jwtToken !=null">{{textShow}}</div>
+=======
+      <div class="text-center mt-10" v-if="UserLists.content.length==0 && jwtToken !=null">-------------no
+        user------------</div>
+>>>>>>> Revert "Revert "Merge branch 'develop' into BACKEND""
 
       <div class="text-center mt-10 text-red-500" v-if="jwtToken ==null">Can't see data Please login first.</div>
       <div class="text-center text-sm underline underline-offset-4 text-gray-400" v-if="jwtToken ==null">

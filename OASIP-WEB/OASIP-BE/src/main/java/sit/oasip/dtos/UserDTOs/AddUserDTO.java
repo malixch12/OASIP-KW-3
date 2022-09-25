@@ -1,4 +1,4 @@
-package sit.oasip.dtos.UserDTO;
+package sit.oasip.dtos.UserDTOs;
 
 import lombok.Getter;
 import lombok.Setter;

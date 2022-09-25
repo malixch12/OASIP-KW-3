@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import sit.oasip.Component.JwtTokenUtil;
 //import sit.oasip.Component.JwtUtil;
-import sit.oasip.dtos.UserDTO.MatchUserDTO;
+import sit.oasip.dtos.UserDTOs.MatchUserDTO;
 import sit.oasip.entities.User;
 import sit.oasip.javainuse.models.JwtResponse;
 import sit.oasip.javainuse.services.JWTUserDetailsService;
 import sit.oasip.repositories.UserRepository;
-import sit.oasip.services.UserService;
+import sit.oasip.services.AuthenticationService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -29,8 +29,7 @@ import java.util.Map;
 @CrossOrigin
 @RequestMapping("/api")
 public class AuthenticateController {
-    @Autowired
-    private AuthenticationManager authenticationManager;
+
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
@@ -41,29 +40,19 @@ public class AuthenticateController {
     @Autowired
     private UserRepository repository;
 
+    @Autowired
+    private AuthenticationService authenticationService;
+
     @PostMapping("/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody MatchUserDTO matchUserDTO) throws Exception {
         User user = repository.findByEmail(matchUserDTO.getEmail());
         if (user != null) {
-            authenticate(matchUserDTO.getEmail(), matchUserDTO.getPassword());
-
-            final UserDetails userDetails = userDetailsService
-                    .loadUserByUsername(matchUserDTO.getEmail());
-            final String token = jwtTokenUtil.generateToken(userDetails);
-            JwtResponse response = new JwtResponse("Login Successfull", token);
-            return ResponseEntity.ok().body(response);
+            authenticationService.authenticate(matchUserDTO.getEmail(), matchUserDTO.getPassword());
+            userDetailsService.loadUserByUsername(matchUserDTO.getEmail());
+            final String token = jwtTokenUtil.generateToken(user);
+            return ResponseEntity.ok().body(new JwtResponse(token));
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with email: " + matchUserDTO.getEmail());
-        }
-    }
-
-    private void authenticate(String email, String password) throws Exception {
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
-        } catch (DisabledException e) {
-            throw new Exception("USER_DISABLED", e);
-        } catch (BadCredentialsException e) {
-            throw new Exception("INVALID_CREDENTIALS", e);
         }
     }
 
@@ -72,16 +61,12 @@ public class AuthenticateController {
         // From the HttpRequest get the claims
         DefaultClaims claims = (io.jsonwebtoken.impl.DefaultClaims) request.getAttribute("claims");
 
-        Map<String, Object> expectedMap = getMapFromIoJsonwebtokenClaims(claims);
-        String token = jwtTokenUtil.doGenerateRefreshToken(expectedMap, expectedMap.get("sub").toString());
-        return ResponseEntity.ok(token);
+        Map<String, Object> expectedMap = authenticationService.getMapFromIoJsonwebtokenClaims(claims);
+
+        User user = repository.findByEmail(expectedMap.get("sub").toString());
+        final String token = jwtTokenUtil.doGenerateRefreshToken(expectedMap.get("role").toString(),expectedMap.get("sub").toString());
+        return ResponseEntity.ok().body(new JwtResponse(token));
     }
 
-    public Map<String, Object> getMapFromIoJsonwebtokenClaims(DefaultClaims claims) {
-        Map<String, Object> expectedMap = new HashMap<String, Object>();
-        for (Map.Entry<String, Object> entry : claims.entrySet()) {
-            expectedMap.put(entry.getKey(), entry.getValue());
-        }
-        return expectedMap;
-    }
+
 }

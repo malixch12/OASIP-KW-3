@@ -1,4 +1,4 @@
-package sit.oasip.dtos.UserDTO;
+package sit.oasip.dtos.UserDTOs;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 
 @Getter
 @Setter
-public class UserDTO {
+public class GetUserDTO {
     private Integer ID;
     private String Name;
     private String Email;

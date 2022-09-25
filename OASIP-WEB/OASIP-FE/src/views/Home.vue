@@ -11,9 +11,7 @@ import Apple from '../components/TextAnimation.vue'
    
 
     <div class="grid grid-cols-2  text-gray-900 space-y-7  items-center  ml-36  relative mt-12">
-      <div class="color2"> </div>
-      <div class="color2"></div>
-      <div class="color2"></div>
+     
      <!-- <div class="text-7xl font-bold col-span-1 text-center">Clinic</div>
 
       <div class="col-span-1 text-center">

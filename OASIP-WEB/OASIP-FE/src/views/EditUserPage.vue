@@ -44,8 +44,39 @@ const getLinkAll = async () => {
    UserOld.value = { ...User.value }
     console.log("corret")
     
-  } else
-    console.log("cant fetch")
+  } else if(res.status === 401){
+    const test = ref(await (await res.text()))
+    console.log("status from backend = " + test.value)
+      if( test.value.length == 18 ) {
+      
+        RefreshToken()
+      }
+  }
+};
+
+const RefreshToken = async () => {
+  
+  const res = await fetch(
+    `${import.meta.env.VITE_APP_TITLE}/api/refresh` ,
+    {
+     
+        method: 'get',
+        headers: {
+          'IsRefreshToken' : 'true' ,
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + jwtToken.value
+        }}
+  );
+  if (res.status === 200) {
+    console.log("โทเค้นหมดอายุ")
+    localStorage.setItem('jwtToken',await res.text());
+    jwtToken.value = localStorage.getItem('jwtToken');
+    getLinkAll()
+    updateUser()
+  }
+
+
+
 };
 
 console.log(myRouter.query.userId)
@@ -90,16 +121,27 @@ const updateUser = async () => {
    CheckStatus.value=false
     //   statusTrue()
       console.log("edited successfully");
-    } else 
-     CheckStatus.value=true
-    isActivePopup.value=true
+    } 
+    
+    if(res.status === 401){
+    const test = ref(await (await res.text()))
+    console.log("status from backend = " + test.value)
+      if( test.value.length == 18 ) {
+      
+        RefreshToken()
+      }
+  }else
+    
+      
+    //  CheckStatus.value=true
+    // isActivePopup.value=true
      StatusNameError.value = await res.json();
       
 console.log("xxx")
   }else
   {
-    CheckStatus.value=true
- isActivePopup.value=true
+   
+
        
   }} 
 
@@ -114,6 +156,7 @@ console.log("xxx")
         method: "PUT",
         headers: {
           "content-type": "application/json",
+          'Authorization': 'Bearer ' + jwtToken.value
         },
         body: JSON.stringify({
             
@@ -127,10 +170,18 @@ console.log("xxx")
    CheckStatus.value=false
     //   statusTrue()
       console.log("edited successfully");
-    } else 
+    } else if(res2.status === 401){
+    const test = ref(await (await res2.text()))
+    console.log("status from backend = " + test.value)
+      if( test.value.length == 18 ) {
+      
+        RefreshToken()
+      }
+  }else
+
      CheckStatus.value=true
     isActivePopup.value=true
-       StatusEmailError.value = await res2.json()
+    StatusEmailError.value = await res2.json()
       
 console.log("xxx")
   }else
@@ -138,8 +189,7 @@ console.log("xxx")
     CheckStatus.value=true
  isActivePopup.value=true
 
-       
-
+      
   }}
 
 
@@ -154,6 +204,7 @@ console.log("xxx")
         method: "PUT",
         headers: {
           "content-type": "application/json",
+          'Authorization': 'Bearer ' + jwtToken.value
         },
         body: JSON.stringify({
             
@@ -168,7 +219,15 @@ console.log("xxx")
    CheckStatus.value=false
     //   statusTrue()
       console.log("edited successfully");
-    } else 
+    } else  if(res.status === 401){
+    const test = ref(await (await res.text()))
+    console.log("status from backend = " + test.value)
+      if( test.value.length == 18 ) {
+      
+        RefreshToken()
+      }
+  }else
+
      CheckStatus.value=true
     isActivePopup.value=true
     console.log(await res.json());

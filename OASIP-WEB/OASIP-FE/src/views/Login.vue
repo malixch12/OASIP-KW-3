@@ -277,6 +277,10 @@ const goHome = () => {
       </div>
       <div class="" v-if="jwtToken!=null">
         Welcome <span class="font-bold underline underline-offset-4">{{decoded.sub}}</span> to Clinic Booking
+       <br/><div class="text-center mt-2 text-gray-400"> you are {{decoded.role}} role</div>
+       <div class="text-center text-sm text-gray-400" v-if="decoded.role==`Student` || decoded.role==`Lecturer`">  Our website does not currently support student roles.</div>
+
+       <div class="text-center text-sm text-gray-400" v-if="decoded.role==`Admin`">  You can do everything on our website.</div>
       </div>
     </section>
 

@@ -19,7 +19,7 @@ const errorStatus = ref({
 })
 const decoded = ref({ sub: "" })
 
-const addUser = async () => {
+const Login = async () => {
   CheckData()
 
   const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/login`, {
@@ -31,12 +31,16 @@ const addUser = async () => {
   })
 
   if (res.status === 200) {
-    const test = await res.json()
-    localStorage.setItem('jwtToken', test.jwttoken);
+    const jwtToken = await res.json()
+    console.log(jwtToken)
+    localStorage.setItem('jwtToken', jwtToken.jwttoken);
     console.log(dataUser.value);
     isActivePopup.value = true
     CheckStatus.value = true
     jwtToken.value = localStorage.getItem('jwtToken');
+    decoded.value = jwt_decode(jwtToken.value);
+    console.log(decoded.value)
+    localStorage.setItem('UserRole', decoded.value.role);
 
     var today = new Date()
     localStorage.setItem('time', today.getTime());
@@ -86,6 +90,8 @@ onBeforeMount(() => {
   jwtToken.value = localStorage.getItem('jwtToken');
   if (jwtToken.value != null) {
     decoded.value = jwt_decode(jwtToken.value);
+    console.log(decoded.value)
+    localStorage.setItem('UserRole', decoded.value.role);
 
   }
 });
@@ -259,7 +265,7 @@ const goHome = () => {
 
 
 
-            <input class="mt-4 test rounded-full px-8 py-1 drop-shadow-lg" value="Login" @click="addUser()">
+            <input class="mt-4 test rounded-full px-8 py-1 drop-shadow-lg" value="Login" @click="Login()">
             <p class="forget">dont have account ? <router-link :to="{ name: 'SignUpPage' }" class="
             
               ">Click here!</router-link>

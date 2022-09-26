@@ -14,7 +14,7 @@ const UserLists = ref({ content: "" })
 
 const page = ref(0);
 const numPage = ref();
-
+const textShow = ref("-------------no user------------" )
 const jwtToken = ref()
 const getLinkAll = async () => {
   console.log(jwtToken.value)
@@ -35,13 +35,13 @@ const getLinkAll = async () => {
     numPage.value = Math.ceil(UserLists.value.totalElements / 8);
 
   } else if (res.status === 401) {
-    const TokenValue = ref(await (await res.text()))
-    console.log("status from backend = " +  TokenValue.value + TokenValue.value.length )
-    if (TokenValue.value.length == 18) {
+    const TokenValue = ref( await res.json())
+    console.log("status from backend = " +  TokenValue.value.message )
+    if (TokenValue.value.message == "Token is expired") {
 
       RefreshToken()
     }
-    if (TokenValue.value.length == 17 & jwtToken.value != null) {
+    if (TokenValue.value.message == "Token incorrect" & jwtToken.value != null) {
 
       localStorage.removeItem('jwtToken')
     localStorage.removeItem('time')
@@ -50,7 +50,7 @@ const getLinkAll = async () => {
     isActivePopup.value = true
 
     }
-    if (TokenValue.value.length == 101 || TokenValue.value.length == 100) {
+    if (TokenValue.value.message == "Please log in for get Token again." ) {
 
 localStorage.removeItem('jwtToken')
 localStorage.removeItem('time')
@@ -60,11 +60,15 @@ isActivePopup.value = true
 
 }
   }
-
+  if (res.status === 403) {
+    textShow.value = "You are not an admin There is no right to view this information."
+    console.log(textShow)
+  }
 
 };
 
 const RefreshToken = async () => {
+  console.log("RefreshToken doing...")
 
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/refresh`,
@@ -80,7 +84,8 @@ const RefreshToken = async () => {
   );
   if (res.status === 200) {
     console.log("โทเค้นหมดอายุ")
-    localStorage.setItem('jwtToken', await res.text());
+    let jwtTokenRF = await res.json()
+    localStorage.setItem('jwtToken', jwtTokenRF.jwttoken);
     jwtToken.value = localStorage.getItem('jwtToken');
     getLinkAll()
   } else
@@ -88,11 +93,6 @@ const RefreshToken = async () => {
     
      
     }
- 
-
-
-
-
 
 };
 
@@ -103,7 +103,7 @@ function CheckTokenTimeOut() {
   const TimeNow = new Date();
   const TimeLogin = localStorage.getItem('time');
   console.log((TimeNow.getTime() - TimeLogin )/100)
-  if ((TimeNow.getTime() - TimeLogin) > 30000) {   //60000 = 1 min 86400000 = 24 hour
+  if ((TimeNow.getTime() - TimeLogin) > 86400000) {   //60000 = 1 min 86400000 = 24 hour
     localStorage.removeItem('jwtToken')
     localStorage.removeItem('time')
     TokenTimeOut.value = true
@@ -166,7 +166,6 @@ const goEdit = (UserId) => {
   });
 
 };
-
 
 
 
@@ -299,8 +298,7 @@ const goEdit = (UserId) => {
         </tbody>
       </table>
 
-      <div class="text-center mt-10" v-if="UserLists.content.length==0 && jwtToken !=null">-------------no
-        user------------</div>
+      <div class="text-center mt-10" v-if="UserLists.content.length==0 && jwtToken !=null">{{textShow}}</div>
 
       <div class="text-center mt-10 text-red-500" v-if="jwtToken ==null">Can't see data Please login first.</div>
       <div class="text-center text-sm underline underline-offset-4 text-gray-400" v-if="jwtToken ==null">

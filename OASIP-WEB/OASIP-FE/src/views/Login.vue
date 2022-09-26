@@ -18,10 +18,17 @@ const errorStatus = ref({
   Email: null
 })
 const decoded = ref({ sub: "" })
+<<<<<<< b4baf820f05ac37732fcd2a5c7192c8d31a6136f
+
+const Login = async () => {
+  CheckData()
+
+=======
 
 const addUser = async () => {
   CheckData()
 
+>>>>>>> Revert "Revert "Merge branch 'develop' into BACKEND""
   const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/login`, {
     method: "POST",
     headers: {
@@ -31,12 +38,24 @@ const addUser = async () => {
   })
 
   if (res.status === 200) {
+<<<<<<< b4baf820f05ac37732fcd2a5c7192c8d31a6136f
+    const jwtToken = await res.json()
+    console.log(jwtToken)
+    localStorage.setItem('jwtToken', jwtToken.jwttoken);
+=======
     const test = await res.json()
     localStorage.setItem('jwtToken', test.jwttoken);
+>>>>>>> Revert "Revert "Merge branch 'develop' into BACKEND""
     console.log(dataUser.value);
     isActivePopup.value = true
     CheckStatus.value = true
     jwtToken.value = localStorage.getItem('jwtToken');
+<<<<<<< b4baf820f05ac37732fcd2a5c7192c8d31a6136f
+    decoded.value = jwt_decode(jwtToken.value);
+    console.log(decoded.value)
+    localStorage.setItem('UserRole', decoded.value.role);
+=======
+>>>>>>> Revert "Revert "Merge branch 'develop' into BACKEND""
 
     var today = new Date()
     localStorage.setItem('time', today.getTime());
@@ -86,6 +105,11 @@ onBeforeMount(() => {
   jwtToken.value = localStorage.getItem('jwtToken');
   if (jwtToken.value != null) {
     decoded.value = jwt_decode(jwtToken.value);
+<<<<<<< b4baf820f05ac37732fcd2a5c7192c8d31a6136f
+    console.log(decoded.value)
+    localStorage.setItem('UserRole', decoded.value.role);
+=======
+>>>>>>> Revert "Revert "Merge branch 'develop' into BACKEND""
 
   }
 });
@@ -259,7 +283,11 @@ const goHome = () => {
 
 
 
+<<<<<<< b4baf820f05ac37732fcd2a5c7192c8d31a6136f
+            <input class="mt-4 test rounded-full px-8 py-1 drop-shadow-lg" value="Login" @click="Login()">
+=======
             <input class="mt-4 test rounded-full px-8 py-1 drop-shadow-lg" value="Login" @click="addUser()">
+>>>>>>> Revert "Revert "Merge branch 'develop' into BACKEND""
             <p class="forget">dont have account ? <router-link :to="{ name: 'SignUpPage' }" class="
             
               ">Click here!</router-link>

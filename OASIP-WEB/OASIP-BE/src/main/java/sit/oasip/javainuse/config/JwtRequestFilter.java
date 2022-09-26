@@ -1,6 +1,7 @@
 package sit.oasip.javainuse.config;
 
 import java.io.IOException;
+import java.time.Instant;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -62,14 +63,26 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 System.out.println("Cannot set the Security Context");
             }
         } catch (ExpiredJwtException ex) {
-            request.setAttribute("message", "Token is expired");
-            String isRefreshToken = request.getHeader("isRefreshToken");
-            String requestURL = request.getRequestURL().toString();
-            // allow for Refresh Token creation if following conditions are true.
-            if (isRefreshToken != null && isRefreshToken.equals("true") && requestURL.contains("refresh")) {
-                allowForRefreshToken(ex, request);
-            } else request.setAttribute("exception", ex);
+            if(ex.getClaims().getExpiration().getTime()+90000 <= Instant.now().toEpochMilli()){
+                System.out.println("dkljsfklujd");
+                request.setAttribute("message", "Can not refresh token, please login again");
+            }else {
+                request.setAttribute("message", "Token is expired");
+                String isRefreshToken = request.getHeader("isRefreshToken");
+                String requestURL = request.getRequestURL().toString();
+                // allow for Refresh Token creation if following conditions are true.
+                if (isRefreshToken != null && isRefreshToken.equals("true") && requestURL.contains("refresh")) {
+                    allowForRefreshToken(ex, request);
+                } else request.setAttribute("exception", ex);
 
+            }
+//            request.setAttribute("message", "Token is expired");
+//            String isRefreshToken = request.getHeader("isRefreshToken");
+//            String requestURL = request.getRequestURL().toString();
+//            // allow for Refresh Token creation if following conditions are true.
+//            if (isRefreshToken != null && isRefreshToken.equals("true") && requestURL.contains("refresh")) {
+//                allowForRefreshToken(ex, request);
+//            } else request.setAttribute("exception", ex);
         } catch (BadCredentialsException ex) {
             request.setAttribute("message", "Token incorrect");
             request.setAttribute("exception", ex);

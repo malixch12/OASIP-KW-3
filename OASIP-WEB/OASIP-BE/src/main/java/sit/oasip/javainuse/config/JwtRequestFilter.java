@@ -13,9 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import io.jsonwebtoken.impl.DefaultClaims;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,6 +29,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.web.server.ResponseStatusException;
 //import sit.oasip.Component.JwtTokenUtil;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 import sit.oasip.Component.JwtTokenUtil;
 import sit.oasip.javainuse.models.JwtResponse;
 import sit.oasip.javainuse.services.JWTUserDetailsService;
@@ -37,6 +40,10 @@ import sit.oasip.services.AuthenticationService;
 public class JwtRequestFilter extends OncePerRequestFilter {
     @Autowired
     private JWTUserDetailsService jwtUserDetailsService;
+
+    @Autowired
+    @Qualifier("handlerExceptionResolver")
+    private HandlerExceptionResolver resolver;
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
@@ -88,10 +95,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                         allowForRefreshToken(ex, request);
 
                     } else if(ex.getClaims().getExpiration().before(new Date(System.currentTimeMillis())) == true) {
-                        System.out.println("else if");
-                        request.setAttribute("message", "Refresh token is expired, please log in again");
+                        System.out.println("else if test");
+                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"Refresh token is expired, please log in");
+                        return;
                     } else {
-                        System.out.println("else if");
                         request.setAttribute("exception", ex);
 
                     }

@@ -6,8 +6,10 @@ import { useRoute } from "vue-router";
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import PopupPage from "../components/PopupPage.vue";
 import RoundButton from "../components/RoundButton.vue";
+import { useRouter } from "vue-router";
 
 
+const router = useRouter();
 
 const route = useRoute();
 const errorStatus = ref({
@@ -131,6 +133,13 @@ function PasswordConfirm() {
 
 }
 
+function goHome () {
+  router.push({
+    name: "Login"
+ 
+  });
+}
+
 
 const EmailCheck = ref(true)   //เซ็คว่ากรอกรึยัง
 const EmailValidation = ref(true)  //ฟอแมท เมล
@@ -158,7 +167,7 @@ const PasswordCheck = ref(false) //check password
         </div>
         <div class=" max-w-lg mx-auto  ">
           <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
-            @click="isActivePopup = false" />
+            @click="isActivePopup = false , goHome()" />
         </div>
       </div>
 

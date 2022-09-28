@@ -6,10 +6,14 @@ import java.io.Serializable;
 
 @Getter @Setter
 public class JwtResponse{
-    private String jwttoken;
+    private String accessToken;
+    private String refreshToken;
 
-    public JwtResponse() {  }
-    public JwtResponse(String jwttoken) {
-        this.jwttoken = jwttoken;
+    public JwtResponse() {
+    }
+
+    public JwtResponse(String accessToken, String refreshToken) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
     }
 }

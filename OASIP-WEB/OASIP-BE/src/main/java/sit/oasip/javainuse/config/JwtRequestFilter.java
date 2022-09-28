@@ -2,12 +2,16 @@ package sit.oasip.javainuse.config;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.Date;
+import java.util.Map;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import io.jsonwebtoken.impl.DefaultClaims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -27,22 +31,25 @@ import sit.oasip.Component.JwtTokenUtil;
 import sit.oasip.javainuse.models.JwtResponse;
 import sit.oasip.javainuse.services.JWTUserDetailsService;
 import sit.oasip.repositories.UserRepository;
+import sit.oasip.services.AuthenticationService;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
     @Autowired
-    private  JWTUserDetailsService jwtUserDetailsService;
+    private JWTUserDetailsService jwtUserDetailsService;
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
+    @Autowired
+    private AuthenticationService authenticationService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-
+        String jwtToken = extractJwtFromRequest(request);
         try {
             // JWT Token is in the form "Bearer token". Remove Bearer word and get only the Token
-            String jwtToken = extractJwtFromRequest(request);
+
 
             if (StringUtils.hasText(jwtToken) && jwtTokenUtil.validateToken(jwtToken)) {
 
@@ -58,31 +65,38 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                  Spring Security Configurations successfully.
                  */
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                String requestURL = request.getRequestURL().toString();
+
             } else {
                 request.setAttribute("message", "Please log in for get Token again.");
                 System.out.println("Cannot set the Security Context");
             }
         } catch (ExpiredJwtException ex) {
-            if(ex.getClaims().getExpiration().getTime()+90000 <= Instant.now().toEpochMilli()){
-                System.out.println("dkljsfklujd");
-                request.setAttribute("message", "Can not refresh token, please login again");
-            }else {
-                request.setAttribute("message", "Token is expired");
-                String isRefreshToken = request.getHeader("isRefreshToken");
-                String requestURL = request.getRequestURL().toString();
-                // allow for Refresh Token creation if following conditions are true.
-                if (isRefreshToken != null && isRefreshToken.equals("true") && requestURL.contains("refresh")) {
-                    allowForRefreshToken(ex, request);
-                } else request.setAttribute("exception", ex);
 
-            }
-//            request.setAttribute("message", "Token is expired");
-//            String isRefreshToken = request.getHeader("isRefreshToken");
-//            String requestURL = request.getRequestURL().toString();
-//            // allow for Refresh Token creation if following conditions are true.
-//            if (isRefreshToken != null && isRefreshToken.equals("true") && requestURL.contains("refresh")) {
-//                allowForRefreshToken(ex, request);
-//            } else request.setAttribute("exception", ex);
+            String isRefreshToken = request.getHeader("isRefreshToken");
+            String requestURL = request.getRequestURL().toString();
+
+            request.setAttribute("message", "Token is expired");
+            System.out.println(ex.getClaims().getExpiration());
+            System.out.println(new Date(System.currentTimeMillis()));
+
+//            System.out.println(new Date(System.currentTimeMillis());
+
+                if (requestURL.contains("refresh") && ex.getClaims().get("refresh").equals(true)) {
+
+                    if (ex.getClaims().getExpiration().after(new Date(System.currentTimeMillis())) == true) {
+                        allowForRefreshToken(ex, request);
+
+                    } else if(ex.getClaims().getExpiration().before(new Date(System.currentTimeMillis())) == true) {
+                        System.out.println("else if");
+                        request.setAttribute("message", "Refresh token is expired, please log in again");
+                    } else {
+                        System.out.println("else if");
+                        request.setAttribute("exception", ex);
+
+                    }
+                }
+
         } catch (BadCredentialsException ex) {
             request.setAttribute("message", "Token incorrect");
             request.setAttribute("exception", ex);
@@ -110,12 +124,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     }
 
-    private String extractJwtFromRequest(HttpServletRequest request) {
+    public String extractJwtFromRequest(HttpServletRequest request) {
         final String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7, bearerToken.length());
         }
-        request.setAttribute("message","Please check your header key is Authorization and header value start with Bearer");
+        request.setAttribute("message", "Please check your header key is Authorization and header value start with Bearer");
         return null;
     }
 }

@@ -32,6 +32,8 @@ loginCheck.value = true
 
 function logout () {
   localStorage.removeItem('jwtToken')
+  localStorage.removeItem('UserRole')
+
   window.location.reload()
 
 }

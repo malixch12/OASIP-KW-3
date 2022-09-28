@@ -5,6 +5,8 @@ import Navbar from "../components/Navbar.vue";
 import { useRoute } from "vue-router";
 import PopupPage from "../components/PopupPage.vue";
 import { useRouter } from "vue-router";
+
+
 const router = useRouter();
 const route = useRoute();
 const eventLists = ref({content:null});

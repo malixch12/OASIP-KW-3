@@ -76,7 +76,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
                 //grant permission for Admin
-                .antMatchers ("/api/users/**","/api/match","/api/events/**").hasAuthority(Role.Admin.name())
+                    .antMatchers ("/api/users","/api/users/**","/api/match","/api/events/**").hasAuthority(Role.Admin.name())
 
                 .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

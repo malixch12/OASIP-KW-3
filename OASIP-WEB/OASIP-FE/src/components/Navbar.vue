@@ -32,6 +32,8 @@ loginCheck.value = true
 
 function logout () {
   localStorage.removeItem('jwtToken')
+  localStorage.removeItem('UserRole')
+
   window.location.reload()
 
 }
@@ -67,7 +69,7 @@ function logout () {
               >Home</router-link
             >
           </li>
-          <li v-if="!loginCheck">
+          <li v-if="!loginCheck && UserRole==`Admin`">
             <router-link
               :to="{ name: 'BookingEventByCate' }"
               class="
@@ -80,7 +82,7 @@ function logout () {
             >
           </li>
 
-          <li v-if="!loginCheck">
+          <li v-if="!loginCheck && UserRole==`Admin`">
             <router-link
               :to="{ name: 'ListAllByCate' }"
               class="
@@ -104,7 +106,7 @@ function logout () {
               ><span v-show="!loginCheck && UserRole==`Admin`">user list</span>
             </router-link>
           </li>
-              <li v-if="loginCheck">
+              <li >
             <router-link 
               :to="{ name: 'Login' }"
               class="
@@ -115,11 +117,11 @@ function logout () {
                
                 
               "
-              ><span >Login</span> 
+              ><span v-if="!loginCheck">my profile</span> <span v-if="loginCheck">Login</span> 
             </router-link>
           </li>
-          <li>
-            <router-link v-if="loginCheck"
+          <li v-if="loginCheck">
+            <router-link 
               :to="{ name: 'SignUpPage' }"
               class="
                  block

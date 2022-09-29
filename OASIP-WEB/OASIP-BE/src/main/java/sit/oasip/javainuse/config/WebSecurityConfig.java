@@ -74,6 +74,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/login","/api/users/signup").permitAll()
 
+
                 //grant permission for Admin
                     .antMatchers ("/api/users","/api/users/**","/api/match","/api/events/**").hasAuthority(Role.Admin.name())
 

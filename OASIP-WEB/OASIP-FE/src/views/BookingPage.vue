@@ -13,18 +13,88 @@ const eventLists = ref({content:null});
 const id = ref();
 const page = ref(0)
 const numPage = ref( )
+const jwtToken = ref()
+
 const getLinkAll = async () => {
-  const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events/categories/${route.query.categoryId}?page=${page.value}&pageSize=6`);
+  RefreshToken()
+  const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events/categories/${route.query.categoryId}?page=${page.value}&pageSize=6`,
+  {
+
+method: 'get',
+headers: {
+
+  'Content-Type': 'application/json',
+  'Authorization': 'Bearer ' + jwtToken.value
+}
+});
   if (res.status === 200) {
     eventLists.value = await res.json();
       numPage.value = Math.ceil(eventLists.value.totalElements / 6)
     
   } 
-   
+  if (res.status === 401) {
+    const TokenValue = ref( await res.json())
+    console.log("status from backend = " +  TokenValue.value.message )
+    if (TokenValue.value.message == "Token is expired") {
+
+      RefreshToken()
+    }
+    if (TokenValue.value.message == "Token incorrect" & jwtToken.value != null) {
+
+      localStorage.removeItem('jwtToken')
+    localStorage.removeItem('time')
+    TokenValue.value = "x"
+    TokenTimeOut.value = true
+    isActivePopup.value = true
+
+    }
+    if (TokenValue.value.message == "Please log in for get Token again." ) {
+
+localStorage.removeItem('jwtToken')
+localStorage.removeItem('time')
+TokenValue.value = "x"
+TokenTimeOut.value = true
+isActivePopup.value = true
+
+}
+  }
 
 };
  
+function removeToken() {
+  localStorage.removeItem('jwtToken')
+  window.location.reload()
+}
+const RefreshToken = async () => {
+  console.log("RefreshToken doing...")
 
+  const res = await fetch(
+    `${import.meta.env.VITE_APP_TITLE}/api/refresh`,
+    {
+
+      method: 'get',
+      headers: {
+        'IsRefreshToken': 'true',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + jwtToken.value
+      }
+    }
+  );
+  if (res.status === 200) {
+    console.log("โทเค้นหมดอายุ")
+    let jwtTokenRF = await res.json()
+    localStorage.setItem('jwtToken', jwtTokenRF.jwttoken);
+    jwtToken.value = localStorage.getItem('jwtToken');
+    getLinkAll()
+  } else
+    if(res.status === 401) {
+    
+     
+    }
+
+};
+
+const TokenTimeOut = ref(false)
 
 
 onBeforeUpdate(() => {
@@ -32,6 +102,7 @@ onBeforeUpdate(() => {
 });
 
 onBeforeMount(() => {
+  jwtToken.value = localStorage.getItem('jwtToken');
   getLinkAll();
 });
 
@@ -41,12 +112,15 @@ onBeforeMount(() => {
 // });
 const CheckOverlap = ref(false)
 const addEvent = async (dataBooking , AllDataCheck) => {
+  RefreshToken()
   if(AllDataCheck == true) {
  dataBooking.eventStartTime=new Date(dataBooking.eventStartTime).toISOString();
   const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events`, {
     method: "POST",
     headers: {
       "content-type": "application/json",
+      'Authorization': 'Bearer ' + jwtToken.value
+
     },
     body: JSON.stringify(dataBooking),
   });
@@ -99,10 +173,20 @@ function paging(index , filter) {
 
 
 const getLinkPast = async () => {
+  RefreshToken()
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/events/categories/pastdays/${
       route.query.categoryId
-    }?page=${page.value}&pageSize=8`
+    }?page=${page.value}&pageSize=8`,
+    {
+
+method: 'get',
+headers: {
+
+  'Content-Type': 'application/json',
+  'Authorization': 'Bearer ' + jwtToken.value
+}
+}
   );
   if (res.status === 200) {
     eventLists.value = await res.json();
@@ -111,10 +195,20 @@ const getLinkPast = async () => {
 };
 
 const getLinkFuture = async () => {
+  RefreshToken()
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/events/categories/futuredays/${
       route.query.categoryId
-    }?page=${page.value}&pageSize=8`
+    }?page=${page.value}&pageSize=8` ,
+    {
+
+method: 'get',
+headers: {
+
+  'Content-Type': 'application/json',
+  'Authorization': 'Bearer ' + jwtToken.value
+}
+}
   );
   if (res.status === 200) {
     eventLists.value = await res.json();

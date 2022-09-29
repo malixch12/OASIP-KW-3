@@ -1,27 +1,21 @@
 package sit.oasip.services;
 
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import org.springframework.web.server.ResponseStatusException;
 
-import sit.oasip.dtos.UserDTO.AddUserDTO;
-import sit.oasip.dtos.UserDTO.EditUserDTO;
-import sit.oasip.dtos.UserDTO.MatchUserDTO;
-import sit.oasip.dtos.UserDTO.UserDTO;
+import sit.oasip.dtos.UserDTOs.AddUserDTO;
+import sit.oasip.dtos.UserDTOs.EditUserDTO;
+import sit.oasip.dtos.UserDTOs.MatchUserDTO;
+import sit.oasip.dtos.UserDTOs.GetUserDTO;
 import sit.oasip.entities.User;
 import sit.oasip.repositories.UserRepository;
 import sit.oasip.utils.ListMapper;
@@ -29,9 +23,7 @@ import sit.oasip.utils.PageMapper;
 
 import sit.oasip.utils.RoleAttribute;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class UserService {
@@ -47,17 +39,17 @@ public class UserService {
     private Argon2PasswordEncoder argon2PasswordEncoder;
 
 
-    public Page<UserDTO> getUserAll(Pageable pageable) {
-        List<UserDTO> userDTOS = listMapper
-                .mapList(repository.findAll(Sort.by("Name").ascending()), UserDTO.class, modelMapper);
+    public Page<GetUserDTO> getUserAll(Pageable pageable) {
+        List<GetUserDTO> userDTOS = listMapper
+                .mapList(repository.findAll(Sort.by("Name").ascending()), GetUserDTO.class, modelMapper);
         return pageMapper.mapToPage(pageable, userDTOS);
 
     }
 
-    public UserDTO getUserById(int userId) {
+    public GetUserDTO getUserById(int userId) {
         User user = repository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, userId + " Does Not Exist !!!"));
-        return modelMapper.map(user, UserDTO.class);
+        return modelMapper.map(user, GetUserDTO.class);
     }
 
 

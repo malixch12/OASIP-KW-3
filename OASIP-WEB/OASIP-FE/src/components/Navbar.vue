@@ -18,9 +18,12 @@ var now_time = (today.getHours() + ":" + today.getMinutes() + ":" + today.getSec
 
 const loginCheck = ref()
 const jwtToken = ref()
+const UserRole = ref()
 onBeforeMount(async () => {
 setInterval(setTime, 1);
 jwtToken.value = localStorage.getItem('jwtToken');
+UserRole.value = localStorage.getItem('UserRole');
+
 if(jwtToken.value != null) {
   loginCheck.value = false
 }else
@@ -29,6 +32,8 @@ loginCheck.value = true
 
 function logout () {
   localStorage.removeItem('jwtToken')
+  localStorage.removeItem('UserRole')
+
   window.location.reload()
 
 }
@@ -64,7 +69,7 @@ function logout () {
               >Home</router-link
             >
           </li>
-          <li>
+          <li v-if="!loginCheck && UserRole==`Admin`">
             <router-link
               :to="{ name: 'BookingEventByCate' }"
               class="
@@ -77,7 +82,7 @@ function logout () {
             >
           </li>
 
-          <li>
+          <li v-if="!loginCheck && UserRole==`Admin`">
             <router-link
               :to="{ name: 'ListAllByCate' }"
               class="
@@ -86,7 +91,7 @@ function logout () {
                
                 md:hover:text-pink-500 md:p-0 
               "
-              >check appointments
+              ><span >check appointments</span>
             </router-link>
           </li>
              <li>
@@ -98,11 +103,11 @@ function logout () {
                
                 md:hover:text-pink-500 md:p-0 
               "
-              >user list
+              ><span v-show="!loginCheck && UserRole==`Admin`">user list</span>
             </router-link>
           </li>
-              <li>
-            <router-link v-show="loginCheck"
+              <li >
+            <router-link 
               :to="{ name: 'Login' }"
               class="
                   block
@@ -112,11 +117,11 @@ function logout () {
                
                 
               "
-              >Login
+              ><span v-if="!loginCheck">my profile</span> <span v-if="loginCheck">Login</span> 
             </router-link>
           </li>
-          <li>
-            <router-link v-show="loginCheck"
+          <li v-if="loginCheck">
+            <router-link 
               :to="{ name: 'SignUpPage' }"
               class="
                  block

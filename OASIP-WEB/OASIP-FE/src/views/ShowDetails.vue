@@ -10,6 +10,7 @@ import { useRouter } from "vue-router";
 import RoundButton from "../components/RoundButton.vue";
 import PopupPage from "../components/PopupPage.vue";
 
+const jwtToken = ref()
 const router = useRouter();
 const myRouter = useRoute();
 const eventLists = ref({
@@ -26,7 +27,16 @@ const hideEdit = ref(true);
 
 const getLinkAll = async () => {
   const res = await fetch(
-    `${import.meta.env.VITE_APP_TITLE}/api/events/${myRouter.query.BookingId}`
+    `${import.meta.env.VITE_APP_TITLE}/api/events/${myRouter.query.BookingId}`,
+    {
+
+method: 'get',
+headers: {
+
+  'Content-Type': 'application/json',
+  'Authorization': 'Bearer ' + jwtToken.value
+}
+}
   );
   if (res.status === 200) {
     eventLists.value = await res.json();
@@ -34,6 +44,8 @@ const getLinkAll = async () => {
 };
 
 onBeforeMount(async () => {
+  jwtToken.value = localStorage.getItem('jwtToken');
+
   getLinkAll();
 });
 
@@ -72,6 +84,7 @@ const updateNote = async () => {
         method: "PUT",
         headers: {
           "content-type": "application/json",
+          'Authorization': 'Bearer ' + jwtToken.value
         },
         body: JSON.stringify({
           eventNotes: eventLists.value.eventNotes,

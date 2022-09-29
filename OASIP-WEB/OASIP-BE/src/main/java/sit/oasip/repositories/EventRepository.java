@@ -3,6 +3,7 @@ package sit.oasip.repositories;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import sit.oasip.dtos.EventDTOs.AddEventDTO;
 import sit.oasip.entities.Event;
 
 import java.time.Instant;
@@ -25,5 +26,4 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
 
         List<Event> findByEventStartTimeEquals(Instant date,Sort sort);
 
-        Optional<Event> saveAndFlush(Optional<Event> event);
 }

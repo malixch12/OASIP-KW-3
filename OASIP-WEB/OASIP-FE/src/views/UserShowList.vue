@@ -17,6 +17,8 @@ const page = ref(0);
 const numPage = ref();
 const textShow = ref("-------------no user------------" )
 const jwtToken = ref()
+const jwtTokenRF = ref()
+
 const getLinkAll = async () => {
   console.log(jwtToken.value)
   const res = await fetch(
@@ -45,7 +47,8 @@ const getLinkAll = async () => {
     if (TokenValue.value.message == "Token incorrect" & jwtToken.value != null) {
 
       localStorage.removeItem('jwtToken')
-    localStorage.removeItem('time')
+      localStorage.removeItem('jwtTokenRF')
+
     TokenValue.value = "x"
     TokenTimeOut.value = true
     isActivePopup.value = true
@@ -54,7 +57,7 @@ const getLinkAll = async () => {
     if (TokenValue.value.message == "Please log in for get Token again." ) {
 
 localStorage.removeItem('jwtToken')
-localStorage.removeItem('time')
+localStorage.removeItem('jwtTokenRF')
 TokenValue.value = "x"
 TokenTimeOut.value = true
 isActivePopup.value = true
@@ -79,7 +82,7 @@ const RefreshToken = async () => {
       headers: {
         'IsRefreshToken': 'true',
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + jwtToken.value
+        'Authorization': 'Bearer ' + jwtTokenRF.value
       }
     }
   );
@@ -91,7 +94,7 @@ const RefreshToken = async () => {
     getLinkAll()
   } else
     if(res.status === 401) {
-    
+      CheckTokenTimeOut()
      
     }
 
@@ -101,27 +104,23 @@ const TokenTimeOut = ref(false)
 
 
 function CheckTokenTimeOut() {
-  const TimeNow = new Date();
-  const TimeLogin = localStorage.getItem('time');
-  console.log((TimeNow.getTime() - TimeLogin )/100)
-  if ((TimeNow.getTime() - TimeLogin) > 86400000) {   //60000 = 1 min 86400000 = 24 hour
+
     localStorage.removeItem('jwtToken')
     localStorage.removeItem('time')
     TokenTimeOut.value = true
     isActivePopup.value = true
-  }
+  
 
 }
 
 const UserRole = ref()
 onBeforeMount(async () => {
   jwtToken.value = localStorage.getItem('jwtToken');
+  jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
   UserRole.value = localStorage.getItem('UserRole');
   const TimeLogin = localStorage.getItem('time');
   getLinkAll();
-  if (TimeLogin != null) {
-    CheckTokenTimeOut()
-  }
+
 
 });
 

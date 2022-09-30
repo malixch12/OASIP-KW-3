@@ -33,7 +33,8 @@ const Login = async () => {
   if (res.status === 200) {
     const jwtToken = await res.json()
     console.log(jwtToken)
-    localStorage.setItem('jwtToken', jwtToken.jwttoken);
+    localStorage.setItem('jwtToken', jwtToken.accessToken);
+    localStorage.setItem('jwtTokenRF', jwtToken.refreshToken);
     console.log(dataUser.value);
     isActivePopup.value = true
     CheckStatus.value = true
@@ -50,7 +51,6 @@ const Login = async () => {
     messageError.value = "the specified email DOES NOT exist"
     isActivePopup.value = true
     CheckStatus.value = false
-    console.log(await res.json());
     errorStatus.value = await res.json()
   }
 

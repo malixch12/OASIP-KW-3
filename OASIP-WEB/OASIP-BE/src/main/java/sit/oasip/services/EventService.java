@@ -1,7 +1,10 @@
 package sit.oasip.services;
 
+import java.net.http.HttpRequest;
 import java.time.Instant;
 import java.util.*;
+
+import io.jsonwebtoken.Claims;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,15 +13,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import sit.oasip.Component.JwtTokenUtil;
 import sit.oasip.dtos.EventDTOs.AddEventDTO;
 import sit.oasip.dtos.EventDTOs.EditEventDTO;
 import sit.oasip.dtos.EventDTOs.GetEventDTO;
 import sit.oasip.entities.Event;
 import sit.oasip.entities.Eventcategory;
+import sit.oasip.javainuse.config.JwtRequestFilter;
 import sit.oasip.repositories.EventRepository;
 import sit.oasip.repositories.EventcategoryRepository;
 import sit.oasip.utils.ListMapper;
 import sit.oasip.utils.PageMapper;
+import sit.oasip.utils.Role;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Service
 public class EventService {
@@ -30,6 +38,10 @@ public class EventService {
     private PageMapper pageMapper ;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+    @Autowired
+    private JwtRequestFilter jwtRequestFilter;
 
     @Autowired
     public EventService(EventRepository repository, EventcategoryRepository cateRepository) {
@@ -42,14 +54,21 @@ public class EventService {
 
 
 
-    // get event
-    public List<GetEventDTO> getEventAll() {
-        return listMapper.mapList(repository.findAll(), GetEventDTO.class, modelMapper);
-    }
+    public Page<GetEventDTO> getSimpleEventAll(Pageable pageable, HttpServletRequest request ) {
+        String token = jwtRequestFilter.extractJwtFromRequest(request);
+        String email = jwtTokenUtil.getAllClaimsFromToken(token).getSubject();
+        String role = jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString();
 
-    public Page<GetEventDTO> getSimpleEventAll(Pageable pageable) {
+        List<Event> allEvent = new ArrayList<>();
+
+        if(role.equals(Role.Student.name())){
+            allEvent = repository.findByBookingEmail(email,Sort.by("eventStartTime").descending());
+        }else if(role.equals(Role.Admin.name())){
+           allEvent =  repository.findAll(Sort.by("eventStartTime").descending());
+        }
+
         List<GetEventDTO> listEventDTO = listMapper
-                .mapList(repository.findAll(Sort.by("eventStartTime").descending()), GetEventDTO.class, modelMapper);
+                .mapList(allEvent, GetEventDTO.class, modelMapper);
         return pageMapper.mapToPage(pageable, listEventDTO);
     }
 

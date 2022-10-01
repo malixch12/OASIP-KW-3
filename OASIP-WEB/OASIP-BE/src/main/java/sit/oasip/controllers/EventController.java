@@ -24,6 +24,7 @@ import sit.oasip.entities.Event;
 import sit.oasip.services.EventService;
 import org.springframework.data.domain.PageRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.Instant;
 
 @RestController
@@ -34,12 +35,12 @@ public class EventController {
     @Autowired
     private EventService eventService;
 
-    // get all
     @GetMapping("")
     public Page<GetEventDTO> getEventByAll(
             @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "8") Integer pageSize) {
-        return eventService.getSimpleEventAll(PageRequest.of(page, pageSize));
+            @RequestParam(defaultValue = "8") Integer pageSize,
+            HttpServletRequest request) {
+        return eventService.getSimpleEventAll(PageRequest.of(page, pageSize),request);
     }
 
     @GetMapping("/{id}")

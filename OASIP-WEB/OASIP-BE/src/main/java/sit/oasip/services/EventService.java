@@ -154,11 +154,7 @@ public class EventService {
     public void delete(int eventID) {
         String token = jwtRequestFilter.extractJwtFromRequest(request);
         Event event = repository.findById(eventID).orElseThrow(() -> new RuntimeException(eventID + " Does not exit !!!"));
-        if (jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString().equals(Role.Student.name())) {
-            if (event.getBookingEmail().equals(jwtTokenUtil.getAllClaimsFromToken(token).getSubject()) == false) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "the booking email must be the same as the student's email");
-            }
-        }
+        checkEmail(event.getBookingEmail(),HttpStatus.FORBIDDEN);
         repository.deleteById(eventID);
     }
 
@@ -184,17 +180,13 @@ public class EventService {
         }
     }
 
-    private boolean isAdd(String newEventEmail) {
+    private void checkEmail(String email,HttpStatus status) {
         String token = jwtRequestFilter.extractJwtFromRequest(request);
-        boolean isAdd = false;
         if (jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString().equals(Role.Student.name())) {
-            if (newEventEmail.equals(jwtTokenUtil.getAllClaimsFromToken(token).getSubject()) == false) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "the booking email must be the same as the student's email");
-            } else {
-                isAdd = true;
+            if (email.equals(jwtTokenUtil.getAllClaimsFromToken(token).getSubject()) == false) {
+                throw new ResponseStatusException(status, "the booking email must be the same as the student's email");
             }
-        } else isAdd = true;
-        return isAdd;
+        }
     }
 
     public Event add(AddEventDTO newEvent) {
@@ -202,34 +194,29 @@ public class EventService {
                 .orElseThrow(() -> new RuntimeException(newEvent.getEventCategoryID() + "Does not exit !!!"));
 
         Event event = new Event();
-        if (isAdd(newEvent.getBookingEmail()) == true) {
-            checkOverlapping(newEvent.getEventStartTime(), newEvent.getEventCategoryID());
-            event.setBookingName(newEvent.getBookingName());
-            event.setBookingEmail(newEvent.getBookingEmail());
-            event.setEventNotes(newEvent.getEventNotes());
-            event.setEventStartTime(newEvent.getEventStartTime());
-            event.setEventCategoryID(newEvent.getEventCategoryID());
-            event.setEventDuration(eventcategory.getEventDuration());
-            event.setEventCategory(eventcategory.getEventCategoryName());
-            Event event1 = modelMapper.map(event, Event.class);
-            repository.saveAndFlush(event1);
+        checkEmail(newEvent.getBookingEmail(),HttpStatus.BAD_REQUEST);
+        checkOverlapping(newEvent.getEventStartTime(), newEvent.getEventCategoryID());
 
-        }
+        event.setBookingName(newEvent.getBookingName());
+        event.setBookingEmail(newEvent.getBookingEmail());
+        event.setEventNotes(newEvent.getEventNotes());
+        event.setEventStartTime(newEvent.getEventStartTime());
+        event.setEventCategoryID(newEvent.getEventCategoryID());
+        event.setEventDuration(eventcategory.getEventDuration());
+        event.setEventCategory(eventcategory.getEventCategoryName());
+        Event event1 = modelMapper.map(event, Event.class);
+        repository.saveAndFlush(event1);
+
         return event;
 
 
     }
 
     public Event update(EditEventDTO updateEvent, int bookingId) {
-        String token = jwtRequestFilter.extractJwtFromRequest(request);
         if (updateEvent.getEventStartTime() != null) {
             Event event = repository.findById(bookingId)
                     .orElseThrow(() -> new RuntimeException("Bookind ID " + bookingId + "Does not exit !!!"));
-            if (jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString().equals(Role.Student.name())) {
-                if (event.getBookingEmail().equals(jwtTokenUtil.getAllClaimsFromToken(token).getSubject()) == false) {
-                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "the booking email must be the same as the student's email");
-                }
-            }
+            checkEmail(event.getBookingEmail(),HttpStatus.FORBIDDEN);
             checkOverlapping(updateEvent.getEventStartTime(), event.getEventCategoryID());
         }
 

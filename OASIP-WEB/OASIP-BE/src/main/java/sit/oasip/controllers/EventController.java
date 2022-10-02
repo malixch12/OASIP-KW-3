@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.Instant;
 
 @RestController
-
 @RequestMapping("/api/events")
 public class EventController {
 

@@ -86,16 +86,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             request.setAttribute("message", "Token is expired");
 
                 if (requestURL.contains("refresh") && ex.getClaims().get("refresh").equals(true)) {
-
                     if (ex.getClaims().getExpiration().after(new Date(System.currentTimeMillis())) == true) {
                         allowForRefreshToken(ex, request);
-
                     } else if(ex.getClaims().getExpiration().before(new Date(System.currentTimeMillis())) == true) {
                         response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"Refresh token is expired, please log in");
                         return;
                     } else {
                         request.setAttribute("exception", ex);
-
                     }
                 }
 

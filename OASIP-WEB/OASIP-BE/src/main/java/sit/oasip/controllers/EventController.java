@@ -38,8 +38,7 @@ public class EventController {
     @GetMapping("")
     public Page<GetEventDTO> getEventByAll(
             @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "8") Integer pageSize,
-            HttpServletRequest request) {
+            @RequestParam(defaultValue = "8") Integer pageSize) {
         return eventService.getSimpleEventAll(PageRequest.of(page, pageSize));
     }
 

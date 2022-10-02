@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +36,7 @@ public class EventService {
     @Autowired
     private ListMapper listMapper;
     @Autowired
-    private PageMapper pageMapper ;
+    private PageMapper pageMapper;
     @Autowired
     private ModelMapper modelMapper;
     @Autowired
@@ -45,34 +46,36 @@ public class EventService {
 
     private HttpServletRequest request;
 
+
     @Autowired
     public EventService(EventRepository repository, EventcategoryRepository cateRepository, HttpServletRequest request) {
         this.repository = repository;
         this.cateRepository = cateRepository;
-        this.request=request;
+        this.request = request;
     }
 
     long now = (System.currentTimeMillis()) / 1000;
     Instant dateNow = Instant.now().ofEpochSecond(now);
 
-    private List<Event> getEvents(List<Event> events){
+    private List<Event> getEvents(List<Event> events) {
         String token = jwtRequestFilter.extractJwtFromRequest(request);
         String email = jwtTokenUtil.getAllClaimsFromToken(token).getSubject();
         String role = jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString();
-        List<Event> event = new ArrayList<>();;
+        List<Event> event = new ArrayList<>();
+        ;
 
-        if(role.equals(Role.Student.name())){
-            event = getEventByStudent(email,events);
-        }else if(role.equals(Role.Admin.name())){
+        if (role.equals(Role.Student.name())) {
+            event = getEventByStudent(email, events);
+        } else if (role.equals(Role.Admin.name())) {
             event = events;
         }
         return event;
     }
 
-    private List<Event> getEventByStudent(String email,List<Event> events){
+    private List<Event> getEventByStudent(String email, List<Event> events) {
         List<Event> eventByEmail = new ArrayList<>();
         for (int i = 0; i < events.size(); i++) {
-            if(events.get(i).getBookingEmail().equals(email)){
+            if (events.get(i).getBookingEmail().equals(email)) {
                 eventByEmail.add(events.get(i));
             }
         }
@@ -81,7 +84,7 @@ public class EventService {
 
 
     public Page<GetEventDTO> getSimpleEventAll(Pageable pageable) {
-        List<Event> allEvent =  repository.findAll(Sort.by("eventStartTime").descending());
+        List<Event> allEvent = repository.findAll(Sort.by("eventStartTime").descending());
         List<GetEventDTO> listEventDTO = listMapper
                 .mapList(getEvents(allEvent), GetEventDTO.class, modelMapper);
         return pageMapper.mapToPage(pageable, listEventDTO);
@@ -94,32 +97,32 @@ public class EventService {
     }
 
     public Page<GetEventDTO> getSimpleEventDate(Instant date, Pageable pageable) {
-        List<Event> allEvent =  repository.findByEventStartTimeEquals(date, Sort.by("eventStartTime").ascending());
+        List<Event> allEvent = repository.findByEventStartTimeEquals(date, Sort.by("eventStartTime").ascending());
         List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(allEvent), GetEventDTO.class, modelMapper);
         return pageMapper.mapToPage(pageable, listEventDTO);
     }
 
     public Page<GetEventDTO> getSimpleEventPastDate(Pageable pageable) {
-        List<Event> allEvent =  repository.findByEventStartTimeLessThan(dateNow, Sort.by("eventStartTime").descending());
-        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(allEvent),GetEventDTO.class, modelMapper);
+        List<Event> allEvent = repository.findByEventStartTimeLessThan(dateNow, Sort.by("eventStartTime").descending());
+        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(allEvent), GetEventDTO.class, modelMapper);
         return pageMapper.mapToPage(pageable, listEventDTO);
     }
 
     public Page<GetEventDTO> getSimpleEventFutureDate(Pageable pageable) {
         List<Event> allEvent = repository.findByEventStartTimeGreaterThan(dateNow, Sort.by("eventStartTime").ascending());
-                List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(allEvent),GetEventDTO.class, modelMapper);
+        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(allEvent), GetEventDTO.class, modelMapper);
         return pageMapper.mapToPage(pageable, listEventDTO);
     }
 
     // get event by category
     public List<GetEventDTO> getEventAllByCategory(int eventCategoryID) {
         List<Event> allEvent = repository.findByEventCategoryID(eventCategoryID, Sort.by("eventStartTime").descending());
-        return listMapper.mapList( getEvents(allEvent) , GetEventDTO.class, modelMapper);
+        return listMapper.mapList(getEvents(allEvent), GetEventDTO.class, modelMapper);
     }
 
     public Page<GetEventDTO> getEventByCategory(int eventCategoryID, Pageable pageable) {
         List<Event> allEvent = repository.findByEventCategoryID(eventCategoryID, Sort.by("eventStartTime").descending());
-        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(allEvent),GetEventDTO.class, modelMapper);
+        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(allEvent), GetEventDTO.class, modelMapper);
         return pageMapper.mapToPage(pageable, listEventDTO);
     }
 
@@ -143,7 +146,7 @@ public class EventService {
     }
 
     public void delete(int eventID) {
-        repository.findById(eventID).orElseThrow(()-> new RuntimeException(eventID + "Does not exit !!!"));
+        repository.findById(eventID).orElseThrow(() -> new RuntimeException(eventID + "Does not exit !!!"));
         repository.deleteById(eventID);
     }
 
@@ -169,30 +172,46 @@ public class EventService {
         }
     }
 
+    private boolean isAdd(AddEventDTO newEvent){
+        String token = jwtRequestFilter.extractJwtFromRequest(request);
+        boolean isAdd=false;
+        if (jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString().equals(Role.Student.name())) {
+            if (newEvent.getBookingEmail().equals(jwtTokenUtil.getAllClaimsFromToken(token).getSubject()) == false) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "the booking email must be the same as the student's email");
+            }else{
+                isAdd=true;
+            }
+        }else isAdd=true;
+        return isAdd;
+    }
+
     public Event add(AddEventDTO newEvent) {
         Eventcategory eventcategory = cateRepository.findById(newEvent.getEventCategoryID())
                 .orElseThrow(() -> new RuntimeException(newEvent.getEventCategoryID() + "Does not exit !!!"));
 
-        checkOverlapping(newEvent.getEventStartTime(), newEvent.getEventCategoryID());
-
         Event event = new Event();
-        event.setBookingName(newEvent.getBookingName());
-        event.setBookingEmail(newEvent.getBookingEmail());
-        event.setEventNotes(newEvent.getEventNotes());
-        event.setEventStartTime(newEvent.getEventStartTime());
-        event.setEventCategoryID(newEvent.getEventCategoryID());
-        event.setEventDuration(eventcategory.getEventDuration());
-        event.setEventCategory(eventcategory.getEventCategoryName());
+        if (isAdd(newEvent) == true){
+            checkOverlapping(newEvent.getEventStartTime(), newEvent.getEventCategoryID());
+            event.setBookingName(newEvent.getBookingName());
+            event.setBookingEmail(newEvent.getBookingEmail());
+            event.setEventNotes(newEvent.getEventNotes());
+            event.setEventStartTime(newEvent.getEventStartTime());
+            event.setEventCategoryID(newEvent.getEventCategoryID());
+            event.setEventDuration(eventcategory.getEventDuration());
+            event.setEventCategory(eventcategory.getEventCategoryName());
+            Event event1 = modelMapper.map(event, Event.class);
+            repository.saveAndFlush(event1);
 
-        Event event1 = modelMapper.map(event, Event.class);
-        repository.saveAndFlush(event1);
-        return event1;
+        }
+        return event;
+
+
     }
 
     public Event update(EditEventDTO updateEvent, int bookingId) {
         if (updateEvent.getEventStartTime() != null) {
             Event event = repository.findById(bookingId)
-                    .orElseThrow(() -> new RuntimeException("Bookind ID " +bookingId + "Does not exit !!!"));
+                    .orElseThrow(() -> new RuntimeException("Bookind ID " + bookingId + "Does not exit !!!"));
 
             checkOverlapping(updateEvent.getEventStartTime(), event.getEventCategoryID());
         }

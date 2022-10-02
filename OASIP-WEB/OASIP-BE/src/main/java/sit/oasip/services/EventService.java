@@ -1,7 +1,10 @@
 package sit.oasip.services;
 
+import java.io.IOException;
 import java.net.http.HttpRequest;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import io.jsonwebtoken.Claims;
@@ -27,6 +30,8 @@ import sit.oasip.utils.ListMapper;
 import sit.oasip.utils.PageMapper;
 import sit.oasip.utils.Role;
 
+import javax.mail.*;
+import javax.mail.internet.*;
 import javax.servlet.http.HttpServletRequest;
 
 @Service
@@ -154,7 +159,7 @@ public class EventService {
     public void delete(int eventID) {
         String token = jwtRequestFilter.extractJwtFromRequest(request);
         Event event = repository.findById(eventID).orElseThrow(() -> new RuntimeException(eventID + " Does not exit !!!"));
-        checkEmail(event.getBookingEmail(),HttpStatus.FORBIDDEN);
+        checkEmail(event.getBookingEmail(), HttpStatus.FORBIDDEN);
         repository.deleteById(eventID);
     }
 
@@ -180,7 +185,7 @@ public class EventService {
         }
     }
 
-    private void checkEmail(String email,HttpStatus status) {
+    private void checkEmail(String email, HttpStatus status) {
         String token = jwtRequestFilter.extractJwtFromRequest(request);
         if (jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString().equals(Role.Student.name())) {
             if (email.equals(jwtTokenUtil.getAllClaimsFromToken(token).getSubject()) == false) {
@@ -189,12 +194,12 @@ public class EventService {
         }
     }
 
-    public Event add(AddEventDTO newEvent) {
+    public Event add(AddEventDTO newEvent) throws MessagingException, IOException {
         Eventcategory eventcategory = cateRepository.findById(newEvent.getEventCategoryID())
                 .orElseThrow(() -> new RuntimeException(newEvent.getEventCategoryID() + "Does not exit !!!"));
 
         Event event = new Event();
-        checkEmail(newEvent.getBookingEmail(),HttpStatus.BAD_REQUEST);
+        checkEmail(newEvent.getBookingEmail(), HttpStatus.BAD_REQUEST);
         checkOverlapping(newEvent.getEventStartTime(), newEvent.getEventCategoryID());
 
         event.setBookingName(newEvent.getBookingName());
@@ -206,7 +211,7 @@ public class EventService {
         event.setEventCategory(eventcategory.getEventCategoryName());
         Event event1 = modelMapper.map(event, Event.class);
         repository.saveAndFlush(event1);
-
+        sendmail(event);
         return event;
 
 
@@ -216,7 +221,7 @@ public class EventService {
         if (updateEvent.getEventStartTime() != null) {
             Event event = repository.findById(bookingId)
                     .orElseThrow(() -> new RuntimeException("Bookind ID " + bookingId + "Does not exit !!!"));
-            checkEmail(event.getBookingEmail(),HttpStatus.FORBIDDEN);
+            checkEmail(event.getBookingEmail(), HttpStatus.FORBIDDEN);
             checkOverlapping(updateEvent.getEventStartTime(), event.getEventCategoryID());
         }
 
@@ -233,6 +238,38 @@ public class EventService {
             return repository.saveAndFlush(e);
         }).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "test"));
         return modelMapper.map(event, Event.class);
+    }
+
+    private void sendmail(Event event) throws AddressException, MessagingException, IOException {
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+
+        Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication("kanyapat.winnerkypt@mail.kmutt.ac.th", "yqgxsziyjlznsorm");
+            }
+        });
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy 'at' hh:mm a").withZone(ZoneId.systemDefault());
+
+        Message msg = new MimeMessage(session);
+        msg.setFrom(new InternetAddress("kanyapat.winnerkypt@mail.kmutt.ac.th", false));
+
+        msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(event.getBookingEmail()));
+        msg.setSubject("Your booking is complete.");
+        msg.setContent("Your booking name : " + event.getBookingName() +
+                        "<br> Event category : " + event.getEventCategory() +
+
+                        "<br><br>Start date and time : " + formatter.format(event.getEventStartTime()) +
+                        "<br>Event duration : " + event.getEventDuration() +
+
+                        "<br><br>Event note : " + event.getEventNotes()
+                , "text/html");
+        msg.setSentDate(new Date());
+
+        Transport.send(msg);
     }
 
 }

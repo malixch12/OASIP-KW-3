@@ -42,9 +42,7 @@ const Login = async () => {
     decoded.value = jwt_decode(jwtToken.value);
     console.log(decoded.value)
     localStorage.setItem('UserRole', decoded.value.role);
-
-    var today = new Date()
-    localStorage.setItem('time', today.getTime());
+    localStorage.setItem('UserEmail', decoded.value.sub);
   }
 
   if (res.status === 404) {

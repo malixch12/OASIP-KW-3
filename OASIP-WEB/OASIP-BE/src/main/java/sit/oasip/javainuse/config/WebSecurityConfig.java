@@ -34,7 +34,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-
     @Autowired
     private UserDetailsService jwtUserDetailsService;
 
@@ -43,16 +42,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        // configure AuthenticationManager so that it knows from where to load
-        // user for matching credentials
-        // Use BCryptPasswordEncoder
         auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new Argon2PasswordEncoder();
-
     }
 
     @Bean
@@ -74,14 +69,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/login","/api/users/signup").permitAll()
 
+                .antMatchers ("/api/users","/api/users/**","/api/match").hasAuthority(Role.Admin.name())
+                .antMatchers ("/api/events/**").hasAnyAuthority(Role.Student.name(),Role.Admin.name())
 
-                //grant permission for Admin
-                    .antMatchers ("/api/users","/api/users/**","/api/match","/api/events/**").hasAuthority(Role.Admin.name())
 
                 .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
+
+
 
 }

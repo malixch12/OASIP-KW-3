@@ -73,7 +73,7 @@ isActivePopup.value = true
 
 const RefreshToken = async () => {
   console.log("RefreshToken doing...")
-
+  console.log(jwtTokenRF.value)
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/refresh`,
     {
@@ -89,13 +89,20 @@ const RefreshToken = async () => {
   if (res.status === 200) {
     console.log("โทเค้นหมดอายุ")
     let jwtTokenRF = await res.json()
-    localStorage.setItem('jwtToken', jwtTokenRF.jwttoken);
+    localStorage.setItem('jwtToken', jwtTokenRF.accessToken);
     jwtToken.value = localStorage.getItem('jwtToken');
     getLinkAll()
-  } else
-    if(res.status === 401) {
+  } 
+    if(res.status === 500) {
+      console.log(await res.json())
+
       CheckTokenTimeOut()
      
+    }
+    if(res.status === 401) {
+     console.log(await res.json())
+     CheckTokenTimeOut()
+
     }
 
 };
@@ -104,7 +111,7 @@ const TokenTimeOut = ref(false)
 
 
 function CheckTokenTimeOut() {
-
+    console.log("time out")
     localStorage.removeItem('jwtToken')
     localStorage.removeItem('time')
     TokenTimeOut.value = true
@@ -171,9 +178,7 @@ const goEdit = (UserId) => {
 
 const isActivePopup2 =ref(false)
 
-function test () {
-  console.log("xxxxxx")
-}
+
 </script>
 
 <template>

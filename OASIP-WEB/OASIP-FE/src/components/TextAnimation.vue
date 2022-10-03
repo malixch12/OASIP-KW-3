@@ -61,6 +61,7 @@ span{
    
     animation: spin_words 10s infinite;
 }
+
 @keyframes spin_words{
     10%{
         transform: translateY(-112%);

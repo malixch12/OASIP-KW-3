@@ -5,6 +5,7 @@ import Navbar from "../components/Navbar.vue";
 import PopupPage from "../components/PopupPage.vue";
 import RoundButton from "../components/RoundButton.vue";
 import { useRouter } from "vue-router";
+import CheckPassword from "../components/CheckPassword.vue";
 
 
 const router = useRouter();
@@ -14,8 +15,10 @@ const UserLists = ref({ content: "" })
 
 const page = ref(0);
 const numPage = ref();
-
+const textShow = ref("-------------no user------------" )
 const jwtToken = ref()
+const jwtTokenRF = ref()
+
 const getLinkAll = async () => {
   console.log(jwtToken.value)
   const res = await fetch(
@@ -35,37 +38,42 @@ const getLinkAll = async () => {
     numPage.value = Math.ceil(UserLists.value.totalElements / 8);
 
   } else if (res.status === 401) {
-    const TokenValue = ref(await (await res.text()))
-    console.log("status from backend = " +  TokenValue.value + TokenValue.value.length )
-    if (TokenValue.value.length == 18) {
+    const TokenValue = ref( await res.json())
+    console.log("status from backend = " +  TokenValue.value.message )
+    if (TokenValue.value.message == "Token is expired") {
 
       RefreshToken()
     }
-    if (TokenValue.value.length == 17 & jwtToken.value != null) {
+    if (TokenValue.value.message == "Token incorrect" & jwtToken.value != null) {
 
       localStorage.removeItem('jwtToken')
-    localStorage.removeItem('time')
+      localStorage.removeItem('jwtTokenRF')
+
     TokenValue.value = "x"
     TokenTimeOut.value = true
     isActivePopup.value = true
 
     }
-    if (TokenValue.value.length == 101 || TokenValue.value.length == 100) {
+    if (TokenValue.value.message == "Please log in for get Token again." ) {
 
 localStorage.removeItem('jwtToken')
-localStorage.removeItem('time')
+localStorage.removeItem('jwtTokenRF')
 TokenValue.value = "x"
 TokenTimeOut.value = true
 isActivePopup.value = true
 
 }
   }
-
+  if (res.status === 403) {
+    textShow.value = "You are not an admin There is no right to view this information."
+    console.log(textShow)
+  }
 
 };
 
 const RefreshToken = async () => {
-
+  console.log("RefreshToken doing...")
+  console.log(jwtTokenRF.value)
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/refresh`,
     {
@@ -74,25 +82,28 @@ const RefreshToken = async () => {
       headers: {
         'IsRefreshToken': 'true',
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + jwtToken.value
+        'Authorization': 'Bearer ' + jwtTokenRF.value
       }
     }
   );
   if (res.status === 200) {
     console.log("โทเค้นหมดอายุ")
-    localStorage.setItem('jwtToken', await res.text());
+    let jwtTokenRF = await res.json()
+    localStorage.setItem('jwtToken', jwtTokenRF.accessToken);
     jwtToken.value = localStorage.getItem('jwtToken');
     getLinkAll()
-  } else
-    if(res.status === 401) {
-    
+  } 
+    if(res.status === 500) {
+      console.log(await res.json())
+
+      CheckTokenTimeOut()
      
     }
- 
+    if(res.status === 401) {
+     console.log(await res.json())
+     CheckTokenTimeOut()
 
-
-
-
+    }
 
 };
 
@@ -100,25 +111,23 @@ const TokenTimeOut = ref(false)
 
 
 function CheckTokenTimeOut() {
-  const TimeNow = new Date();
-  const TimeLogin = localStorage.getItem('time');
-  console.log((TimeNow.getTime() - TimeLogin )/100)
-  if ((TimeNow.getTime() - TimeLogin) > 30000) {   //60000 = 1 min 86400000 = 24 hour
+    console.log("time out")
     localStorage.removeItem('jwtToken')
     localStorage.removeItem('time')
     TokenTimeOut.value = true
     isActivePopup.value = true
-  }
+  
 
 }
 
+const UserRole = ref()
 onBeforeMount(async () => {
   jwtToken.value = localStorage.getItem('jwtToken');
+  jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
+  UserRole.value = localStorage.getItem('UserRole');
   const TimeLogin = localStorage.getItem('time');
   getLinkAll();
-  if (TimeLogin != null) {
-    CheckTokenTimeOut()
-  }
+
 
 });
 
@@ -167,7 +176,7 @@ const goEdit = (UserId) => {
 
 };
 
-
+const isActivePopup2 =ref(false)
 
 
 </script>
@@ -216,11 +225,26 @@ const goEdit = (UserId) => {
 
     </PopupPage>
 
+    <PopupPage v-show="isActivePopup2" :dim-background="true">
+
+<div  class="grid grid-cols-1  pl-24 pr-24 pt-2 " >
+  <div class="flex justify-end mt-14 "  @click="() => isActivePopup2 = false">
+    <svg  xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--iconoir" width="32" height="32" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6.758 17.243L12.001 12m5.243-5.243L12 12m0 0L6.758 6.757M12.001 12l5.243 5.243"></path>
+    </svg>
+
+  </div>
+ 
+  
+
+</div><CheckPassword/>
+ </PopupPage>
 
     <br>
     <div class="overflow-x-auto relative shadow-md sm:rounded-lg w-full px-24 bg-white py-8 ">
       <div class="text-3xl font-bold text-center   drop-shadow-md"> USER LIST </div>
-      <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+      <table class="w-full text-sm text-left text-gray-500 ">
         <caption class="p-5 text-lg font-semibold text-left text-gray-900 bg-white ">
           show list all user in db
           <p class="mt-1 text-sm font-normal text-gray-500 ">This is the table where all user
@@ -238,6 +262,9 @@ const goEdit = (UserId) => {
             <th scope="col" class="py-3 px-14">
               role
             </th>
+            <th scope="col" class="py-3 px-14 text-blue-600 ">
+            </th>
+         
 
             <th scope="col" class="py-3 px-14">
               <span class="sr-only">detail</span>
@@ -299,8 +326,7 @@ const goEdit = (UserId) => {
         </tbody>
       </table>
 
-      <div class="text-center mt-10" v-if="UserLists.content.length==0 && jwtToken !=null">-------------no
-        user------------</div>
+      <div class="text-center mt-10" v-if="UserLists.content.length==0 && jwtToken !=null">{{textShow}}</div>
 
       <div class="text-center mt-10 text-red-500" v-if="jwtToken ==null">Can't see data Please login first.</div>
       <div class="text-center text-sm underline underline-offset-4 text-gray-400" v-if="jwtToken ==null">
@@ -320,7 +346,7 @@ const goEdit = (UserId) => {
           {{ index + 1 }}
         </button>
       </span> -->
-        <nav aria-label="Page navigation example">
+        <nav aria-label="Page navigation example ">
           <ul class="inline-flex -space-x-px" v-for="(e, index) in numPage" :key="index">
 
             <button @click="page=index , getLinkAll() "
@@ -329,9 +355,16 @@ const goEdit = (UserId) => {
 
           </ul>
         </nav>
+        <hr class="mt-4"/>
+        <div v-if="UserRole==`Admin`" @click="isActivePopup2=true" class="mt-4 font-normal text-blue-500 underline underline-offset-1
+">CHECK PASSWORD</div>
+
       </div>
+
+
     </div>
 
+  
 
   </div>
 </template>

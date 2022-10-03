@@ -20,6 +20,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import sit.oasip.utils.Role;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
@@ -41,16 +42,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        // configure AuthenticationManager so that it knows from where to load
-        // user for matching credentials
-        // Use BCryptPasswordEncoder
         auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new Argon2PasswordEncoder();
-
     }
 
     @Bean
@@ -61,6 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
+<<<<<<< HEAD
         // CorsConfiguration corsConfiguration = new CorsConfiguration();
         // corsConfiguration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
         // corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
@@ -82,12 +80,29 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // make sure we use stateless session; session won't be used to
                 // store user's state.
                         exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+=======
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type" , "IsRefreshToken"));
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
+        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PUT","OPTIONS","PATCH", "DELETE"));
+        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.setExposedHeaders(List.of("Authorization"));
 
-        // Add a filter to validate the tokens with every request
+        httpSecurity.csrf().disable().cors().configurationSource(request -> corsConfiguration).and()
+                .authorizeRequests()
+                .antMatchers("/api/login","/api/users/signup").permitAll()
+
+                .antMatchers ("/api/users","/api/users/**","/api/match").hasAuthority(Role.Admin.name())
+                .antMatchers ("/api/events/**").hasAnyAuthority(Role.Student.name(),Role.Admin.name())
+
+
+                .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
+>>>>>>> c5d104895ef487f6da88ed139914617f02da4cd6
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
+
 
 
 }

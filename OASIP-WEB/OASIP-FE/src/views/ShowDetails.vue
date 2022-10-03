@@ -10,6 +10,7 @@ import { useRouter } from "vue-router";
 import RoundButton from "../components/RoundButton.vue";
 import PopupPage from "../components/PopupPage.vue";
 
+const jwtToken = ref()
 const router = useRouter();
 const myRouter = useRoute();
 const eventLists = ref({
@@ -26,7 +27,16 @@ const hideEdit = ref(true);
 
 const getLinkAll = async () => {
   const res = await fetch(
-    `${import.meta.env.VITE_APP_TITLE}/api/events/${myRouter.query.BookingId}`
+    `${import.meta.env.VITE_APP_TITLE}/api/events/${myRouter.query.BookingId}`,
+    {
+
+method: 'get',
+headers: {
+
+  'Content-Type': 'application/json',
+  'Authorization': 'Bearer ' + jwtToken.value
+}
+}
   );
   if (res.status === 200) {
     eventLists.value = await res.json();
@@ -34,6 +44,8 @@ const getLinkAll = async () => {
 };
 
 onBeforeMount(async () => {
+  jwtToken.value = localStorage.getItem('jwtToken');
+  
   getLinkAll();
 });
 
@@ -61,9 +73,14 @@ const toEditMode = (editNote) => {
   editingNote.value = editNote;
 };
 
+const InputTime = ref()
 const updateNote = async () => {
+  console.log("input " + InputTime.value )
+  console.log("eventtime " + eventLists.value.eventStartTime )
   //eventLists.value.eventStartTime = await new Date(eventLists.value.eventStartTime).toISOString();
-  if (DateTimeCheck.value == true) {
+  if (DateTimeCheck.value == true && InputTime.value != null) {
+    console.log("1")
+    eventLists.value.eventStartTime = InputTime.value
     const res = await fetch(
       `${import.meta.env.VITE_APP_TITLE}/api/events/${
         myRouter.query.BookingId
@@ -72,12 +89,44 @@ const updateNote = async () => {
         method: "PUT",
         headers: {
           "content-type": "application/json",
+          'Authorization': 'Bearer ' + jwtToken.value
         },
         body: JSON.stringify({
           eventNotes: eventLists.value.eventNotes,
           eventStartTime: new Date(
             eventLists.value.eventStartTime
           ).toISOString(),
+        }),
+      }
+    );
+     if (res.status === 400) {
+          test();
+    } 
+
+    if (res.status === 200) {
+      console.log(eventLists.value.eventStartTime);
+      isActivePopup.value = false;
+      hideEdit.value = true;
+      getLinkAll();
+      console.log("edited successfully");
+    } else console.log("error, cannot be added");
+  }
+
+  if (DateTimeCheck.value == true && InputTime.value == null) {
+    console.log("2")
+    const res = await fetch(
+      `${import.meta.env.VITE_APP_TITLE}/api/events/${
+        myRouter.query.BookingId
+      }`,
+      {
+        method: "PUT",
+        headers: {
+          "content-type": "application/json",
+          'Authorization': 'Bearer ' + jwtToken.value
+        },
+        body: JSON.stringify({
+          eventNotes: eventLists.value.eventNotes
+         
         }),
       }
     );
@@ -228,7 +277,8 @@ onBeforeUpdate(() => {
             v-if="!hideEdit"
             type="datetime-local"
             class="border-2 border-sky-200 w-8/12 rounded-lg"
-            v-model="eventLists.eventStartTime"
+            v-model="InputTime"
+           
           />
           <div v-if="DateTimeCheck" v-show="!hideEdit" class="text-slate-600 font-bold text-xs">
             * If you leave it blank, the old date will be used.

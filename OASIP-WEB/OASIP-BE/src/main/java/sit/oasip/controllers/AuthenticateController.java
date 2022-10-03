@@ -64,6 +64,8 @@ public class AuthenticateController {
         Claims claims = jwtTokenUtil.getAllClaimsFromToken(token);
 //        DefaultClaims claims = (io.jsonwebtoken.impl.DefaultClaims) request.getAttribute("claims");
 
+        System.out.println(claims);
+
         Map<String, Object> expectedMap = authenticationService.getMapFromIoJsonwebtokenClaims(claims);
 
         return ResponseEntity.ok().body(jwtTokenUtil.doGenerateAccessToken(expectedMap.get("role").toString(),expectedMap.get("sub").toString()));

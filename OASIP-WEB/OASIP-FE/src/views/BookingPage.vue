@@ -5,16 +5,18 @@ import ShowList from "../components/ShowList.vue";
 import { useRoute } from "vue-router";
 import PopupPage from "../components/PopupPage.vue"
 import RoundButton from "../components/RoundButton.vue";
+import { useRouter } from "vue-router";
 
 
 const route = useRoute();
+const router = useRouter();
 
 const eventLists = ref({content:null});
 const id = ref();
 const page = ref(0)
 const numPage = ref( )
 const jwtToken = ref()
-
+const jwtTokenRF = ref()
 const getLinkAll = async () => {
   RefreshToken()
   const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events/categories/${route.query.categoryId}?page=${page.value}&pageSize=6`,
@@ -45,7 +47,7 @@ headers: {
     localStorage.removeItem('time')
     TokenValue.value = "x"
     TokenTimeOut.value = true
-    isActivePopup.value = true
+    isActivePopup2.value = true
 
     }
     if (TokenValue.value.message == "Please log in for get Token again." ) {
@@ -54,17 +56,13 @@ localStorage.removeItem('jwtToken')
 localStorage.removeItem('time')
 TokenValue.value = "x"
 TokenTimeOut.value = true
-isActivePopup.value = true
+isActivePopup2.value = true
 
 }
   }
 
 };
- 
-function removeToken() {
-  localStorage.removeItem('jwtToken')
-  window.location.reload()
-}
+
 const RefreshToken = async () => {
   console.log("RefreshToken doing...")
 
@@ -76,21 +74,21 @@ const RefreshToken = async () => {
       headers: {
         'IsRefreshToken': 'true',
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + jwtToken.value
+        'Authorization': 'Bearer ' + jwtTokenRF.value
       }
     }
   );
   if (res.status === 200) {
     console.log("โทเค้นหมดอายุ")
     let jwtTokenRF = await res.json()
-    localStorage.setItem('jwtToken', jwtTokenRF.jwttoken);
+    localStorage.setItem('jwtToken', jwtTokenRF.accessToken);
     jwtToken.value = localStorage.getItem('jwtToken');
-    getLinkAll()
-  } else
-    if(res.status === 401) {
-    
-     
-    }
+  } 
+  if (res.status === 401) {
+
+console.log(await res.json())
+isActivePopup2.value=true
+}
 
 };
 
@@ -102,7 +100,13 @@ onBeforeUpdate(() => {
 });
 
 onBeforeMount(() => {
+ 
+  jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
   jwtToken.value = localStorage.getItem('jwtToken');
+  console.log(jwtToken.value + "xxxxx")
+  if(jwtToken.value==null) {
+    goHome()
+  }
   getLinkAll();
 });
 
@@ -214,9 +218,21 @@ headers: {
     eventLists.value = await res.json();
     numPage.value = Math.ceil(eventLists.value.totalElements / 8);
     console.log(eventLists.value);
+  } 
+  if(res.status===401) {
+    console.log(await res.json())
+
   }
 };
 
+const goHome = () => {
+
+  router.push({
+    name: "Login"
+   
+  });
+
+};
    
 function pastFilter() {
   getLinkPast();  
@@ -230,11 +246,34 @@ function allFilter() {
   getLinkAll();
 }
 const isActivePopup = ref(false)
+const isActivePopup2 = ref(false)
+
+
+function removeToken() {
+  localStorage.removeItem('jwtToken')
+  localStorage.removeItem('jwtTokenRF')
+
+  window.location.reload()
+}
 </script>
  
 <template>
   <div>
     <div class="flex justify-between grid grid-cols-3 gap-2 rounded">
+
+      <PopupPage v-show="isActivePopup2" :dim-background="true">
+      <div class="grid grid-cols-1 p-12" >
+        โปรดเข้าสู่ระบบใหม่
+        <div class=" max-w-lg mx-auto  ">
+          <br>
+          <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
+            @click="isActivePopup = false , removeToken ()" />
+        </div>
+      </div>
+      </PopupPage>
+
+
+      
 
       <PopupPage v-show="isActivePopup == true" :dim-background="true">
        

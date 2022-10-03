@@ -1,6 +1,7 @@
 package sit.oasip.controllers;
 
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.impl.DefaultClaims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import sit.oasip.Component.JwtTokenUtil;
 //import sit.oasip.Component.JwtUtil;
 import sit.oasip.dtos.UserDTOs.MatchUserDTO;
 import sit.oasip.entities.User;
+import sit.oasip.javainuse.config.JwtRequestFilter;
 import sit.oasip.javainuse.models.JwtResponse;
 import sit.oasip.javainuse.services.JWTUserDetailsService;
 import sit.oasip.repositories.UserRepository;
@@ -29,10 +31,11 @@ import java.util.Map;
 @CrossOrigin
 @RequestMapping("/api")
 public class AuthenticateController {
-
-
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    private JwtRequestFilter jwtRequestFilter;
 
     @Autowired
     private JWTUserDetailsService userDetailsService;
@@ -49,8 +52,7 @@ public class AuthenticateController {
         if (user != null) {
             authenticationService.authenticate(matchUserDTO.getEmail(), matchUserDTO.getPassword());
             userDetailsService.loadUserByUsername(matchUserDTO.getEmail());
-            final String token = jwtTokenUtil.generateToken(user);
-            return ResponseEntity.ok().body(new JwtResponse(token));
+            return ResponseEntity.ok().body(jwtTokenUtil.generateToken(user));
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with email: " + matchUserDTO.getEmail());
         }
@@ -58,14 +60,15 @@ public class AuthenticateController {
 
     @GetMapping("/refresh")
     public ResponseEntity<?> refreshtoken(HttpServletRequest request){
-        // From the HttpRequest get the claims
-        DefaultClaims claims = (io.jsonwebtoken.impl.DefaultClaims) request.getAttribute("claims");
+        String token = jwtRequestFilter.extractJwtFromRequest(request);
+        Claims claims = jwtTokenUtil.getAllClaimsFromToken(token);
+//        DefaultClaims claims = (io.jsonwebtoken.impl.DefaultClaims) request.getAttribute("claims");
+
+        System.out.println(claims);
 
         Map<String, Object> expectedMap = authenticationService.getMapFromIoJsonwebtokenClaims(claims);
 
-        User user = repository.findByEmail(expectedMap.get("sub").toString());
-        final String token = jwtTokenUtil.doGenerateRefreshToken(expectedMap.get("role").toString(),expectedMap.get("sub").toString());
-        return ResponseEntity.ok().body(new JwtResponse(token));
+        return ResponseEntity.ok().body(jwtTokenUtil.doGenerateAccessToken(expectedMap.get("role").toString(),expectedMap.get("sub").toString()));
     }
 
 

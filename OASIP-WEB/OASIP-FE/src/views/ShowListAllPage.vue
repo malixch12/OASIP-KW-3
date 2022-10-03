@@ -12,6 +12,8 @@ const eventLists = ref({content:[{test:"test"}]});
 const page = ref(0);
 const numPage = ref();
 const jwtToken = ref()
+const jwtTokenRF = ref()
+
 const isActivePopup = ref(false);
 const TokenTimeOut = ref(false)
 const RefreshToken = async () => {
@@ -25,20 +27,22 @@ const RefreshToken = async () => {
       headers: {
         'IsRefreshToken': 'true',
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + jwtToken.value
+        'Authorization': 'Bearer ' + jwtTokenRF.value
       }
     }
   );
   if (res.status === 200) {
     console.log("โทเค้นหมดอายุ")
     let jwtTokenRF = await res.json()
-    localStorage.setItem('jwtToken', jwtTokenRF.jwttoken);
+    localStorage.setItem('jwtToken', jwtTokenRF.accessToken);
     jwtToken.value = localStorage.getItem('jwtToken');
-  } else
-    if(res.status === 401) {
-    
-     
-    }
+  }  
+  
+  if (res.status === 401) {
+
+console.log(await res.json())
+isActivePopup2.value=true
+}
 
 };
 
@@ -143,7 +147,11 @@ isActivePopup.value = true
 
 
 onBeforeMount(async () => {
+  jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
   jwtToken.value = localStorage.getItem('jwtToken');
+  if(jwtToken.value==null) {
+    goHome()
+  }
   getLinkAll();
 
 });
@@ -278,10 +286,30 @@ function removeToken() {
 
 }
 
+const isActivePopup2 = ref(false)
+const goHome = () => {
+
+router.push({
+  name: "Login"
+ 
+});
+
+};
 </script>
 
 <template>
   <div>
+
+    <PopupPage v-show="isActivePopup2" :dim-background="true">
+      <div class="grid grid-cols-1 p-12" >
+        โปรดเข้าสู่ระบบใหม่
+        <div class=" max-w-lg mx-auto  ">
+          <br>
+          <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
+            @click="isActivePopup = false , removeToken ()" />
+        </div>
+      </div>
+      </PopupPage>
 
     <PopupPage v-show="isActivePopup" :dim-background="true">
     <div class="grid grid-cols-1 p-12" v-if="TokenTimeOut==true">

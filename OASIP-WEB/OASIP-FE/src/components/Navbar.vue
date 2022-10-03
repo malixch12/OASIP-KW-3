@@ -69,7 +69,7 @@ function logout () {
               >Home</router-link
             >
           </li>
-          <li v-if="!loginCheck && UserRole==`Admin`">
+          <li v-if="!loginCheck &&(UserRole==`Admin` || UserRole==`Student`) " >
             <router-link
               :to="{ name: 'BookingEventByCate' }"
               class="
@@ -82,7 +82,7 @@ function logout () {
             >
           </li>
 
-          <li v-if="!loginCheck && UserRole==`Admin`">
+          <li v-if="!loginCheck ">
             <router-link
               :to="{ name: 'ListAllByCate' }"
               class="

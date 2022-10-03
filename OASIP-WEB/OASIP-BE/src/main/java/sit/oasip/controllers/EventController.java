@@ -24,17 +24,18 @@ import sit.oasip.entities.Event;
 import sit.oasip.services.EventService;
 import org.springframework.data.domain.PageRequest;
 
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.time.Instant;
 
 @RestController
-
 @RequestMapping("/api/events")
 public class EventController {
 
     @Autowired
     private EventService eventService;
 
-    // get all
     @GetMapping("")
     public Page<GetEventDTO> getEventByAll(
             @RequestParam(defaultValue = "0") Integer page,
@@ -114,7 +115,7 @@ public class EventController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public Event create(@Validated @RequestBody AddEventDTO newEvent) {
+    public Event create(@Validated @RequestBody AddEventDTO newEvent) throws MessagingException, IOException {
         return eventService.add(newEvent);
     }
 

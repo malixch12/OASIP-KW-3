@@ -1,5 +1,6 @@
 package sit.oasip.services;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.impl.DefaultClaims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,7 +24,7 @@ public class AuthenticationService {
             throw new Exception("INVALID_CREDENTIALS", e);
         }
     }
-    public Map<String, Object> getMapFromIoJsonwebtokenClaims(DefaultClaims claims) {
+    public Map<String, Object> getMapFromIoJsonwebtokenClaims(Claims claims) {
         Map<String, Object> expectedMap = new HashMap<String, Object>();
         for (Map.Entry<String, Object> entry : claims.entrySet()) {
             expectedMap.put(entry.getKey(), entry.getValue());

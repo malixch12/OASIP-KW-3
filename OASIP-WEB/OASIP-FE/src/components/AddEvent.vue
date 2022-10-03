@@ -25,7 +25,14 @@ defineEmits(["addEvent"]);
 onBeforeUpdate(() => {
   CheckData()
 });
+const UserRole = ref()
+const UserEmail = ref()
+onBeforeMount(() => {
+  dataBooking.value.bookingEmail = localStorage.getItem('UserEmail');
+  UserRole.value = localStorage.getItem('UserRole');
 
+
+});
 function CheckData() {
   //check date and time
   if ((countTime.value > new Date(dataBooking.value.eventStartTime))) {
@@ -117,6 +124,7 @@ function eror() {
 
 <template>
   <div>
+ 
     <div class="space-y-7 bg-white shadow-xl rounded-lg ml-24 p-10 rounded">
       <RoundButton bg-color="bg-slate-400 text-sm text-white" button-name="<< go back" @click="goBack" />
 
@@ -149,8 +157,10 @@ function eror() {
         <span class="after:content-['*'] after:ml-0.5 after:text-red-500"> Email
         </span> :
 
-        <input type="text" v-model="dataBooking.bookingEmail" placeholder="Please enter your email"
-          class="pl-2 border-2 border-sky-200 w-8/12 rounded-lg" maxlength="100" />
+        <input v-if="UserRole==`Student`" type="text" v-model="dataBooking.bookingEmail" placeholder="Please enter your email"
+          class="pl-2 border-2 border-gray-200 w-8/12 rounded-lg bg-gray-100 text-gray-900  cursor-not-allowed" maxlength="100" disabled/>
+          <input v-else type="text" v-model="dataBooking.bookingEmail" placeholder="Please enter your email"
+          class="pl-2 border-2 border-sky-200 w-8/12 rounded-lg  " maxlength="100" />
         <details class="" v-show="!EmailValidation || !EmailCheck">
           <summary class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400">
             invalid

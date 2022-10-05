@@ -56,7 +56,11 @@ const removeEvent = async () => {
         myRouter.query.BookingId
       }`,
       {
-        method: "DELETE",
+        method: "DELETE",headers: {
+
+'Content-Type': 'application/json',
+'Authorization': 'Bearer ' + jwtToken.value
+}
       }
     );
     router.go(-1);

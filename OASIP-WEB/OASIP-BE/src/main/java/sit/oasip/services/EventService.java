@@ -288,7 +288,7 @@ public class EventService {
                         "<br>Event duration : " + event.getEventDuration() +
 
                         "<br><br>Event note : " + event.getEventNotes()
-                , "text/html");
+                , "text/html; charset=utf-8");
         msg.setSentDate(new Date());
 
         Transport.send(msg);

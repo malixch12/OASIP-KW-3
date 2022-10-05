@@ -22,10 +22,14 @@ import sit.oasip.dtos.EventDTOs.AddEventDTO;
 import sit.oasip.dtos.EventDTOs.EditEventDTO;
 import sit.oasip.dtos.EventDTOs.GetEventDTO;
 import sit.oasip.entities.Event;
+import sit.oasip.entities.EventCategoryOwner;
 import sit.oasip.entities.Eventcategory;
+import sit.oasip.entities.User;
 import sit.oasip.javainuse.config.JwtRequestFilter;
+import sit.oasip.repositories.EventCategoryOwnerRepository;
 import sit.oasip.repositories.EventRepository;
 import sit.oasip.repositories.EventcategoryRepository;
+import sit.oasip.repositories.UserRepository;
 import sit.oasip.utils.ListMapper;
 import sit.oasip.utils.PageMapper;
 import sit.oasip.utils.Role;
@@ -38,6 +42,9 @@ import javax.servlet.http.HttpServletRequest;
 public class EventService {
     private final EventcategoryRepository cateRepository;
     private final EventRepository repository;
+    private final UserRepository userRepository;
+    private final EventCategoryOwnerRepository eventCategoryOwnerRepository;
+
     @Autowired
     private ListMapper listMapper;
     @Autowired
@@ -53,10 +60,12 @@ public class EventService {
 
 
     @Autowired
-    public EventService(EventRepository repository, EventcategoryRepository cateRepository, HttpServletRequest request) {
+    public EventService(EventCategoryOwnerRepository eventCategoryOwnerRepository,UserRepository userRepository, EventRepository repository, EventcategoryRepository cateRepository, HttpServletRequest request) {
         this.repository = repository;
         this.cateRepository = cateRepository;
         this.request = request;
+        this.userRepository = userRepository;
+        this.eventCategoryOwnerRepository = eventCategoryOwnerRepository;
     }
 
     long now = (System.currentTimeMillis()) / 1000;
@@ -73,8 +82,31 @@ public class EventService {
             event = getEventByStudent(email, events);
         } else if (role.equals(Role.Admin.name())) {
             event = events;
+        } else if (role.equals(Role.Lecturer.name())) {
+            User user = userRepository.findByEmail(email);
+            List<EventCategoryOwner> owners = eventCategoryOwnerRepository.findByUserID(user);
+//            for (int j = 0; j < owners.size(); j++) {
+//
+//                    System.out.println(owners.get(j).getEventCategoryID().toString());
+//
+//            }
+            event = getEventByLecturer(owners, events);
         }
         return event;
+    }
+
+    private List<Event> getEventByLecturer(List<EventCategoryOwner> owners, List<Event> events) {
+        List<Event> eventByEventCateId = new ArrayList<>();
+        for (int i = 0; i < events.size(); i++) {
+            for (int j = 0; j < owners.size(); j++) {
+                if (events.get(i).getEventCategoryID().equals(owners.get(j).getEventCategoryID().getEventCategoryID())) {
+                    eventByEventCateId.add(events.get(i));
+                    System.out.println(owners.get(j));
+                }
+            }
+
+        }
+        return eventByEventCateId;
     }
 
     private List<Event> getEventByStudent(String email, List<Event> events) {
@@ -252,7 +284,7 @@ public class EventService {
                 return new PasswordAuthentication("kanyapat.winnerkypt@mail.kmutt.ac.th", "yqgxsziyjlznsorm");
             }
         });
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy 'at' hh:mm a").withZone(ZoneId.systemDefault());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 'at' hh:mm a").withZone(ZoneId.systemDefault());
 
         Message msg = new MimeMessage(session);
         msg.setFrom(new InternetAddress("kanyapat.winnerkypt@mail.kmutt.ac.th", false));

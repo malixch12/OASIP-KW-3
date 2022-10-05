@@ -61,7 +61,7 @@ public class UserService {
         String role = roleAttribute.roleChoice(newUser.getRole().toString());
 
         user.setRole(role);
-        user.setName(newUser.getName());
+        user.setUserName(newUser.getUserName());
         user.setEmail(newUser.getEmail());
         user.setPassword(password);
 
@@ -98,32 +98,32 @@ public class UserService {
 
 
                 if (editUserDTO.getName() != null && editUserDTO.getEmail() != null && editUserDTO.getRole() != null) {
-                    e.setName(editUserDTO.getName().trim());
+                    e.setUserName(editUserDTO.getName().trim());
                     e.setEmail(editUserDTO.getEmail().trim());
                     e.setRole( roleAttribute.roleChoice(editUserDTO.getRole().toString()));
                 } else if (editUserDTO.getName() != null && editUserDTO.getEmail() != null) {
-                    e.setName(editUserDTO.getName().trim());
+                    e.setUserName(editUserDTO.getName().trim());
                     e.setEmail(editUserDTO.getEmail().trim());
                     e.setRole(e.getRole().toString());
                 } else if (editUserDTO.getName() != null && editUserDTO.getRole() != null) {
-                    e.setName(editUserDTO.getName().trim());
+                    e.setUserName(editUserDTO.getName().trim());
                     e.setRole( roleAttribute.roleChoice(editUserDTO.getRole().toString()));
                     e.setEmail(e.getEmail());
                 } else if (editUserDTO.getEmail() != null && editUserDTO.getRole() != null) {
                     e.setEmail(editUserDTO.getEmail().trim());
                     e.setRole( roleAttribute.roleChoice(editUserDTO.getRole().toString()));
-                    e.setName(e.getName());
+                    e.setUserName(e.getUserName());
                 } else if (editUserDTO.getName() != null) {
-                    e.setName(editUserDTO.getName().trim());
+                    e.setUserName(editUserDTO.getName().trim());
                     e.setEmail(e.getEmail());
                     e.setRole(e.getRole().toString());
                 } else if (editUserDTO.getEmail() != null) {
                     e.setEmail(editUserDTO.getEmail().trim());
-                    e.setName(e.getName());
+                    e.setUserName(e.getUserName());
                     e.setRole(e.getRole().toString());
                 } else if (editUserDTO.getRole() != null) {
                     e.setEmail(e.getEmail());
-                    e.setName(e.getName());
+                    e.setUserName(e.getUserName());
                     e.setRole( roleAttribute.roleChoice(editUserDTO.getRole().toString()));
 
             }

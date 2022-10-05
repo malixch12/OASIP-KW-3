@@ -2,15 +2,9 @@ package sit.oasip.controllers;
 
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.impl.DefaultClaims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import sit.oasip.Component.JwtTokenUtil;
@@ -18,13 +12,11 @@ import sit.oasip.Component.JwtTokenUtil;
 import sit.oasip.dtos.UserDTOs.MatchUserDTO;
 import sit.oasip.entities.User;
 import sit.oasip.javainuse.config.JwtRequestFilter;
-import sit.oasip.javainuse.models.JwtResponse;
 import sit.oasip.javainuse.services.JWTUserDetailsService;
 import sit.oasip.repositories.UserRepository;
 import sit.oasip.services.AuthenticationService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController

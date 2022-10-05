@@ -1,18 +1,14 @@
 package sit.oasip.services;
 
 import java.io.IOException;
-import java.net.http.HttpRequest;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-
-import io.jsonwebtoken.Claims;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +29,6 @@ import sit.oasip.repositories.UserRepository;
 import sit.oasip.utils.ListMapper;
 import sit.oasip.utils.PageMapper;
 import sit.oasip.utils.Role;
-
 import javax.mail.*;
 import javax.mail.internet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -85,11 +80,6 @@ public class EventService {
         } else if (role.equals(Role.Lecturer.name())) {
             User user = userRepository.findByEmail(email);
             List<EventCategoryOwner> owners = eventCategoryOwnerRepository.findByUserID(user);
-//            for (int j = 0; j < owners.size(); j++) {
-//
-//                    System.out.println(owners.get(j).getEventCategoryID().toString());
-//
-//            }
             event = getEventByLecturer(owners, events);
         }
         return event;
@@ -281,13 +271,13 @@ public class EventService {
 
         Session session = Session.getInstance(props, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("kanyapat.winnerkypt@mail.kmutt.ac.th", "yqgxsziyjlznsorm");
+                return new PasswordAuthentication("oasip.kw3.noreply@gmail.com", "dzszgiijsnafzhlx");
             }
         });
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 'at' hh:mm a").withZone(ZoneId.systemDefault());
 
         Message msg = new MimeMessage(session);
-        msg.setFrom(new InternetAddress("kanyapat.winnerkypt@mail.kmutt.ac.th", false));
+        msg.setFrom(new InternetAddress("oasip.kw3.noreply@gmail.com", false));
 
         msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(event.getBookingEmail()));
         msg.setSubject("Your booking is complete.");

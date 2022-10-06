@@ -43,9 +43,11 @@ headers: {
   }
 };
 
+const UserRole = ref()
 onBeforeMount(async () => {
   jwtToken.value = localStorage.getItem('jwtToken');
-  
+  UserRole.value = localStorage.getItem('UserRole');
+
   getLinkAll();
 });
 
@@ -317,7 +319,7 @@ onBeforeUpdate(() => {
             ></textarea>
           </div>
 
-          <div v-show="hideEdit" class="grid grid-cols-2 pt-3">
+          <div v-if="UserRole!=`Lecturer`" v-show="hideEdit" class="grid grid-cols-2 pt-3">
             <RoundButton
               bg-color="bg-emerald-400 text-white"
               button-name="edit"

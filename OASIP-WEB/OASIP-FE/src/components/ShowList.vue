@@ -52,7 +52,7 @@ const showDet = (BookingId) => {
     query: { BookingId: BookingId },
   });
 };
-const style = "flex justify-between grid gap-4";
+const style = "flex justify-between grid gap-4 grid-cols-1  ";
 
 // filter
 
@@ -73,7 +73,7 @@ const PageIndexCurrent = ref(1)
 
 <template>
   <div>
-    <div class="ml-24 mr-24 p-12 grid grid-cols-1 ">
+    <div class=" p-12 grid grid-cols-1 ">
       <h1 class="text-4xl pb-5 text-center font-bold">{{ name }}</h1>
 
       <!-- filter  -->
@@ -107,29 +107,29 @@ const PageIndexCurrent = ref(1)
       <!-- event list -->
       <div v-if="check" :class="[style, colNum]">
         <div v-for="(event, index) in props.eventLists" :key="index">
-          <div className="rounded-xl  mx-auto  drop-shadow-md ">
+          <div className="rounded-xl  mx-auto  drop-shadow-md md:px-4 px-6">
             <div
-              className="flex flex-col justify-between h-full bg-white text-black rounded-lg p-4 ">
-                
-              <p class=" drop-shadow-2xl  font-semibold  w-auto pr-2 mr-2 rounded-lg text-orange-900" v-if="event.eventCategoryID==3">{{ event.eventCategory }}</p>
+              className="justify-between md:h-96 h-96 bg-white text-black rounded-lg md:px-10  md:pt-20 px-20 py-20 ">
+                <div class="py-2">
+              <p class=" drop-shadow-2xl  font-semibold  w-auto  pr-2 mr-2 rounded-lg text-orange-900" v-if="event.eventCategoryID==3">{{ event.eventCategory }}</p>
               <p class=" drop-shadow-2xl  font-semibold w-auto  pr-2  mr-2 rounded-lg text-sky-700" v-if="event.eventCategoryID==2">{{ event.eventCategory }}</p>
               <p class=" drop-shadow-2xl  font-semibold  w-auto  pr-2  mr-2 rounded-lg text-rose-500" v-if="event.eventCategoryID==6">{{ event.eventCategory }}</p>
               <p class=" drop-shadow-2xl  font-semibold  w-auto  pr-2 mr-2 rounded-lg text-green-600" v-if="event.eventCategoryID==5">{{ event.eventCategory }}</p>
               <p class="drop-shadow-2xl  font-semibold   w-auto  pr-2  mr-2 rounded-lg text-violet-400" v-if="event.eventCategoryID==1">{{ event.eventCategory }}</p>
               <p class="drop-shadow-2xl font-semibold  w-auto  pr-2  mr-2 rounded-lg text-gray-700" v-if="event.eventCategoryID==4">{{ event.eventCategory }}</p>
-
+</div>
               <p>Name : {{ event.bookingName }}</p>
               <p>
                 Date :
                 {{ new Date(event.eventStartTime).toLocaleDateString("th-TH") }}
               </p>
-              <p class="pb-6 text-rose-600 font-semibold">
+              <p class=" text-rose-600 font-semibold">
                 
                 {{ new Date(event.eventStartTime).toLocaleTimeString("th-TH") }} - {{new Date(event.endTime).toLocaleTimeString("th-TH")}}
               </p>
 
-              <RoundButton
-                bg-color="bg-rose-400 text-white transition ease-in-out delay-75  hover:-translate-y-1 hover:scale-110  duration-150"
+              <RoundButton 
+                bg-color="bg-rose-400 text-sm py-1 text-white transition ease-in-out delay-75  hover:-translate-y-1 hover:scale-110  duration-150"
                 button-name="Show detail ->" @click="showDet(event.bookingId)" />
 
             </div>

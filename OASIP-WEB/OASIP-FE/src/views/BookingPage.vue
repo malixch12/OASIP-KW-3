@@ -99,8 +99,10 @@ onBeforeUpdate(() => {
 
 });
 
+const UserRole = ref()
+
 onBeforeMount(() => {
- 
+  UserRole.value = localStorage.getItem('UserRole');
   jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
   jwtToken.value = localStorage.getItem('jwtToken');
   console.log(jwtToken.value + "xxxxx")
@@ -233,6 +235,15 @@ const goHome = () => {
   });
 
 };
+
+const backToHome = () => {
+
+  router.push({
+    name: "Home"
+   
+  });
+
+};
    
 function pastFilter() {
   getLinkPast();  
@@ -268,6 +279,17 @@ function removeToken() {
           <br>
           <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
             @click="isActivePopup = false , removeToken ()" />
+        </div>
+      </div>
+      </PopupPage>
+
+      <PopupPage v-show="UserRole==`Lecturer`" :dim-background="true">
+      <div class="grid grid-cols-1 p-12" >
+        Lecturer ไม่สามารถใช้หน้านี้ได้
+        <div class=" max-w-lg mx-auto  ">
+          <br>
+          <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
+            @click="isActivePopup = false , backToHome ()" />
         </div>
       </div>
       </PopupPage>

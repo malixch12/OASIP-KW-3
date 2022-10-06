@@ -325,7 +325,7 @@ router.push({
 
     <ShowList
       :eventLists="eventLists.content"
-      colNum="grid-cols-4"
+      colNum="md:grid-cols-3"
       :numPage="numPage"
       @paging="paging"
       @pastFilter="pastFilter"

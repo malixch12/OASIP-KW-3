@@ -178,12 +178,31 @@ const goEdit = (UserId) => {
 
 const isActivePopup2 =ref(false)
 
+const backToHome = () => {
 
+router.push({
+  name: "Home"
+ 
+});
+
+};
 </script>
 
 <template>
 
   <div class="flex justify-center grid grid-rows-1  mb-16">
+
+    <PopupPage v-show="UserRole==`Lecturer`" :dim-background="true">
+      <div class="grid grid-cols-1 p-12" >
+        Lecturer ไม่สามารถใช้หน้านี้ได้
+        <div class=" max-w-lg mx-auto  ">
+          <br>
+          <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
+            @click="isActivePopup = false , backToHome ()" />
+        </div>
+      </div>
+      </PopupPage>
+
     <PopupPage v-show="isActivePopup" :dim-background="true">
 
       <div v-if="TokenTimeOut==false" class="grid grid-cols-1 p-12">

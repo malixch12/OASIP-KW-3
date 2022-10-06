@@ -70,7 +70,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/login","/api/users/signup").permitAll()
 
                 .antMatchers ("/api/users","/api/users/**","/api/match").hasAuthority(Role.Admin.name())
-                .antMatchers ("/api/events/**").hasAnyAuthority(Role.Student.name(),Role.Admin.name())
+                .antMatchers (HttpMethod.GET,"/api/events/**").hasAnyAuthority(Role.Student.name(),Role.Admin.name(),Role.Lecturer.name())
+                .antMatchers (HttpMethod.POST,"/api/events/**").hasAnyAuthority(Role.Student.name(),Role.Admin.name())
+                .antMatchers (HttpMethod.PUT,"/api/events/**").hasAnyAuthority(Role.Student.name(),Role.Admin.name())
+                .antMatchers (HttpMethod.DELETE,"/api/events/**").hasAnyAuthority(Role.Student.name(),Role.Admin.name())
+
 
 
                 .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()

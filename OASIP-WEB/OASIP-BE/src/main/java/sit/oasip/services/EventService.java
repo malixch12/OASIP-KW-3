@@ -274,7 +274,7 @@ public class EventService {
                 return new PasswordAuthentication("oasip.kw3.noreply@gmail.com", "dzszgiijsnafzhlx");
             }
         });
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 'at' hh:mm a").withZone(ZoneId.systemDefault());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 'at' HH:mm").withZone(ZoneId.of("UTC"));
 
         Message msg = new MimeMessage(session);
         msg.setFrom(new InternetAddress("oasip.kw3.noreply@gmail.com", false));
@@ -283,11 +283,9 @@ public class EventService {
         msg.setSubject("Your booking is complete.");
         msg.setContent("Your booking name : " + event.getBookingName() +
                         "<br> Event category : " + event.getEventCategory() +
-
-                        "<br><br>Start date and time : " + formatter.format(event.getEventStartTime()) +
-                        "<br>Event duration : " + event.getEventDuration() +
-
-                        "<br><br>Event note : " + event.getEventNotes()
+                        "<br>Start date and time : " + formatter.format(event.getEventStartTime()) +
+                        "<br>Event duration : " + event.getEventDuration() + " minitues"+
+                        "<br>Event note : " + event.getEventNotes()
                 , "text/html; charset=utf-8");
         msg.setSentDate(new Date());
 

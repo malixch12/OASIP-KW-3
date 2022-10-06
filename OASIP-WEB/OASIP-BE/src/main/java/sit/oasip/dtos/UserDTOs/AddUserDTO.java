@@ -17,7 +17,7 @@ public class AddUserDTO {
     @UniqueName
     @NotBlank(message = "please fill user name")
     @Length(min = 1, max = 100, message="size must be between 1 and 100")
-    private String Name;
+    private String UserName;
 
     @UniqueEmail
     @Email(message="please check email format")
@@ -31,8 +31,8 @@ public class AddUserDTO {
 
     private String Role = "Student";
 
-    public void setName(String name) {
-        Name = name.trim();
+    public void setUserName(String name) {
+        UserName = UserName.trim();
     }
     public void setEmail(String email) {
         Email = email.trim();

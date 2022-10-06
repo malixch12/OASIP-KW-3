@@ -41,7 +41,7 @@ public class UserService {
 
     public Page<GetUserDTO> getUserAll(Pageable pageable) {
         List<GetUserDTO> userDTOS = listMapper
-                .mapList(repository.findAll(Sort.by("Name").ascending()), GetUserDTO.class, modelMapper);
+                .mapList(repository.findAll(Sort.by("UserName").ascending()), GetUserDTO.class, modelMapper);
         return pageMapper.mapToPage(pageable, userDTOS);
 
     }

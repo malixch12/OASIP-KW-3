@@ -31,8 +31,8 @@ public class AddUserDTO {
 
     private String Role = "Student";
 
-    public void setUserName(String name) {
-        Name = Name.trim();
+    public void setName(String name) {
+        Name = name.trim();
     }
     public void setEmail(String email) {
         Email = email.trim();

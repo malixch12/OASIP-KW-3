@@ -1,6 +1,7 @@
 package sit.oasip.services;
 
 import java.io.IOException;
+import java.net.http.HttpResponse;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -32,6 +33,7 @@ import sit.oasip.utils.Role;
 import javax.mail.*;
 import javax.mail.internet.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Service
 public class EventService {
@@ -51,22 +53,23 @@ public class EventService {
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
 
-    private HttpServletRequest request;
+//    private HttpServletRequest request;
 
 
     @Autowired
     public EventService(EventCategoryOwnerRepository eventCategoryOwnerRepository,UserRepository userRepository, EventRepository repository, EventcategoryRepository cateRepository, HttpServletRequest request) {
         this.repository = repository;
         this.cateRepository = cateRepository;
-        this.request = request;
+//        this.request = request;
         this.userRepository = userRepository;
         this.eventCategoryOwnerRepository = eventCategoryOwnerRepository;
+        System.out.println(request);
     }
 
     long now = (System.currentTimeMillis()) / 1000;
     Instant dateNow = Instant.now().ofEpochSecond(now);
 
-    private List<Event> getEvents(List<Event> events) {
+    private List<Event> getEvents(List<Event> events, HttpServletRequest request) {
         String token = jwtRequestFilter.extractJwtFromRequest(request);
         String email = jwtTokenUtil.getAllClaimsFromToken(token).getSubject();
         String role = jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString();
@@ -91,7 +94,6 @@ public class EventService {
             for (int j = 0; j < owners.size(); j++) {
                 if (events.get(i).getEventCategoryID().equals(owners.get(j).getEventCategoryID().getEventCategoryID())) {
                     eventByEventCateId.add(events.get(i));
-                    System.out.println(owners.get(j));
                 }
             }
 
@@ -110,14 +112,14 @@ public class EventService {
     }
 
 
-    public Page<GetEventDTO> getSimpleEventAll(Pageable pageable) {
+    public Page<GetEventDTO> getSimpleEventAll(Pageable pageable, HttpServletRequest request) {
         List<Event> allEvent = repository.findAll(Sort.by("eventStartTime").descending());
         List<GetEventDTO> listEventDTO = listMapper
-                .mapList(getEvents(allEvent), GetEventDTO.class, modelMapper);
+                .mapList(getEvents(allEvent,request), GetEventDTO.class, modelMapper);
         return pageMapper.mapToPage(pageable, listEventDTO);
     }
 
-    public GetEventDTO getSimpleEventById(int id) {
+    public GetEventDTO getSimpleEventById(int id, HttpServletRequest request) {
         String token = jwtRequestFilter.extractJwtFromRequest(request);
         Event event = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, id + " Does Not Exist !!!"));
@@ -129,59 +131,59 @@ public class EventService {
         return modelMapper.map(event, GetEventDTO.class);
     }
 
-    public Page<GetEventDTO> getSimpleEventDate(Instant date, Pageable pageable) {
+    public Page<GetEventDTO> getSimpleEventDate(Instant date, Pageable pageable, HttpServletRequest request) {
         List<Event> allEvent = repository.findByEventStartTimeEquals(date, Sort.by("eventStartTime").ascending());
-        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(allEvent), GetEventDTO.class, modelMapper);
+        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(allEvent,request), GetEventDTO.class, modelMapper);
         return pageMapper.mapToPage(pageable, listEventDTO);
     }
 
-    public Page<GetEventDTO> getSimpleEventPastDate(Pageable pageable) {
+    public Page<GetEventDTO> getSimpleEventPastDate(Pageable pageable, HttpServletRequest request) {
         List<Event> allEvent = repository.findByEventStartTimeLessThan(dateNow, Sort.by("eventStartTime").descending());
-        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(allEvent), GetEventDTO.class, modelMapper);
+        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(allEvent,request), GetEventDTO.class, modelMapper);
         return pageMapper.mapToPage(pageable, listEventDTO);
     }
 
-    public Page<GetEventDTO> getSimpleEventFutureDate(Pageable pageable) {
+    public Page<GetEventDTO> getSimpleEventFutureDate(Pageable pageable, HttpServletRequest request) {
         List<Event> allEvent = repository.findByEventStartTimeGreaterThan(dateNow, Sort.by("eventStartTime").ascending());
-        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(allEvent), GetEventDTO.class, modelMapper);
+        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(allEvent,request), GetEventDTO.class, modelMapper);
         return pageMapper.mapToPage(pageable, listEventDTO);
     }
 
     // get event by category
-    public List<GetEventDTO> getEventAllByCategory(int eventCategoryID) {
-        List<Event> allEvent = repository.findByEventCategoryID(eventCategoryID, Sort.by("eventStartTime").descending());
-        return listMapper.mapList(getEvents(allEvent), GetEventDTO.class, modelMapper);
-    }
+//    public List<GetEventDTO> getEventAllByCategory(int eventCategoryID, HttpServletRequest request) {
+//        List<Event> allEvent = repository.findByEventCategoryID(eventCategoryID, Sort.by("eventStartTime").descending());
+//        return listMapper.mapList(getEvents(allEvent,request), GetEventDTO.class, modelMapper);
+//    }
 
-    public Page<GetEventDTO> getEventByCategory(int eventCategoryID, Pageable pageable) {
+    public Page<GetEventDTO> getEventByCategory(int eventCategoryID, Pageable pageable, HttpServletRequest request) {
         List<Event> allEvent = repository.findByEventCategoryID(eventCategoryID, Sort.by("eventStartTime").descending());
-        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(allEvent), GetEventDTO.class, modelMapper);
+        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(allEvent,request), GetEventDTO.class, modelMapper);
         return pageMapper.mapToPage(pageable, listEventDTO);
     }
 
-    public Page<GetEventDTO> getEventDateByCategory(int eventCategoryID, Instant date, Pageable pageable) {
+    public Page<GetEventDTO> getEventDateByCategory(int eventCategoryID, Instant date, Pageable pageable, HttpServletRequest request) {
         List<Event> allEvent = repository.findByEventCategoryIDAndEventStartTimeEquals(eventCategoryID, date);
-        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(allEvent), GetEventDTO.class, modelMapper);
+        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(allEvent,request), GetEventDTO.class, modelMapper);
         return pageMapper.mapToPage(pageable, listEventDTO);
     }
 
-    public Page<GetEventDTO> getEventPastDateByCategory(int eventCategoryID, Pageable pageable) {
+    public Page<GetEventDTO> getEventPastDateByCategory(int eventCategoryID, Pageable pageable, HttpServletRequest request) {
         List<Event> allEvent = repository.findByEventCategoryIDAndEventStartTimeLessThan(eventCategoryID, dateNow,
                 Sort.by("eventStartTime").descending());
-        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(allEvent), GetEventDTO.class, modelMapper);
+        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(allEvent,request), GetEventDTO.class, modelMapper);
         return pageMapper.mapToPage(pageable, listEventDTO);
     }
 
-    public Page<GetEventDTO> getEventFutureDateByCategory(int eventCategoryID, Pageable pageable) {
+    public Page<GetEventDTO> getEventFutureDateByCategory(int eventCategoryID, Pageable pageable, HttpServletRequest request) {
         List<Event> allEvent = repository.findByEventCategoryIDAndEventStartTimeGreaterThan(eventCategoryID, dateNow);
-        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(allEvent), GetEventDTO.class, modelMapper);
+        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(allEvent,request), GetEventDTO.class, modelMapper);
         return pageMapper.mapToPage(pageable, listEventDTO);
     }
 
-    public void delete(int eventID) {
+    public void delete(int eventID, HttpServletRequest request) {
         String token = jwtRequestFilter.extractJwtFromRequest(request);
         Event event = repository.findById(eventID).orElseThrow(() -> new RuntimeException(eventID + " Does not exit !!!"));
-        checkEmail(event.getBookingEmail(), HttpStatus.FORBIDDEN);
+        checkEmail(event.getBookingEmail(), HttpStatus.FORBIDDEN,request);
         repository.deleteById(eventID);
     }
 
@@ -189,7 +191,7 @@ public class EventService {
     public void checkOverlapping(Instant startime, int categoryId) {
         Eventcategory eventcategory = cateRepository.findById(categoryId)
                 .orElseThrow(() -> new RuntimeException(categoryId + "Does not exit !!!"));
-        List<GetEventDTO> listAll = getEventAllByCategory(categoryId);
+        List<Event> listAll = repository.findByEventCategoryID(categoryId, Sort.by("eventStartTime").descending());
 
         Instant newEventStartTime = startime;
         Instant newEventEndTime = startime.plusSeconds(eventcategory.getEventDuration() * 60);
@@ -207,7 +209,7 @@ public class EventService {
         }
     }
 
-    private void checkEmail(String email, HttpStatus status) {
+    private void checkEmail(String email, HttpStatus status, HttpServletRequest request) {
         String token = jwtRequestFilter.extractJwtFromRequest(request);
         if (jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString().equals(Role.Student.name())) {
             if (email.equals(jwtTokenUtil.getAllClaimsFromToken(token).getSubject()) == false) {
@@ -216,34 +218,52 @@ public class EventService {
         }
     }
 
-    public Event add(AddEventDTO newEvent) throws MessagingException, IOException {
+    public Event add(AddEventDTO newEvent, HttpServletRequest request) throws MessagingException, IOException {
         Eventcategory eventcategory = cateRepository.findById(newEvent.getEventCategoryID())
                 .orElseThrow(() -> new RuntimeException(newEvent.getEventCategoryID() + "Does not exit !!!"));
-
         Event event = new Event();
-        checkEmail(newEvent.getBookingEmail(), HttpStatus.BAD_REQUEST);
-        checkOverlapping(newEvent.getEventStartTime(), newEvent.getEventCategoryID());
+        try {
+            checkEmail(newEvent.getBookingEmail(), HttpStatus.BAD_REQUEST, request);
+            checkOverlapping(newEvent.getEventStartTime(), newEvent.getEventCategoryID());
 
-        event.setBookingName(newEvent.getBookingName());
-        event.setBookingEmail(newEvent.getBookingEmail());
-        event.setEventNotes(newEvent.getEventNotes());
-        event.setEventStartTime(newEvent.getEventStartTime());
-        event.setEventCategoryID(newEvent.getEventCategoryID());
-        event.setEventDuration(eventcategory.getEventDuration());
-        event.setEventCategory(eventcategory.getEventCategoryName());
-        Event event1 = modelMapper.map(event, Event.class);
-        repository.saveAndFlush(event1);
-        sendmail(event);
-        return event;
+            event.setBookingName(newEvent.getBookingName());
+            event.setBookingEmail(newEvent.getBookingEmail());
+            event.setEventNotes(newEvent.getEventNotes());
+            event.setEventStartTime(newEvent.getEventStartTime());
+            event.setEventCategoryID(newEvent.getEventCategoryID());
+            event.setEventDuration(eventcategory.getEventDuration());
+            event.setEventCategory(eventcategory.getEventCategoryName());
+            Event event1 = modelMapper.map(event, Event.class);
+            repository.saveAndFlush(event1);
+            sendmail(event);
+            return event;
+        }catch (IllegalArgumentException exception) {
 
 
-    }
+            checkOverlapping(newEvent.getEventStartTime(), newEvent.getEventCategoryID());
 
-    public Event update(EditEventDTO updateEvent, int bookingId) {
+            event.setBookingName(newEvent.getBookingName());
+            event.setBookingEmail(newEvent.getBookingEmail());
+            event.setEventNotes(newEvent.getEventNotes());
+            event.setEventStartTime(newEvent.getEventStartTime());
+            event.setEventCategoryID(newEvent.getEventCategoryID());
+            event.setEventDuration(eventcategory.getEventDuration());
+            event.setEventCategory(eventcategory.getEventCategoryName());
+            Event event1 = modelMapper.map(event, Event.class);
+            repository.saveAndFlush(event1);
+            sendmail(event);
+            return event;
+        }
+        }
+
+
+
+
+    public Event update(EditEventDTO updateEvent, int bookingId, HttpServletRequest request) {
         if (updateEvent.getEventStartTime() != null) {
             Event event = repository.findById(bookingId)
                     .orElseThrow(() -> new RuntimeException("Bookind ID " + bookingId + "Does not exit !!!"));
-            checkEmail(event.getBookingEmail(), HttpStatus.FORBIDDEN);
+            checkEmail(event.getBookingEmail(), HttpStatus.FORBIDDEN ,request);
             checkOverlapping(updateEvent.getEventStartTime(), event.getEventCategoryID());
         }
 

@@ -61,7 +61,7 @@ public class UserService {
         String role = roleAttribute.roleChoice(newUser.getRole().toString());
 
         user.setRole(role);
-        user.setUserName(newUser.getUserName());
+        user.setUserName(newUser.getName());
         user.setEmail(newUser.getEmail());
         user.setPassword(password);
 

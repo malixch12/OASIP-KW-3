@@ -270,7 +270,7 @@ function removeToken() {
  
 <template>
   <div>
-    <div class="flex justify-between grid grid-cols-3 gap-2 rounded">
+    <div class="md:flex md:justify-between md:grid md:grid-cols-2  rounded">
 
       <PopupPage v-show="isActivePopup2" :dim-background="true">
       <div class="grid grid-cols-1 p-12" >
@@ -315,17 +315,17 @@ function removeToken() {
       
       </PopupPage>
 
-        <AddEvent  @addEvent="addEvent"  :categoryDetail="categoryDetail"/>
+        <AddEvent class="px-2" @addEvent="addEvent"  :categoryDetail="categoryDetail"/>
 
   <!-- <AddEvent :id="id" @addEvent="addEvent" @click="getLinkAll" :categoryDetail="categoryDetail"/> -->
-      <ShowList
+  <div class="md:block  hidden">   <ShowList
         :eventLists="eventLists.content"
-        colNum="grid-cols-3"
+        colNum="grid-cols-2"
         class="col-span-2" :numPage = "numPage" @paging="paging"  @pastFilter="pastFilter"
       @futureFilter="futureFilter"
       @allFilter="allFilter"
       :CheckOverlap="CheckOverlap"
-      />
+      /></div> 
     </div>
   </div>
 </template>

@@ -1,40 +1,34 @@
 package sit.oasip.javainuse.config;
 
 import java.io.IOException;
-import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
-import java.util.Map;
+import java.util.List;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import io.jsonwebtoken.impl.DefaultClaims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import io.jsonwebtoken.ExpiredJwtException;
-import org.springframework.web.server.ResponseStatusException;
 //import sit.oasip.Component.JwtTokenUtil;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import sit.oasip.Component.JwtTokenUtil;
-import sit.oasip.javainuse.models.JwtResponse;
 import sit.oasip.javainuse.services.JWTUserDetailsService;
-import sit.oasip.repositories.UserRepository;
-import sit.oasip.services.AuthenticationService;
+import sit.oasip.utils.Role;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
@@ -47,8 +41,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
-    @Autowired
-    private AuthenticationService authenticationService;
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -73,10 +66,20 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                  */
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 
+            } else if(StringUtils.hasText(jwtToken) == false) {
+                System.out.println("go go");
+                List<SimpleGrantedAuthority> role = Arrays.asList(new SimpleGrantedAuthority("Guest"));
+
+                UserDetails userDetails = new User("guest", "",role);
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+
+                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+
+
             } else {
                 request.setAttribute("message", "Please log in for get Token again.");
                 System.out.println("Cannot set the Security Context");
-
             }
         } catch (ExpiredJwtException ex) {
 
@@ -100,8 +103,16 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         } catch (BadCredentialsException ex) {
             request.setAttribute("message", "Token incorrect");
             request.setAttribute("exception", ex);
-        } catch (Exception ex) {
-            System.out.println(ex);
+        } catch (IllegalArgumentException ex) {
+            List<SimpleGrantedAuthority> role = Arrays.asList(new SimpleGrantedAuthority("Guest"));
+
+            UserDetails userDetails = new User(null, "",role);
+            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                    userDetails, null, userDetails.getAuthorities());
+
+            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+        }catch (Exception ex) {
+            System.out.println("lkjelk "+ex);
         }
         chain.doFilter(request, response);
     }

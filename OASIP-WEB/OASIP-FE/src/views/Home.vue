@@ -36,7 +36,7 @@ import Apple from '../components/TextAnimation.vue'
 
 
     <div
-      class="flex flex-wrap text-gray-900 space-y-7  items-center  ml-24  relative mt-12 md:visible  invisible ">
+      class=" flex flex-wrap text-gray-900 space-y-7  items-center  mx-24  relative mt-12 md:visible  invisible ">
 
       <!-- <div class="text-7xl font-bold col-span-1 text-center">Clinic</div>
 
@@ -45,7 +45,7 @@ import Apple from '../components/TextAnimation.vue'
 
       </div> -->
 
-      <div class="ml-14 mt-14 w-7/12">
+      <div class="ml-14 mt-14 w-7/12 ">
         <Apple />
         <p class="text-neutral-500 text-2xl	drop-shadow-lg">A website for booking and managing your clinic in 222
           subjects.</p>
@@ -55,13 +55,13 @@ import Apple from '../components/TextAnimation.vue'
         <div class="text-white font-bold ">
           <div class="flex flex-wrap">
             <ButtonLink name="Sign up ->" link="SignUpPage" addStyle="bg-red-400" class="justify-start" />
-            <ButtonLink name="Appointments" link="ListAllByCate" addStyle="bg-white text-neutral-500"
+            <ButtonLink name="Booking" link="Booking" addStyle="bg-white text-neutral-500"
               class="justify-self-start " />
           </div>
         </div>
       </div>
 
-      <div class=" w-80">
+      <div class=" w-80 ">
 
         <div class="    ">
           <div class="relative w-full max-w-lg ">

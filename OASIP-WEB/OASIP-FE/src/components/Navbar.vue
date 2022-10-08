@@ -33,6 +33,9 @@ loginCheck.value = true
 function logout () {
   localStorage.removeItem('jwtToken')
   localStorage.removeItem('UserRole')
+  localStorage.removeItem('jwtTokenRF')
+  localStorage.removeItem('UserEmail')
+  localStorage.setItem('UserRole', "Guest");
 
   window.location.reload()
 
@@ -194,7 +197,7 @@ function toggle () {
               >Home</router-link
             >
           </li>
-          <li v-if="!loginCheck &&(UserRole==`Admin` || UserRole==`Student`) " >
+          <li v-if=" (UserRole!=`Lecturer` ) " >
             <router-link
               :to="{ name: 'BookingEventByCate' }"
               class="

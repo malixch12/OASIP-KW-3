@@ -2,17 +2,7 @@ package sit.oasip.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -26,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.Instant;
 
@@ -39,35 +30,37 @@ public class EventController {
     @GetMapping("")
     public Page<GetEventDTO> getEventByAll(
             @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "8") Integer pageSize) {
-        return eventService.getSimpleEventAll(PageRequest.of(page, pageSize));
+            @RequestParam(defaultValue = "8") Integer pageSize,
+            HttpServletRequest request
+    ) {
+        return eventService.getSimpleEventAll(PageRequest.of(page, pageSize),request);
     }
 
     @GetMapping("/{id}")
-    public GetEventDTO getEventById(@PathVariable Integer id) {
-        return eventService.getSimpleEventById(id);
+    public GetEventDTO getEventById(@PathVariable Integer id,HttpServletRequest request) {
+        return eventService.getSimpleEventById(id,request);
     }
 
     @GetMapping("/dates")
     public Page<GetEventDTO> getEventDate(
             @RequestParam Instant date,
             @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "8") Integer pageSize) {
-        return eventService.getSimpleEventDate(date,PageRequest.of(page, pageSize));
+            @RequestParam(defaultValue = "8") Integer pageSize,HttpServletRequest request) {
+        return eventService.getSimpleEventDate(date,PageRequest.of(page, pageSize),request);
     }
 
     @GetMapping("/pastdays")
     public Page<GetEventDTO> getEventPastDate(
             @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "8") Integer pageSize) {
-        return eventService.getSimpleEventPastDate(PageRequest.of(page, pageSize));
+            @RequestParam(defaultValue = "8") Integer pageSize,HttpServletRequest request) {
+        return eventService.getSimpleEventPastDate(PageRequest.of(page, pageSize),request);
     }
 
     @GetMapping("/futuredays")
     public Page<GetEventDTO> getEventFutureDate(
             @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "8") Integer pageSize) {
-        return eventService.getSimpleEventFutureDate(PageRequest.of(page, pageSize));
+            @RequestParam(defaultValue = "8") Integer pageSize,HttpServletRequest request) {
+        return eventService.getSimpleEventFutureDate(PageRequest.of(page, pageSize),request);
     }
 
     // get event by category
@@ -76,8 +69,8 @@ public class EventController {
             @PathVariable Integer eventCategoryID,
             @RequestParam(defaultValue = "eventStartTime") String sortBy,
             @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "8") Integer pageSize) {
-                return eventService.getEventByCategory(eventCategoryID,PageRequest.of(page, pageSize,  Sort.by(sortBy)));
+            @RequestParam(defaultValue = "8") Integer pageSize,HttpServletRequest request) {
+                return eventService.getEventByCategory(eventCategoryID,PageRequest.of(page, pageSize,  Sort.by(sortBy)),request);
     }
 
     @GetMapping("/categories/dates/{eventCategoryID}")
@@ -86,8 +79,8 @@ public class EventController {
             @RequestParam Instant date,
             @RequestParam(defaultValue = "eventStartTime") String sortBy,
             @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "8") Integer pageSize) {
-        return eventService.getEventDateByCategory(eventCategoryID, date, PageRequest.of(page, pageSize,  Sort.by(sortBy)));
+            @RequestParam(defaultValue = "8") Integer pageSize,HttpServletRequest request) {
+        return eventService.getEventDateByCategory(eventCategoryID, date, PageRequest.of(page, pageSize,  Sort.by(sortBy)),request);
     }
 
     @GetMapping("/categories/pastdays/{eventCategoryID}")
@@ -95,8 +88,8 @@ public class EventController {
             @PathVariable Integer eventCategoryID,
             @RequestParam(defaultValue = "eventStartTime") String sortBy,
             @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "8") Integer pageSize) {
-      return eventService.getEventPastDateByCategory(eventCategoryID, PageRequest.of(page, pageSize,  Sort.by(sortBy)));
+            @RequestParam(defaultValue = "8") Integer pageSize,HttpServletRequest request) {
+      return eventService.getEventPastDateByCategory(eventCategoryID, PageRequest.of(page, pageSize,  Sort.by(sortBy)),request);
     }
 
     @GetMapping("/categories/futuredays/{eventCategoryID}")
@@ -104,25 +97,25 @@ public class EventController {
             @PathVariable Integer eventCategoryID,
             @RequestParam(defaultValue = "eventStartTime") String sortBy,
             @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "8") Integer pageSize) {
-        return eventService.getEventFutureDateByCategory(eventCategoryID, PageRequest.of(page, pageSize,  Sort.by(sortBy)));
+            @RequestParam(defaultValue = "8") Integer pageSize,HttpServletRequest request) {
+        return eventService.getEventFutureDateByCategory(eventCategoryID, PageRequest.of(page, pageSize,  Sort.by(sortBy)),request);
     }
 
     @DeleteMapping("/{eventID}")
-    public void delete(@PathVariable Integer eventID) {
-        eventService.delete(eventID);
+    public void delete(@PathVariable Integer eventID,HttpServletRequest request) {
+        eventService.delete(eventID,request);
     }
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public Event create(@Validated @RequestBody AddEventDTO newEvent) throws MessagingException, IOException {
-        return eventService.add(newEvent);
+    public Event create(@Validated @RequestBody AddEventDTO newEvent, HttpServletRequest request) throws MessagingException, IOException {
+        return eventService.add(newEvent,request);
     }
 
     @PutMapping("/{bookingId}")
     @ResponseStatus(HttpStatus.OK)
-    public Event update(@Validated @RequestBody EditEventDTO updateEvent, @PathVariable Integer bookingId) {
-        return eventService.update(updateEvent, bookingId);
+    public Event update(@Validated @RequestBody EditEventDTO updateEvent, @PathVariable Integer bookingId,HttpServletRequest request) {
+        return eventService.update(updateEvent, bookingId,request);
     }
 
 }

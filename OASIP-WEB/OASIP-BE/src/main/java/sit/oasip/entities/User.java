@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Set;
 
@@ -31,14 +32,14 @@ public class User {
     @Column(name = "Role", nullable = false)
     private String role;
 
-    @CreationTimestamp
-    @Column(name = "CreateOn", nullable = false)
-    private Instant createOn;
+    @Column(name = "CreatedOn", nullable = false)
+    private Timestamp createdOn;
 
-    @UpdateTimestamp
-    @Column(name = "UpdateOn", nullable = false)
-    private Instant updateOn;
+    @Column(name = "UpdatedOn", nullable = false)
+    private Timestamp updatedOn;
 
     @OneToMany(mappedBy = "userID")
     private Set<EventCategoryOwner> eventCategoryOwners;
+
+
 }

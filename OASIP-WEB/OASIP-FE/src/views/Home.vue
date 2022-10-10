@@ -55,7 +55,7 @@ import Apple from '../components/TextAnimation.vue'
         <div class="text-white font-bold ">
           <div class="flex flex-wrap">
             <ButtonLink name="Sign up ->" link="SignUpPage" addStyle="bg-red-400" class="justify-start" />
-            <ButtonLink name="Booking" link="Booking" addStyle="bg-white text-neutral-500"
+            <ButtonLink name="Booking" link="BookingEventByCate" addStyle="bg-white text-neutral-500"
               class="justify-self-start " />
           </div>
         </div>

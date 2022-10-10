@@ -118,8 +118,9 @@ onBeforeMount(() => {
 // });
 const CheckOverlap = ref(false)
 const addEvent = async (dataBooking , AllDataCheck) => {
-  RefreshToken()
+  
   if(AllDataCheck == true && UserRole.value!="Guest") {
+    RefreshToken()
  dataBooking.eventStartTime=new Date(dataBooking.eventStartTime).toISOString();
   const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events`, {
     method: "POST",

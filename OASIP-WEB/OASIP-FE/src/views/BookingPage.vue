@@ -99,15 +99,17 @@ onBeforeUpdate(() => {
 
 });
 
+const UserRole = ref()
+
 onBeforeMount(() => {
- 
+  UserRole.value = localStorage.getItem('UserRole');
   jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
   jwtToken.value = localStorage.getItem('jwtToken');
-  console.log(jwtToken.value + "xxxxx")
-  if(jwtToken.value==null) {
-    goHome()
+ 
+  if(UserRole.value!="Guest") {
+    getLinkAll();
   }
-  getLinkAll();
+  
 });
 
 // const yourISODateTime = computed(() => {
@@ -116,8 +118,9 @@ onBeforeMount(() => {
 // });
 const CheckOverlap = ref(false)
 const addEvent = async (dataBooking , AllDataCheck) => {
-  RefreshToken()
-  if(AllDataCheck == true) {
+  
+  if(AllDataCheck == true && UserRole.value!="Guest") {
+    RefreshToken()
  dataBooking.eventStartTime=new Date(dataBooking.eventStartTime).toISOString();
   const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events`, {
     method: "POST",
@@ -141,7 +144,29 @@ const addEvent = async (dataBooking , AllDataCheck) => {
           isActivePopup.value = true
 
   }
+  if(AllDataCheck == true && UserRole.value=="Guest") {
+ dataBooking.eventStartTime=new Date(dataBooking.eventStartTime).toISOString();
+  const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+
+    },
+    body: JSON.stringify(dataBooking),
+  });
+    if(res.status === 400) {
+      console.log("overlap")
+      OverlapTrue()
+      console.log(CheckOverlap.value)
+      isActivePopup.value = true
       
+
+    }else
+         OverlapFalse()
+          
+          isActivePopup.value = true
+
+  }
 };
 
 function OverlapTrue (  ) {
@@ -233,6 +258,15 @@ const goHome = () => {
   });
 
 };
+
+const backToHome = () => {
+
+  router.push({
+    name: "Home"
+   
+  });
+
+};
    
 function pastFilter() {
   getLinkPast();  
@@ -259,7 +293,7 @@ function removeToken() {
  
 <template>
   <div>
-    <div class="flex justify-between grid grid-cols-3 gap-2 rounded">
+    <div class="md:flex md:justify-center   rounded">
 
       <PopupPage v-show="isActivePopup2" :dim-background="true">
       <div class="grid grid-cols-1 p-12" >
@@ -268,6 +302,17 @@ function removeToken() {
           <br>
           <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
             @click="isActivePopup = false , removeToken ()" />
+        </div>
+      </div>
+      </PopupPage>
+
+      <PopupPage v-show="UserRole==`Lecturer`" :dim-background="true">
+      <div class="grid grid-cols-1 p-12" >
+        Lecturer ไม่สามารถใช้หน้านี้ได้
+        <div class=" max-w-lg mx-auto  ">
+          <br>
+          <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
+            @click="isActivePopup = false , backToHome ()" />
         </div>
       </div>
       </PopupPage>
@@ -293,17 +338,17 @@ function removeToken() {
       
       </PopupPage>
 
-        <AddEvent  @addEvent="addEvent"  :categoryDetail="categoryDetail"/>
+        <AddEvent class="px-2" @addEvent="addEvent"  :categoryDetail="categoryDetail"/>
 
   <!-- <AddEvent :id="id" @addEvent="addEvent" @click="getLinkAll" :categoryDetail="categoryDetail"/> -->
-      <ShowList
+  <div  v-if="UserRole!=`Guest`" class="md:block  hidden">   <ShowList 
         :eventLists="eventLists.content"
-        colNum="grid-cols-3"
+        colNum="grid-cols-2"
         class="col-span-2" :numPage = "numPage" @paging="paging"  @pastFilter="pastFilter"
       @futureFilter="futureFilter"
       @allFilter="allFilter"
       :CheckOverlap="CheckOverlap"
-      />
+      /></div> 
     </div>
   </div>
 </template>

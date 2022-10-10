@@ -22,7 +22,7 @@ const jwtTokenRF = ref()
 const getLinkAll = async () => {
   console.log(jwtToken.value)
   const res = await fetch(
-    `${import.meta.env.VITE_APP_TITLE}/api/users`,
+    `${import.meta.env.VITE_APP_TITLE}/api/users?page=${page.value}&pageSize=8`,
     {
 
       method: 'get',
@@ -125,7 +125,6 @@ onBeforeMount(async () => {
   jwtToken.value = localStorage.getItem('jwtToken');
   jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
   UserRole.value = localStorage.getItem('UserRole');
-  const TimeLogin = localStorage.getItem('time');
   getLinkAll();
 
 
@@ -178,16 +177,35 @@ const goEdit = (UserId) => {
 
 const isActivePopup2 =ref(false)
 
+const backToHome = () => {
 
+router.push({
+  name: "Home"
+ 
+});
+
+};
 </script>
 
 <template>
 
   <div class="flex justify-center grid grid-rows-1  mb-16">
+
+    <PopupPage v-show="UserRole==`Lecturer`" :dim-background="true">
+      <div class="grid grid-cols-1 p-12" >
+        Lecturer ไม่สามารถใช้หน้านี้ได้
+        <div class=" max-w-lg mx-auto  ">
+          <br>
+          <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
+            @click="isActivePopup = false , backToHome ()" />
+        </div>
+      </div>
+      </PopupPage>
+
     <PopupPage v-show="isActivePopup" :dim-background="true">
 
       <div v-if="TokenTimeOut==false" class="grid grid-cols-1 p-12">
-
+       
         <div class="text-3xl font-bold text-rose-400 mb-3">USER DETAIL</div>
         <p> <span class="font-bold mr-1">NAME : </span> {{dataDetail.name}} </p>
         <p> <span class="font-bold mr-1"> ROLE : </span> {{dataDetail.role}} </p>

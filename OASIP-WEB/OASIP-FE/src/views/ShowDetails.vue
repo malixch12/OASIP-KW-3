@@ -43,9 +43,13 @@ headers: {
   }
 };
 
+const UserRole = ref()
 onBeforeMount(async () => {
   jwtToken.value = localStorage.getItem('jwtToken');
-  
+  UserRole.value = localStorage.getItem('UserRole');
+  if(jwtToken.value==null) {
+    goHome()
+  }
   getLinkAll();
 });
 
@@ -56,7 +60,11 @@ const removeEvent = async () => {
         myRouter.query.BookingId
       }`,
       {
-        method: "DELETE",
+        method: "DELETE",headers: {
+
+'Content-Type': 'application/json',
+'Authorization': 'Bearer ' + jwtToken.value
+}
       }
     );
     router.go(-1);
@@ -181,6 +189,13 @@ onBeforeUpdate(() => {
   }
 });
 
+const goHome = () => {
+
+router.push({
+  name: "Login"
+ 
+});
+}
 
 </script>
 
@@ -313,7 +328,7 @@ onBeforeUpdate(() => {
             ></textarea>
           </div>
 
-          <div v-show="hideEdit" class="grid grid-cols-2 pt-3">
+          <div v-if="UserRole!=`Lecturer`" v-show="hideEdit" class="grid grid-cols-2 pt-3">
             <RoundButton
               bg-color="bg-emerald-400 text-white"
               button-name="edit"

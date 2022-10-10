@@ -9,4 +9,5 @@ import java.util.List;
 public interface EventCategoryOwnerRepository extends JpaRepository<EventCategoryOwner,Integer> {
    List<EventCategoryOwner> findByUserID(User userId);
 
+
 }

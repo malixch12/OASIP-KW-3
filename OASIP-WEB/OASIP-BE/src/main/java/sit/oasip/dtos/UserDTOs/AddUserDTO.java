@@ -31,6 +31,7 @@ public class AddUserDTO {
 
     private String Role = "Student";
 
+
     public void setName(String name) {
         Name = name.trim();
     }

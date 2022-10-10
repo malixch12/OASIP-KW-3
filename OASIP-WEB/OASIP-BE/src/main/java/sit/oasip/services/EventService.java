@@ -139,18 +139,18 @@ public class EventService {
         String role = jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString();
         Event event = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, id + " Does Not Exist !!!"));
-       checkEmail(event.getBookingEmail(),HttpStatus.FORBIDDEN);
-        if (role.equals(Role.Lecturer.name())){
+        checkEmail(event.getBookingEmail(), HttpStatus.FORBIDDEN);
+        if (role.equals(Role.Lecturer.name())) {
             int check = 0;
             User user = userRepository.findByEmail(jwtTokenUtil.getAllClaimsFromToken(token).getSubject());
             List<EventCategoryOwner> co = eventCategoryOwnerRepository.findByUserID(user);
             for (int i = 0; i < co.size(); i++) {
-                if(co.get(i).getEventCategoryID().getEventCategoryID().equals(event.getEventCategoryID())){
+                if (co.get(i).getEventCategoryID().getEventCategoryID().equals(event.getEventCategoryID())) {
                     check = co.get(i).getEventCategoryID().getEventCategoryID();
                 }
             }
 
-            if(check == 0 ){
+            if (check == 0) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No permission");
             }
         }
@@ -282,6 +282,7 @@ public class EventService {
 
 
     public Event update(EditEventDTO updateEvent, int bookingId) {
+
         if (updateEvent.getEventStartTime() != null) {
             Event event = repository.findById(bookingId)
                     .orElseThrow(() -> new RuntimeException("Bookind ID " + bookingId + "Does not exit !!!"));
@@ -316,18 +317,22 @@ public class EventService {
                 return new PasswordAuthentication("oasip.kw3.noreply@gmail.com", "dzszgiijsnafzhlx");
             }
         });
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 'at' HH:mm").withZone(ZoneId.of("UTC"));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E MMM dd, yyyy HH:mm").withZone(ZoneId.of("UTC"));
+        DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("HH:mm ").withZone(ZoneId.of("UTC"));
+        Instant endTime =  event.getEventStartTime().plusSeconds(event.getEventDuration() * 60);
 
         Message msg = new MimeMessage(session);
         msg.setFrom(new InternetAddress("oasip.kw3.noreply@gmail.com", false));
 
         msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(event.getBookingEmail()));
         msg.setSubject("Your booking is complete.");
-        msg.setContent("Your booking name : " + event.getBookingName() +
-                        "<br> Event category : " + event.getEventCategory() +
-                        "<br>Start date and time : " + formatter.format(event.getEventStartTime()) +
-                        "<br>Event duration : " + event.getEventDuration() + " minitues" +
-                        "<br>Event note : " + event.getEventNotes()
+        msg.setContent("Subject: [OASIP] " + event.getEventCategory() + " @ " + formatter.format(event.getEventStartTime()) + " - " +formatter1.format(endTime)+ " (ICT)"+
+                        "<br>Reply-to: noreply@intproj21.sit.kmutt.ac.th" +
+                        "<br>Booking Name: " + event.getBookingName() +
+                        "<br>Event Category: " + event.getEventCategory() +
+                        "<br>When: " + formatter.format(event.getEventStartTime()) + " - " +formatter1.format(endTime)+ " (ICT)"+
+                        "<br>Event Notes: " + event.getEventNotes()
+
                 , "text/html; charset=utf-8");
         msg.setSentDate(new Date());
 

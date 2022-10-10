@@ -22,7 +22,7 @@ const jwtTokenRF = ref()
 const getLinkAll = async () => {
   console.log(jwtToken.value)
   const res = await fetch(
-    `${import.meta.env.VITE_APP_TITLE}/api/users`,
+    `${import.meta.env.VITE_APP_TITLE}/api/users?page=${page.value}&pageSize=8`,
     {
 
       method: 'get',
@@ -125,7 +125,6 @@ onBeforeMount(async () => {
   jwtToken.value = localStorage.getItem('jwtToken');
   jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
   UserRole.value = localStorage.getItem('UserRole');
-  const TimeLogin = localStorage.getItem('time');
   getLinkAll();
 
 
@@ -206,7 +205,7 @@ router.push({
     <PopupPage v-show="isActivePopup" :dim-background="true">
 
       <div v-if="TokenTimeOut==false" class="grid grid-cols-1 p-12">
-
+       
         <div class="text-3xl font-bold text-rose-400 mb-3">USER DETAIL</div>
         <p> <span class="font-bold mr-1">NAME : </span> {{dataDetail.name}} </p>
         <p> <span class="font-bold mr-1"> ROLE : </span> {{dataDetail.role}} </p>

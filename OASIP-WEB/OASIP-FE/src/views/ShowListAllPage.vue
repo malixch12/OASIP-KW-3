@@ -146,12 +146,15 @@ isActivePopup.value = true
 };
 
 
+const UserRole = ref()
 onBeforeMount(async () => {
+  UserRole.value = localStorage.getItem('UserRole');
   jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
   jwtToken.value = localStorage.getItem('jwtToken');
   if(jwtToken.value==null) {
     goHome()
   }
+  
   getLinkAll();
 
 });
@@ -293,6 +296,9 @@ router.push({
   name: "Login"
  
 });
+
+const goBack = () => appRouter.go(-1);
+
 
 };
 </script>

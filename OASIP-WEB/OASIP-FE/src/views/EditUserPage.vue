@@ -114,8 +114,10 @@ const RefreshToken = async () => {
 };
 
 console.log(myRouter.query.userId)
+const UserRole = ref()
 
 onBeforeMount(async () => {
+  UserRole.value = localStorage.getItem('UserRole');
   jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
   jwtToken.value = localStorage.getItem('jwtToken');
   getLinkAll();
@@ -344,12 +346,22 @@ let StatusEmailError = ref({ error: "", Email: "" })
 let StatusNameError = ref({ error: "", Name: "" })
 const CheckStatus = ref(true) //check edit
 const isActivePopup2 =ref(false)
+
 </script>
 
 <template>
 
   <div class="flex justify-center">
-
+    <PopupPage v-show="UserRole!=`Admin`" :dim-background="true">
+      <div class="grid grid-cols-1 p-12" >
+         หน้านี้ใช้ได้เฉพาะ admin เท่านั้น
+        <div class=" max-w-lg mx-auto  ">
+          <br>
+          <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
+            @click="isActivePopup = false , goBack ()" />
+        </div>
+      </div>
+      </PopupPage>
     <PopupPage v-show="isActivePopup" :dim-background="true">
       <div v-if="!CheckStatus" class="grid grid-cols-1 p-12">
         <p class="text-3xl font-semibold text-green-600 tracking-wide pb-8">

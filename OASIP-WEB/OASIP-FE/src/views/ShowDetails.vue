@@ -47,7 +47,9 @@ const UserRole = ref()
 onBeforeMount(async () => {
   jwtToken.value = localStorage.getItem('jwtToken');
   UserRole.value = localStorage.getItem('UserRole');
-
+  if(jwtToken.value==null) {
+    goHome()
+  }
   getLinkAll();
 });
 
@@ -187,6 +189,13 @@ onBeforeUpdate(() => {
   }
 });
 
+const goHome = () => {
+
+router.push({
+  name: "Login"
+ 
+});
+}
 
 </script>
 

@@ -184,7 +184,7 @@ function toggle () {
     </div>
     <div :class="open ? 'block': 'hidden'" class="w-full  flex-warp md:flex md:items-center md:w-auto">
       <div class="text-sm sm:flex-grow ">
-        <ul class="  flex flex-col p-4 mt-4  rounded-lg border border-gray-100 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 ">
+        <ul class="  flex flex-col p-4 mt-4  rounded-lg border border-gray-300 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 ">
           <li>
             <router-link
               :to="{ name: 'Home' }"

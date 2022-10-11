@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -66,16 +67,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                  */
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 
-            } else if(StringUtils.hasText(jwtToken) == false) {
-                System.out.println("go go");
-                List<SimpleGrantedAuthority> role = Arrays.asList(new SimpleGrantedAuthority("Guest"));
 
+            } else if(StringUtils.hasText(jwtToken) == false && request.getMethod().equals(HttpMethod.POST.toString())) {
+                List<SimpleGrantedAuthority> role = Arrays.asList(new SimpleGrantedAuthority("Guest"));
                 UserDetails userDetails = new User("guest", "",role);
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
-
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-
 
             } else {
                 request.setAttribute("message", "Please log in for get Token again.");
@@ -103,16 +101,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         } catch (BadCredentialsException ex) {
             request.setAttribute("message", "Token incorrect");
             request.setAttribute("exception", ex);
-        } catch (IllegalArgumentException ex) {
-            List<SimpleGrantedAuthority> role = Arrays.asList(new SimpleGrantedAuthority("Guest"));
-
-            UserDetails userDetails = new User(null, "",role);
-            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                    userDetails, null, userDetails.getAuthorities());
-
-            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
         }catch (Exception ex) {
-            System.out.println("lkjelk "+ex);
+            System.out.println(ex);
         }
         chain.doFilter(request, response);
     }

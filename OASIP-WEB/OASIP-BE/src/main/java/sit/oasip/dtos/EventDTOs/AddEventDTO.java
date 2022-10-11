@@ -8,7 +8,14 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.time.Instant;
+import java.text.SimpleDateFormat;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+
+import static java.time.ZoneOffset.UTC;
 
 @Getter @Setter
 public class AddEventDTO {
@@ -35,4 +42,8 @@ public class AddEventDTO {
 
     @NotNull(message = "Category ID is not null")
     private Integer EventCategoryID;
+
+    public void setEventStartTime(Instant eventStartTime) {
+        EventStartTime = Instant.from(eventStartTime.atZone(UTC));
+    }
 }

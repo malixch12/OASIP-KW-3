@@ -32,9 +32,11 @@ public class User {
     @Column(name = "Role", nullable = false)
     private String role;
 
+    @CreationTimestamp
     @Column(name = "CreatedOn", nullable = false)
     private Timestamp createdOn;
 
+    @UpdateTimestamp
     @Column(name = "UpdatedOn", nullable = false)
     private Timestamp updatedOn;
 

@@ -260,18 +260,14 @@ router.push({
  </PopupPage>
 
     <br>
-    <div class="overflow-x-auto relative shadow-md sm:rounded-lg w-full px-24 bg-white py-8 ">
+    <div class="text-sm">
       <div class="text-3xl font-bold text-center   drop-shadow-md"> USER LIST </div>
-      <table class="w-full text-sm text-left text-gray-500 ">
-        <caption class="p-5 text-lg font-semibold text-left text-gray-900 bg-white ">
-          show list all user in db
-          <p class="mt-1 text-sm font-normal text-gray-500 ">This is the table where all user
-            information is stored. Each user's information includes username, email address, role, time of creation,
-            last modified time.</p>
-        </caption>
-        <thead class="text-xs text-gray-700 uppercase bg-gray-100 ">
-          <tr>
-            <th scope="col" class="py-3 px-14 ">
+      <div class="flex items-center justify-center">
+	<div class="container">
+		<table class="w-full flex flex-row flex-no-wrap sm:bg-white rounded-lg overflow-hidden sm:shadow-lg my-5">
+			<thead class="text-white">
+				<tr v-for="(user, index) in UserLists.content" :key="index" class="bg-rose-300 flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0">
+					<th scope="col" class="py-3 px-14 ">
               User name
             </th>
             <th scope="col" class="py-3 px-14">
@@ -280,40 +276,34 @@ router.push({
             <th scope="col" class="py-3 px-14">
               role
             </th>
-            <th scope="col" class="py-3 px-14 text-blue-600 ">
+            <th scope="col" class="py-3  text-blue-600 ">
+              test
             </th>
          
 
-            <th scope="col" class="py-3 px-14">
-              <span class="sr-only">detail</span>
-            </th>
+            
 
-            <th>
-
-            </th>
-            <th>
-
-            </th>
-
-          </tr>
-        </thead>
-        <tbody>
-
-          <tr v-for="(user, index) in UserLists.content" :key="index"
-            class="bg-white border-b ">
-
-            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap ">
+            <th scope="col" class="py-3 px-14" > 
+                    action
+            </th >
+         
+				</tr>
+			
+			</thead>
+			<tbody class="flex-1 sm:flex-none">
+				<tr  v-for="(user, index) in UserLists.content" :key="index" class="flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0">
+          <th scope="row" class="p-3  text-center ">
               {{user.name}}
             </th>
-            <td class="py-4 px-14">
+            <td class="p-3 text-center">
               {{user.email}}
             </td>
-            <td class="py-4 px-14">
+            <td class="p-3 text-center">
               {{user.role}}
             </td>
 
-            <td class="py-4 px-14 text-right">
-              <div class="font-medium text-blue-600  hover:underline" @click="isActivePopup=true
+            <td class="p-3">
+              <div class="font-medium text-blue-600 text-center hover:underline" @click="isActivePopup=true
                     , dataDetail.name=user.name ,
                     dataDetail.email=user.email ,
                      dataDetail.role=user.role ,
@@ -323,70 +313,59 @@ router.push({
                     ">detail</div>
 
             </td>
-            <td class="py-4 px-14 text-right">
-              <div class="font-medium text-red-600  hover:underline" @click="removeUser(user.id)">delete</div>
+            <td class="p-3 text-center mb-1.5">
+              <span class="font-medium text-red-600  hover:underline" @click="removeUser(user.id)">delete</span>
+              <span class="font-medium text-red-600  hover:underline"  @click="goEdit(user.id)">edit</span>
 
             </td>
-            <td class="py-4 text-right " @click="goEdit(user.id)">
+            <!-- <td class="p-3  " @click="goEdit(user.id)">
               <svg width="1em" height="1em" viewBox="0 0 24 24">
                 <path fill="#888888"
                   d="m19.3 8.925l-4.25-4.2l1.4-1.4q.575-.575 1.413-.575q.837 0 1.412.575l1.4 1.4q.575.575.6 1.388q.025.812-.55 1.387ZM17.85 10.4L7.25 21H3v-4.25l10.6-10.6Z">
                 </path>
               </svg>
-            </td>
+            </td> -->
+				</tr>
+		
+			</tbody>
+		</table>
+	</div>
 
-
-
-
-
-          </tr>
-
-        </tbody>
-      </table>
-
-      <div class="text-center mt-10" v-if="UserLists.content.length==0 && jwtToken !=null">{{textShow}}</div>
-
-      <div class="text-center mt-10 text-red-500" v-if="jwtToken ==null">Can't see data Please login first.</div>
-      <div class="text-center text-sm underline underline-offset-4 text-gray-400" v-if="jwtToken ==null">
-        <router-link :to="{ name: 'Login' }" class="
-            
-                ">Click here to login page!</router-link>
-      </div>
-
-
-      <div class="  rounded-b-lg p-8 ml-24 mr-24 text-center">
-        <!-- <span
-        v-for="(e, index) in numPage"
-        :key="index"
-        class="p-5 text-white hover:text-orange-600"
-      >
-        <button @click="$emit('paging', index, filter)">
-          {{ index + 1 }}
-        </button>
-      </span> -->
-        <nav aria-label="Page navigation example ">
-          <ul class="inline-flex -space-x-px" v-for="(e, index) in numPage" :key="index">
-
-            <button @click="page=index , getLinkAll() "
-              class="py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 focus:bg-gray-200 focus:text-red-600 ">{{
-              index + 1 }}</button>
-
-          </ul>
-        </nav>
-        <hr class="mt-4"/>
-        <div v-if="UserRole==`Admin`" @click="isActivePopup2=true" class="mt-4 font-normal text-blue-500 underline underline-offset-1
-">CHECK PASSWORD</div>
+      
 
       </div>
 
 
     </div>
 
-  
-
+    <hr class="mt-4 "/>
+        <div v-if="UserRole==`Admin`" @click="isActivePopup2=true" class="mt-4 font-normal text-center text-blue-500 underline underline-offset-1
+">CHECK PASSWORD</div>
+   
   </div>
 </template>
 
 <style>
+html,
+  body {
+    height: 100%;
+  }
 
+  @media (min-width: 640px) {
+    table {
+      display: inline-table !important;
+    }
+
+    thead tr:not(:first-child) {
+      display: none;
+    }
+  }
+
+  td:not(:last-child) {
+    border-bottom: 0;
+  }
+
+  th:not(:last-child) {
+    border-bottom: 2px solid rgba(0, 0, 0, .1);
+  }
 </style>

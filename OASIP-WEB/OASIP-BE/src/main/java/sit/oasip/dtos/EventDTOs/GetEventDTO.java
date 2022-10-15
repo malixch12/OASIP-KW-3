@@ -24,7 +24,7 @@ public class GetEventDTO {
     private Integer EventCategoryID;
 
     public String getDate() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.systemDefault());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.of("Asia/Bangkok"));
         return formatter.format(EventStartTime);
     }
 

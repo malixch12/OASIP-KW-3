@@ -41,11 +41,22 @@ headers: {
   if (res.status === 200) {
     eventLists.value = await res.json();
   }
+
+  if (res.status === 403) {
+    goList()
+    
+
+  
+  }
 };
 
+const UserRole = ref()
 onBeforeMount(async () => {
   jwtToken.value = localStorage.getItem('jwtToken');
-  
+  UserRole.value = localStorage.getItem('UserRole');
+  if(jwtToken.value==null) {
+    goHome()
+  }
   getLinkAll();
 });
 
@@ -56,7 +67,11 @@ const removeEvent = async () => {
         myRouter.query.BookingId
       }`,
       {
-        method: "DELETE",
+        method: "DELETE",headers: {
+
+'Content-Type': 'application/json',
+'Authorization': 'Bearer ' + jwtToken.value
+}
       }
     );
     router.go(-1);
@@ -64,7 +79,9 @@ const removeEvent = async () => {
   }
 };
 
-const goBack = () => router.go(-1);
+function goBack () {
+  router.go(-1);
+} 
 
 const goAboutUs = () => appRouter.push({ name: "About" });
 
@@ -181,6 +198,23 @@ onBeforeUpdate(() => {
   }
 });
 
+const goHome = () => {
+
+router.push({
+  name: "Login"
+ 
+});
+}
+
+const goList = () => {
+
+router.push({
+  name: "ListAllEvent"
+ 
+});
+}
+
+
 
 </script>
 
@@ -239,7 +273,7 @@ onBeforeUpdate(() => {
       <RoundButton
         bg-color="bg-slate-400 text-white text-sm"
         button-name="<< go back"
-        @click="goBack"
+        @click="goBack()"
       />
 
       <div class="col-span-1 grid grid-cols-1 place-items-center">
@@ -313,7 +347,7 @@ onBeforeUpdate(() => {
             ></textarea>
           </div>
 
-          <div v-show="hideEdit" class="grid grid-cols-2 pt-3">
+          <div v-if="UserRole!=`Lecturer`" v-show="hideEdit" class="grid grid-cols-2 pt-3">
             <RoundButton
               bg-color="bg-emerald-400 text-white"
               button-name="edit"

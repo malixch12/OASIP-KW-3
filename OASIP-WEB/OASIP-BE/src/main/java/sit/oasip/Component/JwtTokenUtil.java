@@ -1,7 +1,5 @@
 package sit.oasip.Component;
 
-import java.io.Serializable;
-import java.net.http.HttpRequest;
 import java.util.*;
 import java.util.function.Function;
 
@@ -9,16 +7,12 @@ import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import sit.oasip.entities.User;
 import sit.oasip.javainuse.models.JwtResponse;
 import sit.oasip.utils.Role;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Component
 public class JwtTokenUtil {
@@ -50,8 +44,9 @@ public class JwtTokenUtil {
             claims.put("role", Role.Admin.name());
         }else if(userDetails.getRole().equals(Role.Student.name())){
             claims.put("role", Role.Student.name());
+        }else if(userDetails.getRole().equals(Role.Lecturer.name())) {
+            claims.put("role", Role.Lecturer.name());
         }
-
         doGenerateToken(claims, userDetails.getEmail());
         doGenerateRefreshToken(claims, userDetails.getEmail());
         jwtResponse = new JwtResponse(doGenerateToken(claims, userDetails.getEmail()),doGenerateRefreshToken(claims, userDetails.getEmail()));
@@ -133,7 +128,9 @@ public class JwtTokenUtil {
                 roles = Arrays.asList(new SimpleGrantedAuthority(Role.Admin.name()));
             }else if(role.equals(Role.Student.name())){
                 roles = Arrays.asList(new SimpleGrantedAuthority(Role.Student.name()));
-            }
+            }else if(role.equals(Role.Lecturer.name())){
+            roles = Arrays.asList(new SimpleGrantedAuthority(Role.Lecturer.name()));
+        }
 
         }
         return roles;

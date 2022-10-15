@@ -5,5 +5,5 @@ import sit.oasip.entities.User;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
     User findByEmail(String email);
-    User findByName(String userName);
+    User findByUserName(String userName);
 }

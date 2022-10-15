@@ -1,5 +1,6 @@
 package sit.oasip.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -8,9 +9,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import sit.oasip.dtos.SimpleEventcategoryDTO;
+import sit.oasip.entities.Event;
+import sit.oasip.entities.EventCategoryOwner;
 import sit.oasip.entities.Eventcategory;
 import sit.oasip.repositories.EventcategoryRepository;
 import sit.oasip.utils.ListMapper;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Service
 public class EventCategoryService {
@@ -22,13 +27,29 @@ public class EventCategoryService {
     @Autowired
     private ModelMapper modelMapper;
 
+    private HttpServletRequest request;
     @Autowired
-    public EventCategoryService(EventcategoryRepository repository) {
+    public EventCategoryService(EventcategoryRepository repository, HttpServletRequest request) {
         this.repository = repository;
+        this.request=request;
     }
 
+//    private List<Eventcategory> getEventCateByLecturer(List<EventCategoryOwner> owners, List<Eventcategory> getCateLists) {
+//        List<Eventcategory> eventByEventCateId = new ArrayList<>();
+//        for (int i = 0; i < getCateLists.size(); i++) {
+//            for (int j = 0; j < owners.size(); j++) {
+//                if (getCateLists.get(i).getEventCategoryID().equals(owners.get(j).getEventCategoryID().getEventCategoryID())) {
+//                    eventByEventCateId.add(getCateLists.get(i));
+//                }
+//            }
+//
+//        }
+//        return eventByEventCateId;
+//    }
+
     public List<SimpleEventcategoryDTO> getSimpleEventcategoryAll() {
-        return listMapper.mapList(repository.findAll(), SimpleEventcategoryDTO.class, modelMapper);
+        List<Eventcategory> getCateLists = repository.findAll();
+        return listMapper.mapList(getCateLists, SimpleEventcategoryDTO.class, modelMapper);
     }
 
     public SimpleEventcategoryDTO getSimpleEventcategoryById(Integer id) {

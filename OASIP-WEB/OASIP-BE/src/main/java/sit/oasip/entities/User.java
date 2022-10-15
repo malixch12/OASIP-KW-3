@@ -6,26 +6,26 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.Set;
 
 @Getter @Setter
 @Entity
-@Table(name = "User")
+@Table(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "UserID", nullable = false)
-    private Integer ID;
+    private Integer id;
 
-    @Column(name = "UserName", nullable = false, length = 100,unique = true)
-    private String name;
+    @Column(name = "UserName", nullable = false, length = 100)
+    private String userName;
 
-    @Column(name = "Email", nullable = false, length = 50, unique = true)
+    @Column(name = "Email", nullable = false, length = 50)
     private String email;
 
-    @Column(name = "Password", nullable = false, length = 90)
+    @Column(name = "Password", nullable = false, length = 100)
     private String password;
 
     @Lob
@@ -33,12 +33,15 @@ public class User {
     private String role;
 
     @CreationTimestamp
-    @Column(name = "CreateOn", nullable = false)
+    @Column(name = "CreatedOn", nullable = false)
     private Timestamp createdOn;
 
     @UpdateTimestamp
-    @Column(name = "UpdateOn", nullable = false)
+    @Column(name = "UpdatedOn", nullable = false)
     private Timestamp updatedOn;
+
+    @OneToMany(mappedBy = "userID")
+    private Set<EventCategoryOwner> eventCategoryOwners;
 
 
 }

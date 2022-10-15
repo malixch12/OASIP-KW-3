@@ -186,6 +186,22 @@ VALUES
     'student',
     '2022-08-16 09:00:00+07:00',
     '2022-08-16 09:00:00+07:00'
+  ),
+  (
+    'Charidaporn Chuangdonphai',
+    'charidaporn.ch@mail.kmutt.ac.th',
+    '$argon2id$v=19$m=12,t=3,p=1$amp3c3NjMXJma2cwMDAwMA$9SP1/kJ71/jW7QzWJ2e36g',
+    'admin',
+    '2022-10-15 17:00:00+07:00',
+    '2022-10-15 17:00:00+07:00'
+  ),
+  (
+    'Kanyapat Wittayamanitkul',
+    'kanyapat.winnerkypt@mail.kmutt.ac.th',
+   '$argon2id$v=19$m=12,t=3,p=1$dzF6b21wOTV4ZTkwMDAwMA$+cYfCxPb7e3q7wetPbJWVw',
+   'student',
+    '2022-10-15 17:00:00+07:00',
+    '2022-10-15 17:00:00+07:00'
   );
 
 INSERT INTO

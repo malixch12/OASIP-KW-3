@@ -1,4 +1,5 @@
 package sit.oasip.javainuse.config;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -58,6 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
+
         // CorsConfiguration corsConfiguration = new CorsConfiguration();
         // corsConfiguration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type" , "IsRefreshToken"));
         // corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
@@ -65,12 +67,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // corsConfiguration.setAllowCredentials(true);
         // corsConfiguration.setExposedHeaders(List.of("Authorization"));
 
+
         httpSecurity.csrf().disable().cors().configurationSource(request -> corsConfiguration).and()
                 .authorizeRequests()
-                .antMatchers("/api/login","/api/users/signup").permitAll()
+//                .antMatchers ("/api/events").permitAll()
+                .antMatchers("/api/login", "/api/users/signup","/api/eventcategorys/**").permitAll()
+//                .antMatchers(HttpMethod.POST, "/api/events").anonymous()
 
-                .antMatchers ("/api/users","/api/users/**","/api/match").hasAuthority(Role.Admin.name())
-                .antMatchers ("/api/events/**").hasAnyAuthority(Role.Student.name(),Role.Admin.name())
+                .antMatchers("/api/users", "/api/users/**", "/api/match").hasAuthority(Role.Admin.name())
+                .antMatchers(HttpMethod.GET, "/api/events/**").hasAnyAuthority(Role.Student.name(), Role.Admin.name(), Role.Lecturer.name())
+                .antMatchers(HttpMethod.POST, "/api/events/**").hasAnyAuthority(Role.Student.name(), Role.Admin.name(),"Guest")
+                .antMatchers(HttpMethod.PUT, "/api/events/**").hasAnyAuthority(Role.Student.name(), Role.Admin.name())
+                .antMatchers(HttpMethod.DELETE, "/api/events/**").hasAnyAuthority(Role.Student.name(), Role.Admin.name())
 
 
                 .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
@@ -78,7 +86,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
-
 
 
 }

@@ -1,6 +1,21 @@
 <script setup>
-import { ref, onBeforeMount } from "vue";
+import { ref, onBeforeMount , onBeforeUpdate } from "vue";
 import Navbar from '../src/components/Navbar.vue'
+
+const jwtToken = ref()
+onBeforeMount(() => {
+
+ 
+  jwtToken.value = localStorage.getItem('jwtToken');
+  if(jwtToken.value==null) {
+    localStorage.setItem('UserRole', "Guest");
+
+  }
+
+
+});
+
+
 </script>
 
 <template>

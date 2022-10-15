@@ -146,12 +146,15 @@ isActivePopup.value = true
 };
 
 
+const UserRole = ref()
 onBeforeMount(async () => {
+  UserRole.value = localStorage.getItem('UserRole');
   jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
   jwtToken.value = localStorage.getItem('jwtToken');
   if(jwtToken.value==null) {
     goHome()
   }
+  
   getLinkAll();
 
 });
@@ -294,6 +297,9 @@ router.push({
  
 });
 
+const goBack = () => appRouter.go(-1);
+
+
 };
 </script>
 
@@ -325,7 +331,7 @@ router.push({
 
     <ShowList
       :eventLists="eventLists.content"
-      colNum="grid-cols-4"
+      colNum="md:grid-cols-4"
       :numPage="numPage"
       @paging="paging"
       @pastFilter="pastFilter"

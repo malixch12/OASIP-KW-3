@@ -59,12 +59,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type", "IsRefreshToken"));
-        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
-        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PUT", "OPTIONS", "PATCH", "DELETE"));
-        corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.setExposedHeaders(List.of("Authorization"));
+
+        // CorsConfiguration corsConfiguration = new CorsConfiguration();
+        // corsConfiguration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type" , "IsRefreshToken"));
+        // corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
+        // corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PUT","OPTIONS","PATCH", "DELETE"));
+        // corsConfiguration.setAllowCredentials(true);
+        // corsConfiguration.setExposedHeaders(List.of("Authorization"));
+
 
         httpSecurity.csrf().disable().cors().configurationSource(request -> corsConfiguration).and()
                 .authorizeRequests()

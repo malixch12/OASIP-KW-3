@@ -41,6 +41,13 @@ headers: {
   if (res.status === 200) {
     eventLists.value = await res.json();
   }
+
+  if (res.status === 403) {
+    goList()
+    
+
+  
+  }
 };
 
 const UserRole = ref()
@@ -72,7 +79,9 @@ const removeEvent = async () => {
   }
 };
 
-const goBack = () => router.go(-1);
+function goBack () {
+  router.go(-1);
+} 
 
 const goAboutUs = () => appRouter.push({ name: "About" });
 
@@ -197,6 +206,16 @@ router.push({
 });
 }
 
+const goList = () => {
+
+router.push({
+  name: "ListAllEvent"
+ 
+});
+}
+
+
+
 </script>
 
 <template>
@@ -254,7 +273,7 @@ router.push({
       <RoundButton
         bg-color="bg-slate-400 text-white text-sm"
         button-name="<< go back"
-        @click="goBack"
+        @click="goBack()"
       />
 
       <div class="col-span-1 grid grid-cols-1 place-items-center">

@@ -1,8 +1,8 @@
 -- create database int222;
--- create user 'int222'@'%'identified with mysql_native_password by 'int222';
--- grant all privileges on int222.*to'int222'@'%';
+create user 'int222'@'%'identified with mysql_native_password by 'int222';
+grant all privileges on int222.*to'int222'@'%';
 
-use int222;
+-- use int222;
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
@@ -59,7 +59,7 @@ ENGINE = InnoDB;
 -- Table `EventCategoryOwner`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `EventCategoryOwner` ;
-drop table EventCategoryOwner;
+-- drop table EventCategoryOwner;
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `EventCategoryOwner` (
   `EventCategoryOwnerID` INT NOT NULL AUTO_INCREMENT,

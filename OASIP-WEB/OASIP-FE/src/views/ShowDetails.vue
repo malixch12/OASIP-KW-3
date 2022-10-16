@@ -269,7 +269,7 @@ router.push({
         </div>
         </div>
       </PopupPage>
-    <div class="bg-white space-y-7 shadow-xl rounded-lg ml-48 mr-48 p-12 w-2/5">
+    <div class="space-y-7 bg-white shadow-xl rounded-lg md:ml-24 md:p-16 p-8  rounded md:w-auto w-full mt-12">
       <RoundButton
         bg-color="bg-slate-400 text-white text-sm"
         button-name="<< go back"

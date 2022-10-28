@@ -42,7 +42,8 @@ public class AddEventDTO {
 
     @NotNull(message = "Category ID is not null")
     private Integer EventCategoryID;
-
+    private byte[] FileData;
+    private String FileName;
     public void setEventStartTime(Instant eventStartTime) {
         EventStartTime = Instant.from(eventStartTime.atZone(UTC));
     }

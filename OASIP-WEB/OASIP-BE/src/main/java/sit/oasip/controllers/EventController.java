@@ -7,6 +7,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartFile;
 import sit.oasip.dtos.EventDTOs.AddEventDTO;
 import sit.oasip.dtos.EventDTOs.EditEventDTO;
 import sit.oasip.dtos.EventDTOs.GetEventDTO;
@@ -108,8 +110,8 @@ public class EventController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public Event create(@Validated @RequestBody AddEventDTO newEvent) throws MessagingException, IOException {
-        return eventService.add(newEvent);
+    public Event create(@Validated @ModelAttribute  AddEventDTO newEvent,@ModelAttribute ("file") MultipartFile file) throws MessagingException, IOException {
+        return eventService.add(newEvent,file);
     }
 
     @PutMapping("/{bookingId}")

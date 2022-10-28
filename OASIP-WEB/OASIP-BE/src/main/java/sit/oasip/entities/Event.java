@@ -46,6 +46,13 @@ public class Event {
     @Column(name = "EventNotes", length = 500)
     private String eventNotes;
 
+    @Lob
+    @Column(name = "FilesData", length = 500)
+    private  byte[]  filesData;
+
+    @Column(name = "FileName")
+    private String fileName;
+
     @Column(name = "EventCategoryID", nullable = false)
     private Integer eventCategoryID;       
 }

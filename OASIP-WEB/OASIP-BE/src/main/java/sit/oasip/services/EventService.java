@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -19,6 +21,7 @@ import sit.oasip.Component.JwtTokenUtil;
 import sit.oasip.dtos.EventDTOs.AddEventDTO;
 import sit.oasip.dtos.EventDTOs.EditEventDTO;
 import sit.oasip.dtos.EventDTOs.GetEventDTO;
+import sit.oasip.dtos.FileDTO.UploadFileDTO;
 import sit.oasip.entities.Event;
 import sit.oasip.entities.EventCategoryOwner;
 import sit.oasip.entities.Eventcategory;
@@ -244,10 +247,11 @@ public class EventService {
         }
     }
 
-    public Event add(AddEventDTO newEvent) throws MessagingException, IOException {
+    public Event add(AddEventDTO newEvent, MultipartFile files) throws MessagingException, IOException {
         Eventcategory eventcategory = cateRepository.findById(newEvent.getEventCategoryID())
                 .orElseThrow(() -> new RuntimeException(newEvent.getEventCategoryID() + "Does not exit !!!"));
         Event event = new Event();
+        String file = StringUtils.cleanPath(files.getOriginalFilename());
         try {
             checkEmail(newEvent.getBookingEmail(), HttpStatus.BAD_REQUEST);
             checkOverlapping(newEvent.getEventStartTime(), newEvent.getEventCategoryID());
@@ -259,6 +263,11 @@ public class EventService {
             event.setEventCategoryID(newEvent.getEventCategoryID());
             event.setEventDuration(eventcategory.getEventDuration());
             event.setEventCategory(eventcategory.getEventCategoryName());
+//            if(uploadFileDTO != null){
+                event.setFileName(file);
+                event.setFilesData(newEvent.getFileData());
+//            }
+
             Event event1 = modelMapper.map(event, Event.class);
             repository.saveAndFlush(event1);
             sendmail(event);
@@ -273,6 +282,11 @@ public class EventService {
             event.setEventCategoryID(newEvent.getEventCategoryID());
             event.setEventDuration(eventcategory.getEventDuration());
             event.setEventCategory(eventcategory.getEventCategoryName());
+//            if(uploadFileDTO != null){
+                event.setFileName(file);
+                event.setFilesData(newEvent.getFileData());
+//            }
+
             Event event1 = modelMapper.map(event, Event.class);
             repository.saveAndFlush(event1);
             sendmail(event);

@@ -1,5 +1,6 @@
 package sit.oasip.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -7,11 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import sit.oasip.Component.JwtTokenUtil;
+import sit.oasip.config.JwtRequestFilter;
 import sit.oasip.dtos.EventCategoryDTO.EditEventcategoryDTO;
 import sit.oasip.dtos.EventCategoryDTO.GetEventCategoryDTO;
 import sit.oasip.entities.Eventcategory;
 import sit.oasip.repositories.EventcategoryRepository;
+import sit.oasip.repositories.UserRepository;
 import sit.oasip.utils.ListMapper;
+import sit.oasip.utils.Role;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,30 +24,66 @@ import javax.servlet.http.HttpServletRequest;
 public class EventCategoryService {
 
     private final EventcategoryRepository repository;
+    private final UserRepository userRepository;
 
     @Autowired
     private ListMapper listMapper;
     @Autowired
     private ModelMapper modelMapper;
-
-    private HttpServletRequest request;
     @Autowired
-    public EventCategoryService(EventcategoryRepository repository, HttpServletRequest request) {
+    private JwtTokenUtil jwtTokenUtil;
+    @Autowired
+    private JwtRequestFilter jwtRequestFilter;
+    private HttpServletRequest request;
+
+    @Autowired
+    public EventCategoryService(EventcategoryRepository repository, UserRepository userRepository, HttpServletRequest request) {
         this.repository = repository;
-        this.request=request;
+        this.userRepository = userRepository;
+        this.request = request;
+    }
+
+    private List<Eventcategory> getAllEventCate() {
+        List<Eventcategory> eventcategories = new ArrayList<>();
+        Eventcategory eventcategory = new Eventcategory();
+
+        String token = jwtRequestFilter.extractJwtFromRequest(request);
+        String email = jwtTokenUtil.getAllClaimsFromToken(token).getSubject();
+        String role = jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString();
+
+        if (role.equals(Role.Lecturer.name())) {
+            eventcategories = repository.findEventCateByLecturer(userRepository.findByEmail(email).getId());
+        } else {
+            eventcategories = repository.findAll();
+        }
+        return eventcategories;
+    }
+
+    private Eventcategory getEventCate(int cateId) {
+        Eventcategory eventcategory = new Eventcategory();
+
+        String token = jwtRequestFilter.extractJwtFromRequest(request);
+        String email = jwtTokenUtil.getAllClaimsFromToken(token).getSubject();
+        String role = jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString();
+
+        if (role.equals(Role.Lecturer.name())) {
+            eventcategory = repository.findEventCateByLecturerAndCateID(userRepository.findByEmail(email).getId(), cateId).orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "No Permission !!"));
+        } else {
+            eventcategory = repository.findById(cateId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category ID : " + cateId + " Does Not Exist !!!"));
+
+        }
+        return eventcategory;
     }
 
 
     public List<GetEventCategoryDTO> getSimpleEventcategoryAll() {
         List<Eventcategory> getCateLists = repository.findAll();
-        return listMapper.mapList(getCateLists, GetEventCategoryDTO.class, modelMapper);
+        return listMapper.mapList(getAllEventCate(), GetEventCategoryDTO.class, modelMapper);
     }
 
     public GetEventCategoryDTO getSimpleEventcategoryById(Integer id) {
-        Eventcategory eventcategory = repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, id + " Does Not Exist !!!"));
-
-        return modelMapper.map(eventcategory, GetEventCategoryDTO.class);
+        return modelMapper.map(getEventCate(id), GetEventCategoryDTO.class);
     }
 
     public GetEventCategoryDTO update(EditEventcategoryDTO updateCategory, Integer id) {

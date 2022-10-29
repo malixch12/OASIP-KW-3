@@ -1,4 +1,4 @@
-package sit.oasip.javainuse.models;
+package sit.oasip.dtos;
 import lombok.Getter;
 import lombok.Setter;
 

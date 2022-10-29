@@ -1,4 +1,4 @@
-package sit.oasip.javainuse.services;
+package sit.oasip.services;
 
 import java.util.ArrayList;
 

@@ -1,7 +1,6 @@
-package sit.oasip.javainuse.config;
+package sit.oasip.config;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -12,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,19 +24,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import io.jsonwebtoken.ExpiredJwtException;
 //import sit.oasip.Component.JwtTokenUtil;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 import sit.oasip.Component.JwtTokenUtil;
-import sit.oasip.javainuse.services.JWTUserDetailsService;
-import sit.oasip.utils.Role;
+import sit.oasip.services.JWTUserDetailsService;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
     @Autowired
     private JWTUserDetailsService jwtUserDetailsService;
-
-    @Autowired
-    @Qualifier("handlerExceptionResolver")
-    private HandlerExceptionResolver resolver;
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
@@ -47,12 +39,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        String jwtToken = extractJwtFromRequest(request);
+
         try {
             // JWT Token is in the form "Bearer token". Remove Bearer word and get only the Token
 
+            String jwtToken = extractJwtFromRequest(request);
 
-            if (StringUtils.hasText(jwtToken) && jwtTokenUtil.validateToken(jwtToken)) {
+            if (StringUtils.hasText(jwtToken) == true && jwtTokenUtil.validateToken(jwtToken)) {
 
                 UserDetails userDetails = new User(jwtTokenUtil.getUsernameFromToken(jwtToken), "",
                         jwtTokenUtil.getRolesFromToken(jwtToken));

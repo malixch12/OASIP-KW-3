@@ -1,4 +1,4 @@
-package sit.oasip.javainuse.config;
+package sit.oasip.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -13,18 +13,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import sit.oasip.utils.Role;
 
-import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -74,10 +67,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers("/api/users", "/api/users/**", "/api/match").hasAuthority(Role.Admin.name())
                 .antMatchers(HttpMethod.GET, "/api/events/**").hasAnyAuthority(Role.Student.name(), Role.Admin.name(), Role.Lecturer.name())
-                .antMatchers(HttpMethod.POST, "/api/events/**").hasAnyAuthority(Role.Student.name(), Role.Admin.name(),"Guest")
                 .antMatchers(HttpMethod.PUT, "/api/events/**").hasAnyAuthority(Role.Student.name(), Role.Admin.name())
                 .antMatchers(HttpMethod.DELETE, "/api/events/**").hasAnyAuthority(Role.Student.name(), Role.Admin.name())
-
+                .antMatchers(HttpMethod.POST, "/api/events/**").hasAnyAuthority(Role.Student.name(), Role.Admin.name(),"Guest")
 
                 .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

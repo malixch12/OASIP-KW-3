@@ -1,4 +1,4 @@
-package sit.oasip.javainuse.config;
+package sit.oasip.config;
 
 import org.springframework.security.core.AuthenticationException;
 

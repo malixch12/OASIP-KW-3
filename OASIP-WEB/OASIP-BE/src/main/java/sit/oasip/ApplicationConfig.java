@@ -5,7 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
-import sit.oasip.javainuse.models.JwtResponse;
+import sit.oasip.dtos.JwtResponse;
 import sit.oasip.services.AuthenticationService;
 //import sit.oasip.services.FileStorageService;
 import sit.oasip.utils.ListMapper;
@@ -31,6 +31,5 @@ public class ApplicationConfig {
     public JwtResponse jwtResponse(){return new JwtResponse();}
     @Bean
     public AuthenticationService authenticationService(){return  new AuthenticationService();}
-//    @Bean
-//    public FileStorageService storageService(){return new FileStorageService();}
+
 }

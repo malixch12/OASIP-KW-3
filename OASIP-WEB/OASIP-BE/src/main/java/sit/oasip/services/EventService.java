@@ -1,7 +1,6 @@
 package sit.oasip.services;
 
 import java.io.IOException;
-import java.net.http.HttpResponse;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -21,12 +20,10 @@ import sit.oasip.Component.JwtTokenUtil;
 import sit.oasip.dtos.EventDTOs.AddEventDTO;
 import sit.oasip.dtos.EventDTOs.EditEventDTO;
 import sit.oasip.dtos.EventDTOs.GetEventDTO;
-import sit.oasip.dtos.FileDTO.UploadFileDTO;
 import sit.oasip.entities.Event;
-import sit.oasip.entities.EventCategoryOwner;
 import sit.oasip.entities.Eventcategory;
 import sit.oasip.entities.User;
-import sit.oasip.javainuse.config.JwtRequestFilter;
+import sit.oasip.config.JwtRequestFilter;
 import sit.oasip.repositories.EventCategoryOwnerRepository;
 import sit.oasip.repositories.EventRepository;
 import sit.oasip.repositories.EventcategoryRepository;
@@ -38,7 +35,6 @@ import sit.oasip.utils.Role;
 import javax.mail.*;
 import javax.mail.internet.*;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @Service
 public class EventService {
@@ -58,7 +54,7 @@ public class EventService {
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
 
-    private HttpServletRequest request;
+    private final HttpServletRequest request;
 
 
     @Autowired
@@ -73,22 +69,7 @@ public class EventService {
     long now = (System.currentTimeMillis()) / 1000;
     Instant dateNow = Instant.now().ofEpochSecond(now);
 
-//    private String checkRole(){
-//        String token = jwtRequestFilter.extractJwtFromRequest(request);
-//        String email = jwtTokenUtil.getAllClaimsFromToken(token).getSubject();
-//        String role = jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString();
-//        if (role.equals(Role.Student.name())) {
-//            event = getEventByStudent(email, events);
-//        } else if (role.equals(Role.Admin.name())) {
-//            event = events;
-//        } else if (role.equals(Role.Lecturer.name())) {
-//            User user = userRepository.findByEmail(email);
-//            List<EventCategoryOwner> owners = eventCategoryOwnerRepository.findByUserID(user);
-//            event = getEventByLecturer(owners, events);
-//        }
-//    }
-
-    private List<Event> getEvents(List<Event> events) {
+    private List<Event> getEvents(Sort sort, Instant myDate, Integer cateId, String filter) {
 
         List<Event> event = new ArrayList<>();
 
@@ -96,44 +77,69 @@ public class EventService {
         String email = jwtTokenUtil.getAllClaimsFromToken(token).getSubject();
         String role = jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString();
         if (role.equals(Role.Student.name())) {
-            event = getEventByStudent(email, events);
+            if (filter == null) event = repository.findAllEventByStudent(email, sort);
+            else if (filter.equals("date"))
+                event = repository.findAllEventByStudentStartTimeEquals(email, sort, myDate);
+            else if (filter.equals("past"))
+                event = repository.findAllEventByStudentStartTimeLessThan(email, sort, myDate);
+            else if (filter.equals("future"))
+                event = repository.findAllEventByStudentStartTimeGreaterThan(email, sort, myDate);
+
+            else if (filter.equals("cateId"))
+                event = repository.findAllEventByStudentCategoryId(email, cateId, sort);
+            else if (filter.equals("catIdDate"))
+                event = repository.findAllEventByStudentCategoryIdAndEventStartTimeEquals(email, cateId, sort, myDate);
+            else if (filter.equals("cateIdPast"))
+                event = repository.findAllEventByStudentCategoryIdAndEventStartTimeLessThan(email, cateId, sort, myDate);
+            else if (filter.equals("cateIdFuture"))
+                event = repository.findAllEventByStudentCategoryIdAndEventStartTimeGreaterThan(email, cateId, sort, myDate);
+
+
         } else if (role.equals(Role.Admin.name())) {
-            event = events;
+            if (filter == null) event = repository.findAll(sort);
+            else if (filter.equals("date"))
+                event = repository.findByEventStartTimeEquals(myDate, sort);
+            else if (filter.equals("past"))
+                event = repository.findByEventStartTimeLessThan(myDate, sort);
+            else if (filter.equals("future"))
+                event = repository.findByEventStartTimeGreaterThan(myDate, sort);
+
+            else if (filter.equals("cateId"))
+                event = repository.findByEventCategoryID(cateId, sort);
+            else if (filter.equals("catIdDate"))
+                event = repository.findByEventCategoryIDAndEventStartTimeEquals(cateId, myDate);
+            else if (filter.equals("cateIdPast"))
+                event = repository.findByEventCategoryIDAndEventStartTimeLessThan(cateId, myDate, sort);
+            else if (filter.equals("cateIdFuture"))
+                event = repository.findByEventCategoryIDAndEventStartTimeGreaterThan(cateId, myDate, sort);
+
+
         } else if (role.equals(Role.Lecturer.name())) {
             User user = userRepository.findByEmail(email);
-            List<EventCategoryOwner> owners = eventCategoryOwnerRepository.findByUserID(user);
-            event = getEventByLecturer(owners, events);
+            if (filter == null) event = repository.findAllEventByLecturerCategory(user.getId(), sort);
+            else if (filter.equals("date"))
+                event = repository.findAllEventByLecturerStartTimeEquals(user.getId(), sort, myDate);
+            else if (filter.equals("past"))
+                event = repository.findAllEventByLecturerStartTimeLessThan(user.getId(), sort, myDate);
+            else if (filter.equals("future"))
+                event = repository.findAllEventByLecturerStartTimeGreaterThan(user.getId(), sort, myDate);
+
+            else if (filter.equals("cateId"))
+                event = repository.findAllEventByLecturerCategoryId(user.getId(), cateId, sort);
+            else if (filter.equals("catIdDate"))
+                event = repository.findAllEventByLecturerCategoryIdAndEventStartTimeEquals(user.getId(), cateId, myDate);
+            else if (filter.equals("cateIdPast"))
+                event = repository.findAllEventByLecturerCategoryIdAndEventStartTimeLessThan(user.getId(), cateId, myDate, sort);
+            else if (filter.equals("cateIdFuture"))
+                event = repository.findAllEventByLecturerCategoryIdAndEventStartTimeGreaterThan(user.getId(), cateId, myDate, sort);
         }
         return event;
     }
 
-    private List<Event> getEventByLecturer(List<EventCategoryOwner> owners, List<Event> events) {
-        List<Event> eventByEventCateId = new ArrayList<>();
-        for (int i = 0; i < events.size(); i++) {
-            for (int j = 0; j < owners.size(); j++) {
-                if (events.get(i).getEventCategoryID().equals(owners.get(j).getEventCategoryID().getEventCategoryID())) {
-                    eventByEventCateId.add(events.get(i));
-                }
-            }
-        }
-        return eventByEventCateId;
-    }
-
-    private List<Event> getEventByStudent(String email, List<Event> events) {
-        List<Event> eventByEmail = new ArrayList<>();
-        for (int i = 0; i < events.size(); i++) {
-            if (events.get(i).getBookingEmail().equals(email)) {
-                eventByEmail.add(events.get(i));
-            }
-        }
-        return eventByEmail;
-    }
-
 
     public Page<GetEventDTO> getSimpleEventAll(Pageable pageable) {
-        List<Event> allEvent = repository.findAll(Sort.by("eventStartTime").descending());
         List<GetEventDTO> listEventDTO = listMapper
-                .mapList(getEvents(allEvent), GetEventDTO.class, modelMapper);
+                .mapList(getEvents(Sort.by("eventStartTime").descending(), null, null, null), GetEventDTO.class, modelMapper);
         return pageMapper.mapToPage(pageable, listEventDTO);
     }
 
@@ -141,78 +147,64 @@ public class EventService {
         String token = jwtRequestFilter.extractJwtFromRequest(request);
         String role = jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString();
         Event event = repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, id + " Does Not Exist !!!"));
-        checkEmail(event.getBookingEmail(), HttpStatus.FORBIDDEN);
-        if (role.equals(Role.Lecturer.name())) {
-            int check = 0;
-            User user = userRepository.findByEmail(jwtTokenUtil.getAllClaimsFromToken(token).getSubject());
-            List<EventCategoryOwner> co = eventCategoryOwnerRepository.findByUserID(user);
-            for (int i = 0; i < co.size(); i++) {
-                if (co.get(i).getEventCategoryID().getEventCategoryID().equals(event.getEventCategoryID())) {
-                    check = co.get(i).getEventCategoryID().getEventCategoryID();
-                }
-            }
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Booking " + id + " Does Not Exist !!!"));
 
-            if (check == 0) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No permission");
+        String email = jwtTokenUtil.getAllClaimsFromToken(token).getSubject();
+        User user = userRepository.findByEmail(email);
+        if (token != null) {
+            if (role.equals(Role.Student.name())) {
+                checkEmail(event.getBookingEmail(), HttpStatus.FORBIDDEN);
+            } else if (role.equals(Role.Lecturer.name())) {
+                repository.findEventByLecturerAndEventID(user.getId(), id).orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "No permission"));
             }
         }
+
+
         return modelMapper.map(event, GetEventDTO.class);
     }
 
     public Page<GetEventDTO> getSimpleEventDate(Instant date, Pageable pageable) {
-        List<Event> allEvent = repository.findByEventStartTimeEquals(date, Sort.by("eventStartTime").ascending());
-        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(allEvent), GetEventDTO.class, modelMapper);
+        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(Sort.by("eventStartTime").ascending(), date, null, "date"), GetEventDTO.class, modelMapper);
         return pageMapper.mapToPage(pageable, listEventDTO);
     }
 
     public Page<GetEventDTO> getSimpleEventPastDate(Pageable pageable) {
-        List<Event> allEvent = repository.findByEventStartTimeLessThan(dateNow, Sort.by("eventStartTime").descending());
-        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(allEvent), GetEventDTO.class, modelMapper);
+        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(Sort.by("eventStartTime").descending(), dateNow, null, "past"), GetEventDTO.class, modelMapper);
         return pageMapper.mapToPage(pageable, listEventDTO);
     }
 
     public Page<GetEventDTO> getSimpleEventFutureDate(Pageable pageable) {
-        List<Event> allEvent = repository.findByEventStartTimeGreaterThan(dateNow, Sort.by("eventStartTime").ascending());
-        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(allEvent), GetEventDTO.class, modelMapper);
+        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(Sort.by("eventStartTime").ascending(), dateNow, null, "future"), GetEventDTO.class, modelMapper);
         return pageMapper.mapToPage(pageable, listEventDTO);
     }
 
-    // get event by category
-//    public List<GetEventDTO> getEventAllByCategory(int eventCategoryID) {
-//        List<Event> allEvent = repository.findByEventCategoryID(eventCategoryID, Sort.by("eventStartTime").descending());
-//        return listMapper.mapList(getEvents(allEvent), GetEventDTO.class, modelMapper);
-//    }
-
     public Page<GetEventDTO> getEventByCategory(int eventCategoryID, Pageable pageable) {
-        List<Event> allEvent = repository.findByEventCategoryID(eventCategoryID, Sort.by("eventStartTime").descending());
-        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(allEvent), GetEventDTO.class, modelMapper);
+        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(Sort.by("eventStartTime").descending(), null, eventCategoryID, "cateId"), GetEventDTO.class, modelMapper);
         return pageMapper.mapToPage(pageable, listEventDTO);
     }
 
     public Page<GetEventDTO> getEventDateByCategory(int eventCategoryID, Instant date, Pageable pageable) {
-        List<Event> allEvent = repository.findByEventCategoryIDAndEventStartTimeEquals(eventCategoryID, date);
-        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(allEvent), GetEventDTO.class, modelMapper);
+        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(null, date, eventCategoryID, "catIdDate"), GetEventDTO.class, modelMapper);
         return pageMapper.mapToPage(pageable, listEventDTO);
     }
 
     public Page<GetEventDTO> getEventPastDateByCategory(int eventCategoryID, Pageable pageable) {
-        List<Event> allEvent = repository.findByEventCategoryIDAndEventStartTimeLessThan(eventCategoryID, dateNow,
-                Sort.by("eventStartTime").descending());
-        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(allEvent), GetEventDTO.class, modelMapper);
+        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(Sort.by("eventStartTime").descending(), dateNow, eventCategoryID, "cateIdPast"), GetEventDTO.class, modelMapper);
         return pageMapper.mapToPage(pageable, listEventDTO);
     }
 
     public Page<GetEventDTO> getEventFutureDateByCategory(int eventCategoryID, Pageable pageable) {
-        List<Event> allEvent = repository.findByEventCategoryIDAndEventStartTimeGreaterThan(eventCategoryID, dateNow);
-        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(allEvent), GetEventDTO.class, modelMapper);
+        List<GetEventDTO> listEventDTO = listMapper.mapList(getEvents(Sort.by("eventStartTime").ascending(), dateNow, eventCategoryID, "cateIdFuture"), GetEventDTO.class, modelMapper);
         return pageMapper.mapToPage(pageable, listEventDTO);
     }
 
     public void delete(int eventID) {
         String token = jwtRequestFilter.extractJwtFromRequest(request);
         Event event = repository.findById(eventID).orElseThrow(() -> new RuntimeException(eventID + " Does not exit !!!"));
-        checkEmail(event.getBookingEmail(), HttpStatus.FORBIDDEN);
+        if (token != null) {
+            if (jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString().equals(Role.Student.name()))
+                checkEmail(event.getBookingEmail(), HttpStatus.FORBIDDEN);
+        }
         repository.deleteById(eventID);
     }
 
@@ -240,11 +232,10 @@ public class EventService {
 
     private void checkEmail(String email, HttpStatus status) {
         String token = jwtRequestFilter.extractJwtFromRequest(request);
-        if (jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString().equals(Role.Student.name())) {
-            if (email.equals(jwtTokenUtil.getAllClaimsFromToken(token).getSubject()) == false) {
-                throw new ResponseStatusException(status, "the booking email must be the same as the student's email");
-            }
+        if (email.equals(jwtTokenUtil.getAllClaimsFromToken(token).getSubject()) == false) {
+            throw new ResponseStatusException(status, "the booking email must be the same as the student's email");
         }
+
     }
 
     public Event add(AddEventDTO newEvent, MultipartFile files) throws MessagingException, IOException {
@@ -252,46 +243,31 @@ public class EventService {
                 .orElseThrow(() -> new RuntimeException(newEvent.getEventCategoryID() + "Does not exit !!!"));
         Event event = new Event();
         String file = StringUtils.cleanPath(files.getOriginalFilename());
-        try {
-            checkEmail(newEvent.getBookingEmail(), HttpStatus.BAD_REQUEST);
-            checkOverlapping(newEvent.getEventStartTime(), newEvent.getEventCategoryID());
 
-            event.setBookingName(newEvent.getBookingName());
-            event.setBookingEmail(newEvent.getBookingEmail());
-            event.setEventNotes(newEvent.getEventNotes());
-            event.setEventStartTime(newEvent.getEventStartTime());
-            event.setEventCategoryID(newEvent.getEventCategoryID());
-            event.setEventDuration(eventcategory.getEventDuration());
-            event.setEventCategory(eventcategory.getEventCategoryName());
-//            if(uploadFileDTO != null){
-                event.setFileName(file);
-                event.setFilesData(newEvent.getFileData());
-//            }
-
-            Event event1 = modelMapper.map(event, Event.class);
-            repository.saveAndFlush(event1);
-            sendmail(event);
-            return event;
-        } catch (IllegalArgumentException exception) {
-            checkOverlapping(newEvent.getEventStartTime(), newEvent.getEventCategoryID());
-
-            event.setBookingName(newEvent.getBookingName());
-            event.setBookingEmail(newEvent.getBookingEmail());
-            event.setEventNotes(newEvent.getEventNotes());
-            event.setEventStartTime(newEvent.getEventStartTime());
-            event.setEventCategoryID(newEvent.getEventCategoryID());
-            event.setEventDuration(eventcategory.getEventDuration());
-            event.setEventCategory(eventcategory.getEventCategoryName());
-//            if(uploadFileDTO != null){
-                event.setFileName(file);
-                event.setFilesData(newEvent.getFileData());
-//            }
-
-            Event event1 = modelMapper.map(event, Event.class);
-            repository.saveAndFlush(event1);
-            sendmail(event);
-            return event;
+        String token = jwtRequestFilter.extractJwtFromRequest(request);
+        if (token != null) {
+            if (jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString().equals(Role.Student.name())) {
+                checkEmail(newEvent.getBookingEmail(), HttpStatus.BAD_REQUEST);
+            }
         }
+
+        checkOverlapping(newEvent.getEventStartTime(), newEvent.getEventCategoryID());
+
+        event.setBookingName(newEvent.getBookingName());
+        event.setBookingEmail(newEvent.getBookingEmail());
+        event.setEventNotes(newEvent.getEventNotes());
+        event.setEventStartTime(newEvent.getEventStartTime());
+        event.setEventCategoryID(newEvent.getEventCategoryID());
+        event.setEventDuration(eventcategory.getEventDuration());
+        event.setEventCategory(eventcategory.getEventCategoryName());
+        event.setFileName(file);
+        event.setFilesData(newEvent.getFileData());
+
+        Event event1 = modelMapper.map(event, Event.class);
+        repository.saveAndFlush(event1);
+        sendmail(event);
+        return event;
+
     }
 
 
@@ -300,7 +276,13 @@ public class EventService {
         if (updateEvent.getEventStartTime() != null) {
             Event event = repository.findById(bookingId)
                     .orElseThrow(() -> new RuntimeException("Bookind ID " + bookingId + "Does not exit !!!"));
-            checkEmail(event.getBookingEmail(), HttpStatus.FORBIDDEN);
+
+            String token = jwtRequestFilter.extractJwtFromRequest(request);
+            if (token != null) {
+                if (jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString().equals(Role.Student.name())) {
+                    checkEmail(event.getBookingEmail(), HttpStatus.FORBIDDEN);
+                }
+            }
             checkOverlapping(updateEvent.getEventStartTime(), event.getEventCategoryID());
         }
 
@@ -333,18 +315,18 @@ public class EventService {
         });
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E MMM dd, yyyy HH:mm").withZone(ZoneId.of("UTC"));
         DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("HH:mm ").withZone(ZoneId.of("UTC"));
-        Instant endTime =  event.getEventStartTime().plusSeconds(event.getEventDuration() * 60);
+        Instant endTime = event.getEventStartTime().plusSeconds(event.getEventDuration() * 60);
 
         Message msg = new MimeMessage(session);
         msg.setFrom(new InternetAddress("oasip.kw3.noreply@gmail.com", false));
 
         msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(event.getBookingEmail()));
         msg.setSubject("Your booking is complete.");
-        msg.setContent("Subject: [OASIP] " + event.getEventCategory() + " @ " + formatter.format(event.getEventStartTime()) + " - " +formatter1.format(endTime)+ " (ICT)"+
+        msg.setContent("Subject: [OASIP] " + event.getEventCategory() + " @ " + formatter.format(event.getEventStartTime()) + " - " + formatter1.format(endTime) + " (ICT)" +
                         "<br>Reply-to: noreply@intproj21.sit.kmutt.ac.th" +
                         "<br>Booking Name: " + event.getBookingName() +
                         "<br>Event Category: " + event.getEventCategory() +
-                        "<br>When: " + formatter.format(event.getEventStartTime()) + " - " +formatter1.format(endTime)+ " (ICT)"+
+                        "<br>When: " + formatter.format(event.getEventStartTime()) + " - " + formatter1.format(endTime) + " (ICT)" +
                         "<br>Event Notes: " + event.getEventNotes()
 
                 , "text/html; charset=utf-8");

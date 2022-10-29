@@ -22,8 +22,8 @@ public class EditEventcategoryDTO {
 
     @Range(min = 1, max = 480, message="duration must be between 1 and 480")
     private Integer EventDuration;
-//
-//    public void setEventCategoryName(String name) {
-//        EventCategoryName = name.trim();
-//    }
+
+    public void setEventCategoryName(String name) {
+        EventCategoryName = name.trim();
+    }
 }

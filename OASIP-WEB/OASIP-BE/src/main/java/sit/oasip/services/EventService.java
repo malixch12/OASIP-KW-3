@@ -1,6 +1,8 @@
 package sit.oasip.services;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -35,6 +37,8 @@ import sit.oasip.utils.Role;
 import javax.mail.*;
 import javax.mail.internet.*;
 import javax.servlet.http.HttpServletRequest;
+
+import static org.aspectj.weaver.tools.cache.SimpleCacheFactory.path;
 
 @Service
 public class EventService {
@@ -263,7 +267,7 @@ public class EventService {
         event.setEventDuration(eventcategory.getEventDuration());
         event.setEventCategory(eventcategory.getEventCategoryName());
         event.setFileName(file);
-        event.setFilesData(newEvent.getFileData());
+        event.setFilesData(files.getBytes());
 
         Event event1 = modelMapper.map(event, Event.class);
         repository.saveAndFlush(event1);

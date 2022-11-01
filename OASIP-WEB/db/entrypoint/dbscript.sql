@@ -101,9 +101,3 @@ INSERT INTO event values (1,'Somchai Jaidee (OR-7)','somchai.jai@mail.kmutt.com'
 INSERT INTO event values (2,'Somsri Rakdee (SJ-3)','somsri.rak@mail.kmutt.com','Project Management Clinic','2022-04-27:09:30:00',30,'ขอปรึกษาปัญหาเพื่อนไม่ช่วยงาน',1);
 INSERT INTO event values (3,'สมเกียรติ ขยันเรียน กลุ่ม TT-4','somkiat.kay@mail.kmutt.com','Database Clinic','2022-05-23:16:30:00',30,null,3);
 
-
-
-
-INSERT INTO User(UserID,UserName,Email,Password,Role)values(1,'สมส่วน สุขศรี','somsuan.s@kmutt.ac.th','somsuans','Lecturer');
-INSERT INTO User(UserID,UserName,Email,Password)values(2,'กัญญาพัขร','kanyapat.w@kmutt.ac.th','kanyapatw');
-

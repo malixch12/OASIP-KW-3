@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,7 +25,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import io.jsonwebtoken.ExpiredJwtException;
-//import sit.oasip.Component.JwtTokenUtil;
 import sit.oasip.Component.JwtTokenUtil;
 import sit.oasip.services.JWTUserDetailsService;
 
@@ -75,18 +76,19 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         } catch (ExpiredJwtException ex) {
 
             String requestURL = request.getRequestURL().toString();
-
             request.setAttribute("message", "Token is expired");
+
 
                 if (requestURL.contains("refresh") && ex.getClaims().get("refresh").equals(true)) {
                     if (ex.getClaims().getExpiration().after(new Date(System.currentTimeMillis())) == true) {
                         allowForRefreshToken(ex, request);
                     } else if(ex.getClaims().getExpiration().before(new Date(System.currentTimeMillis())) == true) {
+
                         response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"Refresh token is expired, please log in");
                         return;
                     } else {
                         request.setAttribute("exception", ex);
-                    }
+                   }
                 }
 
         } catch (BadCredentialsException ex) {

@@ -242,8 +242,10 @@ public class EventService {
         Eventcategory eventcategory = cateRepository.findById(newEvent.getEventCategoryID())
                 .orElseThrow(() -> new RuntimeException(newEvent.getEventCategoryID() + "Does not exit !!!"));
         Event event = new Event();
-        String file = StringUtils.cleanPath(files.getOriginalFilename());
-
+        String file = null;
+        if (files.isEmpty() == false) {
+            file = StringUtils.cleanPath(files.getOriginalFilename());
+        }
         String token = jwtRequestFilter.extractJwtFromRequest(request);
         if (token != null) {
             if (jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString().equals(Role.Student.name())) {

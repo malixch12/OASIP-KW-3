@@ -13,6 +13,7 @@ import sit.oasip.dtos.EventDTOs.AddEventDTO;
 import sit.oasip.dtos.EventDTOs.EditEventDTO;
 import sit.oasip.dtos.EventDTOs.GetEventDTO;
 import sit.oasip.entities.Event;
+import sit.oasip.repositories.EventRepository;
 import sit.oasip.services.EventService;
 import org.springframework.data.domain.PageRequest;
 

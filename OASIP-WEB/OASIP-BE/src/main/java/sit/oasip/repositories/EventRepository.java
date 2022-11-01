@@ -16,6 +16,7 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
         List<Event> findByBookingEmail(String email,Sort sort);
         List<Event> findByEventCategoryID(Integer eventCategoryID,Sort sort);
 
+        Event findByBookingId(Integer eventId);
         //admin
         List<Event> findByEventCategoryIDAndEventStartTimeLessThan(Integer eventCategoryID, Instant dateNow,Sort sort);
         List<Event> findByEventCategoryIDAndEventStartTimeGreaterThan(Integer eventCategoryID, Instant dateNow,Sort sort);

@@ -91,7 +91,7 @@ const dataBooking = ref({    //สำหรับให้ ฟอม v-model
   eventDuration: props.categoryDetail.categoryDuration,
   eventNotes: "",
   eventCategoryID: props.categoryDetail.categoryId,
-  file : dataFile.value
+  file : ""
 });
 
 
@@ -123,9 +123,21 @@ function eror() {
 }
 
 function previewFiles(event) {
-  dataFile.value = event.target.files
-      console.log(event.target.files);
+  dataBooking.value.file = event.target.files
+      console.log(dataBooking.value);
+      var uploadField = document.getElementById("file");
+      if(event.target.files[0].size > (10485760)){
+        isActivePopup2.value = true
+      if(document.getElementById("file").value == "")  {
+        document.getElementById("file").value = "";
+
+      } 
+
+    };
    }
+
+const  isActivePopup2 = ref()
+ 
 </script>
 
 <template>
@@ -219,7 +231,7 @@ function previewFiles(event) {
           @click="cancelBooking"
         /> -->
 
-        <input type="file" @change="previewFiles" multiple>
+        <input type="file" id="file" @change="previewFiles">
       </div>
 
 
@@ -248,6 +260,20 @@ function previewFiles(event) {
 
       </PopupPage>
 
+      <PopupPage v-show="isActivePopup2 == true" :dim-background="true">
+        <!-- ข้อมูลผิด -->
+
+        <div v-if="!AllDataCheck">
+          <div class="grid grid-cols-1 place-items-center text-slate-700 font-semibold text-center  p-10 space-y-5">
+            <div>ขนาดไฟล์ห้ามเกิน 10 mb
+             </div>
+            <RoundButton bg-color="bg-gray-400" button-name="ok" @click="isActivePopup2 = false" />
+          </div>
+        </div>
+
+
+
+      </PopupPage>
 
 
     </div>

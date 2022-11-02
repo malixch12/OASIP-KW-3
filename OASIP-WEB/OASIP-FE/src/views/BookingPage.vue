@@ -118,22 +118,36 @@ onBeforeMount(() => {
 // });
 const CheckOverlap = ref(false)
 const addEvent = async (dataBooking , AllDataCheck) => {
+  dataBooking.eventStartTime=new Date(dataBooking.eventStartTime).toISOString();
 
   console.log(dataBooking)
+  let photo = document.getElementById("file").files[0];
+  let formData = new FormData();
+            formData.append("bookingEmail", dataBooking.bookingEmail);
+            formData.append("bookingName", dataBooking.bookingName);
+            formData.append("eventCategory", dataBooking.eventCategory);
+            formData.append("eventCategoryID", dataBooking.eventCategoryID);
+            formData.append("eventDuration", dataBooking.eventDuration);
+            formData.append("eventNotes", dataBooking.eventNotes);
+            formData.append("eventStartTime", dataBooking.eventStartTime);
+            formData.append("file", photo);
+
+         //   formData.append("file", "John123");
+
 
   if(AllDataCheck == true && UserRole.value!="Guest") {
     RefreshToken()
- dataBooking.eventStartTime=new Date(dataBooking.eventStartTime).toISOString();
+ //dataBooking.eventStartTime = "2024-11-30T05:55:00.000Z"
   const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events`, {
     method: "POST",
     headers: {
-      "content-type": "application/json",
       'Authorization': 'Bearer ' + jwtToken.value
 
     },
-    body: JSON.stringify(dataBooking),
-  });
+    body: formData,
+  })
     if(res.status === 400) {
+      console.log(...formData)
       console.log("overlap")
       OverlapTrue()
       console.log(CheckOverlap.value)
@@ -147,7 +161,6 @@ const addEvent = async (dataBooking , AllDataCheck) => {
 
   }
   if(AllDataCheck == true && UserRole.value=="Guest") {
- dataBooking.eventStartTime=new Date(dataBooking.eventStartTime).toISOString();
   const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events`, {
     method: "POST",
     headers: {

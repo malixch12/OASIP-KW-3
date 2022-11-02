@@ -19,7 +19,6 @@ import org.springframework.data.domain.PageRequest;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.Instant;
 
@@ -117,8 +116,8 @@ public class EventController {
 
     @PutMapping("/{bookingId}")
     @ResponseStatus(HttpStatus.OK)
-    public Event update(@Validated @RequestBody EditEventDTO updateEvent, @PathVariable Integer bookingId) {
-        return eventService.update(updateEvent, bookingId);
+    public Event update(@Validated @ModelAttribute EditEventDTO updateEvent, @PathVariable Integer bookingId,@ModelAttribute ("file") MultipartFile file) {
+        return eventService.update(updateEvent, bookingId,file);
     }
 
 }

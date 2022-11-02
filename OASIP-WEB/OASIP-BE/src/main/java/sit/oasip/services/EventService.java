@@ -247,9 +247,7 @@ public class EventService {
                 .orElseThrow(() -> new RuntimeException(newEvent.getEventCategoryID() + "Does not exit !!!"));
         Event event = new Event();
         String file = null;
-        if (files.isEmpty() == false) {
-            file = StringUtils.cleanPath(files.getOriginalFilename());
-        }
+
         String token = jwtRequestFilter.extractJwtFromRequest(request);
         if (token != null) {
             if (jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString().equals(Role.Student.name())) {
@@ -266,8 +264,12 @@ public class EventService {
         event.setEventCategoryID(newEvent.getEventCategoryID());
         event.setEventDuration(eventcategory.getEventDuration());
         event.setEventCategory(eventcategory.getEventCategoryName());
-        event.setFileName(file);
-        event.setFilesData(files.getBytes());
+        if (files != null) {
+            file = StringUtils.cleanPath(files.getOriginalFilename());
+            event.setFileName(file);
+            event.setFilesData(files.getBytes());
+        }
+
 
         Event event1 = modelMapper.map(event, Event.class);
         repository.saveAndFlush(event1);
@@ -277,7 +279,7 @@ public class EventService {
     }
 
 
-    public Event update(EditEventDTO updateEvent, int bookingId) {
+    public Event update(EditEventDTO updateEvent, int bookingId ,MultipartFile files){
 
         if (updateEvent.getEventStartTime() != null) {
             Event event = repository.findById(bookingId)
@@ -302,6 +304,16 @@ public class EventService {
             } else if (updateEvent.getEventStartTime() != null) {
                 e.setEventStartTime(updateEvent.getEventStartTime());
             }
+
+            if (files != null){
+                e.setFileName(StringUtils.cleanPath(files.getOriginalFilename()));
+                try {
+                    e.setFilesData(files.getBytes());
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+
             return repository.saveAndFlush(e);
         }).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "test"));
         return modelMapper.map(event, Event.class);

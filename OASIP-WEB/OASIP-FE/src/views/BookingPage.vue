@@ -118,7 +118,9 @@ onBeforeMount(() => {
 // });
 const CheckOverlap = ref(false)
 const addEvent = async (dataBooking , AllDataCheck) => {
-  
+
+  console.log(dataBooking)
+
   if(AllDataCheck == true && UserRole.value!="Guest") {
     RefreshToken()
  dataBooking.eventStartTime=new Date(dataBooking.eventStartTime).toISOString();

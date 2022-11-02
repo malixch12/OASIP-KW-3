@@ -81,6 +81,7 @@ const DateTimeCheck = ref(false)
 const NameCheck = ref(false)     //เซ็คว่ากรอกรึยัง
 const EmailCheck = ref(false)   //เซ็คว่ากรอกรึยัง
 const EmailValidation = ref(false)  //ฟอแมท เมล
+const dataFile = ref()
 const dataBooking = ref({    //สำหรับให้ ฟอม v-model
   bookingId: "",
   bookingName: "",
@@ -90,6 +91,7 @@ const dataBooking = ref({    //สำหรับให้ ฟอม v-model
   eventDuration: props.categoryDetail.categoryDuration,
   eventNotes: "",
   eventCategoryID: props.categoryDetail.categoryId,
+  file : dataFile.value
 });
 
 
@@ -120,6 +122,10 @@ function eror() {
   if (!AllDataCheck.value) { isActivePopup.value = true }
 }
 
+function previewFiles(event) {
+  dataFile.value = event.target.files
+      console.log(event.target.files);
+   }
 </script>
 
 <template>
@@ -212,6 +218,8 @@ function eror() {
           button-name="cancel"
           @click="cancelBooking"
         /> -->
+
+        <input type="file" @change="previewFiles" multiple>
       </div>
 
 

@@ -1,8 +1,6 @@
 package sit.oasip.services;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -37,8 +35,6 @@ import sit.oasip.utils.Role;
 import javax.mail.*;
 import javax.mail.internet.*;
 import javax.servlet.http.HttpServletRequest;
-
-import static org.aspectj.weaver.tools.cache.SimpleCacheFactory.path;
 
 @Service
 public class EventService {
@@ -242,11 +238,10 @@ public class EventService {
 
     }
 
-    public Event add(AddEventDTO newEvent, MultipartFile files) throws MessagingException, IOException {
+    public Event add(AddEventDTO newEvent) throws MessagingException, IOException {
         Eventcategory eventcategory = cateRepository.findById(newEvent.getEventCategoryID())
                 .orElseThrow(() -> new RuntimeException(newEvent.getEventCategoryID() + "Does not exit !!!"));
         Event event = new Event();
-        String file = null;
 
         String token = jwtRequestFilter.extractJwtFromRequest(request);
         if (token != null) {
@@ -264,10 +259,9 @@ public class EventService {
         event.setEventCategoryID(newEvent.getEventCategoryID());
         event.setEventDuration(eventcategory.getEventDuration());
         event.setEventCategory(eventcategory.getEventCategoryName());
-        if (files != null) {
-            file = StringUtils.cleanPath(files.getOriginalFilename());
-            event.setFileName(file);
-            event.setFilesData(files.getBytes());
+        if (newEvent.getFile() != null) {
+            event.setFileName(StringUtils.cleanPath(newEvent.getFile().getOriginalFilename()));
+            event.setFilesData(newEvent.getFile().getBytes());
         }
 
 
@@ -279,7 +273,7 @@ public class EventService {
     }
 
 
-    public Event update(EditEventDTO updateEvent, int bookingId ,MultipartFile files){
+    public Event update(EditEventDTO updateEvent, int bookingId){
 
         if (updateEvent.getEventStartTime() != null) {
             Event event = repository.findById(bookingId)
@@ -305,10 +299,10 @@ public class EventService {
                 e.setEventStartTime(updateEvent.getEventStartTime());
             }
 
-            if (files != null){
-                e.setFileName(StringUtils.cleanPath(files.getOriginalFilename()));
+            if (updateEvent.getFile() != null){
+                e.setFileName(StringUtils.cleanPath(updateEvent.getFile().getOriginalFilename()));
                 try {
-                    e.setFilesData(files.getBytes());
+                    e.setFilesData(updateEvent.getFile().getBytes());
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }

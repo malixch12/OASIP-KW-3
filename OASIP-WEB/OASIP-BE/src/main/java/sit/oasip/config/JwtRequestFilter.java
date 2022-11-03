@@ -62,9 +62,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 
 
-            } else if(StringUtils.hasText(jwtToken) == false && request.getMethod().equals(HttpMethod.POST.toString())) {
+            } else if (StringUtils.hasText(jwtToken) == false &&
+                    (request.getMethod().equals(HttpMethod.POST.toString()) && request.getRequestURL().toString().contains("events") ||
+                            request.getMethod().equals(HttpMethod.GET.toString()) && request.getRequestURL().toString().contains("eventcategorys"))) {
+
                 List<SimpleGrantedAuthority> role = Arrays.asList(new SimpleGrantedAuthority("Guest"));
-                UserDetails userDetails = new User("guest", "",role);
+                UserDetails userDetails = new User("guest", "", role);
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
@@ -79,22 +82,22 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             request.setAttribute("message", "Token is expired");
 
 
-                if (requestURL.contains("refresh") && ex.getClaims().get("refresh").equals(true)) {
-                    if (ex.getClaims().getExpiration().after(new Date(System.currentTimeMillis())) == true) {
-                        allowForRefreshToken(ex, request);
-                    } else if(ex.getClaims().getExpiration().before(new Date(System.currentTimeMillis())) == true) {
+            if (requestURL.contains("refresh") && ex.getClaims().get("refresh").equals(true)) {
+                if (ex.getClaims().getExpiration().after(new Date(System.currentTimeMillis())) == true) {
+                    allowForRefreshToken(ex, request);
+                } else if (ex.getClaims().getExpiration().before(new Date(System.currentTimeMillis())) == true) {
 
-                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"Refresh token is expired, please log in");
-                        return;
-                    } else {
-                        request.setAttribute("exception", ex);
-                   }
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Refresh token is expired, please log in");
+                    return;
+                } else {
+                    request.setAttribute("exception", ex);
                 }
+            }
 
         } catch (BadCredentialsException ex) {
             request.setAttribute("message", "Token incorrect");
             request.setAttribute("exception", ex);
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             System.out.println(ex);
         }
         chain.doFilter(request, response);

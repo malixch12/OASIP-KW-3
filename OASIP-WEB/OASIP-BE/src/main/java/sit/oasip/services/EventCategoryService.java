@@ -48,14 +48,19 @@ public class EventCategoryService {
         Eventcategory eventcategory = new Eventcategory();
 
         String token = jwtRequestFilter.extractJwtFromRequest(request);
-        String email = jwtTokenUtil.getAllClaimsFromToken(token).getSubject();
-        String role = jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString();
-
-        if (role.equals(Role.Lecturer.name())) {
-            eventcategories = repository.findEventCateByLecturer(userRepository.findByEmail(email).getId());
-        } else {
+        if(token != null){
+            String email = jwtTokenUtil.getAllClaimsFromToken(token).getSubject();
+            String role = jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString();
+            System.out.println(role);
+            if (role.equals(Role.Lecturer.name())) {
+                eventcategories = repository.findEventCateByLecturer(userRepository.findByEmail(email).getId());
+            } else {
+                eventcategories = repository.findAll();
+            }
+        }else{
             eventcategories = repository.findAll();
         }
+
         return eventcategories;
     }
 

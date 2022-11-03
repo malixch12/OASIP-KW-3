@@ -1,8 +1,6 @@
 package sit.oasip.controllers;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -13,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
-import sit.oasip.dtos.ApiError;
 
 @ControllerAdvice
 public class ExceptionController {

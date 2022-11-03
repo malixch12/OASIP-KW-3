@@ -64,7 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.csrf().disable().cors().configurationSource(request -> corsConfiguration).and()
                 .authorizeRequests()
 //                .antMatchers ("/api/events").permitAll()
-                .antMatchers("/api/login", "/api/users/signup","/api/eventcategorys/**").permitAll()
+                .antMatchers("/api/login", "/api/users/signup").permitAll()
 //                .antMatchers(HttpMethod.POST, "/api/events").anonymous()
 
                 .antMatchers("/api/users", "/api/users/**", "/api/match").hasAuthority(Role.Admin.name())
@@ -72,6 +72,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, "/api/events/**").hasAnyAuthority(Role.Student.name(), Role.Admin.name())
                 .antMatchers(HttpMethod.DELETE, "/api/events/**").hasAnyAuthority(Role.Student.name(), Role.Admin.name())
                 .antMatchers(HttpMethod.POST, "/api/events/**").hasAnyAuthority(Role.Student.name(), Role.Admin.name(),"Guest")
+
+                .antMatchers(HttpMethod.GET,"/api/eventcategorys/**").hasAnyAuthority(Role.Student.name(), Role.Admin.name(), Role.Lecturer.name(),"Guest")
+                .antMatchers(HttpMethod.PUT,"/api/eventcategorys/**").hasAnyAuthority(Role.Admin.name())
 
                 .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

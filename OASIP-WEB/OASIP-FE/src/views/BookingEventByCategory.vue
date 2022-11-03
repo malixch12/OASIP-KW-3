@@ -101,7 +101,6 @@ onBeforeMount(async () => {
   jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
   jwtToken.value = localStorage.getItem('jwtToken');
   if(jwtToken.value==null) {
-    goHome()
   }
   
   getLinkAll();
@@ -114,28 +113,7 @@ onBeforeMount(async () => {
 
 <template>
 <div>
-  <PopupPage v-show="isActivePopup2" :dim-background="true">
-      <div class="grid grid-cols-1 p-12" >
-        โปรดเข้าสู่ระบบใหม่
-        <div class=" max-w-lg mx-auto  ">
-          <br>
-          <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
-            @click="isActivePopup = false , removeToken ()" />
-        </div>
-      </div>
-      </PopupPage>
 
-    <PopupPage v-show="isActivePopup" :dim-background="true">
-    <div class="grid grid-cols-1 p-12" v-if="TokenTimeOut==true">
-        โปรดเข้าสู่ระบบใหม่
-        <div class=" max-w-lg mx-auto  ">
-          <br>
-          <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
-            @click="isActivePopup = false , removeToken()" />
-        </div>
-      </div>
-
-    </PopupPage>
 <generateCategory name="Select a clinic to booking" :categorys="CateLists" type="Booking"/>
 
 

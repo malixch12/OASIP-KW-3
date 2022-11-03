@@ -3,6 +3,7 @@ import RoundButton from "../components/RoundButton.vue";
 import { useRouter, useRoute } from "vue-router";
 import { ref, onBeforeMount, onBeforeUpdate, computed } from "vue";
 import PopupPage from "../components/PopupPage.vue"
+import privew from "../components/PicPreview.vue"
 const appRouter = useRouter();
 const goBack = () => appRouter.go(-1);
 
@@ -122,27 +123,46 @@ function eror() {
   if (!AllDataCheck.value) { isActivePopup.value = true }
 }
 
-function previewFiles(event) {
-  dataBooking.value.file = event.target.files
-      console.log(dataBooking.value);
-      var uploadField = document.getElementById("file");
-      if(event.target.files[0].size > (10485760)){
-        isActivePopup2.value = true
-      if(document.getElementById("file").value == "")  {
-        document.getElementById("file").value = "";
+// function previewFiles(event) {  
+//       console.log(dataBooking.value);
+//       var uploadField = document.getElementById("file");
+//       let photo = document.getElementById("file").files[0];
 
-      } 
+//       if(event.target.files[0].size > (10485760)){
+//         isActivePopup2.value = true
+//       if(dataFile.value == null)  {
+//         document.getElementById("file").value = "";
 
-    };
-   }
+//       }
+      
+//       if (dataFile.value != null) {  
+        
+//         document.getElementById("file").files[0] =  dataFile.value;
+
+//       } 
+
+//     }
+    
+//     if(event.target.files[0].size < (10485760)){  dataFile.value = photo }
+//    }
 
 const  isActivePopup2 = ref()
  
+function previewFiles(event) {
+
+
+    var output = document.getElementById('output');
+    output.src = URL.createObjectURL(event.target.files[0]);
+    output.onload = function() {
+      URL.revokeObjectURL(output.src) // free memory
+    }
+  
+}
+
 </script>
 
 <template>
   <div>
-
     <div class="space-y-7 bg-white shadow-xl rounded-lg md:ml-24 md:p-16 p-8  rounded md:w-auto w-full">
       <RoundButton bg-color="bg-slate-400 text-sm text-white" button-name="<< go back" @click="goBack" />
 
@@ -231,8 +251,13 @@ const  isActivePopup2 = ref()
           @click="cancelBooking"
         /> -->
 
-        <input type="file" id="file" @change="previewFiles">
-      </div>
+        <!-- <label class="block mb-2 text-sm font-medium text-gray-900 mt-4" for="file_input">Upload file</label>
+<input class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer  focus:outline-none  " id="file_input" type="file" @change="previewFiles()"> -->
+    
+<div id="output"></div>
+
+<privew/>
+</div>
 
 
       <PopupPage v-show="isActivePopup == true" :dim-background="true">

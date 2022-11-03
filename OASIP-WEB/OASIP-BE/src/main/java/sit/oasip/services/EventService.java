@@ -273,7 +273,7 @@ public class EventService {
     }
 
 
-    public Event update(EditEventDTO updateEvent, int bookingId){
+    public Event update(EditEventDTO updateEvent, int bookingId) {
 
         if (updateEvent.getEventStartTime() != null) {
             Event event = repository.findById(bookingId)
@@ -299,7 +299,13 @@ public class EventService {
                 e.setEventStartTime(updateEvent.getEventStartTime());
             }
 
-            if (updateEvent.getFile() != null){
+            if (updateEvent.getFile() == null) {
+                e.setFilesData(null);
+                e.setFileName(null);
+            } else if (updateEvent.getFile().isEmpty()) {
+                e.setFilesData(null);
+                e.setFileName(null);
+            } else {
                 e.setFileName(StringUtils.cleanPath(updateEvent.getFile().getOriginalFilename()));
                 try {
                     e.setFilesData(updateEvent.getFile().getBytes());

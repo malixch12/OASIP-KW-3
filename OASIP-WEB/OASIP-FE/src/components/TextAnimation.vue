@@ -10,13 +10,13 @@ import { ref, onBeforeMount, onBeforeUpdate, computed } from "vue";
    <div class="wrapper">
        
        
-       <div class="words drop-shadow-lg">
-           <span>Server-side Clinic.</span>
-           <span>Project Management</span>
-           <span>DevOps/Infra Clinic.</span>
-           <span>Database Clinic.</span>
-           <span>Client-side Clinic.</span>
-           <span>Project Management</span>
+       <div class="words drop-shadow-lg ">
+           <span class="text-transparent  bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 ">Server-side Clinic.</span>
+           <span class="text-transparent  bg-clip-text bg-gradient-to-r from-red-400 to-orange-600 ">Project Management</span>
+           <span class="text-transparent  bg-clip-text bg-gradient-to-r from-blue-400 to-pink-600 ">DevOps/Infra Clinic.</span>
+           <span class="text-transparent  bg-clip-text bg-gradient-to-r from-gray-400 to-green-600 ">Database Clinic.</span>
+           <span class="text-transparent  bg-clip-text bg-gradient-to-r from-purple-400 to-red-600 ">Client-side Clinic.</span>
+           <span class="text-transparent  bg-clip-text bg-gradient-to-r from-purple-400 to-blue-600 ">Project Management</span>
        </div>
    </div>
 <div class="font-bold drop-shadow-lg ">and booking</div>
@@ -58,9 +58,10 @@ span{
     display: block;
     height: 100%;
     
-    color: #0e6ffc;
+   
     animation: spin_words 10s infinite;
 }
+
 @keyframes spin_words{
     10%{
         transform: translateY(-112%);

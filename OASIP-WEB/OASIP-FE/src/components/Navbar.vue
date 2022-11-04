@@ -16,9 +16,28 @@ var now_time = (today.getHours() + ":" + today.getMinutes() + ":" + today.getSec
   countTime.value = now_date + " - " + now_time
 }
 
+const loginCheck = ref()
+const jwtToken = ref()
+const UserRole = ref()
 onBeforeMount(async () => {
 setInterval(setTime, 1);
+jwtToken.value = localStorage.getItem('jwtToken');
+UserRole.value = localStorage.getItem('UserRole');
+
+if(jwtToken.value != null) {
+  loginCheck.value = false
+}else
+loginCheck.value = true
 });
+
+function logout () {
+  localStorage.removeItem('jwtToken')
+  localStorage.removeItem('UserRole')
+
+  window.location.reload()
+
+}
+
 </script>
  
 <template>
@@ -50,7 +69,7 @@ setInterval(setTime, 1);
               >Home</router-link
             >
           </li>
-          <li>
+          <li v-if="!loginCheck && UserRole==`Admin`">
             <router-link
               :to="{ name: 'BookingEventByCate' }"
               class="
@@ -63,7 +82,7 @@ setInterval(setTime, 1);
             >
           </li>
 
-          <li>
+          <li v-if="!loginCheck && UserRole==`Admin`">
             <router-link
               :to="{ name: 'ListAllByCate' }"
               class="
@@ -72,7 +91,7 @@ setInterval(setTime, 1);
                
                 md:hover:text-pink-500 md:p-0 
               "
-              >check appointments
+              ><span >check appointments</span>
             </router-link>
           </li>
              <li>
@@ -84,11 +103,11 @@ setInterval(setTime, 1);
                
                 md:hover:text-pink-500 md:p-0 
               "
-              >user list
+              ><span v-show="!loginCheck && UserRole==`Admin`">user list</span>
             </router-link>
           </li>
-              <li>
-            <router-link
+              <li >
+            <router-link 
               :to="{ name: 'Login' }"
               class="
                   block
@@ -98,11 +117,11 @@ setInterval(setTime, 1);
                
                 
               "
-              >Login
+              ><span v-if="!loginCheck">my profile</span> <span v-if="loginCheck">Login</span> 
             </router-link>
           </li>
-          <li>
-            <router-link
+          <li v-if="loginCheck">
+            <router-link 
               :to="{ name: 'SignUpPage' }"
               class="
                  block
@@ -113,7 +132,18 @@ setInterval(setTime, 1);
               >sign up
             </router-link>
           </li>
-         
+          <li>
+            <div v-show="!loginCheck"  @click="logout()"
+             
+              class="
+                 block
+                text-transparent  bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 
+               
+                
+              "
+              >     Log out
+            </div>
+          </li>
           
           <li>
             <span

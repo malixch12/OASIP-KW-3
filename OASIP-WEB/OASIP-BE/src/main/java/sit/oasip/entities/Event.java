@@ -28,34 +28,31 @@ public class Event {
     @Column(name = "BookingID", nullable = false)
     private Integer bookingId;
 
-    @NotBlank(message = "Booking name must not be blank")
-    @Length(min=1, max = 100, message="size must be between 1 and 100")
     @Column(name = "BookingName", nullable = false, length = 100)
     private String bookingName;
 
-    @Email
-    @NotBlank(message = "Email must not be blank")
-    @Length(min = 1, max = 100, message="size must be between 1 and 100")
     @Column(name = "BookingEmail", nullable = false, length = 100)
     private String bookingEmail;
 
-    @Length(min = 1, max = 100, message="size must be between 1 and 100")
     @Column(name = "EventCategory", nullable = false, length = 100)
     private String eventCategory;
 
-    @Future(message = "Start Time must be future")
-    @NotNull(message = "Time is not null")
     @Column(name = "EventStartTime", nullable = false)
     private Instant eventStartTime;
 
     @Column(name = "EventDuration", nullable = false)
     private Integer eventDuration;
 
-    @Length(min = 0, max = 500, message = "size must be between 0 and 500")
     @Column(name = "EventNotes", length = 500)
     private String eventNotes;
 
-    @NotNull(message = "Category ID is not null")
+    @Lob
+    @Column(name = "FilesData", length = 500)
+    private  byte[]  filesData;
+
+    @Column(name = "FileName")
+    private String fileName;
+
     @Column(name = "EventCategoryID", nullable = false)
     private Integer eventCategoryID;       
 }

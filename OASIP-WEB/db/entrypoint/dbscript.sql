@@ -1,6 +1,6 @@
-create database int222;
-create user 'int222'@'%'identified with mysql_native_password by 'int222';
-grant all privileges on int222.*to'int222'@'%';
+-- create database int222;
+-- create user 'int222'@'%'identified with mysql_native_password by 'int222';
+-- grant all privileges on int222.*to'int222'@'%';
 
 use int222;
 
@@ -66,6 +66,7 @@ CREATE TABLE IF NOT EXISTS `User` (
  `UserID` INT NOT NULL AUTO_INCREMENT,
   `UserName` VARCHAR(100) NOT NULL UNIQUE,
   `Email` VARCHAR(50) NOT NULL UNIQUE,
+`Password` VARCHAR(90) NOT NULL,
   `Role` ENUM('Admin','Lecturer','Student') DEFAULT 'Student' NOT NULL,
   `CreateOn` TIMESTAMP NOT NULL  DEFAULT CURRENT_TIMESTAMP,
   `UpdateOn` TIMESTAMP NOT NULL  DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
@@ -79,6 +80,9 @@ CREATE TABLE IF NOT EXISTS `Enrollment` (
   `EventCategoryID` INT NOT NULL,
   PRIMARY KEY (`EnrollmenID`))
 ENGINE = InnoDB;
+
+
+
 
 
 SHOW WARNINGS;
@@ -96,12 +100,4 @@ INSERT INTO eventcategory VALUES (5,'Server-side Clinic',null,30);
 INSERT INTO event values (1,'Somchai Jaidee (OR-7)','somchai.jai@mail.kmutt.com','DevOps/Infra Clinic','2022-05-23:13:30:00',30,null,2);
 INSERT INTO event values (2,'Somsri Rakdee (SJ-3)','somsri.rak@mail.kmutt.com','Project Management Clinic','2022-04-27:09:30:00',30,'ขอปรึกษาปัญหาเพื่อนไม่ช่วยงาน',1);
 INSERT INTO event values (3,'สมเกียรติ ขยันเรียน กลุ่ม TT-4','somkiat.kay@mail.kmutt.com','Database Clinic','2022-05-23:16:30:00',30,null,3);
-
-
-
-
-INSERT INTO User(UserID,UserName,Email,Role)values(1,'สมส่วน สุขศรี','somsuan.s@kmutt.ac.th','Lecturer');
-INSERT INTO User(UserID,UserName,Email)values(2,'กัญญาพัขร','kanyapat.w@kmutt.ac.th');
-
-
 

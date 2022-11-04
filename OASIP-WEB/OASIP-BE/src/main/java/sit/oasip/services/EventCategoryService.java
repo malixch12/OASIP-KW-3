@@ -1,5 +1,6 @@
 package sit.oasip.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -7,38 +8,90 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import sit.oasip.dtos.SimpleEventcategoryDTO;
+import sit.oasip.Component.JwtTokenUtil;
+import sit.oasip.config.JwtRequestFilter;
+import sit.oasip.dtos.EventCategoryDTO.EditEventcategoryDTO;
+import sit.oasip.dtos.EventCategoryDTO.GetEventCategoryDTO;
 import sit.oasip.entities.Eventcategory;
 import sit.oasip.repositories.EventcategoryRepository;
+import sit.oasip.repositories.UserRepository;
 import sit.oasip.utils.ListMapper;
+import sit.oasip.utils.Role;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Service
 public class EventCategoryService {
 
     private final EventcategoryRepository repository;
+    private final UserRepository userRepository;
 
     @Autowired
     private ListMapper listMapper;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+    @Autowired
+    private JwtRequestFilter jwtRequestFilter;
+    private HttpServletRequest request;
 
     @Autowired
-    public EventCategoryService(EventcategoryRepository repository) {
+    public EventCategoryService(EventcategoryRepository repository, UserRepository userRepository, HttpServletRequest request) {
         this.repository = repository;
+        this.userRepository = userRepository;
+        this.request = request;
     }
 
-    public List<SimpleEventcategoryDTO> getSimpleEventcategoryAll() {
-        return listMapper.mapList(repository.findAll(), SimpleEventcategoryDTO.class, modelMapper);
+    private List<Eventcategory> getAllEventCate() {
+        List<Eventcategory> eventcategories = new ArrayList<>();
+        Eventcategory eventcategory = new Eventcategory();
+
+        String token = jwtRequestFilter.extractJwtFromRequest(request);
+        if(token != null){
+            String email = jwtTokenUtil.getAllClaimsFromToken(token).getSubject();
+            String role = jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString();
+            System.out.println(role);
+            if (role.equals(Role.Lecturer.name())) {
+                eventcategories = repository.findEventCateByLecturer(userRepository.findByEmail(email).getId());
+            } else {
+                eventcategories = repository.findAll();
+            }
+        }else{
+            eventcategories = repository.findAll();
+        }
+
+        return eventcategories;
     }
 
-    public SimpleEventcategoryDTO getSimpleEventcategoryById(Integer id) {
-        Eventcategory eventcategory = repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, id + " Does Not Exist !!!"));
+    private Eventcategory getEventCate(int cateId) {
+        Eventcategory eventcategory = new Eventcategory();
 
-        return modelMapper.map(eventcategory, SimpleEventcategoryDTO.class);
+        String token = jwtRequestFilter.extractJwtFromRequest(request);
+        String email = jwtTokenUtil.getAllClaimsFromToken(token).getSubject();
+        String role = jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString();
+
+        if (role.equals(Role.Lecturer.name())) {
+            eventcategory = repository.findEventCateByLecturerAndCateID(userRepository.findByEmail(email).getId(), cateId).orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "No Permission !!"));
+        } else {
+            eventcategory = repository.findById(cateId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category ID : " + cateId + " Does Not Exist !!!"));
+
+        }
+        return eventcategory;
     }
 
-    public SimpleEventcategoryDTO update(SimpleEventcategoryDTO updateCategory, Integer id) {
+
+    public List<GetEventCategoryDTO> getSimpleEventcategoryAll() {
+        List<Eventcategory> getCateLists = repository.findAll();
+        return listMapper.mapList(getAllEventCate(), GetEventCategoryDTO.class, modelMapper);
+    }
+
+    public GetEventCategoryDTO getSimpleEventcategoryById(Integer id) {
+        return modelMapper.map(getEventCate(id), GetEventCategoryDTO.class);
+    }
+
+    public GetEventCategoryDTO update(EditEventcategoryDTO updateCategory, Integer id) {
         List<Eventcategory> listCateAll = repository.findAll();
 
         // category name unique
@@ -58,6 +111,6 @@ public class EventCategoryService {
             return repository.saveAndFlush(c);
 
         }).orElseThrow(() -> new RuntimeException("Can not update !!!"));
-        return modelMapper.map(eventCate, SimpleEventcategoryDTO.class);
+        return modelMapper.map(eventCate, GetEventCategoryDTO.class);
     }
 }

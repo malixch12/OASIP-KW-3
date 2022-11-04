@@ -6,8 +6,10 @@ import { useRoute } from "vue-router";
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import PopupPage from "../components/PopupPage.vue";
 import RoundButton from "../components/RoundButton.vue";
+import { useRouter } from "vue-router";
 
 
+const router = useRouter();
 
 const route = useRoute();
 const errorStatus = ref({
@@ -25,7 +27,7 @@ if( PasswordCheck.value == true) {
       dataUser.value.role = "Student"
     }
 
-    const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/users`, {
+    const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/users/signup`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -131,6 +133,13 @@ function PasswordConfirm() {
 
 }
 
+function goHome () {
+  router.push({
+    name: "Login"
+ 
+  });
+}
+
 
 const EmailCheck = ref(true)   //เซ็คว่ากรอกรึยัง
 const EmailValidation = ref(true)  //ฟอแมท เมล
@@ -158,7 +167,7 @@ const PasswordCheck = ref(false) //check password
         </div>
         <div class=" max-w-lg mx-auto  ">
           <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
-            @click="isActivePopup = false" />
+            @click="isActivePopup = false , goHome()" />
         </div>
       </div>
 
@@ -394,9 +403,10 @@ section .color:nth-child(3) {
   border-right: 1px solid rgba(255, 255, 255, 0.2);
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   background: rgba(255, 255, 255, 0.1);
-  animation: animate 10s linear infinite;
+  
   border-radius: 10px;
   animation-delay: calc(-1s * var(--i));
+  animation: animate 10s linear infinite;
 }
 
 @keyframes animate {

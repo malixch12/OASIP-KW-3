@@ -41,11 +41,22 @@ headers: {
   if (res.status === 200) {
     eventLists.value = await res.json();
   }
+
+  if (res.status === 403) {
+    goList()
+    
+
+  
+  }
 };
 
+const UserRole = ref()
 onBeforeMount(async () => {
   jwtToken.value = localStorage.getItem('jwtToken');
-
+  UserRole.value = localStorage.getItem('UserRole');
+  if(jwtToken.value==null) {
+    goHome()
+  }
   getLinkAll();
 });
 
@@ -56,7 +67,11 @@ const removeEvent = async () => {
         myRouter.query.BookingId
       }`,
       {
-        method: "DELETE",
+        method: "DELETE",headers: {
+
+'Content-Type': 'application/json',
+'Authorization': 'Bearer ' + jwtToken.value
+}
       }
     );
     router.go(-1);
@@ -64,7 +79,9 @@ const removeEvent = async () => {
   }
 };
 
-const goBack = () => router.go(-1);
+function goBack () {
+  router.go(-1);
+} 
 
 const goAboutUs = () => appRouter.push({ name: "About" });
 
@@ -73,9 +90,14 @@ const toEditMode = (editNote) => {
   editingNote.value = editNote;
 };
 
+const InputTime = ref()
 const updateNote = async () => {
+  console.log("input " + InputTime.value )
+  console.log("eventtime " + eventLists.value.eventStartTime )
   //eventLists.value.eventStartTime = await new Date(eventLists.value.eventStartTime).toISOString();
-  if (DateTimeCheck.value == true) {
+  if (DateTimeCheck.value == true && InputTime.value != null) {
+    console.log("1")
+    eventLists.value.eventStartTime = InputTime.value
     const res = await fetch(
       `${import.meta.env.VITE_APP_TITLE}/api/events/${
         myRouter.query.BookingId
@@ -91,6 +113,37 @@ const updateNote = async () => {
           eventStartTime: new Date(
             eventLists.value.eventStartTime
           ).toISOString(),
+        }),
+      }
+    );
+     if (res.status === 400) {
+          test();
+    } 
+
+    if (res.status === 200) {
+      console.log(eventLists.value.eventStartTime);
+      isActivePopup.value = false;
+      hideEdit.value = true;
+      getLinkAll();
+      console.log("edited successfully");
+    } else console.log("error, cannot be added");
+  }
+
+  if (DateTimeCheck.value == true && InputTime.value == null) {
+    console.log("2")
+    const res = await fetch(
+      `${import.meta.env.VITE_APP_TITLE}/api/events/${
+        myRouter.query.BookingId
+      }`,
+      {
+        method: "PUT",
+        headers: {
+          "content-type": "application/json",
+          'Authorization': 'Bearer ' + jwtToken.value
+        },
+        body: JSON.stringify({
+          eventNotes: eventLists.value.eventNotes
+         
         }),
       }
     );
@@ -144,6 +197,23 @@ onBeforeUpdate(() => {
     DateTimeCheck.value = true;
   }
 });
+
+const goHome = () => {
+
+router.push({
+  name: "Login"
+ 
+});
+}
+
+const goList = () => {
+
+router.push({
+  name: "ListAllEvent"
+ 
+});
+}
+
 
 
 </script>
@@ -199,11 +269,11 @@ onBeforeUpdate(() => {
         </div>
         </div>
       </PopupPage>
-    <div class="bg-white space-y-7 shadow-xl rounded-lg ml-48 mr-48 p-12 w-2/5">
+    <div class="space-y-7 bg-white shadow-xl rounded-lg md:ml-24 md:p-16 p-8  rounded md:w-auto w-full mt-12">
       <RoundButton
         bg-color="bg-slate-400 text-white text-sm"
         button-name="<< go back"
-        @click="goBack"
+        @click="goBack()"
       />
 
       <div class="col-span-1 grid grid-cols-1 place-items-center">
@@ -241,7 +311,8 @@ onBeforeUpdate(() => {
             v-if="!hideEdit"
             type="datetime-local"
             class="border-2 border-sky-200 w-8/12 rounded-lg"
-            v-model="eventLists.eventStartTime"
+            v-model="InputTime"
+           
           />
           <div v-if="DateTimeCheck" v-show="!hideEdit" class="text-slate-600 font-bold text-xs">
             * If you leave it blank, the old date will be used.
@@ -276,7 +347,7 @@ onBeforeUpdate(() => {
             ></textarea>
           </div>
 
-          <div v-show="hideEdit" class="grid grid-cols-2 pt-3">
+          <div v-if="UserRole!=`Lecturer`" v-show="hideEdit" class="grid grid-cols-2 pt-3">
             <RoundButton
               bg-color="bg-emerald-400 text-white"
               button-name="edit"

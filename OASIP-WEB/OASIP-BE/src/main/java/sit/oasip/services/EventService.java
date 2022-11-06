@@ -12,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -259,7 +258,13 @@ public class EventService {
         event.setEventCategoryID(newEvent.getEventCategoryID());
         event.setEventDuration(eventcategory.getEventDuration());
         event.setEventCategory(eventcategory.getEventCategoryName());
-        if (newEvent.getFile() != null) {
+        if (newEvent.getFile() == null) {
+            event.setFilesData(null);
+            event.setFileName(null);
+        } else if (newEvent.getFile().isEmpty()) {
+            event.setFilesData(null);
+            event.setFileName(null);
+        } else {
             event.setFileName(StringUtils.cleanPath(newEvent.getFile().getOriginalFilename()));
             event.setFilesData(newEvent.getFile().getBytes());
         }

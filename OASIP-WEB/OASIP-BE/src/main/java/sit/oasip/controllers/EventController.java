@@ -26,6 +26,7 @@ import java.time.Instant;
 @RequestMapping("/api/events")
 public class EventController {
     private final EventRepository repository;
+
     @Autowired
     private EventService eventService;
 

@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 import sit.oasip.entities.Event;
 import sit.oasip.repositories.EventRepository;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
 @RestController
 @RequestMapping("/api/download")
 public class FileDownloadController {

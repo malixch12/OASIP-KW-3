@@ -18,7 +18,9 @@ const TokenTimeOut = ref(false)
 const isActivePopup2 = ref(false);
 
 const getLinkAll = async () => {
-  const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/eventcategorys` ,{
+
+  if (UserRole.value!="Guest") {
+    const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/eventcategorys` ,{
 
 method: 'get',
 headers: {
@@ -59,6 +61,53 @@ isActivePopup.value = true
 }
 if (res.status === 500) {   isActivePopup2.value=true
 }
+  }
+
+  if (UserRole.value=="Guest") {
+    const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/eventcategorys` ,{
+
+method: 'get',
+headers: {
+
+  'Content-Type': 'application/json',
+  
+}
+}
+
+  );
+
+  if (res.status === 200) {
+    CateLists.value = await res.json();
+  }
+  if (res.status === 401) {
+    const TokenValue = ref( await res.json())
+    console.log("status from backend = " +  TokenValue.value.message )
+    if (TokenValue.value.message == "Token is expired") {
+
+  
+    }
+    if (TokenValue.value.message == "Token incorrect" & jwtToken.value != null) {
+
+      localStorage.removeItem('jwtToken')
+    localStorage.removeItem('time')
+    TokenValue.value = "x"
+    TokenTimeOut.value = true
+    isActivePopup.value = true
+
+    }
+    if (TokenValue.value.message == "Please log in for get Token again." ) {
+
+localStorage.removeItem('jwtToken')
+localStorage.removeItem('time')
+TokenValue.value = "x"
+TokenTimeOut.value = true
+isActivePopup.value = true
+    }
+}
+if (res.status === 500) {   isActivePopup2.value=true
+}
+  }
+ 
   }
 
 const RefreshToken = async () => {

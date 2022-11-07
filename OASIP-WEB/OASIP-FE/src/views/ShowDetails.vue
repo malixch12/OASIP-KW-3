@@ -40,6 +40,7 @@ headers: {
   );
   if (res.status === 200) {
     eventLists.value = await res.json();
+    console.log( eventLists.value)
   }
 
   if (res.status === 403) {
@@ -215,7 +216,19 @@ router.push({
 }
 
 
+const DowloadFlie = async () => {
 
+
+   await fetch( `${import.meta.env.VITE_APP_TITLE}/api/download/file/${eventLists.value.bookingId}` )
+.then((res) => { return res.blob(); })
+.then((data) => {
+  var a = document.createElement("a");
+  a.href = window.URL.createObjectURL(data);
+  a.download = `${eventLists.value.fileName}`;
+  a.click();
+});
+
+}
 </script>
 
 <template>
@@ -330,6 +343,20 @@ router.push({
             {{ eventLists.eventDuration }}
             <span class="text-slate-600 font-bold">Minutes</span>
           </p>
+
+          <p class="text-slate-600 font-bold">file</p>
+
+<span v-if="eventLists.fileName!=null">
+
+    {{ eventLists.fileName }}  <span class="text-blue-500" @click="DowloadFlie()">Dowload</span>
+
+</span>
+<span v-if="eventLists.fileName==null">
+
+-
+
+</span>
+
 
           <p class="text-slate-600 font-bold">Message to Advisor</p>
 

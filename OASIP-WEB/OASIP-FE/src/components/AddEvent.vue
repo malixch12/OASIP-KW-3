@@ -123,42 +123,54 @@ function eror() {
   if (!AllDataCheck.value) { isActivePopup.value = true }
 }
 
-// function previewFiles(event) {  
-//       console.log(dataBooking.value);
-//       var uploadField = document.getElementById("file");
-//       let photo = document.getElementById("file").files[0];
+const oldFile = ref()
+function CheckSizeFile(size) {  
+      var uploadField = document.getElementById("file");
+      let photo = document.getElementById("file").files[0];
 
-//       if(event.target.files[0].size > (10485760)){
-//         isActivePopup2.value = true
-//       if(dataFile.value == null)  {
-//         document.getElementById("file").value = "";
+      if(event.target.files[0].size > (10485760)){
+        isActivePopup2.value = true
+      if(oldFile.value == null)  {
+        document.getElementById("file").value = "";
 
-//       }
+      } 
+      if(oldFile.value != null) {
+        document.getElementById("file").value = oldFile.value[0];
+      }
       
-//       if (dataFile.value != null) {  
-        
-//         document.getElementById("file").files[0] =  dataFile.value;
+    }else
+    oldFile.value = uploadField.files
 
-//       } 
-
-//     }
     
-//     if(event.target.files[0].size < (10485760)){  dataFile.value = photo }
-//    }
+
+    
+   }
 
 const  isActivePopup2 = ref()
  
-function previewFiles(event) {
+const preview =  ref(null)
+const    image =  ref(null)
+const    preview_list = ref([])
 
+function previewImage(event) {
+  CheckSizeFile(event)
+     var input = event.target;
+     if (input.files) {
+       var reader = new FileReader();
+       reader.onload = (e) => {
+         this.preview = e.target.result;
+       }
+       this.image=input.files[0];
+       reader.readAsDataURL(input.files[0]);
+     }
+   }
 
-    var output = document.getElementById('output');
-    output.src = URL.createObjectURL(event.target.files[0]);
-    output.onload = function() {
-      URL.revokeObjectURL(output.src) // free memory
+   function reset() {
+      image.value = null;
+      preview.value = null;
+      preview_list.value = [];
+      document.getElementById("file").value = "";
     }
-  
-}
-
 </script>
 
 <template>
@@ -239,6 +251,39 @@ function previewFiles(event) {
       
       <textarea maxlength="500" type="text" v-model="dataBooking.eventNotes"
         class="border-2 border-sky-200 w-11/12 h-56 rounded-lg"></textarea>
+
+        <div>
+      
+      <div id="app" class="container my-3">
+<div class="row">
+  <div class="col-12 text-center">
+  </div>
+  <div class="col-md-5 offset-md-1">
+ 
+    <form>
+      <div class="form-group">
+        <label for="file">Select Image</label>
+        <input type="file" @change="previewImage " class="form-control-file block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer  focus:outline-none" id="file">
+  
+        <div class="border p-2 mt-3 w-72">
+          <p>Preview Here:</p>
+          <template v-if="preview">
+            <img :src="preview" class="img-fluid " />
+            <p class="mb-0 text-xs">file name: {{ image.name }}</p>
+            <p class="mb-0 text-xs" id="size">size: {{ image.size/1024 }}KB</p>
+            
+          </template>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="w-100"></div>
+    <div class="col-12 mt-3 text-center">
+      <button @click="reset">Clear file</button>
+    </div>
+  </div>
+</div>
+    </div>
       <div class="grid grid-cols-1 place-items-center">
         <RoundButton bg-color="bg-emerald-400" button-name="add" @click="isActivePopup = true" />
         <br><span v-if="!AllDataCheck"
@@ -254,9 +299,10 @@ function previewFiles(event) {
         <!-- <label class="block mb-2 text-sm font-medium text-gray-900 mt-4" for="file_input">Upload file</label>
 <input class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer  focus:outline-none  " id="file_input" type="file" @change="previewFiles()"> -->
     
-<div id="output"></div>
+<!-- <div id="output"></div> -->
 
-<privew/>
+
+<!-- <privew @CheckSizeFile="CheckSizeFile"/> -->
 </div>
 
 

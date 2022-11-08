@@ -154,7 +154,7 @@ const    preview_list = ref([])
 function previewImage(event) {
  // CheckSizeFile(event)
 
- if(event.target.files[0].size < (10485760)) {
+ if(event.target.files[0].size <= (10485760)) {
   dataBooking.value.file = event.target.files[0];
 
   var input = event.target;
@@ -352,12 +352,12 @@ function previewImage(event) {
       <PopupPage v-show="isActivePopup2 == true" :dim-background="true">
         <!-- ข้อมูลผิด -->
 
-        <div v-if="!AllDataCheck">
+        
           <div class="grid grid-cols-1 place-items-center text-slate-700 font-semibold text-center  p-10 space-y-5">
             <div>ขนาดไฟล์ห้ามเกิน 10 mb
              </div>
             <RoundButton bg-color="bg-gray-400" button-name="ok" @click="isActivePopup2 = false" />
-          </div>
+        
         </div>
 
 

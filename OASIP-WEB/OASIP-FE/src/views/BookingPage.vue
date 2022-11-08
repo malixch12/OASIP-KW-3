@@ -111,7 +111,6 @@ onBeforeMount(() => {
   }
   
 });
-
 // const yourISODateTime = computed(() => {
 //   test1.value = new Date(yourDateTime.value).toISOString();
 //  return new Date(yourDateTime.value).toISOString();
@@ -121,7 +120,6 @@ const addEvent = async (dataBooking , AllDataCheck) => {
   dataBooking.eventStartTime=new Date(dataBooking.eventStartTime).toISOString();
 
   console.log(dataBooking)
-  let photo = document.getElementById("file").files[0];
   let formData = new FormData();
             formData.append("bookingEmail", dataBooking.bookingEmail);
             formData.append("bookingName", dataBooking.bookingName);
@@ -130,7 +128,7 @@ const addEvent = async (dataBooking , AllDataCheck) => {
             formData.append("eventDuration", dataBooking.eventDuration);
             formData.append("eventNotes", dataBooking.eventNotes);
             formData.append("eventStartTime", dataBooking.eventStartTime);
-            formData.append("file", photo);
+            formData.append("file", dataBooking.file);
 
          //   formData.append("file", "John123");
 

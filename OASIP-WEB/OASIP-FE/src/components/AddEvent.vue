@@ -155,6 +155,8 @@ function previewImage(event) {
  // CheckSizeFile(event)
 
  if(event.target.files[0].size < (10485760)) {
+  dataBooking.value.file = event.target.files[0];
+
   var input = event.target;
      if (input.files) {
        var reader = new FileReader();

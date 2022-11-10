@@ -6,11 +6,15 @@ import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import sit.oasip.Component.FileStorageProperties;
 import sit.oasip.entities.Event;
 import sit.oasip.repositories.EventRepository;
@@ -74,5 +78,24 @@ public class FileService {
         }catch (MalformedURLException ex){
             throw new RuntimeException("File not found "+fileName,ex);
         }
+    }
+
+    public void delete(int id) throws IOException {
+
+        Event event = eventRepository.findByBookingId(id);
+        if(event != null){
+            if(event.getFileName() != null){
+                String fileName = "../db/file-uploads/" + event.getFileName();
+                Files.delete(Paths.get(fileName));
+                event.setFileName(null);
+                eventRepository.saveAndFlush(event);
+                throw new ResponseStatusException(HttpStatus.OK,"Delete successful !!");
+            }else {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND,"No files to delete");
+            }
+        }else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"No files to delete");
+        }
+
     }
 }

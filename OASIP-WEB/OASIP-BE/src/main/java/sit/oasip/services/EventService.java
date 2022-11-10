@@ -275,7 +275,16 @@ public class EventService {
 
         Event event1 = modelMapper.map(event, Event.class);
         repository.saveAndFlush(event1);
-//        sendmail(event);
+        Thread t = new Thread(() -> {
+            try {
+                sendmail(event);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        t.start();
         return event;
 
     }
@@ -316,7 +325,7 @@ public class EventService {
                     e.setFileName(null);
                     Files.delete(Paths.get(fileName));
                 } else {
-                    if(e.getFileName() != null) {
+                    if (e.getFileName() != null) {
                         Files.delete(Paths.get(fileName));
                     }
                     fileService.store(updateEvent.getFile());

@@ -10,10 +10,6 @@ import java.nio.file.Paths;
 public class OasipBEApplication {
 
     public static void main(String[] args) {
-//        System.out.println("System property: " + System.getProperty("user.dir"));
-//        Path path = Paths.get("/grade2_2/INT221/OASIP-KW-3/OASIP-WEB/db");
-//        System.out.println(path);
-
         SpringApplication.run(OasipBEApplication.class, args);
 
 

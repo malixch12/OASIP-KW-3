@@ -76,6 +76,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/api/eventcategorys/**").hasAnyAuthority(Role.Student.name(), Role.Admin.name(), Role.Lecturer.name(),"Guest")
                 .antMatchers(HttpMethod.PUT,"/api/eventcategorys/**").hasAnyAuthority(Role.Admin.name())
 
+                .antMatchers(HttpMethod.DELETE,"/api/file/**").hasAnyAuthority(Role.Student.name(), Role.Admin.name())
                 .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 

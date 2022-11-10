@@ -37,10 +37,12 @@ import javax.servlet.http.HttpServletRequest;
 
 @Service
 public class EventService {
+
     private final EventcategoryRepository cateRepository;
     private final EventRepository repository;
     private final UserRepository userRepository;
     private final EventCategoryOwnerRepository eventCategoryOwnerRepository;
+    private final FileService fileService;
 
     @Autowired
     private ListMapper listMapper;
@@ -57,9 +59,10 @@ public class EventService {
 
 
     @Autowired
-    public EventService(EventCategoryOwnerRepository eventCategoryOwnerRepository, UserRepository userRepository, EventRepository repository, EventcategoryRepository cateRepository, HttpServletRequest request) {
+    public EventService(EventCategoryOwnerRepository eventCategoryOwnerRepository, UserRepository userRepository, EventRepository repository, EventcategoryRepository cateRepository, FileService fileService, HttpServletRequest request) {
         this.repository = repository;
         this.cateRepository = cateRepository;
+        this.fileService = fileService;
         this.request = request;
         this.userRepository = userRepository;
         this.eventCategoryOwnerRepository = eventCategoryOwnerRepository;
@@ -259,20 +262,17 @@ public class EventService {
         event.setEventDuration(eventcategory.getEventDuration());
         event.setEventCategory(eventcategory.getEventCategoryName());
         if (newEvent.getFile() == null) {
-            event.setFilesData(null);
             event.setFileName(null);
         } else if (newEvent.getFile().isEmpty()) {
-            event.setFilesData(null);
             event.setFileName(null);
         } else {
-            event.setFileName(StringUtils.cleanPath(newEvent.getFile().getOriginalFilename()));
-            event.setFilesData(newEvent.getFile().getBytes());
+            fileService.store(newEvent.getFile());
+            event.setFileName(fileService.getName());
         }
-
 
         Event event1 = modelMapper.map(event, Event.class);
         repository.saveAndFlush(event1);
-        sendmail(event);
+//        sendmail(event);
         return event;
 
     }
@@ -305,18 +305,11 @@ public class EventService {
             }
 
             if (updateEvent.getFile() == null) {
-                e.setFilesData(null);
                 e.setFileName(null);
             } else if (updateEvent.getFile().isEmpty()) {
-                e.setFilesData(null);
                 e.setFileName(null);
             } else {
                 e.setFileName(StringUtils.cleanPath(updateEvent.getFile().getOriginalFilename()));
-                try {
-                    e.setFilesData(updateEvent.getFile().getBytes());
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
             }
 
             return repository.saveAndFlush(e);

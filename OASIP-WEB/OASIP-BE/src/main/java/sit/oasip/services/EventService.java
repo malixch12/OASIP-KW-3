@@ -1,6 +1,9 @@
 package sit.oasip.services;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -304,12 +307,23 @@ public class EventService {
                 e.setEventStartTime(updateEvent.getEventStartTime());
             }
 
-            if (updateEvent.getFile() == null) {
-                e.setFileName(null);
-            } else if (updateEvent.getFile().isEmpty()) {
-                e.setFileName(null);
-            } else {
-                e.setFileName(StringUtils.cleanPath(updateEvent.getFile().getOriginalFilename()));
+            String fileName = "../db/file-uploads/" + e.getFileName();
+            try {
+                if (updateEvent.getFile() == null) {
+                    e.setFileName(null);
+                    Files.delete(Paths.get(fileName));
+                } else if (updateEvent.getFile().isEmpty()) {
+                    e.setFileName(null);
+                    Files.delete(Paths.get(fileName));
+                } else {
+                    if(e.getFileName() != null) {
+                        Files.delete(Paths.get(fileName));
+                    }
+                    fileService.store(updateEvent.getFile());
+                    e.setFileName(fileService.getName());
+                }
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
             }
 
             return repository.saveAndFlush(e);

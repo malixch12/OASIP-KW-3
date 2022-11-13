@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EventRepository extends JpaRepository<Event, Integer> {
+        @Query("select e.fileName from Event e")
+        List<String> findFileName();
+
         List<Event> findAll(Sort sort);
         List<Event> findByBookingEmail(String email,Sort sort);
         List<Event> findByEventCategoryID(Integer eventCategoryID,Sort sort);

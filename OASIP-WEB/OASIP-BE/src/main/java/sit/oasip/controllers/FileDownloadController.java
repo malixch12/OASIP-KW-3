@@ -10,7 +10,10 @@ import sit.oasip.entities.Event;
 import sit.oasip.repositories.EventRepository;
 import sit.oasip.services.FileService;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.http.HttpResponse;
 
 @RestController
 @RequestMapping("/api/file")
@@ -26,13 +29,19 @@ public class FileDownloadController {
     @GetMapping("/download/{id}")
     public ResponseEntity<Resource> getFile(@PathVariable Integer id) {
         Event fileDB = repository.findByBookingId(id);
-        if (fileDB.getFileName() == null ){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"No files to download !!");
+        if (fileDB.getFileName() == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No files to download !!");
         }
         Resource file = fileService.loadFileAsResource(fileDB.getFileName());
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileDB.getFileName() + "\"")
                 .body(file);
+    }
+
+    @GetMapping("/downloadZip")
+    public void getZipfile(HttpServletResponse response) {
+        fileService.loadAllFile(response);
+
     }
 
     @DeleteMapping("/{id}")

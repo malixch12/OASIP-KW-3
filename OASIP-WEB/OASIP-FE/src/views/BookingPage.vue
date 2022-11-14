@@ -128,7 +128,7 @@ const addEvent = async (dataBooking , AllDataCheck) => {
             formData.append("eventDuration", dataBooking.eventDuration);
             formData.append("eventNotes", dataBooking.eventNotes);
             formData.append("eventStartTime", dataBooking.eventStartTime);
-            formData.append("file", dataBooking.file);
+           formData.append("file", dataBooking.file);
 
          //   formData.append("file", "John123");
 

@@ -82,14 +82,14 @@ function validateEmail(email) {
 }
 
 onBeforeUpdate(() => {
-  if (dataUser.value.passwordConfirm.length > 0) {
-    PasswordConfirm()
-  }
+
 
 });
 
 function CheckData() {
-
+  
+    PasswordConfirm()
+  
   if (dataUser.value.email != null) {
     EmailCheck.value = true
   } else { EmailCheck.value = false }
@@ -145,7 +145,7 @@ const EmailCheck = ref(true)   //เซ็คว่ากรอกรึยั�
 const EmailValidation = ref(true)  //ฟอแมท เมล
 const NameCheck = ref(true)     //เซ็คว่ากรอกรึยัง
 const RoleCheck = ref(true) //check role
-const PasswordCheck = ref(false) //check password
+const PasswordCheck = ref(true) //check password
 </script>
 
 <template>
@@ -235,7 +235,9 @@ const PasswordCheck = ref(false) //check password
 
             <form>
               <div class="inputBox">
-                <input type="text" placeholder="Username" v-model.trim="dataUser.name">
+                <input v-if="!NameCheck" type="text" placeholder="Username" v-model.trim="dataUser.name" class="border-2 border-rose-600">
+
+                <input v-if="NameCheck" type="text" placeholder="Username" v-model.trim="dataUser.name" >
                 <details class="" v-if="!NameCheck">
                   <summary
                     class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
@@ -247,7 +249,9 @@ const PasswordCheck = ref(false) //check password
                 </details>
               </div>
               <div class="inputBox ">
-                <input type="text" class="" placeholder="email" v-model.trim="dataUser.email">
+                <input v-if="!EmailValidation" type="text" placeholder="email" v-model.trim="dataUser.email" class="border-2 border-rose-600">
+                <input v-if="EmailValidation" type="text" class="" placeholder="email" v-model.trim="dataUser.email" >
+
                 <details class="" v-show="!EmailValidation || !EmailCheck">
                   <summary
                     class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
@@ -263,7 +267,9 @@ const PasswordCheck = ref(false) //check password
               <div class="inputBox">
 
                 <input type="password" placeholder="password" v-model.trim="dataUser.password">
-                <input class="mt-4" type="password" placeholder="Confirm password"
+                <input v-if="PasswordCheck " class="mt-4 " type="password" placeholder="Confirm password"
+                  v-model.trim="dataUser.passwordConfirm">
+                  <input v-if="!PasswordCheck " class="mt-4 border-2 border-rose-600" type="password" placeholder="Confirm password"
                   v-model.trim="dataUser.passwordConfirm">
                 <span class="text-sm ml-4 text-gray-400">password size must be between 8 and 14</span>
                 
@@ -519,13 +525,10 @@ section .color:nth-child(3) {
 .form .inputBox input {
   width: 100%;
   background: rgba(255, 255, 255, 0.2);
-  border: none;
   outline: none;
   padding: 10px 20px;
   border-radius: 35px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-right: 1px solid rgba(255, 255, 255, 0.2);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+ 
   font-size: 16px;
   letter-spacing: 1px;
   /* color: rgb(5, 78, 6); */

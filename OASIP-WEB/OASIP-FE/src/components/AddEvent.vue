@@ -24,7 +24,7 @@ const props = defineProps({
 defineEmits(["addEvent"]);
 
 onBeforeUpdate(() => {
-  CheckData()
+ CheckData()
 });
 const UserRole = ref()
 const UserEmail = ref()
@@ -36,13 +36,14 @@ onBeforeMount(() => {
 });
 function CheckData() {
   //check date and time
+  console.log(dataBooking.value.bookingName.length)
   if ((countTime.value > new Date(dataBooking.value.eventStartTime))) {
     DateTimeCheck.value = true
   } else {
     DateTimeCheck.value = false
   }
   //check name
-  if (dataBooking.value.bookingName != "") {
+  if ( dataBooking.value.bookingName != "") {
     NameCheck.value = true
   } else {
     NameCheck.value = false
@@ -78,10 +79,10 @@ function validateEmail(email) {
 
 
 const AllDataCheck = ref(false)
-const DateTimeCheck = ref(false)
-const NameCheck = ref(false)     //เซ็คว่ากรอกรึยัง
-const EmailCheck = ref(false)   //เซ็คว่ากรอกรึยัง
-const EmailValidation = ref(false)  //ฟอแมท เมล
+const DateTimeCheck = ref(true)
+const NameCheck = ref(true)     //เซ็คว่ากรอกรึยัง
+const EmailCheck = ref(true)   //เซ็คว่ากรอกรึยัง
+const EmailValidation = ref(true)  //ฟอแมท เมล
 const dataFile = ref()
 const dataBooking = ref({    //สำหรับให้ ฟอม v-model
   bookingId: "",
@@ -169,6 +170,8 @@ function previewImage(event) {
 
  }else
  isActivePopup2.value = true
+ document.getElementById("dropzone-file").value = "";
+ console.log("1-1")
 
      
    }
@@ -177,7 +180,7 @@ function previewImage(event) {
       image.value = null;
       preview.value = null;
       preview_list.value = [];
-      document.getElementById("file").value = "";
+      document.getElementById("dropzone-file").value = "";
     }
 </script>
 
@@ -258,7 +261,7 @@ function previewImage(event) {
       <p>Message to Advisor</p>
       
       <textarea maxlength="500" type="text" v-model="dataBooking.eventNotes"
-        class="border-2 border-sky-200 w-11/12 h-56 rounded-lg"></textarea>
+        class="border-2 border-sky-200 w-11/12 h-32 rounded-lg"></textarea>
 
         <div>
       
@@ -273,11 +276,11 @@ function previewImage(event) {
         <label for="file">Select Image</label>
         <!-- <input type="file" @change="previewImage " class="form-control-file block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer  focus:outline-none" id="file"> -->
         <div class="flex justify-center items-center w-full">
-    <label for="dropzone-file" class="flex flex-col justify-center items-center w-full h-64 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+    <label for="dropzone-file" class="flex flex-col justify-center items-center w-full h-24 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
         <div class="flex flex-col justify-center items-center pt-5 pb-6">
-            <svg aria-hidden="true" class="mb-3 w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-            <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-            <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+            <svg aria-hidden="true" class="mb-3 w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+            <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> </p>
+          
         </div>
         <input id="dropzone-file" type="file" class="hidden"  @change="previewImage " />
     </label>
@@ -352,12 +355,11 @@ function previewImage(event) {
       <PopupPage v-show="isActivePopup2 == true" :dim-background="true">
         <!-- ข้อมูลผิด -->
 
-        
+      
           <div class="grid grid-cols-1 place-items-center text-slate-700 font-semibold text-center  p-10 space-y-5">
             <div>ขนาดไฟล์ห้ามเกิน 10 mb
              </div>
             <RoundButton bg-color="bg-gray-400" button-name="ok" @click="isActivePopup2 = false" />
-        
         </div>
 
 

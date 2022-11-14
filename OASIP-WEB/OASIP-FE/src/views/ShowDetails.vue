@@ -93,12 +93,19 @@ const toEditMode = (editNote) => {
 
 const InputTime = ref()
 const updateNote = async () => {
+  let formData = new FormData();
+
+
   console.log("input " + InputTime.value )
   console.log("eventtime " + eventLists.value.eventStartTime )
   //eventLists.value.eventStartTime = await new Date(eventLists.value.eventStartTime).toISOString();
   if (DateTimeCheck.value == true && InputTime.value != null) {
     console.log("1")
     eventLists.value.eventStartTime = InputTime.value
+    formData.append("eventNotes", eventLists.value.eventNotes);
+  formData.append("eventStartTime", 
+            eventLists.value.eventStartTime
+  )
     const res = await fetch(
       `${import.meta.env.VITE_APP_TITLE}/api/events/${
         myRouter.query.BookingId
@@ -106,15 +113,9 @@ const updateNote = async () => {
       {
         method: "PUT",
         headers: {
-          "content-type": "application/json",
           'Authorization': 'Bearer ' + jwtToken.value
         },
-        body: JSON.stringify({
-          eventNotes: eventLists.value.eventNotes,
-          eventStartTime: new Date(
-            eventLists.value.eventStartTime
-          ).toISOString(),
-        }),
+        body:formData
       }
     );
      if (res.status === 400) {
@@ -132,6 +133,8 @@ const updateNote = async () => {
 
   if (DateTimeCheck.value == true && InputTime.value == null) {
     console.log("2")
+    formData.append("eventNotes", eventLists.value.eventNotes);
+
     const res = await fetch(
       `${import.meta.env.VITE_APP_TITLE}/api/events/${
         myRouter.query.BookingId
@@ -139,13 +142,9 @@ const updateNote = async () => {
       {
         method: "PUT",
         headers: {
-          "content-type": "application/json",
           'Authorization': 'Bearer ' + jwtToken.value
         },
-        body: JSON.stringify({
-          eventNotes: eventLists.value.eventNotes
-         
-        }),
+        body: formData
       }
     );
      if (res.status === 400) {
@@ -192,7 +191,7 @@ setInterval(setTime, 1000);
 
 
 onBeforeUpdate(() => {
-  if (countTime.value > new Date(eventLists.value.eventStartTime)) {
+  if (countTime.value > eventLists.value.eventStartTime) {
     DateTimeCheck.value = false;
   } else {
     DateTimeCheck.value = true;

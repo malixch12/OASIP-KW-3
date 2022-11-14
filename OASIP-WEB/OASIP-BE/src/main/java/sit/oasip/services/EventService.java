@@ -306,6 +306,37 @@ public class EventService {
         }
 
         Event event = repository.findById(bookingId).map(e -> {
+
+            if (e.getFileName() != null) {
+                String fileName = "../db/file-uploads/" + e.getFileName();
+                try {
+                    if (updateEvent.getFile() == null) {
+                        e.setFileName(null);
+                        Files.delete(Paths.get(fileName));
+                    } else if (updateEvent.getFile().isEmpty()) {
+                        e.setFileName(null);
+                        Files.delete(Paths.get(fileName));
+                    } else {
+                        if (e.getFileName() != null) {
+                            Files.delete(Paths.get(fileName));
+                        }
+                        fileService.store(updateEvent.getFile());
+                        e.setFileName(fileService.getName());
+                    }
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }else{
+                if(updateEvent.getFile() != null){
+                    try {
+                        fileService.store(updateEvent.getFile());
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                    e.setFileName(fileService.getName());
+                }
+            }
+
             if (updateEvent.getEventStartTime() != null && updateEvent.getEventNotes() != null) {
                 e.setEventStartTime(updateEvent.getEventStartTime());
                 e.setEventNotes(updateEvent.getEventNotes());
@@ -316,24 +347,10 @@ public class EventService {
                 e.setEventStartTime(updateEvent.getEventStartTime());
             }
 
-            String fileName = "../db/file-uploads/" + e.getFileName();
-            try {
-                if (updateEvent.getFile() == null) {
-                    e.setFileName(null);
-                    Files.delete(Paths.get(fileName));
-                } else if (updateEvent.getFile().isEmpty()) {
-                    e.setFileName(null);
-                    Files.delete(Paths.get(fileName));
-                } else {
-                    if (e.getFileName() != null) {
-                        Files.delete(Paths.get(fileName));
-                    }
-                    fileService.store(updateEvent.getFile());
-                    e.setFileName(fileService.getName());
-                }
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
+
+
+
+
 
             return repository.saveAndFlush(e);
         }).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "test"));

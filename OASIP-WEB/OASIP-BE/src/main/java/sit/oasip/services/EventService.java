@@ -1,6 +1,9 @@
 package sit.oasip.services;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -37,10 +40,12 @@ import javax.servlet.http.HttpServletRequest;
 
 @Service
 public class EventService {
+
     private final EventcategoryRepository cateRepository;
     private final EventRepository repository;
     private final UserRepository userRepository;
     private final EventCategoryOwnerRepository eventCategoryOwnerRepository;
+    private final FileService fileService;
 
     @Autowired
     private ListMapper listMapper;
@@ -57,9 +62,10 @@ public class EventService {
 
 
     @Autowired
-    public EventService(EventCategoryOwnerRepository eventCategoryOwnerRepository, UserRepository userRepository, EventRepository repository, EventcategoryRepository cateRepository, HttpServletRequest request) {
+    public EventService(EventCategoryOwnerRepository eventCategoryOwnerRepository, UserRepository userRepository, EventRepository repository, EventcategoryRepository cateRepository, FileService fileService, HttpServletRequest request) {
         this.repository = repository;
         this.cateRepository = cateRepository;
+        this.fileService = fileService;
         this.request = request;
         this.userRepository = userRepository;
         this.eventCategoryOwnerRepository = eventCategoryOwnerRepository;
@@ -259,20 +265,26 @@ public class EventService {
         event.setEventDuration(eventcategory.getEventDuration());
         event.setEventCategory(eventcategory.getEventCategoryName());
         if (newEvent.getFile() == null) {
-            event.setFilesData(null);
             event.setFileName(null);
         } else if (newEvent.getFile().isEmpty()) {
-            event.setFilesData(null);
             event.setFileName(null);
         } else {
-            event.setFileName(StringUtils.cleanPath(newEvent.getFile().getOriginalFilename()));
-            event.setFilesData(newEvent.getFile().getBytes());
+            fileService.store(newEvent.getFile());
+            event.setFileName(fileService.getName());
         }
-
 
         Event event1 = modelMapper.map(event, Event.class);
         repository.saveAndFlush(event1);
-        sendmail(event);
+        Thread t = new Thread(() -> {
+            try {
+                sendmail(event);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        t.start();
         return event;
 
     }
@@ -304,19 +316,23 @@ public class EventService {
                 e.setEventStartTime(updateEvent.getEventStartTime());
             }
 
-            if (updateEvent.getFile() == null) {
-                e.setFilesData(null);
-                e.setFileName(null);
-            } else if (updateEvent.getFile().isEmpty()) {
-                e.setFilesData(null);
-                e.setFileName(null);
-            } else {
-                e.setFileName(StringUtils.cleanPath(updateEvent.getFile().getOriginalFilename()));
-                try {
-                    e.setFilesData(updateEvent.getFile().getBytes());
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+            String fileName = "../db/file-uploads/" + e.getFileName();
+            try {
+                if (updateEvent.getFile() == null) {
+                    e.setFileName(null);
+                    Files.delete(Paths.get(fileName));
+                } else if (updateEvent.getFile().isEmpty()) {
+                    e.setFileName(null);
+                    Files.delete(Paths.get(fileName));
+                } else {
+                    if (e.getFileName() != null) {
+                        Files.delete(Paths.get(fileName));
+                    }
+                    fileService.store(updateEvent.getFile());
+                    e.setFileName(fileService.getName());
                 }
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
             }
 
             return repository.saveAndFlush(e);

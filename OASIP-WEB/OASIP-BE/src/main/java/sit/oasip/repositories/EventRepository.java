@@ -12,11 +12,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EventRepository extends JpaRepository<Event, Integer> {
+        @Query("select e.fileName from Event e")
+        List<String> findFileName();
+
         List<Event> findAll(Sort sort);
         List<Event> findByBookingEmail(String email,Sort sort);
         List<Event> findByEventCategoryID(Integer eventCategoryID,Sort sort);
 
         Event findByBookingId(Integer eventId);
+        Event findByFileName(String filename);
         //admin
         List<Event> findByEventCategoryIDAndEventStartTimeLessThan(Integer eventCategoryID, Instant dateNow,Sort sort);
         List<Event> findByEventCategoryIDAndEventStartTimeGreaterThan(Integer eventCategoryID, Instant dateNow,Sort sort);

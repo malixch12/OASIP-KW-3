@@ -311,8 +311,7 @@ public class EventService {
                 String fileName = "../db/file-uploads/" + e.getFileName();
                 try {
                     if (updateEvent.getFile() == null) {
-                        e.setFileName(null);
-                        Files.delete(Paths.get(fileName));
+                        e.setFileName(e.getFileName());
                     } else if (updateEvent.getFile().isEmpty()) {
                         e.setFileName(null);
                         Files.delete(Paths.get(fileName));

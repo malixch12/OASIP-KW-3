@@ -161,7 +161,7 @@ const updateNote = async () => {
     } else console.log("error, cannot be added");
   }
 
-  if (preview.value!=null) {
+  if (preview.value!=null ) {
   
     formData.append("file", eventLists.value.file);
 
@@ -191,7 +191,31 @@ const updateNote = async () => {
       reset()
     } else console.log("error, cannot be added");
     
+
+   
   }
+  if(deleteFileCheck.value == true) {
+    const res = await fetch(
+      `${import.meta.env.VITE_APP_TITLE}/api/file/${
+        myRouter.query.BookingId
+      }`,
+      {
+        method: "DELETE",headers: {
+
+'Content-Type': 'application/json',
+'Authorization': 'Bearer ' + jwtToken.value
+}
+      }
+    );if (res.status === 200) {
+      console.log("delete")
+      deleteFileCheck.value = false    } 
+
+  } else {
+  
+   }
+
+   window.location.reload();
+
 };
 const testname = ref('')
 const isActivePopup = ref(false);
@@ -298,10 +322,25 @@ function previewImage(event) {
       preview.value = null;
       preview_list.value = [];
     }
+
+ const   deleteFileCheck  =   ref(false)
+   function deleteFile() {
+      console.log("delete")
+      eventLists.value.file = ""
+      eventLists.value.fileName = ""
+      deleteFileCheck.value = true
+
+     
+  
+  
+   
+
+    }
 </script>
 
 <template>
   <div class="flex justify-center">
+    {{deleteFileCheck}}
      <!-- popup -->
      <PopupPage v-show="isActivePopup2 == true" :dim-background="true">
         <!-- ข้อมูลผิด -->
@@ -443,17 +482,19 @@ function previewImage(event) {
 
 <span v-if="! hideEdit">
 
-<span class="text-xs">old file : </span>    <span v-if="eventLists.fileName==null">-</span>
-<span class="text-sm">{{ eventLists.fileName }}</span> <br/>
+<span class="text-xs">old file : </span>    <span v-if="eventLists.fileName==null">-</span> 
+<span class="text-sm">{{ eventLists.fileName }} <span class="text-xs text-red-500" v-if="eventLists.fileName!=null" @click="deleteFile()">delete</span> </span> <br/>
 <span class="text-xs">new file file : {{ image.name }} </span> 
 </span>
 <form v-if="! hideEdit">
       <div class="form-group">
         <!-- <input type="file" @change="previewImage " class="form-control-file block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer  focus:outline-none" id="file"> -->
-        <div class="flex justify-center items-center w-full">
+        <div class=" justify-center items-center w-full">
+         
     <label for="dropzone-file" class="flex flex-col justify-center items-center w-full h-12 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
         <div class="flex flex-col justify-center items-center pt-6 pb-6">
-            <p class=" text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload new file</span> </p>
+          
+            <p class=" text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold"> upload new file</span> </p>
           
         </div>
         <input id="dropzone-file" type="file" class="hidden"  @change="previewImage " />

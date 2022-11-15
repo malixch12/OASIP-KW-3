@@ -22,6 +22,7 @@ const eventLists = ref({
   eventDuration: null,
   eventNotes: "",
   eventCategoryID: null,
+  file : null
 });
 const hideEdit = ref(true);
 
@@ -159,6 +160,38 @@ const updateNote = async () => {
       console.log("edited successfully");
     } else console.log("error, cannot be added");
   }
+
+  if (preview.value!=null) {
+  
+    formData.append("file", eventLists.value.file);
+
+    const res = await fetch(
+      `${import.meta.env.VITE_APP_TITLE}/api/events/${
+        myRouter.query.BookingId
+      }`,
+      {
+        method: "PUT",
+        headers: {
+          'Authorization': 'Bearer ' + jwtToken.value
+        },
+        body: formData
+      }
+    );
+     if (res.status === 400) {
+          test();
+    } 
+
+    if (res.status === 200) {
+      console.log(eventLists.value.eventStartTime);
+      isActivePopup.value = false;
+      hideEdit.value = true;
+      getLinkAll();
+       console.log("edited file successfully");
+
+      reset()
+    } else console.log("error, cannot be added");
+    
+  }
 };
 const testname = ref('')
 const isActivePopup = ref(false);
@@ -228,11 +261,63 @@ const DowloadFlie = async () => {
 });
 
 }
+
+
+const  isActivePopup2 = ref()
+ 
+const preview =  ref(null)
+const    image =  ref({name:null})
+const    preview_list = ref([])
+
+function previewImage(event) {
+ // CheckSizeFile(event)
+
+ if(event.target.files[0].size <= (10485760)) {
+  eventLists.value.file = event.target.files[0];
+
+  var input = event.target;
+     if (input.files) {
+       var reader = new FileReader();
+       reader.onload = (e) => {
+         this.preview = e.target.result;
+       }
+       this.image=input.files[0];
+       reader.readAsDataURL(input.files[0]);
+     }
+
+ }else
+ isActivePopup2.value = true
+ document.getElementById("dropzone-file").value = "";
+ console.log("1-1")
+
+     
+   }
+
+   function reset() {
+      image.value = {name:null};
+      preview.value = null;
+      preview_list.value = [];
+    }
 </script>
 
 <template>
   <div class="flex justify-center">
      <!-- popup -->
+     <PopupPage v-show="isActivePopup2 == true" :dim-background="true">
+        <!-- ข้อมูลผิด -->
+
+      
+          <div class="grid grid-cols-1 place-items-center text-slate-700 font-semibold text-center  p-10 space-y-5">
+            <div>ขนาดไฟล์ห้ามเกิน 10 mb
+             </div>
+            <RoundButton bg-color="bg-gray-400" button-name="ok" @click="isActivePopup2 = false" />
+        </div>
+
+
+
+      </PopupPage>
+
+
       <PopupPage v-show="isActivePopup" :dim-background="true">
       <div class="grid grid-cols-1 place-items-center  font-semibold text-center  p-10 space-y-5">
         <div v-show="DateTimeCheck == true">
@@ -322,7 +407,7 @@ const DowloadFlie = async () => {
           <input
             v-if="!hideEdit"
             type="datetime-local"
-            class="border-2 border-sky-200 w-8/12 rounded-lg"
+            class="border-2 border-sky-200 w-full rounded-lg"
             v-model="InputTime"
            
           />
@@ -345,17 +430,49 @@ const DowloadFlie = async () => {
 
           <p class="text-slate-600 font-bold">file</p>
 
-<span v-if="eventLists.fileName!=null">
+<span v-if="eventLists.fileName!=null & hideEdit">
 
     {{ eventLists.fileName }}  <span class="text-blue-500" @click="DowloadFlie()">Dowload</span>
 
 </span>
-<span v-if="eventLists.fileName==null">
+<span v-if="eventLists.fileName==null &  hideEdit">
 
 -
 
 </span>
 
+<span v-if="! hideEdit">
+
+<span class="text-xs">old file : </span>    <span v-if="eventLists.fileName==null">-</span>
+<span class="text-sm">{{ eventLists.fileName }}</span> <br/>
+<span class="text-xs">new file file : {{ image.name }} </span> 
+</span>
+<form v-if="! hideEdit">
+      <div class="form-group">
+        <!-- <input type="file" @change="previewImage " class="form-control-file block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer  focus:outline-none" id="file"> -->
+        <div class="flex justify-center items-center w-full">
+    <label for="dropzone-file" class="flex flex-col justify-center items-center w-full h-12 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+        <div class="flex flex-col justify-center items-center pt-6 pb-6">
+            <p class=" text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload new file</span> </p>
+          
+        </div>
+        <input id="dropzone-file" type="file" class="hidden"  @change="previewImage " />
+    </label>
+</div> 
+        <div class="border-2 p-2 mt-3 w-full border-sky-200	">
+          <p class="text-xs">Your file upload:</p>
+          <template v-if="preview">
+            <img :src="preview" class="img-fluid h-24" />
+            <!-- <p class="text-green-500 text-xs">Upload success !!</p> -->
+            <p class="mb-0 text-xs">file name: {{ image.name }}</p>
+            <p class="mb-0 text-xs" id="size">size: {{ image.size/1024 }}KB</p>
+    <div class="col-12 mt-3 text-center">
+      <button @click="reset" class="text-sm text-red-500 ">cancel upload </button>
+    </div>
+          </template>
+        </div>
+      </div>
+    </form>
 
           <p class="text-slate-600 font-bold">Message to Advisor</p>
 
@@ -368,7 +485,7 @@ const DowloadFlie = async () => {
             <textarea
               v-show="!hideEdit"
               type="text"
-              class="border-2 border-sky-200 w-11/12 h-56 rounded-lg"
+              class="border-2 border-sky-200 w-full h-56 rounded-lg"
               v-model="eventLists.eventNotes"
             ></textarea>
           </div>

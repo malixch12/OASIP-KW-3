@@ -28,6 +28,7 @@
   if (res.status === 200) {
     console.log("โทเค้นหมดอายุ")
     let jwtTokenRF = await res.json()
+    console.log(jwtTokenRF)
     localStorage.setItem('jwtToken', jwtTokenRF.jwttoken);
     jwtToken.value = localStorage.getItem('jwtToken');
     

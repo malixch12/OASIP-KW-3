@@ -14,7 +14,7 @@ const props = defineProps({
   categoryDetail: {
     type: Object,
   },
-  CheckOverlap : {
+  CheckOverlap: {
     type: Boolean,
     default: true
   }
@@ -25,7 +25,14 @@ defineEmits(["addEvent"]);
 onBeforeUpdate(() => {
   CheckData()
 });
+const UserRole = ref()
+const UserEmail = ref()
+onBeforeMount(() => {
+  dataBooking.value.bookingEmail = localStorage.getItem('UserEmail');
+  UserRole.value = localStorage.getItem('UserRole');
 
+
+});
 function CheckData() {
   //check date and time
   if ((countTime.value > new Date(dataBooking.value.eventStartTime))) {
@@ -52,7 +59,7 @@ function CheckData() {
   }
 
   // All check
-  if (NameCheck.value == true && EmailCheck.value == true && DateTimeCheck.value == false && EmailValidation.value == true ) {
+  if (NameCheck.value == true && EmailCheck.value == true && DateTimeCheck.value == false && EmailValidation.value == true) {
     AllDataCheck.value = true
   } else {
     AllDataCheck.value = false
@@ -64,13 +71,13 @@ function CheckData() {
 
 
 function validateEmail(email) {
-  var re =  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(email);
 }
 
 
 const AllDataCheck = ref(false)
-const DateTimeCheck = ref(false)    
+const DateTimeCheck = ref(false)
 const NameCheck = ref(false)     //เซ็คว่ากรอกรึยัง
 const EmailCheck = ref(false)   //เซ็คว่ากรอกรึยัง
 const EmailValidation = ref(false)  //ฟอแมท เมล
@@ -117,7 +124,8 @@ function eror() {
 
 <template>
   <div>
-    <div class="space-y-7 bg-white shadow-xl rounded-lg ml-24 p-10 rounded">
+
+    <div class="space-y-7 bg-white shadow-xl rounded-lg md:ml-24 md:p-16 p-8  rounded md:w-auto w-full">
       <RoundButton bg-color="bg-slate-400 text-sm text-white" button-name="<< go back" @click="goBack" />
 
 
@@ -129,33 +137,33 @@ function eror() {
       </span> :
       <input maxlength="100" type="text" v-model="dataBooking.bookingName" placeholder="Please enter your name"
         class="border-2 pl-2 border-sky-200 w-8/12 rounded-lg col-span-5" />
-      <br>
-
-      <span class=" font-bold text-gray-600 text-xs"> *คุณสามารถกรอกได้เพียง 100 ตัวอักษร</span> <span
-        class=" font-bold text-gray-600 text-xs">--> เหลืออีก {{ 100 - dataBooking.bookingName.length }} ตัว
-
+  
         <details class="" v-if="!NameCheck">
-          <summary class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400">
+          <summary class="text-sm leading-6 text-slate-900  font-semibold select-none text-red-400">
             invalid
           </summary>
-          <div class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
+          <div class="mt-3 text-sm leading-6 text-slate-600 ">
             <span v-show="!NameCheck" class="text-red-600"> กรุณาใส่ชื่อ</span>
           </div>
         </details>
-      </span>
+      
       <div class=" font-bold text-red-600 text-xs" v-if="dataBooking.bookingName.length == 100">
         ตอนนี้คุณไม่สามารถเพิ่มข้อความได้มากกว่านี้ กรุณาตรวจความถูกต้องของข้อความทั้งหมด</div>
       <div>
         <span class="after:content-['*'] after:ml-0.5 after:text-red-500"> Email
         </span> :
 
-        <input type="text" v-model="dataBooking.bookingEmail" placeholder="Please enter your email"
-          class="pl-2 border-2 border-sky-200 w-8/12 rounded-lg" maxlength="100" />
+        <input v-if="UserRole==`Student`" type="text" v-model="dataBooking.bookingEmail"
+          placeholder="Please enter your email"
+          class="pl-2 border-2 border-gray-200 w-8/12 rounded-lg bg-gray-100 text-gray-900  cursor-not-allowed"
+          maxlength="100" disabled />
+        <input v-else type="text" v-model="dataBooking.bookingEmail" placeholder="Please enter your email"
+          class="pl-2 border-2 border-sky-200 w-8/12 rounded-lg  " maxlength="100" />
         <details class="" v-show="!EmailValidation || !EmailCheck">
-          <summary class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400">
+          <summary class="text-sm leading-6 text-slate-900  font-semibold select-none text-red-400">
             invalid
           </summary>
-          <div class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
+          <div class="mt-3 text-sm leading-6 text-slate-600 ">
             <span v-show="!EmailCheck" class="text-red-600"> กรุณาใส่อีเมล</span>
             <span v-show="!EmailValidation & EmailCheck" class="text-red-600"> กรุณากรอกอีเมลล์ให้ถูกต้อง</span>
           </div>
@@ -174,7 +182,7 @@ function eror() {
         <input type="datetime-local" v-model="dataBooking.eventStartTime"
           class="border-2 border-sky-200 w-9/12 rounded-lg" />
         <details class="" v-show="DateTimeCheck">
-          <summary class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400">
+          <summary class="text-sm leading-6 text-slate-900  font-semibold select-none text-red-400">
             invalid
           </summary>
           <div class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
@@ -190,16 +198,13 @@ function eror() {
 
       <p>Duration {{ categoryDetail.categoryDuration }} minutes</p>
       <p>Message to Advisor</p>
-      <span class=" font-bold text-gray-600 text-xs"> *คุณสามารถกรอกได้เพียง 500 ตัวอักษร</span> <span
-        class=" font-bold text-gray-600 text-xs">--> เหลืออีก {{ 500 - dataBooking.eventNotes.length }} ตัว</span><br>
-      <span class=" font-bold text-red-600 text-xs" v-if="dataBooking.eventNotes.length == 500">
-        ตอนนี้คุณไม่สามารถเพิ่มข้อความได้มากกว่านี้ กรุณาตรวจความถูกต้องของข้อความทั้งหมด</span>
+      
       <textarea maxlength="500" type="text" v-model="dataBooking.eventNotes"
         class="border-2 border-sky-200 w-11/12 h-56 rounded-lg"></textarea>
       <div class="grid grid-cols-1 place-items-center">
         <RoundButton bg-color="bg-emerald-400" button-name="add" @click="isActivePopup = true" />
         <br><span v-if="!AllDataCheck"
-          class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400">
+          class="text-sm leading-6 text-slate-900  font-semibold select-none text-red-400">
           **ยังไม่สามารถเพิ่มอีเว้นได้ กรุณาตรวจสอบข้อมูลของคุณให้ถูกต้อง </span>
 
         <!-- <RoundButton
@@ -225,14 +230,14 @@ function eror() {
           <div class="text-slate-700 font-semibold text-center p-10 space-y-5">
             <div> Do you want to add appointment?</div>
             <div class="grid grid-cols-2 place-items-center">
-            <RoundButton bg-color="bg-green-400 text-white " button-name="YES"
-              @click="$emit('addEvent', dataBooking, AllDataCheck), isActivePopup = false" />
-            <RoundButton bg-color="bg-red-400 text-white" button-name="NO" @click="isActivePopup = false" />
-         </div>
-         </div>
+              <RoundButton bg-color="bg-green-400 text-white " button-name="YES"
+                @click="$emit('addEvent', dataBooking, AllDataCheck), isActivePopup = false" />
+              <RoundButton bg-color="bg-red-400 text-white" button-name="NO" @click="isActivePopup = false" />
+            </div>
+          </div>
         </div>
 
-           
+
       </PopupPage>
 
 
@@ -246,4 +251,5 @@ function eror() {
 </template>
 
 <style>
+
 </style>

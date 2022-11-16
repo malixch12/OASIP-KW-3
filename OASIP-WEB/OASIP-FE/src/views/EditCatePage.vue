@@ -12,7 +12,7 @@ import PopupPage from "../components/PopupPage.vue";
 
 const router = useRouter();
 const myRouter = useRoute();
-const eventLists = ref([])
+const eventLists = ref({eventCategoryName:"test"})
 const getLinkAll = async () => {
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/eventcategorys/${myRouter.query.categoryId}`

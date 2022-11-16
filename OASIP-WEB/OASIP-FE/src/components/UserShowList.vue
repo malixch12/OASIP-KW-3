@@ -5,7 +5,6 @@ import Navbar from "../components/Navbar.vue";
 import PopupPage from "../components/PopupPage.vue";
 import RoundButton from "../components/RoundButton.vue";
 import { useRouter } from "vue-router";
-import CheckPassword from "../components/CheckPassword.vue";
 
 
 const router = useRouter();
@@ -187,11 +186,9 @@ router.push({
 };
 </script>
 
+
 <template>
-
-  <div class="flex justify-center grid grid-rows-1  mb-16">
-
-    <PopupPage class="" v-show="UserRole==`Lecturer`" :dim-background="true">
+     <PopupPage class="" v-show="UserRole==`Lecturer`" :dim-background="true">
       <div class="grid grid-cols-1 p-12" >
         Lecturer ไม่สามารถใช้หน้านี้ได้
         <div class=" max-w-lg mx-auto  ">
@@ -243,30 +240,16 @@ router.push({
 
     </PopupPage>
 
-    <PopupPage v-show="isActivePopup2" :dim-background="true">
-
-<div  class="grid grid-cols-1  pl-24 pr-24 pt-2 " >
-  <div class="flex justify-end mt-14 "  @click="() => isActivePopup2 = false">
-    <svg  xmlns="http://www.w3.org/2000/svg"
-      xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--iconoir" width="32" height="32" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-      <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6.758 17.243L12.001 12m5.243-5.243L12 12m0 0L6.758 6.757M12.001 12l5.243 5.243"></path>
-    </svg>
-
-  </div>
- 
   
-
-</div><CheckPassword/>
- </PopupPage>
 
     <br>
     <div class="text-sm ">
-      <div class="text-3xl font-bold text-center   drop-shadow-md"> USER LIST </div>
+      <div class="text-3xl font-bold text-center   drop-shadow-md mt-8"> USER </div>
       <div class="flex items-center justify-center">
 	<div class="container">
 		<table class="w-full flex flex-row flex-no-wrap sm:bg-white rounded-lg overflow-hidden sm:shadow-lg my-5">
 			<thead class="text-white">
-				<tr v-for="(user, index) in UserLists.content" :key="index" class="bg-rose-300 flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0">
+				<tr v-for="(user, index) in UserLists.content" :key="index" class="bg-black flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0">
 					<th scope="col" class="py-3 px-14 ">
               User name
             </th>
@@ -335,38 +318,5 @@ router.push({
       
 
       </div>
-
-
-    </div>
-
-    <hr class="mt-4 "/>
-        <div v-if="UserRole==`Admin`" @click="isActivePopup2=true" class="mt-4 font-normal text-center text-blue-500 underline underline-offset-1
-">CHECK PASSWORD</div>
-   
-  </div>
+      </div>
 </template>
-
-<style>
-html,
-  body {
-    height: 100%;
-  }
-
-  @media (min-width: 640px) {
-    table {
-      display: inline-table !important;
-    }
-
-    thead tr:not(:first-child) {
-      display: none;
-    }
-  }
-
-  td:not(:last-child) {
-    border-bottom: 0;
-  }
-
-  th:not(:last-child) {
-    border-bottom: 2px solid rgba(0, 0, 0, .1);
-  }
-</style>

@@ -21,6 +21,7 @@ public class GetEventDTO {
     private Instant EventStartTime;
     private Integer EventDuration;
     private String EventNotes;
+    private String FileName;
     private Integer EventCategoryID;
 
     public String getDate() {

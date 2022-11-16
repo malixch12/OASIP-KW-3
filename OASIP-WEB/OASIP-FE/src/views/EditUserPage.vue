@@ -421,7 +421,7 @@ const isActivePopup2 =ref(false)
 
 
 
-    <div class="bg-white space-y-7 shadow-xl rounded-lg ml-48 mr-48 p-12 w-2/5">
+    <div class="space-y-7 bg-white shadow-xl mt-12 rounded-lg md:ml-24 md:p-16 p-8  rounded md:w-auto w-full">
       <div v-if="LoginCheck">
       <RoundButton bg-color="bg-slate-400 text-white text-sm" button-name="<< go back" @click="goBack" />
 

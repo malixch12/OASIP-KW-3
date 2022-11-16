@@ -3,6 +3,7 @@ import RoundButton from "../components/RoundButton.vue";
 import { useRouter, useRoute } from "vue-router";
 import { ref, onBeforeMount, onBeforeUpdate, computed } from "vue";
 import PopupPage from "../components/PopupPage.vue"
+import privew from "../components/PicPreview.vue"
 const appRouter = useRouter();
 const goBack = () => appRouter.go(-1);
 
@@ -23,7 +24,7 @@ const props = defineProps({
 defineEmits(["addEvent"]);
 
 onBeforeUpdate(() => {
-  CheckData()
+ CheckData()
 });
 const UserRole = ref()
 const UserEmail = ref()
@@ -35,13 +36,14 @@ onBeforeMount(() => {
 });
 function CheckData() {
   //check date and time
+  console.log(dataBooking.value.bookingName.length)
   if ((countTime.value > new Date(dataBooking.value.eventStartTime))) {
     DateTimeCheck.value = true
   } else {
     DateTimeCheck.value = false
   }
   //check name
-  if (dataBooking.value.bookingName != "") {
+  if ( dataBooking.value.bookingName != "") {
     NameCheck.value = true
   } else {
     NameCheck.value = false
@@ -77,10 +79,11 @@ function validateEmail(email) {
 
 
 const AllDataCheck = ref(false)
-const DateTimeCheck = ref(false)
-const NameCheck = ref(false)     //เซ็คว่ากรอกรึยัง
-const EmailCheck = ref(false)   //เซ็คว่ากรอกรึยัง
-const EmailValidation = ref(false)  //ฟอแมท เมล
+const DateTimeCheck = ref(true)
+const NameCheck = ref(true)     //เซ็คว่ากรอกรึยัง
+const EmailCheck = ref(true)   //เซ็คว่ากรอกรึยัง
+const EmailValidation = ref(true)  //ฟอแมท เมล
+const dataFile = ref()
 const dataBooking = ref({    //สำหรับให้ ฟอม v-model
   bookingId: "",
   bookingName: "",
@@ -90,6 +93,7 @@ const dataBooking = ref({    //สำหรับให้ ฟอม v-model
   eventDuration: props.categoryDetail.categoryDuration,
   eventNotes: "",
   eventCategoryID: props.categoryDetail.categoryId,
+  file : null
 });
 
 
@@ -120,11 +124,68 @@ function eror() {
   if (!AllDataCheck.value) { isActivePopup.value = true }
 }
 
+const oldFile = ref()
+function CheckSizeFile(size) {  
+      var uploadField = document.getElementById("file");
+      let photo = document.getElementById("file").files[0];
+
+      if(event.target.files[0].size > (10485760)){
+        isActivePopup2.value = true
+      if(dataBooking.value.file == null)  {
+          
+      } 
+      if(dataBooking.value.file != null) {
+        
+      }
+      
+    }else
+    dataBooking.value.file = event.target.files[0];
+
+    
+
+    
+   }
+
+const  isActivePopup2 = ref()
+ 
+const preview =  ref(null)
+const    image =  ref(null)
+const    preview_list = ref([])
+
+function previewImage(event) {
+ // CheckSizeFile(event)
+
+ if(event.target.files[0].size <= (10485760)) {
+  dataBooking.value.file = event.target.files[0];
+
+  var input = event.target;
+     if (input.files) {
+       var reader = new FileReader();
+       reader.onload = (e) => {
+         this.preview = e.target.result;
+       }
+       this.image=input.files[0];
+       reader.readAsDataURL(input.files[0]);
+     }
+
+ }else
+ isActivePopup2.value = true
+ document.getElementById("dropzone-file").value = "";
+ console.log("1-1")
+
+     
+   }
+
+   function reset() {
+      image.value = null;
+      preview.value = null;
+      preview_list.value = [];
+      document.getElementById("dropzone-file").value = "";
+    }
 </script>
 
 <template>
   <div>
-
     <div class="space-y-7 bg-white shadow-xl rounded-lg md:ml-24 md:p-16 p-8  rounded md:w-auto w-full">
       <RoundButton bg-color="bg-slate-400 text-sm text-white" button-name="<< go back" @click="goBack" />
 
@@ -200,7 +261,50 @@ function eror() {
       <p>Message to Advisor</p>
       
       <textarea maxlength="500" type="text" v-model="dataBooking.eventNotes"
-        class="border-2 border-sky-200 w-11/12 h-56 rounded-lg"></textarea>
+        class="border-2 border-sky-200 w-11/12 h-32 rounded-lg"></textarea>
+
+        <div>
+      
+      <div id="app" class="container my-3">
+<div class="row">
+  <div class="col-12 text-center">
+  </div>
+  <div class="col-md-5 offset-md-1">
+ 
+    <form>
+      <div class="form-group">
+        <label for="file">Select Image</label>
+        <!-- <input type="file" @change="previewImage " class="form-control-file block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer  focus:outline-none" id="file"> -->
+        <div class="flex justify-center items-center w-full">
+    <label for="dropzone-file" class="flex flex-col justify-center items-center w-full h-24 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+        <div class="flex flex-col justify-center items-center pt-5 pb-6">
+            <svg aria-hidden="true" class="mb-3 w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+            <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> </p>
+          
+        </div>
+        <input id="dropzone-file" type="file" class="hidden"  @change="previewImage " />
+    </label>
+</div> 
+        <div class="border p-2 mt-3 w-72">
+          <p>Your file upload:</p>
+          <template v-if="preview">
+            <img :src="preview" class="img-fluid " />
+            <!-- <p class="text-green-500 text-xs">Upload success !!</p> -->
+            <p class="mb-0 text-xs">file name: {{ image.name }}</p>
+            <p class="mb-0 text-xs" id="size">size: {{ image.size/1024 }}KB</p>
+            
+          </template>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="w-100"></div>
+    <div class="col-12 mt-3 text-center">
+      <button @click="reset">Clear file</button>
+    </div>
+  </div>
+</div>
+    </div>
       <div class="grid grid-cols-1 place-items-center">
         <RoundButton bg-color="bg-emerald-400" button-name="add" @click="isActivePopup = true" />
         <br><span v-if="!AllDataCheck"
@@ -212,7 +316,15 @@ function eror() {
           button-name="cancel"
           @click="cancelBooking"
         /> -->
-      </div>
+
+        <!-- <label class="block mb-2 text-sm font-medium text-gray-900 mt-4" for="file_input">Upload file</label>
+<input class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer  focus:outline-none  " id="file_input" type="file" @change="previewFiles()"> -->
+    
+<!-- <div id="output"></div> -->
+
+
+<!-- <privew @CheckSizeFile="CheckSizeFile"/> -->
+</div>
 
 
       <PopupPage v-show="isActivePopup == true" :dim-background="true">
@@ -240,6 +352,19 @@ function eror() {
 
       </PopupPage>
 
+      <PopupPage v-show="isActivePopup2 == true" :dim-background="true">
+        <!-- ข้อมูลผิด -->
+
+      
+          <div class="grid grid-cols-1 place-items-center text-slate-700 font-semibold text-center  p-10 space-y-5">
+            <div>ขนาดไฟล์ห้ามเกิน 10 mb
+             </div>
+            <RoundButton bg-color="bg-gray-400" button-name="ok" @click="isActivePopup2 = false" />
+        </div>
+
+
+
+      </PopupPage>
 
 
     </div>

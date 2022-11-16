@@ -46,6 +46,9 @@ public class Event {
     @Column(name = "EventNotes", length = 500)
     private String eventNotes;
 
+    @Column(name = "FileName")
+    private String fileName;
+
     @Column(name = "EventCategoryID", nullable = false)
     private Integer eventCategoryID;       
 }

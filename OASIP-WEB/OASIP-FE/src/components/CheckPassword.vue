@@ -10,6 +10,8 @@
     const errorStatus = ref({Name : null,
     Email : null})
     const jwtToken = ref()
+    const jwtTokenRF = ref()
+
     const RefreshToken = async () => {
   console.log("RefreshToken doing...")
 
@@ -21,15 +23,13 @@
       headers: {
         'IsRefreshToken': 'true',
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + jwtToken.value
+        'Authorization': 'Bearer ' + jwtTokenRF.value
       }
     }
   );
   if (res.status === 200) {
-    console.log("โทเค้นหมดอายุ")
     let jwtTokenRF = await res.json()
-    console.log(jwtTokenRF)
-    localStorage.setItem('jwtToken', jwtTokenRF.jwttoken);
+    localStorage.setItem('jwtToken', jwtTokenRF.accessToken);
     jwtToken.value = localStorage.getItem('jwtToken');
     
   } else
@@ -83,7 +83,9 @@
       return re.test(email);
     }
     onBeforeMount(() => {
-        jwtToken.value = localStorage.getItem('jwtToken');
+  jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
+  jwtToken.value = localStorage.getItem('jwtToken');
+ 
 
     });
 

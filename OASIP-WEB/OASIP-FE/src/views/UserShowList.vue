@@ -191,7 +191,7 @@ router.push({
 
   <div class="flex justify-center grid grid-rows-1  mb-16">
 
-    <PopupPage v-show="UserRole==`Lecturer`" :dim-background="true">
+    <PopupPage class="" v-show="UserRole==`Lecturer`" :dim-background="true">
       <div class="grid grid-cols-1 p-12" >
         Lecturer ไม่สามารถใช้หน้านี้ได้
         <div class=" max-w-lg mx-auto  ">
@@ -204,7 +204,7 @@ router.push({
 
     <PopupPage v-show="isActivePopup" :dim-background="true">
 
-      <div v-if="TokenTimeOut==false" class="grid grid-cols-1 p-12">
+      <div v-if="TokenTimeOut==false" class="grid grid-cols-1 p-12 ">
        
         <div class="text-3xl font-bold text-rose-400 mb-3">USER DETAIL</div>
         <p> <span class="font-bold mr-1">NAME : </span> {{dataDetail.name}} </p>
@@ -260,7 +260,7 @@ router.push({
  </PopupPage>
 
     <br>
-    <div class="text-sm">
+    <div class="text-sm ">
       <div class="text-3xl font-bold text-center   drop-shadow-md"> USER LIST </div>
       <div class="flex items-center justify-center">
 	<div class="container">
@@ -274,10 +274,10 @@ router.push({
               Email
             </th>
             <th scope="col" class="py-3 px-14">
-              role
+              detail
             </th>
-            <th scope="col" class="py-3  text-blue-600 ">
-              test
+            <th scope="col" class="py-3   ">
+              role
             </th>
          
 
@@ -298,9 +298,7 @@ router.push({
             <td class="p-3 text-center">
               {{user.email}}
             </td>
-            <td class="p-3 text-center">
-              {{user.role}}
-            </td>
+         
 
             <td class="p-3">
               <div class="font-medium text-blue-600 text-center hover:underline" @click="isActivePopup=true
@@ -310,12 +308,15 @@ router.push({
                       dataDetail.updatedOn = user.updatedOn ,
                       dataDetail.createdOn = user.createdOn
                     
-                    ">detail</div>
+                    ">Show</div>
 
             </td>
+            <td class="p-3 text-center">
+              {{user.role}}
+            </td>
             <td class="p-3 text-center mb-1.5">
+              <span class="font-medium text-blue-500  px-2 hover:underline"  @click="goEdit(user.id)">edit</span>
               <span class="font-medium text-red-600  hover:underline" @click="removeUser(user.id)">delete</span>
-              <span class="font-medium text-red-600  hover:underline"  @click="goEdit(user.id)">edit</span>
 
             </td>
             <!-- <td class="p-3  " @click="goEdit(user.id)">

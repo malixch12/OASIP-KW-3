@@ -3,6 +3,7 @@ package sit.oasip.dtos.EventDTOs;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Future;
@@ -42,7 +43,7 @@ public class AddEventDTO {
 
     @NotNull(message = "Category ID is not null")
     private Integer EventCategoryID;
-
+    private MultipartFile File;
     public void setEventStartTime(Instant eventStartTime) {
         EventStartTime = Instant.from(eventStartTime.atZone(UTC));
     }

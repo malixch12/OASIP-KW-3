@@ -11,8 +11,8 @@ import sit.oasip.Component.JwtTokenUtil;
 //import sit.oasip.Component.JwtUtil;
 import sit.oasip.dtos.UserDTOs.MatchUserDTO;
 import sit.oasip.entities.User;
-import sit.oasip.javainuse.config.JwtRequestFilter;
-import sit.oasip.javainuse.services.JWTUserDetailsService;
+import sit.oasip.config.JwtRequestFilter;
+import sit.oasip.services.JWTUserDetailsService;
 import sit.oasip.repositories.UserRepository;
 import sit.oasip.services.AuthenticationService;
 

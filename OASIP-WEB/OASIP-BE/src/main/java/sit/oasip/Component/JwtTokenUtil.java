@@ -11,7 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import sit.oasip.entities.User;
-import sit.oasip.javainuse.models.JwtResponse;
+import sit.oasip.dtos.JwtResponse;
 import sit.oasip.utils.Role;
 
 @Component

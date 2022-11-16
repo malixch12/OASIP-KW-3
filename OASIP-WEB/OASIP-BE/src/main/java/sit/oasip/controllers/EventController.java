@@ -7,25 +7,32 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 
+import org.springframework.web.multipart.MultipartFile;
 import sit.oasip.dtos.EventDTOs.AddEventDTO;
 import sit.oasip.dtos.EventDTOs.EditEventDTO;
 import sit.oasip.dtos.EventDTOs.GetEventDTO;
 import sit.oasip.entities.Event;
+import sit.oasip.repositories.EventRepository;
 import sit.oasip.services.EventService;
 import org.springframework.data.domain.PageRequest;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.time.Instant;
 
 @RestController
 @RequestMapping("/api/events")
 public class EventController {
+    private final EventRepository repository;
 
     @Autowired
     private EventService eventService;
+
+    public EventController(EventRepository repository) {
+        this.repository = repository;
+    }
 
     @GetMapping("")
     public Page<GetEventDTO> getEventByAll(
@@ -46,7 +53,7 @@ public class EventController {
             @RequestParam Instant date,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "8") Integer pageSize) {
-        return eventService.getSimpleEventDate(date,PageRequest.of(page, pageSize));
+        return eventService.getSimpleEventDate(date, PageRequest.of(page, pageSize));
     }
 
     @GetMapping("/pastdays")
@@ -70,7 +77,7 @@ public class EventController {
             @RequestParam(defaultValue = "eventStartTime") String sortBy,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "8") Integer pageSize) {
-                return eventService.getEventByCategory(eventCategoryID,PageRequest.of(page, pageSize,  Sort.by(sortBy)));
+        return eventService.getEventByCategory(eventCategoryID, PageRequest.of(page, pageSize, Sort.by(sortBy)));
     }
 
     @GetMapping("/categories/dates/{eventCategoryID}")
@@ -80,7 +87,7 @@ public class EventController {
             @RequestParam(defaultValue = "eventStartTime") String sortBy,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "8") Integer pageSize) {
-        return eventService.getEventDateByCategory(eventCategoryID, date, PageRequest.of(page, pageSize,  Sort.by(sortBy)));
+        return eventService.getEventDateByCategory(eventCategoryID, date, PageRequest.of(page, pageSize, Sort.by(sortBy)));
     }
 
     @GetMapping("/categories/pastdays/{eventCategoryID}")
@@ -89,7 +96,7 @@ public class EventController {
             @RequestParam(defaultValue = "eventStartTime") String sortBy,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "8") Integer pageSize) {
-      return eventService.getEventPastDateByCategory(eventCategoryID, PageRequest.of(page, pageSize,  Sort.by(sortBy)));
+        return eventService.getEventPastDateByCategory(eventCategoryID, PageRequest.of(page, pageSize, Sort.by(sortBy)));
     }
 
     @GetMapping("/categories/futuredays/{eventCategoryID}")
@@ -98,7 +105,7 @@ public class EventController {
             @RequestParam(defaultValue = "eventStartTime") String sortBy,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "8") Integer pageSize) {
-        return eventService.getEventFutureDateByCategory(eventCategoryID, PageRequest.of(page, pageSize,  Sort.by(sortBy)));
+        return eventService.getEventFutureDateByCategory(eventCategoryID, PageRequest.of(page, pageSize, Sort.by(sortBy)));
     }
 
     @DeleteMapping("/{eventID}")
@@ -108,14 +115,13 @@ public class EventController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public Event create(@Validated @RequestBody AddEventDTO newEvent) throws MessagingException, IOException {
+    public Event create(@Validated @ModelAttribute AddEventDTO newEvent) throws MessagingException, IOException {
         return eventService.add(newEvent);
     }
 
     @PutMapping("/{bookingId}")
     @ResponseStatus(HttpStatus.OK)
-    public Event update(@Validated @RequestBody EditEventDTO updateEvent, @PathVariable Integer bookingId) {
+    public Event update(@Valid @ModelAttribute EditEventDTO updateEvent, @PathVariable Integer bookingId) {
         return eventService.update(updateEvent, bookingId);
     }
-
 }

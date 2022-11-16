@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import sit.oasip.dtos.SimpleEventcategoryDTO;
+import sit.oasip.dtos.EventCategoryDTO.EditEventcategoryDTO;
+import sit.oasip.dtos.EventCategoryDTO.GetEventCategoryDTO;
+import sit.oasip.entities.Eventcategory;
 import sit.oasip.repositories.EventcategoryRepository;
 import sit.oasip.services.EventCategoryService;
 import org.springframework.http.HttpStatus;
@@ -31,18 +33,18 @@ public class EventcategoryController {
     }
 
     @GetMapping("")
-    public List<SimpleEventcategoryDTO> getEventcategoryByAll() {
+    public List<GetEventCategoryDTO> getEventcategoryByAll() {
         return eventcategoryService.getSimpleEventcategoryAll();
     }
 
     @GetMapping("/{id}")
-    public SimpleEventcategoryDTO getEventcategoryById(@PathVariable Integer id) {
+    public GetEventCategoryDTO getEventcategoryById(@PathVariable Integer id) {
         return eventcategoryService.getSimpleEventcategoryById(id);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public SimpleEventcategoryDTO edit(@Valid @RequestBody SimpleEventcategoryDTO updateCategory, @PathVariable Integer id) {
+    public GetEventCategoryDTO edit(@Valid @RequestBody EditEventcategoryDTO updateCategory, @PathVariable Integer id) {
        return eventcategoryService.update(updateCategory,id);
     }
 

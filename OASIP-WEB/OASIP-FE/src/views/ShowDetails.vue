@@ -275,7 +275,7 @@ router.push({
 const DowloadFlie = async () => {
 
 
-   await fetch( `${import.meta.env.VITE_APP_TITLE}/api/download/file/${eventLists.value.bookingId}` )
+   await fetch( `${import.meta.env.VITE_APP_TITLE}/api/download/${eventLists.value.bookingId}` )
 .then((res) => { return res.blob(); })
 .then((data) => {
   var a = document.createElement("a");

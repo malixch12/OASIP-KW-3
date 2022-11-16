@@ -173,8 +173,8 @@ function toggle () {
   <div class="font-sans antialiased " id="app">
   <nav class="container flex flex-wrap justify-between items-center mx-auto mt-4">
     <div class="flex items-center flex-no-shrink text-white mr-6">
-      <router-link :to="{ name: 'Home' }" class="flex items-center">
-      <img src="../assets/logo-removebg-preview.png" class="w-14 ml-4"/> </router-link>
+      <router-link :to="{ name: 'Home' }" class="flex items-center ">
+      <img src="../assets/logo-removebg-preview.png" class="w-14 ml-4"/>   </router-link>
   
     </div>
     <div class="md:hidden">
@@ -194,7 +194,7 @@ function toggle () {
                 text-gray-700
                 md:hover:text-pink-500 md:p-0
               "
-              >Home</router-link
+              >🏠&nbspHome</router-link
             >
           </li>
           <li v-if=" (UserRole!=`Lecturer` ) " >
@@ -206,7 +206,7 @@ function toggle () {
                 
                 md:hover:text-pink-500 md:p-0
               "
-              >booking</router-link
+              >⏰&nbsp booking</router-link
             >
           </li>
 
@@ -217,9 +217,9 @@ function toggle () {
                  block
                 text-gray-700
                
-                md:hover:text-pink-500 md:p-0 
+                md:hover:text-pink-500 md:p-0  
               "
-              ><span >check appointments</span>
+              ><span >📅&nbsp check appointments</span>
             </router-link >
           </li>
              <li>
@@ -231,7 +231,7 @@ function toggle () {
                
                 md:hover:text-pink-500 md:p-0 
               "
-              ><span >user list</span>
+              ><span >👤 &nbsp user list</span>
             </router-link>
           </li>
               <li >

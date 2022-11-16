@@ -126,7 +126,9 @@ askShowList.value = false
         {{ name }}
   </div>
 
-  <div class="flex justify-center mb-8 " v-if="type == `Booking`">
+
+  <div class="md:block hidden">
+  <div class="flex justify-center md:mb-8  " v-if="type == `Booking`">
     <ol class="items-center sm:flex  ">
       <li class="relative mb-6 sm:mb-0">
         <div class="flex items-center">
@@ -200,7 +202,7 @@ askShowList.value = false
 
   </div>
   <!-- หัวข้อ -->
-
+</div>
 
  <div class="grid justify-items-center ">
   
@@ -226,7 +228,7 @@ askShowList.value = false
     <!-- <img src="../assets/ques.gif" v-if="!askShowList"/> -->
   </div>
 
-  <div class="grid grid-cols-3 gap-6 place-items-center mb-12" v-if="askShowList">
+  <div class="grid md:grid-cols-3 grid-cols-1  " v-if="askShowList">
     <div v-for="category in categorys" :key="category.eventCategoryID">
       <div class="grid justify-items-center">
         <img :src="`/kw3/` + category.eventCategoryID + `.png`" @click="

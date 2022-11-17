@@ -8,7 +8,7 @@ import Booking from "../views/BookingPage.vue";
 import ShowDetails from "../views/ShowDetails.vue"
 import BookingEventByCate from "../views/BookingEventByCategory.vue"
 import EditCatePage from "../views/EditCatePage.vue"
-import UserShowList from "../views/UserShowList.vue"
+import UserManage from "../views/UserManage.vue"
 import SignUpPage from "../views/SignUpPage.vue"
 import EditUserPage from "../views/EditUserPage.vue"
 import Login from "../views/Login.vue"
@@ -61,9 +61,9 @@ const routes = [
     component: EditCatePage,
   } ,
   {
-    path: "/UserShowList",
-    name: "UserShowList",
-    component: UserShowList,
+    path: "/UserManage",
+    name: "UserManage",
+    component: UserManage,
   }
   ,
   {

@@ -36,7 +36,7 @@ headers: {
     const TokenValue = ref( await res.json())
     console.log("status from backend = " +  TokenValue.value.message )
     if (TokenValue.value.message == "Token is expired") {
-
+      RefreshToken()
   
     }
     if (TokenValue.value.message == "Token incorrect" & jwtToken.value != null) {

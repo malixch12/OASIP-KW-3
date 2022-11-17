@@ -224,14 +224,14 @@ function toggle () {
           </li>
              <li>
             <router-link v-show="!loginCheck && UserRole==`Admin`"
-              :to="{ name: 'UserShowList' }"
+              :to="{ name: 'UserManage' }"
               class="
                  block
                 text-gray-700
                
                 md:hover:text-pink-500 md:p-0 
               "
-              ><span >👤 &nbsp user list</span>
+              ><span >👤 &nbsp user manage</span>
             </router-link>
           </li>
               <li >

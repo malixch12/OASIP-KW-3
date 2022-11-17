@@ -340,7 +340,6 @@ function previewImage(event) {
 
 <template>
   <div class="flex justify-center">
-    {{deleteFileCheck}}
      <!-- popup -->
      <PopupPage v-show="isActivePopup2 == true" :dim-background="true">
         <!-- ข้อมูลผิด -->

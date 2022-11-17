@@ -166,9 +166,9 @@ function previewImage(event) {
      if (input.files) {
        var reader = new FileReader();
        reader.onload = (e) => {
-         this.preview = e.target.result;
+         preview.value = e.target.result;
        }
-       this.image=input.files[0];
+       image.value=input.files[0];
        reader.readAsDataURL(input.files[0]);
      }
 

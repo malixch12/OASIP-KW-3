@@ -10,6 +10,8 @@
     const errorStatus = ref({Name : null,
     Email : null})
     const jwtToken = ref()
+    const jwtTokenRF = ref()
+
     const RefreshToken = async () => {
   console.log("RefreshToken doing...")
 
@@ -21,14 +23,13 @@
       headers: {
         'IsRefreshToken': 'true',
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + jwtToken.value
+        'Authorization': 'Bearer ' + jwtTokenRF.value
       }
     }
   );
   if (res.status === 200) {
-    console.log("โทเค้นหมดอายุ")
     let jwtTokenRF = await res.json()
-    localStorage.setItem('jwtToken', jwtTokenRF.jwttoken);
+    localStorage.setItem('jwtToken', jwtTokenRF.accessToken);
     jwtToken.value = localStorage.getItem('jwtToken');
     
   } else
@@ -82,7 +83,9 @@
       return re.test(email);
     }
     onBeforeMount(() => {
-        jwtToken.value = localStorage.getItem('jwtToken');
+  jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
+  jwtToken.value = localStorage.getItem('jwtToken');
+ 
 
     });
 
@@ -113,8 +116,10 @@
     const PasswordCheck =ref(true) //check password
     </script>
     <template>
-      <div class="test22">
-     
+      <div class="drop-shadow-md bg-gray-100 px-12 mt-8 rounded-md
+
+">
+
     <div class="text-white text-xs">{{dataUser.role}}</div>
      <PopupPage v-show="isActivePopup" :dim-background="true">
           <div v-if="CheckStatus" class="grid grid-cols-1 p-12">
@@ -158,65 +163,89 @@
           </div>
           
         </PopupPage>
-        <section class="">
-         
-              
-              <div class="box">
-                   
-                <div class="container2">
+        
+        <div class="grid grid-rows-1">
+     
+              <div class="">
+                <div class="text-3xl font-bold text-center   drop-shadow-md mt-12"> CHECK PASSWORD </div>
+
+                <div class="">
                     <div class="form">
-                        <h2>Check Password</h2>
+                        
                         <form>
-                            <!-- <div class="inputBox">
-                                <input type="text" placeholder="Username" v-model.trim="dataUser.name" >
-                                  <details class="" v-if="!NameCheck">
-              <summary class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
-                invalid
-              </summary>
-              <div class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
-                <span v-show="!NameCheck" class="text-red-600"> ยูสเซอร์เนมห้ามเว้นว่างและห้ามเกิน 100 ตัว</span>
-              </div>
-            </details>
-                            </div> -->
-                             <div class="inputBox ">
-                                <input type="text" class="" placeholder="email" v-model.trim="dataUser.email" required>
+                         
+                             <div class=" ">
+                              <input maxlength="100" type="text" v-model.trim="dataUser.email" placeholder="email" class="
+        my-3
+        form-control
+        block
+        w-full
+        px-3
+        py-1.5
+        text-base
+        font-normal
+        text-gray-700
+        bg-white bg-clip-padding
+        border border-solid border-gray-300
+        rounded
+        transition
+        ease-in-out
+        m-0
+        focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" />
+
+                                <!-- <input class="bg-black" type="text" placeholder="email" v-model.trim="dataUser.email" required> -->
                                   <details class="" v-show="!EmailValidation || !EmailCheck">
-              <summary class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
+              <summary class="text-sm leading-6 text-slate-900  font-semibold select-none text-red-400 ml-3 mt-3">
                 invalid
               </summary>
-              <div class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
+              <div class="mt-3 text-sm leading-6 text-slate-600">
                 <span v-show="!EmailCheck" class="text-red-600"> กรุณาใส่อีเมล</span>
                 <span v-show="!EmailValidation & EmailCheck" class="text-red-600"> กรุณากรอกอีเมลล์ให้ถูกต้อง</span>
               </div>
             </details>
                             </div>
-                             <div class="inputBox">
-                           
-                                <input type="text" placeholder="password" v-model.trim="dataUser.password">
+                             <div class="">
+                              <input maxlength="100" type="text" v-model.trim="dataUser.password" placeholder="password" class="
+        my-3
+        form-control
+        block
+        w-full
+        px-3
+        py-1.5
+        text-base
+        font-normal
+        text-gray-700
+        bg-white bg-clip-padding
+        border border-solid border-gray-300
+        rounded
+        transition
+        ease-in-out
+        m-0
+        focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" />
+
+                                <!-- <input type="text" placeholder="password" v-model.trim="dataUser.password"> -->
                              <details class="" v-if="!PasswordCheck">
-              <summary class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
+              <summary class="text-sm leading-6 text-slate-900  font-semibold select-none text-red-400 ml-3 mt-3">
                 invalid
               </summary>
-              <div class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
+              <div class="mt-3 text-sm leading-6 text-slate-600 ">
                 <span v-show="!PasswordCheck" class="text-red-600"> กรุณาใส่รหัส</span>
               </div>
             </details>
                             </div>
                             
                         
-           <input  class="mt-4 test rounded-full px-8 py-1 drop-shadow-lg" value="Check" @click="addUser()">
+           <input  class="mt-7 test rounded-full px-8 py-1 drop-shadow-lg" value="Check" @click="addUser()">
                          
                         </form>
                     </div>
                 </div>
               </div>
-        </section>
+            </div>
      
       </div>
     </template>
     <style>
 
-        .test22 { margin-top: -100px;
-        margin-left: 100px;
-    margin-right:100px}
+      
     </style>

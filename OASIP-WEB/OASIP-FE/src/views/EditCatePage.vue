@@ -12,7 +12,7 @@ import PopupPage from "../components/PopupPage.vue";
 
 const router = useRouter();
 const myRouter = useRoute();
-const eventLists = ref([])
+const eventLists = ref({eventCategoryName:"test"})
 const getLinkAll = async () => {
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/eventcategorys/${myRouter.query.categoryId}`
@@ -113,7 +113,7 @@ const isActivePopup = ref(false);
 
 
 
-    <div class="bg-white space-y-7 shadow-xl rounded-lg ml-48 mr-48 p-12 w-2/5">
+    <div class="space-y-7 bg-white shadow-xl rounded-lg md:ml-24 md:p-16 p-8  rounded md:w-auto w-full">
       <RoundButton bg-color="bg-slate-400 text-white text-sm" button-name="<< go back" @click="goBack" />
 
 

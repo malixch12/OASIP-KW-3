@@ -8,7 +8,7 @@ const props = defineProps({
 </script>
  
 <template>
-  <div class="z-50 popup-container" :class="{ 'bg-black/80': props.dimBackground }">
+  <div class="z-50 popup-container " :class="{ 'bg-black/80': props.dimBackground } ">
     <div class="popup">
       <slot>
         

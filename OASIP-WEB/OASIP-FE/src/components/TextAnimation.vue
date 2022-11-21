@@ -4,13 +4,13 @@ import { ref, onBeforeMount, onBeforeUpdate, computed } from "vue";
 </script>
  
 <template>
-  <div >
+  <div class=""  >
  
-<div class="font-bold drop-shadow-lg">Select  clinics</div>
+<div class="font-bold drop-shadow-lg text-[80px] ">Select  clinics</div>
    <div class="wrapper">
        
        
-       <div class="words drop-shadow-lg ">
+       <div class="words drop-shadow-lg  text-[80px]">
            <span class="text-transparent  bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 ">Server-side Clinic.</span>
            <span class="text-transparent  bg-clip-text bg-gradient-to-r from-red-400 to-orange-600 ">Project Management</span>
            <span class="text-transparent  bg-clip-text bg-gradient-to-r from-blue-400 to-pink-600 ">DevOps/Infra Clinic.</span>
@@ -19,7 +19,7 @@ import { ref, onBeforeMount, onBeforeUpdate, computed } from "vue";
            <span class="text-transparent  bg-clip-text bg-gradient-to-r from-purple-400 to-blue-600 ">Project Management</span>
        </div>
    </div>
-<div class="font-bold drop-shadow-lg ">and booking</div>
+<div class="font-bold drop-shadow-lg text-[80px] ">and booking</div>
   </div>
 </template>
  
@@ -32,7 +32,7 @@ import { ref, onBeforeMount, onBeforeUpdate, computed } from "vue";
     box-sizing: border-box;
     font-family: Helvetica;
     width: 980px;
-  font-size: 80px;
+  
     
 }
 body{

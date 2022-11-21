@@ -8,6 +8,7 @@ import PopupPage from "../components/PopupPage.vue";
 import RoundButton from "../components/RoundButton.vue";
 import { useRouter } from "vue-router";
 import jwt_decode from "jwt-decode";
+import addUser from "../components/addUser.vue";
 
 
 
@@ -204,13 +205,13 @@ const goHome = () => {
       <div class="color"></div>
       <div class="color"></div>
 
-      <div class="box"></div>
+      <div class="box">
 
-      <div class="square" style="--i:0;"></div>
+      <!-- <div class="square" style="--i:0;"></div>
       <div class="square" style="--i:1;"></div>
       <div class="square" style="--i:2;"></div>
       <div class="square" style="--i:3;"></div>
-      <div class="square" style="--i:4;"></div>
+      <div class="square" style="--i:4;"></div> -->
 
 
       <div class="container2" v-if="jwtToken==null">
@@ -230,7 +231,8 @@ const goHome = () => {
         </details>
                         </div> -->
             <div class="inputBox ">
-              <input type="text" class="" placeholder="email" v-model.trim="dataUser.email" required>
+              <p class="ml-4 mb-2 text-gray-500 text-sm">email</p>
+              <input type="text" class="" placeholder="" v-model.trim="dataUser.email" required>
               <details class="" v-show="!EmailValidation || !EmailCheck">
                 <summary
                   class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
@@ -259,7 +261,7 @@ const goHome = () => {
 
 
 
-
+            <addUser/>
 
 
 
@@ -280,11 +282,13 @@ const goHome = () => {
 
        <div class="text-center text-sm text-gray-400" v-if="decoded.role==`Admin`">  You can do everything on our website.</div>
       </div>
+    </div>
     </section>
 
   </div>
 </template>
 
 <style>
+
 
 </style>

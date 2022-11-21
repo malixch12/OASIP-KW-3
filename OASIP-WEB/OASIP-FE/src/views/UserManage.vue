@@ -3,6 +3,7 @@ import { onBeforeMount, ref, onBeforeUpdate } from "@vue/runtime-core";
 import UserShowList from "../components/UserShowList.vue";
 import CheckPassword from "../components/CheckPassword.vue";
 import CategoryManage from "../components/CategoryManage.vue";
+import addUser from "../components/addUser.vue";
 
 import PopupPage from "../components/PopupPage.vue";
 
@@ -44,6 +45,7 @@ const CategoryManageShow = ref(false);
 
 </div>
    
+<addUser />
   </div>
 </template>
 

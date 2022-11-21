@@ -109,7 +109,7 @@ public class EventController {
     }
 
     @DeleteMapping("/{eventID}")
-    public void delete(@PathVariable Integer eventID) {
+    public void delete(@PathVariable Integer eventID) throws IOException {
         eventService.delete(eventID);
     }
 

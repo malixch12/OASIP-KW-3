@@ -1,13 +1,13 @@
 <template>
     <div>
 
-            <div @click="login()"  class="bg-green-300">
-                login microsoft
-            </div>
+          
 
-            <div  @click="logout()"  class="bg-red-300">
-              asdsad
-            </div>
+            <button class="bg-gray-300 mt-2 w-full  rounded"> <img src="../assets/SignIn_with_microsoft-removebg-preview.png" class="h-14"/></button>
+
+            <!-- <div  @click="logoff()"  class="bg-red-300">
+              logout
+            </div> -->
 
             
 

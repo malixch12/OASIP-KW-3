@@ -203,13 +203,15 @@ public class EventService {
         return pageMapper.mapToPage(pageable, listEventDTO);
     }
 
-    public void delete(int eventID) {
+    public void delete(int eventID) throws IOException {
         String token = jwtRequestFilter.extractJwtFromRequest(request);
         Event event = repository.findById(eventID).orElseThrow(() -> new RuntimeException(eventID + " Does not exit !!!"));
         if (token != null) {
             if (jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString().equals(Role.Student.name()))
                 checkEmail(event.getBookingEmail(), HttpStatus.FORBIDDEN);
         }
+        String fileName = "../db/file-uploads/" + event.getFileName();
+        Files.delete(Paths.get(fileName));
         repository.deleteById(eventID);
     }
 

@@ -2,6 +2,7 @@ package sit.oasip.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 import sit.oasip.dtos.EventDTOs.AddEventDTO;
 import sit.oasip.dtos.EventDTOs.EditEventDTO;
+import sit.oasip.dtos.EventDTOs.GetDateTimeEvent;
 import sit.oasip.dtos.EventDTOs.GetEventDTO;
 import sit.oasip.entities.Event;
 import sit.oasip.repositories.EventRepository;
@@ -34,11 +36,20 @@ public class EventController {
         this.repository = repository;
     }
 
+    @GetMapping("/datetime")
+//    @PreAuthorize("hasAuthority('Admin')")
+    public Page<GetDateTimeEvent> getDateTimeEvent(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "8") Integer pageSize
+    ) {
+        return eventService.getDateTimeEvents(PageRequest.of(page, pageSize));
+    }
+
     @GetMapping("")
+//    @PreAuthorize("hasAuthority('Admin')")
     public Page<GetEventDTO> getEventByAll(
             @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "8") Integer pageSize,
-            HttpServletRequest request
+            @RequestParam(defaultValue = "8") Integer pageSize
     ) {
         return eventService.getSimpleEventAll(PageRequest.of(page, pageSize));
     }

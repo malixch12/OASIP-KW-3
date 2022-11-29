@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import sit.oasip.dtos.UserDTOs.AddUserDTO;
@@ -22,10 +24,12 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("")
+//    @PreAuthorize("hasAuthority('APPROLE_Admin')")
     public Page<GetUserDTO> getUserByAll(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "8") Integer pageSize
     ){
+
         return userService.getUserAll(PageRequest.of(page, pageSize));
     }
 
@@ -36,6 +40,7 @@ public class UserController {
 
 
     @PostMapping("/signup")
+//    @PreAuthorize("hasAuthority('APPROLE_Admin')")
     @ResponseStatus(HttpStatus.OK)
     public User addUser(@Validated @RequestBody AddUserDTO newUser){
         return userService.add(newUser);

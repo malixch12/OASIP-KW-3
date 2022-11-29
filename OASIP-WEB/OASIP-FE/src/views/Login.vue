@@ -261,15 +261,26 @@ const goHome = () => {
 
 
 
-            <addUser/>
+
+<div class="flex justify-center">
+  <input class="my-4 test rounded-full text-center py-1 drop-shadow-lg w-full" value="Login" @click="Login()">
+
+</div>
+
+<div class="text-gray-500 text-center text-sm mb-4">━━━━━━━━━   or   ━━━━━━━━━</div>
 
 
 
-            <input class="mt-4 test rounded-full px-8 py-1 drop-shadow-lg" value="Login" @click="Login()">
-            <p class="forget">dont have account ? <router-link :to="{ name: 'SignUpPage' }" class="
+                        <addUser/>
+
+                        <div class="text-center mt-2">
+                          <p class="forget">dont have account ? <router-link :to="{ name: 'SignUpPage' }" class="
             
-              ">Click here!</router-link>
-            </p>
+            ">Click here!</router-link>
+          </p>
+
+                        </div>
+          
 
           </form>
         </div>

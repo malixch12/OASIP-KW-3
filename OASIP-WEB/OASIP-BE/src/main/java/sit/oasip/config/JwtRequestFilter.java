@@ -47,6 +47,7 @@ public class JwtRequestFilter  extends OncePerRequestFilter{
 
         
         try {
+
             String jwtToken = extractJwtFromRequest(request);
             if (StringUtils.hasText(jwtToken) == true && jwtTokenUtil.validateToken(jwtToken)) {
                 UserDetails userDetails = new User(jwtTokenUtil.getUsernameFromToken(jwtToken), "",
@@ -101,42 +102,6 @@ public class JwtRequestFilter  extends OncePerRequestFilter{
         }
         chain.doFilter(request, response);
     }
-
-//    private void test(HttpServletRequest request) throws Exception {
-//        // JWT Token is in the form "Bearer token". Remove Bearer word and get only the Token
-//
-//
-//        if (StringUtils.hasText(jwtToken) == true && jwtTokenUtil.validateToken(jwtToken)) {
-//
-//            UserDetails userDetails = new User(jwtTokenUtil.getUsernameFromToken(jwtToken), "",
-//                    jwtTokenUtil.getRolesFromToken(jwtToken));
-//            String userName = jwtTokenUtil.getUsernameFromToken(jwtToken);
-//            UserDetails userDetail = this.jwtUserDetailsService.loadUserByUsername(userName);
-//            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-//                    userDetails, null, userDetails.getAuthorities());
-//                /*
-//                 After setting the Authentication in the context, we specify
-//                 that the current user is authenticated. So it passes the
-//                 Spring Security Configurations successfully.
-//                 */
-//            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-//
-//
-//        } else if (StringUtils.hasText(jwtToken) == false &&
-//                (request.getMethod().equals(HttpMethod.POST.toString()) && request.getRequestURL().toString().contains("events") ||
-//                        request.getMethod().equals(HttpMethod.GET.toString()) && request.getRequestURL().toString().contains("eventcategorys"))) {
-//
-//            List<SimpleGrantedAuthority> role = Arrays.asList(new SimpleGrantedAuthority("Guest"));
-//            UserDetails userDetails = new User("guest", "", role);
-//            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-//                    userDetails, null, userDetails.getAuthorities());
-//            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-//
-//        } else {
-//            request.setAttribute("message", "Please log in for get Token again.");
-//            System.out.println("Cannot set the Security Context");
-//        }
-//    }
 
     private void allowForRefreshToken(ExpiredJwtException ex, HttpServletRequest request) {
 

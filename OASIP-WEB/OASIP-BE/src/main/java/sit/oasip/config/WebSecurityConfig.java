@@ -181,17 +181,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.csrf().disable().cors().configurationSource(request -> corsConfiguration).and()
                 .authorizeRequests()
                 .antMatchers("/api/login", "/api/users/signup").permitAll()
-
-                .antMatchers("/api/users", "/api/users/**", "/api/match").hasAuthority(Role.Admin.name())
-                .antMatchers(HttpMethod.GET, "/api/events/**").hasAnyAuthority(Role.Student.name(), Role.Admin.name(), Role.Lecturer.name(), "Guest")
-                .antMatchers(HttpMethod.PUT, "/api/events/**").hasAnyAuthority(Role.Student.name(), Role.Admin.name())
-                .antMatchers(HttpMethod.DELETE, "/api/events/**").hasAnyAuthority(Role.Student.name(), Role.Admin.name())
-                .antMatchers(HttpMethod.POST, "/api/events/**").hasAnyAuthority(Role.Student.name(), Role.Admin.name())
-
-                .antMatchers(HttpMethod.GET, "/api/eventcategorys/**").hasAnyAuthority(Role.Student.name(), Role.Admin.name(), Role.Lecturer.name())
-                .antMatchers(HttpMethod.PUT, "/api/eventcategorys/**").hasAnyAuthority(Role.Admin.name())
-
-                .antMatchers(HttpMethod.DELETE, "/api/file/**").hasAnyAuthority(Role.Student.name(), Role.Admin.name())
                 .anyRequest().authenticated()
                 .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

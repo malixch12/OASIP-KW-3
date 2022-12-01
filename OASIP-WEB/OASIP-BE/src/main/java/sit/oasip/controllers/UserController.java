@@ -24,7 +24,7 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("")
-//    @PreAuthorize("hasAuthority('APPROLE_Admin')")
+    @PreAuthorize("hasAuthority('Admin')")
     public Page<GetUserDTO> getUserByAll(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "8") Integer pageSize
@@ -33,23 +33,26 @@ public class UserController {
         return userService.getUserAll(PageRequest.of(page, pageSize));
     }
 
+    @PreAuthorize("hasAuthority('Admin')")
     @GetMapping("/{userId}")
-    public GetUserDTO getEventById(@PathVariable Integer userId) {
+    public GetUserDTO getUserById(@PathVariable Integer userId) {
         return userService.getUserById(userId);
     }
 
 
     @PostMapping("/signup")
-//    @PreAuthorize("hasAuthority('APPROLE_Admin')")
+    @PreAuthorize("hasAuthority('Admin')")
     @ResponseStatus(HttpStatus.OK)
     public User addUser(@Validated @RequestBody AddUserDTO newUser){
         return userService.add(newUser);
     }
 
+    @PreAuthorize("hasAuthority('Admin')")
     @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable Integer userId){userService.delete(userId);}
 
+    @PreAuthorize("hasAuthority('Admin')")
     @PutMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public User edit(@Validated @RequestBody EditUserDTO editUserDTO, @PathVariable Integer userId){

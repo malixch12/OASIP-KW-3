@@ -60,13 +60,6 @@ public class AuthenticateController {
         return ResponseEntity.ok().body(jwtTokenUtil.doGenerateAccessToken(expectedMap.get("role").toString(),expectedMap.get("username").toString(),expectedMap.get("sub").toString()));
     }
 
-//    @GetMapping("")
-//    public void configuration( ){
-//        GraphServiceClient<Request> graphClient =
-//                GraphServiceClient
-//                        .builder()
-//                        .authenticationProvider(authenticationProvider)
-//                        .buildClient();
-//    }
+
 
 }

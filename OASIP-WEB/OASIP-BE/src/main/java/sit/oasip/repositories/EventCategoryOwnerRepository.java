@@ -12,5 +12,7 @@ import java.util.List;
 public interface EventCategoryOwnerRepository extends JpaRepository<EventCategoryOwner,Integer> {
    EventCategoryOwner findById(int ownerId);
    List<EventCategoryOwner> findByEventCategoryID(Eventcategory cateId);
+   List<EventCategoryOwner> findByUserID(User userId);
+   EventCategoryOwner findByEventCategoryIDAndAndUserID(Eventcategory cateId, User userId);
 
 }

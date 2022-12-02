@@ -122,22 +122,22 @@ public class EventService {
 
             } else if (role.equals(Role.Lecturer.name())) {
                 User user = userRepository.findByEmail(email);
-                if (filter == null) event = repository.findAllEventByLecturerCategory(user.getId(), sort);
+                if (filter == null) event = repository.findAllEventByLecturerCategory(user.getUserId(), sort);
                 else if (filter.equals("date"))
-                    event = repository.findAllEventByLecturerStartTimeEquals(user.getId(), sort, myDate);
+                    event = repository.findAllEventByLecturerStartTimeEquals(user.getUserId(), sort, myDate);
                 else if (filter.equals("past"))
-                    event = repository.findAllEventByLecturerStartTimeLessThan(user.getId(), sort, myDate);
+                    event = repository.findAllEventByLecturerStartTimeLessThan(user.getUserId(), sort, myDate);
                 else if (filter.equals("future"))
-                    event = repository.findAllEventByLecturerStartTimeGreaterThan(user.getId(), sort, myDate);
+                    event = repository.findAllEventByLecturerStartTimeGreaterThan(user.getUserId(), sort, myDate);
 
                 else if (filter.equals("cateId"))
-                    event = repository.findAllEventByLecturerCategoryId(user.getId(), cateId, sort);
+                    event = repository.findAllEventByLecturerCategoryId(user.getUserId(), cateId, sort);
                 else if (filter.equals("catIdDate"))
-                    event = repository.findAllEventByLecturerCategoryIdAndEventStartTimeEquals(user.getId(), cateId, myDate);
+                    event = repository.findAllEventByLecturerCategoryIdAndEventStartTimeEquals(user.getUserId(), cateId, myDate);
                 else if (filter.equals("cateIdPast"))
-                    event = repository.findAllEventByLecturerCategoryIdAndEventStartTimeLessThan(user.getId(), cateId, myDate, sort);
+                    event = repository.findAllEventByLecturerCategoryIdAndEventStartTimeLessThan(user.getUserId(), cateId, myDate, sort);
                 else if (filter.equals("cateIdFuture"))
-                    event = repository.findAllEventByLecturerCategoryIdAndEventStartTimeGreaterThan(user.getId(), cateId, myDate, sort);
+                    event = repository.findAllEventByLecturerCategoryIdAndEventStartTimeGreaterThan(user.getUserId(), cateId, myDate, sort);
             }
         } else {
             if (filter == null) event = repository.findAll(sort);
@@ -185,7 +185,7 @@ public class EventService {
             if (role.equals(Role.Student.name())) {
                 checkEmail(event.getBookingEmail(), HttpStatus.FORBIDDEN);
             } else if (role.equals(Role.Lecturer.name())) {
-                repository.findEventByLecturerAndEventID(user.getId(), id).orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "No permission"));
+                repository.findEventByLecturerAndEventID(user.getUserId(), id).orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "No permission"));
             }
         }
 

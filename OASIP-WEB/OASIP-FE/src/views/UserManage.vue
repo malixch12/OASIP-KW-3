@@ -10,6 +10,7 @@ import PopupPage from "../components/PopupPage.vue";
 const UserShowListShow = ref(true);
 const CheckPasswordShow = ref(false);
 const CategoryManageShow = ref(false);
+const addUserShow = ref(false);
 
 
 </script>
@@ -18,16 +19,20 @@ const CategoryManageShow = ref(false);
 
   <div >
 
-    <div class="flex justify-center mt-8 ">
-  <button @click="UserShowListShow=true,CheckPasswordShow=false,CategoryManageShow=false" class="border-r-2  border-white bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-9 rounded-l text-base">
-    USER
+    <div class="md:flex md:justify-center mt-8 grid grid-cols-4">
+  <button @click="UserShowListShow=true,CheckPasswordShow=false,CategoryManageShow=false ,addUserShow=false" class="border-r-2   border-white bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-9 rounded-l md:text-base text-sm">
+    USER LIST
   </button>
-  <button @click="UserShowListShow=false,CheckPasswordShow=true ,CategoryManageShow=false" class="bg-gray-300 border-r-2  border-white hover:bg-gray-400 text-gray-800 font-bold py-2 px-9 text-base  ">
+  <button @click="UserShowListShow=false,CheckPasswordShow=true ,CategoryManageShow=false ,addUserShow=false" class="bg-gray-300 border-r-2  border-white hover:bg-gray-400 text-gray-800 font-bold py-2 md:px-9 md:text-base text-sm ">
     CHECK PASSWORD
   </button>
-  <button  @click="UserShowListShow=false,CheckPasswordShow=false ,CategoryManageShow=true" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-9 rounded-r text-base">
+  <button  @click="UserShowListShow=false,CheckPasswordShow=false ,CategoryManageShow=true ,addUserShow=false" class="bg-gray-300 border-r-2  border-white hover:bg-gray-400 text-gray-800 font-bold py-2 px-9  md:text-base text-sm">
     CATEGORY
   </button>
+
+  <button  @click="UserShowListShow=false,CheckPasswordShow=false ,CategoryManageShow=false , addUserShow=true" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-9 rounded-r md:text-base text-sm">
+    ADD USER
+  </button>  
 </div>
 
 <div class="flex justify-center">
@@ -44,8 +49,13 @@ const CategoryManageShow = ref(false);
   <CategoryManage v-if="CategoryManageShow"/>
 
 </div>
+
+<div class="flex justify-center">
+  <addUser v-if="addUserShow"/>
+
+</div>
    
-<addUser />
+
   </div>
 </template>
 

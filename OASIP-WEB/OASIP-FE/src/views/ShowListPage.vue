@@ -98,7 +98,7 @@ onBeforeMount(async () => {
   if(jwtToken.value==null) {
     goHome()
   }
-  getLink();
+  getLinkFuture();
 });
 
 

@@ -19,11 +19,12 @@ var now_time = (today.getHours() + ":" + today.getMinutes() + ":" + today.getSec
 const loginCheck = ref()
 const jwtToken = ref()
 const UserRole = ref()
+const micosoft = ref()
 onBeforeMount(async () => {
 setInterval(setTime, 1);
 jwtToken.value = localStorage.getItem('jwtToken');
 UserRole.value = localStorage.getItem('UserRole');
-
+micosoft.value = localStorage.getItem('micosoft');
 if(jwtToken.value != null) {
   loginCheck.value = false
 }else
@@ -36,6 +37,10 @@ function logout () {
   localStorage.removeItem('jwtTokenRF')
   localStorage.removeItem('UserEmail')
   localStorage.setItem('UserRole', "Guest");
+  localStorage.removeItem('micosoft')
+  localStorage.removeItem('UserName')
+
+
 
   window.location.reload()
 
@@ -239,16 +244,13 @@ function toggle () {
               :to="{ name: 'Login' }"
               class="
                   block
-                text-gray-700
-               
-                md:hover:text-pink-500 md:p-0  
-               
+                  text-transparent  bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 
                 
               "
               ><span v-if="!loginCheck">my profile</span> <span v-if="loginCheck">Login</span> 
             </router-link>
           </li>
-          <li v-if="loginCheck">
+          <!-- <li v-if="loginCheck">
             <router-link 
               :to="{ name: 'SignUpPage' }"
               class="
@@ -259,9 +261,9 @@ function toggle () {
               "
               >sign up
             </router-link>
-          </li>
+          </li> -->
           <li>
-            <div v-show="!loginCheck"  @click="logout()"
+            <div v-if="!loginCheck && micosoft ==null"  @click="logout()"
              
               class="
                  block
@@ -271,6 +273,18 @@ function toggle () {
               "
               >     Log out
             </div>
+            <div v-if="!loginCheck && micosoft==`true`"  @click="logout()"
+             
+             class="
+             block
+                text-gray-700
+               
+                md:hover:text-pink-500 md:p-0  
+              
+               
+             "
+             >    <a href="http://localhost:3000/kw3/#/logoutPage" target="_blank"> Log out </a> 
+           </div>
           </li>
           
           <li>

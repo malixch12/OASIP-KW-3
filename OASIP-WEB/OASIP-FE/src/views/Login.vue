@@ -9,6 +9,7 @@ import RoundButton from "../components/RoundButton.vue";
 import { useRouter } from "vue-router";
 import jwt_decode from "jwt-decode";
 import addUser from "../components/addUser.vue";
+import { UserAgentApplication } from "msal" ;
 
 
 
@@ -18,7 +19,7 @@ const errorStatus = ref({
   Name: null,
   Email: null
 })
-const decoded = ref({ sub: "" })
+const decoded = ref({ sub: ""  , role : ""})
 
 const Login = async () => {
   CheckData()
@@ -87,10 +88,17 @@ const jwtToken = ref(null)
 onBeforeMount(() => {
   
   jwtToken.value = localStorage.getItem('jwtToken');
-  if (jwtToken.value != null) {
+ var  microsoft = localStorage.getItem('micosoft');
+
+  if (jwtToken.value != null && microsoft == null) {
+    console.log(microsoft)
     decoded.value = jwt_decode(jwtToken.value);
     console.log(decoded.value)
     localStorage.setItem('UserRole', decoded.value.role);
+
+  }else {
+    decoded.value.sub = localStorage.getItem('UserName')
+    decoded.value.role = localStorage.getItem('UserRole')
 
   }
 });
@@ -131,11 +139,66 @@ const goHome = () => {
 
 
 
+const msalConfig = {
+    auth: {
+        clientId: "585a0cf6-90bc-4e5e-ad97-521891f56132",
+        authority: "https://login.microsoftonline.com/6f4432dc-20d2-441d-b1db-ac3380ba633d",
+        redirectURI: "http://localhost:3000/"
+    },
+    cache: {
+        cacheLocation: "localStorage", // This configures where your cache will be stored
+        storeAuthStateInCookie: true,
+        popUp:true // Set this to "true" if you are having issues on IE11 or Edge
+    }
+};  
+
+
+var requestObj = {
+    scopes: ["user.read"]
+};
+
+var myMSALObj = new UserAgentApplication(msalConfig);
+
+var login = async () => {
+    var authResult = await myMSALObj.loginPopup(requestObj);
+    accoutMicro.value = authResult.account
+    return authResult.account;
+};
+
+var getAccount = async () => {
+    var account = await myMSALObj.getAccount();
+    return account;
+};
+
+var logoff = () => {
+    myMSALObj.logout();
+};
+
+const accoutMicro = ref({accountIdentifier:null , roles:[]})
+
+
+onBeforeUpdate(() => {
+
+  if(accoutMicro.value.accountIdentifier!=null) {
+    localStorage.setItem('jwtToken', accoutMicro.value.userName);
+    localStorage.setItem('jwtTokenRF', accoutMicro.value.userName);
+    localStorage.setItem('UserRole', accoutMicro.value.idTokenClaims.roles[0]);
+    localStorage.setItem('UserEmail', accoutMicro.value.userName);
+    localStorage.setItem('UserName', accoutMicro.value.name);
+    localStorage.setItem('micosoft', true);
+
+    CheckStatus.value = true
+    isActivePopup.value = true
+
+    
+  }
+
+});
 </script>
 
 <template>
   <div class="">
-
+<p class="opacity-0">{{accoutMicro.accountIdentifier}}</p>
     <div class="text-white text-xs">{{dataUser.role}}</div>
     <PopupPage v-show="isActivePopup" :dim-background="true">
       <div v-if="CheckStatus" class="grid grid-cols-1 p-12">
@@ -207,11 +270,11 @@ const goHome = () => {
 
       <div class="box">
 
-      <!-- <div class="square" style="--i:0;"></div>
+      <div class="square" style="--i:0;"></div>
       <div class="square" style="--i:1;"></div>
       <div class="square" style="--i:2;"></div>
       <div class="square" style="--i:3;"></div>
-      <div class="square" style="--i:4;"></div> -->
+      <div class="square" style="--i:4;"></div>
 
 
       <div class="container2" v-if="jwtToken==null">
@@ -246,8 +309,9 @@ const goHome = () => {
             </div>
 
             <div class="inputBox">
+              <p class="ml-4 mb-2 text-gray-500 text-sm">password</p>
 
-              <input type="password" placeholder="password" v-model.trim="dataUser.password">
+              <input type="password"  v-model.trim="dataUser.password">
               <details class="" v-if="!PasswordCheck">
                 <summary
                   class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
@@ -271,7 +335,15 @@ const goHome = () => {
 
 
 
-                        <addUser/>
+<button @click="login()" class="bg-gray-200 mt-2 w-full drop-shadow-md rounded"> <img src="../assets/SignIn_with_microsoft-removebg-preview.png" class="h-14"/></button>
+
+<!-- <a href="http://localhost:3000/kw3/#/logoutPage" target="_blank">  
+  
+  <div    class="bg-red-300" >
+      logout
+    </div>
+
+      </a> -->
 
                         <div class="text-center mt-2">
                           <p class="forget">dont have account ? <router-link :to="{ name: 'SignUpPage' }" class="
@@ -289,9 +361,9 @@ const goHome = () => {
       <div class="" v-if="jwtToken!=null">
         Welcome <span class="font-bold underline underline-offset-4">{{decoded.sub}}</span> to Clinic Booking
        <br/><div class="text-center mt-2 text-gray-400"> you are {{decoded.role}} role</div>
-       <div class="text-center text-sm text-gray-400" v-if="decoded.role==`Student` || decoded.role==`Lecturer`">  Our website does not currently support student roles.</div>
+     
 
-       <div class="text-center text-sm text-gray-400" v-if="decoded.role==`Admin`">  You can do everything on our website.</div>
+    
       </div>
     </div>
     </section>

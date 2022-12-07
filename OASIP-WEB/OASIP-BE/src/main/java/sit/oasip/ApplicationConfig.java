@@ -3,17 +3,25 @@ package sit.oasip;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 
+import org.springframework.web.client.RestTemplate;
 import sit.oasip.Component.FileStorageProperties;
+//import sit.oasip.Component.TokenHandler;
 import sit.oasip.dtos.JwtResponse;
 import sit.oasip.services.AuthenticationService;
 import sit.oasip.utils.ListMapper;
 import sit.oasip.utils.PageMapper;
 
 import java.nio.file.Path;
+import java.util.Arrays;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.APPLICATION_OCTET_STREAM;
 
 
 @Configuration
@@ -39,4 +47,6 @@ public class ApplicationConfig {
     @Bean
     public AuthenticationService authenticationService(){return  new AuthenticationService();}
 
+//    @Bean
+//    public TokenHandler tokenHandler(){return new TokenHandler();}
 }

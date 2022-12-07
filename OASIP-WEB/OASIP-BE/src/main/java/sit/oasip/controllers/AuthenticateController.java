@@ -1,8 +1,6 @@
 package sit.oasip.controllers;
 
 
-import com.microsoft.graph.models.Request;
-import com.microsoft.graph.requests.GraphServiceClient;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

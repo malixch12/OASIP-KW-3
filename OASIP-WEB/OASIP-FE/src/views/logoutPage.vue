@@ -5,38 +5,37 @@
 
             <button @click="login()" class="bg-gray-200 mt-2 w-full drop-shadow-md rounded"> <img src="../assets/SignIn_with_microsoft-removebg-preview.png" class="h-14"/></button>
 
-        <a href="http://localhost:3000/kw3/#/logoutPage" target="_blank">  
-          
-          <div @click="logoff()"   class="bg-red-300" >
+            <div  @click="logoff()"  class="bg-red-300">
               logout
             </div>
 
-              </a>
             
-           name :  {{username.name}}
-          role :  {{username.roles}}
-          email :  {{username.userName}}
+
     </div>
 
   </template>
   
   <script>
-  import PopupPage from "../components/PopupPage.vue";
-  import aad from "../services/aad.js";
-  import { onBeforeMount, ref, onBeforeUpdate } from "@vue/runtime-core";
+  import { onMounted } from 'vue'
 
+  import aad from "../services/aad.js";
   export default {
     name: "App",
     data: () => ({
       items: ["Apple", "Banana", "Mango"],
       newText: "",
-      username: "" ,
-      isActivePopup:false
+      username: ""
     }),
+
+    setup() {
+    onMounted(() => {
+      aad.logoff()
+    })
+  },
     created() {
       aad.getAccount().then((account) => {
         if(account !== null) {
-          this.username = account;
+          this.username = account.userName;
         }
       });
     },
@@ -54,10 +53,9 @@
         });
       },
       logoff() {
-          this.username = null
-           
-    window.location.reload()
-      }
+        aad.logoff();
+      } 
+      
     }
   };
   </script>

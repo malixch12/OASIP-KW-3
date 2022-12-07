@@ -17,7 +17,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "UserID", nullable = false)
-    private Integer id;
+    private Integer UserId;
 
     @Column(name = "UserName", nullable = false, length = 100)
     private String userName;
@@ -42,6 +42,5 @@ public class User {
 
     @OneToMany(mappedBy = "userID")
     private Set<EventCategoryOwner> eventCategoryOwners;
-
 
 }

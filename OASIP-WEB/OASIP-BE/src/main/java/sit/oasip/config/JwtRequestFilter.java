@@ -10,9 +10,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import lombok.Getter;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,6 +22,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import io.jsonwebtoken.ExpiredJwtException;
@@ -29,41 +30,37 @@ import sit.oasip.Component.JwtTokenUtil;
 import sit.oasip.services.JWTUserDetailsService;
 
 @Component
-public class JwtRequestFilter extends OncePerRequestFilter {
+public class JwtRequestFilter  extends OncePerRequestFilter{
     @Autowired
     private JWTUserDetailsService jwtUserDetailsService;
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
+    @Getter
+    private String token = "MSIP";
 
+    @SneakyThrows
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
+        
         try {
-            // JWT Token is in the form "Bearer token". Remove Bearer word and get only the Token
 
             String jwtToken = extractJwtFromRequest(request);
-
             if (StringUtils.hasText(jwtToken) == true && jwtTokenUtil.validateToken(jwtToken)) {
-
                 UserDetails userDetails = new User(jwtTokenUtil.getUsernameFromToken(jwtToken), "",
                         jwtTokenUtil.getRolesFromToken(jwtToken));
                 String userName = jwtTokenUtil.getUsernameFromToken(jwtToken);
                 UserDetails userDetail = this.jwtUserDetailsService.loadUserByUsername(userName);
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
-                /*
-                 After setting the Authentication in the context, we specify
-                 that the current user is authenticated. So it passes the
-                 Spring Security Configurations successfully.
-                 */
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 
 
             } else if (StringUtils.hasText(jwtToken) == false &&
-                    (request.getMethod().equals(HttpMethod.POST.toString()) && request.getRequestURL().toString().contains("events") ||
+                    (request.getMethod().equals(HttpMethod.GET.toString()) && request.getRequestURL().toString().contains("events") ||
                             request.getMethod().equals(HttpMethod.GET.toString()) && request.getRequestURL().toString().contains("eventcategorys"))) {
 
                 List<SimpleGrantedAuthority> role = Arrays.asList(new SimpleGrantedAuthority("Guest"));
@@ -76,6 +73,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 request.setAttribute("message", "Please log in for get Token again.");
                 System.out.println("Cannot set the Security Context");
             }
+        } catch (ResourceAccessException ex) {
+            System.out.println("ResourceAccessException");
+            return ;
         } catch (ExpiredJwtException ex) {
 
             String requestURL = request.getRequestURL().toString();
@@ -102,7 +102,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
         chain.doFilter(request, response);
     }
-
 
     private void allowForRefreshToken(ExpiredJwtException ex, HttpServletRequest request) {
 

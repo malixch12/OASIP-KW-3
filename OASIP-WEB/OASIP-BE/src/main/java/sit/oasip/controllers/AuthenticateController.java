@@ -1,21 +1,22 @@
 package sit.oasip.controllers;
 
 
+import com.microsoft.graph.models.Request;
+import com.microsoft.graph.requests.GraphServiceClient;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import sit.oasip.Component.JwtTokenUtil;
-//import sit.oasip.Component.JwtUtil;
+import sit.oasip.config.JwtRequestFilter;
 import sit.oasip.dtos.UserDTOs.MatchUserDTO;
 import sit.oasip.entities.User;
-import sit.oasip.config.JwtRequestFilter;
 import sit.oasip.services.JWTUserDetailsService;
 import sit.oasip.repositories.UserRepository;
 import sit.oasip.services.AuthenticationService;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
@@ -54,14 +55,11 @@ public class AuthenticateController {
     public ResponseEntity<?> refreshtoken(HttpServletRequest request){
         String token = jwtRequestFilter.extractJwtFromRequest(request);
         Claims claims = jwtTokenUtil.getAllClaimsFromToken(token);
-//        DefaultClaims claims = (io.jsonwebtoken.impl.DefaultClaims) request.getAttribute("claims");
-
-        System.out.println(claims);
-
         Map<String, Object> expectedMap = authenticationService.getMapFromIoJsonwebtokenClaims(claims);
 
-        return ResponseEntity.ok().body(jwtTokenUtil.doGenerateAccessToken(expectedMap.get("role").toString(),expectedMap.get("sub").toString()));
+        return ResponseEntity.ok().body(jwtTokenUtil.doGenerateAccessToken(expectedMap.get("role").toString(),expectedMap.get("username").toString(),expectedMap.get("sub").toString()));
     }
+
 
 
 }

@@ -16,14 +16,20 @@ import sit.oasip.dtos.UserDTOs.AddUserDTO;
 import sit.oasip.dtos.UserDTOs.EditUserDTO;
 import sit.oasip.dtos.UserDTOs.MatchUserDTO;
 import sit.oasip.dtos.UserDTOs.GetUserDTO;
+import sit.oasip.entities.EventCategoryOwner;
+import sit.oasip.entities.Eventcategory;
 import sit.oasip.entities.User;
+import sit.oasip.repositories.EventCategoryOwnerRepository;
 import sit.oasip.repositories.UserRepository;
 import sit.oasip.utils.ListMapper;
 import sit.oasip.utils.PageMapper;
 
 import sit.oasip.utils.RoleAttribute;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserService {
@@ -37,6 +43,10 @@ public class UserService {
     private PageMapper pageMapper;
     @Autowired
     private Argon2PasswordEncoder argon2PasswordEncoder;
+    @Autowired
+    private EventCategoryOwnerRepository eventCategoryOwnerRepository;
+    @Autowired
+    private UserRepository userRepository;
 
 
     public Page<GetUserDTO> getUserAll(Pageable pageable) {
@@ -50,7 +60,23 @@ public class UserService {
     public GetUserDTO getUserById(int userId) {
         User user = repository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, userId + " Does Not Exist !!!"));
-        return modelMapper.map(user, GetUserDTO.class);
+        GetUserDTO users =  modelMapper.map(user, GetUserDTO.class);
+
+        List<Eventcategory> eco = eventCategoryOwnerRepository.findCategoryName(userId);
+
+
+        if (eco == null){
+            users.setOwners(null);
+        }else {
+            Map cateName = new LinkedHashMap();
+            eco.forEach((e)->{
+                cateName.put(e.getEventCategoryID(),e.getEventCategoryName());
+                users.setOwners(cateName);
+            });
+        }
+
+
+        return users;
     }
 
 

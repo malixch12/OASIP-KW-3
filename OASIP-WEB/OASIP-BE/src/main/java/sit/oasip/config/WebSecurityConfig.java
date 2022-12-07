@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
 //@EnableWebSecurity
 @Component
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig extends AadResourceServerWebSecurityConfigurerAdapter {
 
     @Autowired
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
@@ -103,15 +103,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PUT", "OPTIONS", "PATCH", "DELETE"));
 //        corsConfiguration.setAllowCredentials(true);
 //        corsConfiguration.setExposedHeaders(List.of("Authorization"));
-////        System.out.println("2");
-////        if (jwtRequestFilter.getIssuer() !=null){
-////            if(jwtRequestFilter.getIssuer().equals("MSIP")){
-////        super.configure(http);
-////            }
-////        }
-////        http.oauth2ResourceServer().jwt().jwtAuthenticationConverter(new AadJwtBearerTokenAuthenticationConverter(this.properties.getPrincipalClaimName(), this.properties.getClaimToAuthorityPrefixMap()));
-////        http.cors();
-////        http.authorizeRequests((requests) -> requests.anyRequest().authenticated());
+//        System.out.println("2");
+//
+//        super.configure(http);
+//
+//
+//        http.cors();
+//        http.authorizeRequests((requests) -> requests.anyRequest().authenticated());
 //
 //        JwtIssuerAuthenticationManagerResolver authenticationManagerResolver = new JwtIssuerAuthenticationManagerResolver
 //                ("https://login.microsoftonline.com/6f4432dc-20d2-441d-b1db-ac3380ba633d/v2.0", "http://localhost:8080/api/login");
@@ -170,6 +168,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //        });
 //        return conv;
 //    }
+
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
@@ -178,6 +177,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PUT", "OPTIONS", "PATCH", "DELETE"));
         corsConfiguration.setAllowCredentials(true);
         corsConfiguration.setExposedHeaders(List.of("Authorization"));
+
+        super.configure(httpSecurity);
         httpSecurity.csrf().disable().cors().configurationSource(request -> corsConfiguration).and()
                 .authorizeRequests()
                 .antMatchers("/api/login", "/api/users/signup").permitAll()

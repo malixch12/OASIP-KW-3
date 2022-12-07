@@ -24,7 +24,7 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("")
-    @PreAuthorize("hasAuthority('Admin')")
+    @PreAuthorize("hasAnyAuthority('Admin','APPROLE_Admin')")
     public Page<GetUserDTO> getUserByAll(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "8") Integer pageSize

@@ -38,7 +38,6 @@ public class EventCategoryOwnerService {
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"This lecturer cannot be removed because there is only one lecturer left.");
         }
-        System.out.println(ownerList.size());
     }
 
     public EventCategoryOwner grantOwner(GrantOwner owner) {

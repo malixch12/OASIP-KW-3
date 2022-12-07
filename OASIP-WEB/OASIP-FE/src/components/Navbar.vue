@@ -276,8 +276,10 @@ function toggle () {
             <div v-if="!loginCheck && micosoft==`true`"  @click="logout()"
              
              class="
-                block
-               text-transparent  bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 
+             block
+                text-gray-700
+               
+                md:hover:text-pink-500 md:p-0  
               
                
              "

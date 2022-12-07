@@ -270,11 +270,11 @@ onBeforeUpdate(() => {
 
       <div class="box">
 
-      <!-- <div class="square" style="--i:0;"></div>
+      <div class="square" style="--i:0;"></div>
       <div class="square" style="--i:1;"></div>
       <div class="square" style="--i:2;"></div>
       <div class="square" style="--i:3;"></div>
-      <div class="square" style="--i:4;"></div> -->
+      <div class="square" style="--i:4;"></div>
 
 
       <div class="container2" v-if="jwtToken==null">
@@ -309,8 +309,9 @@ onBeforeUpdate(() => {
             </div>
 
             <div class="inputBox">
+              <p class="ml-4 mb-2 text-gray-500 text-sm">password</p>
 
-              <input type="password" placeholder="password" v-model.trim="dataUser.password">
+              <input type="password"  v-model.trim="dataUser.password">
               <details class="" v-if="!PasswordCheck">
                 <summary
                   class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
@@ -360,9 +361,9 @@ onBeforeUpdate(() => {
       <div class="" v-if="jwtToken!=null">
         Welcome <span class="font-bold underline underline-offset-4">{{decoded.sub}}</span> to Clinic Booking
        <br/><div class="text-center mt-2 text-gray-400"> you are {{decoded.role}} role</div>
-       <div class="text-center text-sm text-gray-400" v-if="decoded.role==`Student` || decoded.role==`Lecturer`">  Our website does not currently support student roles.</div>
+     
 
-       <div class="text-center text-sm text-gray-400" v-if="decoded.role==`Admin`">  You can do everything on our website.</div>
+    
       </div>
     </div>
     </section>

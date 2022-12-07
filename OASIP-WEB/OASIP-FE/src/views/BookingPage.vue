@@ -107,7 +107,7 @@ onBeforeMount(() => {
   jwtToken.value = localStorage.getItem('jwtToken');
  
   if(UserRole.value!="Guest") {
-    getLinkAll();
+    getLinkFuture();
   }
   
 });

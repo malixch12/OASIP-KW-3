@@ -155,7 +155,7 @@ onBeforeMount(async () => {
     goHome()
   }
   
-  getLinkAll();
+  getLinkFuture();
 
 });
 

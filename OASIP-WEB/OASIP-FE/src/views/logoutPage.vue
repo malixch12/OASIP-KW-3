@@ -2,12 +2,8 @@
     <div>
 
           
-
-            <button @click="login()" class="bg-gray-200 mt-2 w-full drop-shadow-md rounded"> <img src="../assets/SignIn_with_microsoft-removebg-preview.png" class="h-14"/></button>
-
-            <div  @click="logoff()"  class="bg-red-300">
-              logout
-            </div>
+          <div class="text-center mt-60 text-3xl">we're taking you logout</div>
+          <div class="text-center  text-lg">You can close this page now.</div>
 
             
 
@@ -29,7 +25,13 @@
 
     setup() {
     onMounted(() => {
-      aad.logoff()
+     
+
+  aad.logoff() 
+
+
+
+
     })
   },
     created() {

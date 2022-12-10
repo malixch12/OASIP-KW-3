@@ -80,7 +80,7 @@ public class EventService {
 
         String token = jwtRequestFilter.extractJwtFromRequest(request);
         String email = jwtTokenUtil.getAllClaimsFromToken(token).getSubject();
-        String role = jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString();
+        String role = jwtTokenUtil.getAllClaimsFromToken(token).get("roles").toString();
         if (role.equals(Role.Student.name())) {
             if (filter == null) event = repository.findAllEventByStudent(email, sort);
             else if (filter.equals("date"))
@@ -150,7 +150,7 @@ public class EventService {
 
     public GetEventDTO getSimpleEventById(int id) {
         String token = jwtRequestFilter.extractJwtFromRequest(request);
-        String role = jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString();
+        String role = jwtTokenUtil.getAllClaimsFromToken(token).get("roles").toString();
         Event event = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Booking " + id + " Does Not Exist !!!"));
 
@@ -207,7 +207,7 @@ public class EventService {
         String token = jwtRequestFilter.extractJwtFromRequest(request);
         Event event = repository.findById(eventID).orElseThrow(() -> new RuntimeException(eventID + " Does not exit !!!"));
         if (token != null) {
-            if (jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString().equals(Role.Student.name()))
+            if (jwtTokenUtil.getAllClaimsFromToken(token).get("roles").toString().equals(Role.Student.name()))
                 checkEmail(event.getBookingEmail(), HttpStatus.FORBIDDEN);
         }
         String fileName = "../db/file-uploads/" + event.getFileName();
@@ -252,7 +252,7 @@ public class EventService {
 
         String token = jwtRequestFilter.extractJwtFromRequest(request);
         if (token != null) {
-            if (jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString().equals(Role.Student.name())) {
+            if (jwtTokenUtil.getAllClaimsFromToken(token).get("roles").toString().equals(Role.Student.name())) {
                 checkEmail(newEvent.getBookingEmail(), HttpStatus.BAD_REQUEST);
             }
         }
@@ -300,7 +300,7 @@ public class EventService {
 
             String token = jwtRequestFilter.extractJwtFromRequest(request);
             if (token != null) {
-                if (jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString().equals(Role.Student.name())) {
+                if (jwtTokenUtil.getAllClaimsFromToken(token).get("roles").toString().equals(Role.Student.name())) {
                     checkEmail(event.getBookingEmail(), HttpStatus.FORBIDDEN);
                 }
             }

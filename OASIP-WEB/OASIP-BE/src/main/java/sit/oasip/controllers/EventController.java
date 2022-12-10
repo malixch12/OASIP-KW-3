@@ -2,6 +2,7 @@ package sit.oasip.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,7 @@ public class EventController {
         this.repository = repository;
     }
 
+    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer','Guest')")
     @GetMapping("")
     public Page<GetEventDTO> getEventByAll(
             @RequestParam(defaultValue = "0") Integer page,
@@ -43,11 +45,13 @@ public class EventController {
         return eventService.getSimpleEventAll(PageRequest.of(page, pageSize));
     }
 
+    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer','Guest')")
     @GetMapping("/{id}")
     public GetEventDTO getEventById(@PathVariable Integer id) {
         return eventService.getSimpleEventById(id);
     }
 
+    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer','Guest')")
     @GetMapping("/dates")
     public Page<GetEventDTO> getEventDate(
             @RequestParam Instant date,
@@ -56,6 +60,7 @@ public class EventController {
         return eventService.getSimpleEventDate(date, PageRequest.of(page, pageSize));
     }
 
+    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer','Guest')")
     @GetMapping("/pastdays")
     public Page<GetEventDTO> getEventPastDate(
             @RequestParam(defaultValue = "0") Integer page,
@@ -63,6 +68,7 @@ public class EventController {
         return eventService.getSimpleEventPastDate(PageRequest.of(page, pageSize));
     }
 
+    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer','Guest')")
     @GetMapping("/futuredays")
     public Page<GetEventDTO> getEventFutureDate(
             @RequestParam(defaultValue = "0") Integer page,
@@ -71,6 +77,7 @@ public class EventController {
     }
 
     // get event by category
+    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer','Guest')")
     @GetMapping("/categories/{eventCategoryID}")
     public Page<GetEventDTO> getEventByCategory(
             @PathVariable Integer eventCategoryID,
@@ -80,6 +87,7 @@ public class EventController {
         return eventService.getEventByCategory(eventCategoryID, PageRequest.of(page, pageSize, Sort.by(sortBy)));
     }
 
+    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer','Guest')")
     @GetMapping("/categories/dates/{eventCategoryID}")
     public Page<GetEventDTO> getEventDateByCategory(
             @PathVariable Integer eventCategoryID,
@@ -90,6 +98,7 @@ public class EventController {
         return eventService.getEventDateByCategory(eventCategoryID, date, PageRequest.of(page, pageSize, Sort.by(sortBy)));
     }
 
+    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer','Guest')")
     @GetMapping("/categories/pastdays/{eventCategoryID}")
     public Page<GetEventDTO> getEventPastDateByCategory(
             @PathVariable Integer eventCategoryID,
@@ -99,6 +108,7 @@ public class EventController {
         return eventService.getEventPastDateByCategory(eventCategoryID, PageRequest.of(page, pageSize, Sort.by(sortBy)));
     }
 
+    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer','Guest')")
     @GetMapping("/categories/futuredays/{eventCategoryID}")
     public Page<GetEventDTO> getEventFutureDateByCategory(
             @PathVariable Integer eventCategoryID,
@@ -108,17 +118,20 @@ public class EventController {
         return eventService.getEventFutureDateByCategory(eventCategoryID, PageRequest.of(page, pageSize, Sort.by(sortBy)));
     }
 
+    @PreAuthorize("hasAnyAuthority('Admin','Student')")
     @DeleteMapping("/{eventID}")
     public void delete(@PathVariable Integer eventID) throws IOException {
         eventService.delete(eventID);
     }
 
+    @PreAuthorize("hasAnyAuthority('Admin','Student')")
     @PostMapping("")
     @ResponseStatus(HttpStatus.OK)
     public Event create(@Validated @ModelAttribute AddEventDTO newEvent) throws MessagingException, IOException {
         return eventService.add(newEvent);
     }
 
+    @PreAuthorize("hasAnyAuthority('Admin','Student')")
     @PutMapping("/{bookingId}")
     @ResponseStatus(HttpStatus.OK)
     public Event update(@Valid @ModelAttribute EditEventDTO updateEvent, @PathVariable Integer bookingId) {

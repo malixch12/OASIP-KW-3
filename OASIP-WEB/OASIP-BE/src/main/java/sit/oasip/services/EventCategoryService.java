@@ -50,7 +50,7 @@ public class EventCategoryService {
         String token = jwtRequestFilter.extractJwtFromRequest(request);
         if(token != null){
             String email = jwtTokenUtil.getAllClaimsFromToken(token).getSubject();
-            String role = jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString();
+            String role = jwtTokenUtil.getAllClaimsFromToken(token).get("roles").toString();
             System.out.println(role);
             if (role.equals(Role.Lecturer.name())) {
                 eventcategories = repository.findEventCateByLecturer(userRepository.findByEmail(email).getId());

@@ -8,8 +8,8 @@ public class OasipBEApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(OasipBEApplication.class, args);
-
-
     }
 
 }
+
+

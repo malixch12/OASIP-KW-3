@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import sit.oasip.dtos.UserDTOs.AddUserDTO;
@@ -22,10 +23,7 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("")
-<<<<<<< HEAD
-    @PreAuthorize("hasAnyAuthority('APPROLE_Admin')")
-=======
->>>>>>> front-end-develop
+    @PreAuthorize("hasAnyAuthority('Admin')")
     public Page<GetUserDTO> getUserByAll(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "8") Integer pageSize
@@ -33,22 +31,25 @@ public class UserController {
         return userService.getUserAll(PageRequest.of(page, pageSize));
     }
 
+    @PreAuthorize("hasAnyAuthority('Admin')")
     @GetMapping("/{userId}")
     public GetUserDTO getEventById(@PathVariable Integer userId) {
         return userService.getUserById(userId);
     }
 
-
+    @PreAuthorize("hasAnyAuthority('Admin')")
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.OK)
     public User addUser(@Validated @RequestBody AddUserDTO newUser){
         return userService.add(newUser);
     }
 
+    @PreAuthorize("hasAnyAuthority('Admin')")
     @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable Integer userId){userService.delete(userId);}
 
+    @PreAuthorize("hasAnyAuthority('Admin')")
     @PutMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public User edit(@Validated @RequestBody EditUserDTO editUserDTO, @PathVariable Integer userId){

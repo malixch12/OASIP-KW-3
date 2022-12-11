@@ -78,29 +78,70 @@ public class EventService {
 
         List<Event> event = new ArrayList<>();
 
-        String token = jwtRequestFilter.extractJwtFromRequest(request);
-        String email = jwtTokenUtil.getAllClaimsFromToken(token).getSubject();
-        String role = jwtTokenUtil.getAllClaimsFromToken(token).get("roles").toString();
-        if (role.equals(Role.Student.name())) {
-            if (filter == null) event = repository.findAllEventByStudent(email, sort);
-            else if (filter.equals("date"))
-                event = repository.findAllEventByStudentStartTimeEquals(email, sort, myDate);
-            else if (filter.equals("past"))
-                event = repository.findAllEventByStudentStartTimeLessThan(email, sort, myDate);
-            else if (filter.equals("future"))
-                event = repository.findAllEventByStudentStartTimeGreaterThan(email, sort, myDate);
+        String token = jwtRequestFilter.getJwtToken();
+        if (token != null) {
+            String email = jwtTokenUtil.getAllClaimsFromToken(token).getSubject();
+            String role = jwtTokenUtil.getAllClaimsFromToken(token).get("roles").toString();
 
-            else if (filter.equals("cateId"))
-                event = repository.findAllEventByStudentCategoryId(email, cateId, sort);
-            else if (filter.equals("catIdDate"))
-                event = repository.findAllEventByStudentCategoryIdAndEventStartTimeEquals(email, cateId, sort, myDate);
-            else if (filter.equals("cateIdPast"))
-                event = repository.findAllEventByStudentCategoryIdAndEventStartTimeLessThan(email, cateId, sort, myDate);
-            else if (filter.equals("cateIdFuture"))
-                event = repository.findAllEventByStudentCategoryIdAndEventStartTimeGreaterThan(email, cateId, sort, myDate);
+            if (role.equals(Role.Student.name())) {
+                if (filter == null) event = repository.findAllEventByStudent(email, sort);
+                else if (filter.equals("date"))
+                    event = repository.findAllEventByStudentStartTimeEquals(email, sort, myDate);
+                else if (filter.equals("past"))
+                    event = repository.findAllEventByStudentStartTimeLessThan(email, sort, myDate);
+                else if (filter.equals("future"))
+                    event = repository.findAllEventByStudentStartTimeGreaterThan(email, sort, myDate);
+
+                else if (filter.equals("cateId"))
+                    event = repository.findAllEventByStudentCategoryId(email, cateId, sort);
+                else if (filter.equals("catIdDate"))
+                    event = repository.findAllEventByStudentCategoryIdAndEventStartTimeEquals(email, cateId, sort, myDate);
+                else if (filter.equals("cateIdPast"))
+                    event = repository.findAllEventByStudentCategoryIdAndEventStartTimeLessThan(email, cateId, sort, myDate);
+                else if (filter.equals("cateIdFuture"))
+                    event = repository.findAllEventByStudentCategoryIdAndEventStartTimeGreaterThan(email, cateId, sort, myDate);
 
 
-        } else if (role.equals(Role.Admin.name())) {
+            } else if (role.equals(Role.Admin.name())) {
+                if (filter == null) event = repository.findAll(sort);
+                else if (filter.equals("date"))
+                    event = repository.findByEventStartTimeEquals(myDate, sort);
+                else if (filter.equals("past"))
+                    event = repository.findByEventStartTimeLessThan(myDate, sort);
+                else if (filter.equals("future"))
+                    event = repository.findByEventStartTimeGreaterThan(myDate, sort);
+
+                else if (filter.equals("cateId"))
+                    event = repository.findByEventCategoryID(cateId, sort);
+                else if (filter.equals("catIdDate"))
+                    event = repository.findByEventCategoryIDAndEventStartTimeEquals(cateId, myDate);
+                else if (filter.equals("cateIdPast"))
+                    event = repository.findByEventCategoryIDAndEventStartTimeLessThan(cateId, myDate, sort);
+                else if (filter.equals("cateIdFuture"))
+                    event = repository.findByEventCategoryIDAndEventStartTimeGreaterThan(cateId, myDate, sort);
+
+
+            } else if (role.equals(Role.Lecturer.name())) {
+                User user = userRepository.findByEmail(email);
+                if (filter == null) event = repository.findAllEventByLecturerCategory(user.getId(), sort);
+                else if (filter.equals("date"))
+                    event = repository.findAllEventByLecturerStartTimeEquals(user.getId(), sort, myDate);
+                else if (filter.equals("past"))
+                    event = repository.findAllEventByLecturerStartTimeLessThan(user.getId(), sort, myDate);
+                else if (filter.equals("future"))
+                    event = repository.findAllEventByLecturerStartTimeGreaterThan(user.getId(), sort, myDate);
+
+                else if (filter.equals("cateId"))
+                    event = repository.findAllEventByLecturerCategoryId(user.getId(), cateId, sort);
+                else if (filter.equals("catIdDate"))
+                    event = repository.findAllEventByLecturerCategoryIdAndEventStartTimeEquals(user.getId(), cateId, myDate);
+                else if (filter.equals("cateIdPast"))
+                    event = repository.findAllEventByLecturerCategoryIdAndEventStartTimeLessThan(user.getId(), cateId, myDate, sort);
+                else if (filter.equals("cateIdFuture"))
+                    event = repository.findAllEventByLecturerCategoryIdAndEventStartTimeGreaterThan(user.getId(), cateId, myDate, sort);
+            }
+
+        } else {
             if (filter == null) event = repository.findAll(sort);
             else if (filter.equals("date"))
                 event = repository.findByEventStartTimeEquals(myDate, sort);
@@ -117,27 +158,8 @@ public class EventService {
                 event = repository.findByEventCategoryIDAndEventStartTimeLessThan(cateId, myDate, sort);
             else if (filter.equals("cateIdFuture"))
                 event = repository.findByEventCategoryIDAndEventStartTimeGreaterThan(cateId, myDate, sort);
-
-
-        } else if (role.equals(Role.Lecturer.name())) {
-            User user = userRepository.findByEmail(email);
-            if (filter == null) event = repository.findAllEventByLecturerCategory(user.getId(), sort);
-            else if (filter.equals("date"))
-                event = repository.findAllEventByLecturerStartTimeEquals(user.getId(), sort, myDate);
-            else if (filter.equals("past"))
-                event = repository.findAllEventByLecturerStartTimeLessThan(user.getId(), sort, myDate);
-            else if (filter.equals("future"))
-                event = repository.findAllEventByLecturerStartTimeGreaterThan(user.getId(), sort, myDate);
-
-            else if (filter.equals("cateId"))
-                event = repository.findAllEventByLecturerCategoryId(user.getId(), cateId, sort);
-            else if (filter.equals("catIdDate"))
-                event = repository.findAllEventByLecturerCategoryIdAndEventStartTimeEquals(user.getId(), cateId, myDate);
-            else if (filter.equals("cateIdPast"))
-                event = repository.findAllEventByLecturerCategoryIdAndEventStartTimeLessThan(user.getId(), cateId, myDate, sort);
-            else if (filter.equals("cateIdFuture"))
-                event = repository.findAllEventByLecturerCategoryIdAndEventStartTimeGreaterThan(user.getId(), cateId, myDate, sort);
         }
+
         return event;
     }
 
@@ -327,8 +349,8 @@ public class EventService {
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
-            }else{
-                if(updateEvent.getFile() != null){
+            } else {
+                if (updateEvent.getFile() != null) {
                     try {
                         fileService.store(updateEvent.getFile());
                     } catch (IOException ex) {
@@ -347,10 +369,6 @@ public class EventService {
             } else if (updateEvent.getEventStartTime() != null) {
                 e.setEventStartTime(updateEvent.getEventStartTime());
             }
-
-
-
-
 
 
             return repository.saveAndFlush(e);

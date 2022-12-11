@@ -10,6 +10,8 @@ import com.microsoft.aad.msal4j.IAuthenticationResult;
 import com.microsoft.aad.msal4j.PublicClientApplication;
 import com.microsoft.aad.msal4j.UserNamePasswordParameters;
 import io.jsonwebtoken.*;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import org.json.JSONObject;
 
@@ -49,8 +51,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private HttpSecurity security;
+    @Getter
+    @Setter
+    String jwtToken;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -59,31 +62,35 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         try {
             System.out.println("----- RUN JWT REQUEST FILTER ------");
 
-            String jwtToken = extractJwtFromRequest(request);
-            JSONObject payload = extractMSJwt(jwtToken, security);
+            setJwtToken(extractJwtFromRequest(request));
 
-            if (jwtToken == null &&
-                    (request.getMethod().equals(HttpMethod.GET.toString()) && request.getRequestURL().toString().contains("events") ||
-                            request.getMethod().equals(HttpMethod.GET.toString()) && request.getRequestURL().toString().contains("eventcategorys"))) {
+            if (getJwtToken() == null &&
+                    (request.getMethod().equals(HttpMethod.GET.toString()) &&
+                            (request.getRequestURL().toString().contains("events") ||
+                                    request.getRequestURL().toString().contains("eventcategorys")))) {
                 System.out.println("FOR GUEST ROLE");
-                List<SimpleGrantedAuthority> role = Arrays.asList(new SimpleGrantedAuthority("c"));
+                List<SimpleGrantedAuthority> role = Arrays.asList(new SimpleGrantedAuthority("Guest"));
                 UserDetails userDetails = new User("guest", "", role);
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 
             }
+            JSONObject payload = null;
+            if (getJwtToken() != null) {
+                payload = extractMSJwt(getJwtToken());
+            }
 
-            if (StringUtils.hasText(jwtToken) == true && payload.getString("iss").equals("https://login.microsoftonline.com/6f4432dc-20d2-441d-b1db-ac3380ba633d/v2.0")) {
+            if (StringUtils.hasText(getJwtToken()) == true && payload.getString("iss").equals("https://login.microsoftonline.com/6f4432dc-20d2-441d-b1db-ac3380ba633d/v2.0")) {
                 String role = payload.getString("roles");
                 String extract = role.replaceAll("[^a-zA-Z]+", "");
                 System.out.println("MSIP");
-                jwtToken = jwtTokenUtil.doGenerateAccessToken(extract, payload.getString("sub")).getAccessToken();
+                setJwtToken(jwtTokenUtil.doGenerateAccessToken(extract, payload.getString("preferred_username")).getAccessToken());
             }
 
-            if (StringUtils.hasText(jwtToken) == true && jwtTokenUtil.validateToken(jwtToken)) {
-                UserDetails userDetails = new User(jwtTokenUtil.getUsernameFromToken(jwtToken), "",
-                        jwtTokenUtil.getRolesFromToken(jwtToken));
+            if (StringUtils.hasText(getJwtToken()) == true && jwtTokenUtil.validateToken(getJwtToken())) {
+                UserDetails userDetails = new User(jwtTokenUtil.getUsernameFromToken(getJwtToken()), "",
+                        jwtTokenUtil.getRolesFromToken(getJwtToken()));
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 System.out.println(usernamePasswordAuthenticationToken);
@@ -155,7 +162,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     }
 
     @SneakyThrows
-    public JSONObject extractMSJwt(String token, HttpSecurity security) {
+    public JSONObject extractMSJwt(String token) {
         String[] chunks = token.split("\\.");
 
         JSONObject header = new JSONObject(decode(chunks[0]));

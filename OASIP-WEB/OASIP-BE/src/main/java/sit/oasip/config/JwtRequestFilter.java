@@ -82,10 +82,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             }
 
             if (StringUtils.hasText(getJwtToken()) == true && payload.getString("iss").equals("https://login.microsoftonline.com/6f4432dc-20d2-441d-b1db-ac3380ba633d/v2.0")) {
+                System.out.println("MSIP");
                 String role = payload.getString("roles");
                 String extract = role.replaceAll("[^a-zA-Z]+", "");
-                System.out.println("MSIP");
-                setJwtToken(jwtTokenUtil.doGenerateAccessToken(extract, payload.getString("preferred_username")).getAccessToken());
+                setJwtToken(jwtTokenUtil.doGenerateAccessToken(extract, payload.getString("preferred_username"),payload.getString("name")).getAccessToken());
             }
 
             if (StringUtils.hasText(getJwtToken()) == true && jwtTokenUtil.validateToken(getJwtToken())) {

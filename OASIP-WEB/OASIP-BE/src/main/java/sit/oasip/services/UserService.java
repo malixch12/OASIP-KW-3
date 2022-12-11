@@ -12,18 +12,25 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.web.server.ResponseStatusException;
 
+import sit.oasip.Component.JwtTokenUtil;
+import sit.oasip.config.JwtRequestFilter;
 import sit.oasip.dtos.UserDTOs.AddUserDTO;
 import sit.oasip.dtos.UserDTOs.EditUserDTO;
 import sit.oasip.dtos.UserDTOs.MatchUserDTO;
 import sit.oasip.dtos.UserDTOs.GetUserDTO;
+import sit.oasip.entities.Eventcategory;
 import sit.oasip.entities.User;
+import sit.oasip.repositories.EventCategoryOwnerRepository;
 import sit.oasip.repositories.UserRepository;
 import sit.oasip.utils.ListMapper;
 import sit.oasip.utils.PageMapper;
 
+import sit.oasip.utils.Role;
 import sit.oasip.utils.RoleAttribute;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserService {
@@ -37,20 +44,40 @@ public class UserService {
     private PageMapper pageMapper;
     @Autowired
     private Argon2PasswordEncoder argon2PasswordEncoder;
+    @Autowired
+    private EventCategoryOwnerRepository eventCategoryOwnerRepository;
+    @Autowired
+    private JwtRequestFilter jwtRequestFilter;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
 
     public Page<GetUserDTO> getUserAll(Pageable pageable) {
         List<GetUserDTO> userDTOS = listMapper
                 .mapList(repository.findAll(Sort.by("UserName").ascending()), GetUserDTO.class, modelMapper);
         return pageMapper.mapToPage(pageable, userDTOS);
-
     }
 
 
     public GetUserDTO getUserById(int userId) {
         User user = repository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, userId + " Does Not Exist !!!"));
-        return modelMapper.map(user, GetUserDTO.class);
+        GetUserDTO users =  modelMapper.map(user, GetUserDTO.class);
+
+        List<Eventcategory> eco = eventCategoryOwnerRepository.findCategoryName(userId);
+
+        if (eco == null){
+            users.setOwners(null);
+        }else {
+
+            Map cateName = new LinkedHashMap();
+            eco.forEach((e)->{
+                cateName.put( e.getEventCategoryID(),e.getEventCategoryName());
+                users.setOwners(cateName);
+            });
+        }
+        
+        return users;
     }
 
 

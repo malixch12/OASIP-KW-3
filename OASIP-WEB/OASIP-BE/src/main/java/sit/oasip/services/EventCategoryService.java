@@ -44,15 +44,14 @@ public class EventCategoryService {
     }
 
     private List<Eventcategory> getAllEventCate() {
-        List<Eventcategory> eventcategories = new ArrayList<>();
-        Eventcategory eventcategory = new Eventcategory();
+        List<Eventcategory> eventcategories ;
 
         String token = jwtRequestFilter.getJwtToken();
         if(token != null){
             String email = jwtTokenUtil.getAllClaimsFromToken(token).getSubject();
             String role = jwtTokenUtil.getAllClaimsFromToken(token).get("roles").toString();
             if (role.equals(Role.Lecturer.name())) {
-                eventcategories = repository.findEventCateByLecturer(userRepository.findByEmail(email).getId());
+                eventcategories = repository.findEventCateByLecturer(userRepository.findByEmail(email).getUserId());
             } else {
                 eventcategories = repository.findAll();
             }
@@ -71,7 +70,7 @@ public class EventCategoryService {
         String role = jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString();
 
         if (role.equals(Role.Lecturer.name())) {
-            eventcategory = repository.findEventCateByLecturerAndCateID(userRepository.findByEmail(email).getId(), cateId).orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "No Permission !!"));
+            eventcategory = repository.findEventCateByLecturerAndCateID(userRepository.findByEmail(email).getUserId(), cateId).orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "No Permission !!"));
         } else {
             eventcategory = repository.findById(cateId)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category ID : " + cateId + " Does Not Exist !!!"));

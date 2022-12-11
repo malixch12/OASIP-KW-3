@@ -21,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import sit.oasip.Component.JwtTokenUtil;
 import sit.oasip.dtos.EventDTOs.AddEventDTO;
 import sit.oasip.dtos.EventDTOs.EditEventDTO;
+import sit.oasip.dtos.EventDTOs.GetDateTimeEvent;
 import sit.oasip.dtos.EventDTOs.GetEventDTO;
 import sit.oasip.entities.Event;
 import sit.oasip.entities.Eventcategory;
@@ -123,22 +124,22 @@ public class EventService {
 
             } else if (role.equals(Role.Lecturer.name())) {
                 User user = userRepository.findByEmail(email);
-                if (filter == null) event = repository.findAllEventByLecturerCategory(user.getId(), sort);
+                if (filter == null) event = repository.findAllEventByLecturerCategory(user.getUserId(), sort);
                 else if (filter.equals("date"))
-                    event = repository.findAllEventByLecturerStartTimeEquals(user.getId(), sort, myDate);
+                    event = repository.findAllEventByLecturerStartTimeEquals(user.getUserId(), sort, myDate);
                 else if (filter.equals("past"))
-                    event = repository.findAllEventByLecturerStartTimeLessThan(user.getId(), sort, myDate);
+                    event = repository.findAllEventByLecturerStartTimeLessThan(user.getUserId(), sort, myDate);
                 else if (filter.equals("future"))
-                    event = repository.findAllEventByLecturerStartTimeGreaterThan(user.getId(), sort, myDate);
+                    event = repository.findAllEventByLecturerStartTimeGreaterThan(user.getUserId(), sort, myDate);
 
                 else if (filter.equals("cateId"))
-                    event = repository.findAllEventByLecturerCategoryId(user.getId(), cateId, sort);
+                    event = repository.findAllEventByLecturerCategoryId(user.getUserId(), cateId, sort);
                 else if (filter.equals("catIdDate"))
-                    event = repository.findAllEventByLecturerCategoryIdAndEventStartTimeEquals(user.getId(), cateId, myDate);
+                    event = repository.findAllEventByLecturerCategoryIdAndEventStartTimeEquals(user.getUserId(), cateId, myDate);
                 else if (filter.equals("cateIdPast"))
-                    event = repository.findAllEventByLecturerCategoryIdAndEventStartTimeLessThan(user.getId(), cateId, myDate, sort);
+                    event = repository.findAllEventByLecturerCategoryIdAndEventStartTimeLessThan(user.getUserId(), cateId, myDate, sort);
                 else if (filter.equals("cateIdFuture"))
-                    event = repository.findAllEventByLecturerCategoryIdAndEventStartTimeGreaterThan(user.getId(), cateId, myDate, sort);
+                    event = repository.findAllEventByLecturerCategoryIdAndEventStartTimeGreaterThan(user.getUserId(), cateId, myDate, sort);
             }
 
         } else {
@@ -163,7 +164,11 @@ public class EventService {
         return event;
     }
 
-
+    public Page<GetDateTimeEvent> getDateTimeEvents(Pageable pageable){
+        List<GetDateTimeEvent> listEventDTO = listMapper
+                .mapList(getEvents(Sort.by("eventStartTime").descending(), null, null, null), GetDateTimeEvent.class, modelMapper);
+        return pageMapper.mapToPage(pageable, listEventDTO);
+    }
     public Page<GetEventDTO> getSimpleEventAll(Pageable pageable) {
         List<GetEventDTO> listEventDTO = listMapper
                 .mapList(getEvents(Sort.by("eventStartTime").descending(), null, null, null), GetEventDTO.class, modelMapper);
@@ -171,7 +176,7 @@ public class EventService {
     }
 
     public GetEventDTO getSimpleEventById(int id) {
-        String token = jwtRequestFilter.extractJwtFromRequest(request);
+        String token = jwtRequestFilter.getJwtToken();
         String role = jwtTokenUtil.getAllClaimsFromToken(token).get("roles").toString();
         Event event = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Booking " + id + " Does Not Exist !!!"));
@@ -182,7 +187,7 @@ public class EventService {
             if (role.equals(Role.Student.name())) {
                 checkEmail(event.getBookingEmail(), HttpStatus.FORBIDDEN);
             } else if (role.equals(Role.Lecturer.name())) {
-                repository.findEventByLecturerAndEventID(user.getId(), id).orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "No permission"));
+                repository.findEventByLecturerAndEventID(user.getUserId(), id).orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "No permission"));
             }
         }
 
@@ -226,7 +231,7 @@ public class EventService {
     }
 
     public void delete(int eventID) throws IOException {
-        String token = jwtRequestFilter.extractJwtFromRequest(request);
+        String token = jwtRequestFilter.getJwtToken();
         Event event = repository.findById(eventID).orElseThrow(() -> new RuntimeException(eventID + " Does not exit !!!"));
         if (token != null) {
             if (jwtTokenUtil.getAllClaimsFromToken(token).get("roles").toString().equals(Role.Student.name()))
@@ -260,7 +265,7 @@ public class EventService {
     }
 
     private void checkEmail(String email, HttpStatus status) {
-        String token = jwtRequestFilter.extractJwtFromRequest(request);
+        String token = jwtRequestFilter.getJwtToken();
         if (email.equals(jwtTokenUtil.getAllClaimsFromToken(token).getSubject()) == false) {
             throw new ResponseStatusException(status, "the booking email must be the same as the student's email");
         }
@@ -272,7 +277,7 @@ public class EventService {
                 .orElseThrow(() -> new RuntimeException(newEvent.getEventCategoryID() + "Does not exit !!!"));
         Event event = new Event();
 
-        String token = jwtRequestFilter.extractJwtFromRequest(request);
+        String token = jwtRequestFilter.getJwtToken();
         if (token != null) {
             if (jwtTokenUtil.getAllClaimsFromToken(token).get("roles").toString().equals(Role.Student.name())) {
                 checkEmail(newEvent.getBookingEmail(), HttpStatus.BAD_REQUEST);
@@ -320,7 +325,7 @@ public class EventService {
             Event event = repository.findById(bookingId)
                     .orElseThrow(() -> new RuntimeException("Bookind ID " + bookingId + "Does not exit !!!"));
 
-            String token = jwtRequestFilter.extractJwtFromRequest(request);
+            String token = jwtRequestFilter.getJwtToken();
             if (token != null) {
                 if (jwtTokenUtil.getAllClaimsFromToken(token).get("roles").toString().equals(Role.Student.name())) {
                     checkEmail(event.getBookingEmail(), HttpStatus.FORBIDDEN);

@@ -47,33 +47,34 @@ public class JwtTokenUtil {
         }else if(userDetails.getRole().equals(Role.Lecturer.name())) {
             claims.put("roles", Role.Lecturer.name());
         }
-        doGenerateToken(claims, userDetails.getEmail());
-        doGenerateRefreshToken(claims, userDetails.getEmail());
-        jwtResponse = new JwtResponse(doGenerateToken(claims, userDetails.getEmail()),doGenerateRefreshToken(claims, userDetails.getEmail()));
+        doGenerateToken(claims, userDetails.getEmail(),userDetails.getUserName());
+        doGenerateRefreshToken(claims, userDetails.getEmail(),userDetails.getUserName());
+        jwtResponse = new JwtResponse(doGenerateToken(claims, userDetails.getEmail(),userDetails.getUserName()), doGenerateRefreshToken(claims, userDetails.getEmail(),userDetails.getUserName()));
         return jwtResponse;
     }
 
-    public String doGenerateToken(Map<String, Object> claims, String subject) {
+    public String doGenerateToken(Map<String, Object> claims, String subject,String username) {
         claims.put("refresh", false);
+        claims.put("username",username);
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuer("https://intproj21.sit.kmutt.ac.th/kw3/#/").setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationInMs))
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
 
     }
 
-    public String doGenerateRefreshToken(Map<String, Object> claims, String subject) {
-//        Map<String, Object> claim = new HashMap<>();
-//        claim.put("role",claims);
+    public String doGenerateRefreshToken(Map<String, Object> claims, String subject,String username) {
         claims.put("refresh", true);
+        claims.put("username",username);
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuer("https://intproj21.sit.kmutt.ac.th/kw3/#/").setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + refreshExpirationDateInMs))
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
 
     }
-    public JwtResponse doGenerateAccessToken(String claims, String subject) {
+    public JwtResponse doGenerateAccessToken(String claims, String subject,String username) {
         Map<String, Object> claim = new HashMap<>();
-        claim.put("roles",claims);
+        claim.put("roles", claims);
         claim.put("refresh", false);
+        claim.put("username",username);
         String token = Jwts.builder().setClaims(claim).setSubject(subject).setIssuer("https://intproj21.sit.kmutt.ac.th/kw3/#/").setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationInMs))
                 .signWith(SignatureAlgorithm.HS512, secret).compact();

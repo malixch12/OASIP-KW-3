@@ -41,40 +41,41 @@ public class JwtTokenUtil {
     public JwtResponse generateToken(User userDetails) {
         Map<String, Object> claims = new HashMap<>();
         if(userDetails.getRole().equals(Role.Admin.name())){
-            claims.put("role", Role.Admin.name());
+            claims.put("roles", Role.Admin.name());
         }else if(userDetails.getRole().equals(Role.Student.name())){
-            claims.put("role", Role.Student.name());
+            claims.put("roles", Role.Student.name());
         }else if(userDetails.getRole().equals(Role.Lecturer.name())) {
-            claims.put("role", Role.Lecturer.name());
+            claims.put("roles", Role.Lecturer.name());
         }
-        doGenerateToken(claims, userDetails.getEmail());
-        doGenerateRefreshToken(claims, userDetails.getEmail());
-        jwtResponse = new JwtResponse(doGenerateToken(claims, userDetails.getEmail()),doGenerateRefreshToken(claims, userDetails.getEmail()));
+        doGenerateToken(claims, userDetails.getEmail(),userDetails.getUserName());
+        doGenerateRefreshToken(claims, userDetails.getEmail(),userDetails.getUserName());
+        jwtResponse = new JwtResponse(doGenerateToken(claims, userDetails.getEmail(),userDetails.getUserName()), doGenerateRefreshToken(claims, userDetails.getEmail(),userDetails.getUserName()));
         return jwtResponse;
     }
 
-    public String doGenerateToken(Map<String, Object> claims, String subject) {
+    public String doGenerateToken(Map<String, Object> claims, String subject,String username) {
         claims.put("refresh", false);
-        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
+        claims.put("username",username);
+        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuer("https://intproj21.sit.kmutt.ac.th/kw3/#/").setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationInMs))
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
 
     }
 
-    public String doGenerateRefreshToken(Map<String, Object> claims, String subject) {
-//        Map<String, Object> claim = new HashMap<>();
-//        claim.put("role",claims);
+    public String doGenerateRefreshToken(Map<String, Object> claims, String subject,String username) {
         claims.put("refresh", true);
-        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
+        claims.put("username",username);
+        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuer("https://intproj21.sit.kmutt.ac.th/kw3/#/").setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + refreshExpirationDateInMs))
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
 
     }
-    public JwtResponse doGenerateAccessToken(String claims, String subject) {
+    public JwtResponse doGenerateAccessToken(String claims, String subject,String username) {
         Map<String, Object> claim = new HashMap<>();
-        claim.put("role",claims);
+        claim.put("roles", claims);
         claim.put("refresh", false);
-        String token = Jwts.builder().setClaims(claim).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
+        claim.put("username",username);
+        String token = Jwts.builder().setClaims(claim).setSubject(subject).setIssuer("https://intproj21.sit.kmutt.ac.th/kw3/#/").setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationInMs))
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
         jwtResponse.setAccessToken(token);
@@ -85,6 +86,7 @@ public class JwtTokenUtil {
 
     public Claims getAllClaimsFromToken(String token) {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+//        return Jwts.parser().setSigningKey().parseClaimsJws(token).getBody();
     }
     public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = getAllClaimsFromToken(token);
@@ -121,7 +123,7 @@ public class JwtTokenUtil {
 
         List<SimpleGrantedAuthority> roles = null;
 
-        String role = claims.get("role", String.class);
+        String role = claims.get("roles", String.class);
 
         if (role != null ) {
             if(role.equals(Role.Admin.name())){

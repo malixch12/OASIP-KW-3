@@ -5,6 +5,8 @@ import ShowList from "../components/ShowList.vue";
 import { useRoute } from "vue-router";
 import PopupPage from "../components/PopupPage.vue"
 import RoundButton from "../components/RoundButton.vue";
+import timeEvent from "../components/timeEvent.vue";
+
 import { useRouter } from "vue-router";
 
 
@@ -18,7 +20,7 @@ const numPage = ref( )
 const jwtToken = ref()
 const jwtTokenRF = ref()
 const getLinkAll = async () => {
-  RefreshToken()
+  //RefreshToken()
   const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events/categories/${route.query.categoryId}?page=${page.value}&pageSize=6`,
   {
 
@@ -35,30 +37,9 @@ headers: {
     
   } 
   if (res.status === 401) {
-    const TokenValue = ref( await res.json())
-    console.log("status from backend = " +  TokenValue.value.message )
-    if (TokenValue.value.message == "Token is expired") {
+    await RefreshToken() 
+    await getLinkAll() 
 
-      RefreshToken()
-    }
-    if (TokenValue.value.message == "Token incorrect" & jwtToken.value != null) {
-
-      localStorage.removeItem('jwtToken')
-    localStorage.removeItem('time')
-    TokenValue.value = "x"
-    TokenTimeOut.value = true
-    isActivePopup2.value = true
-
-    }
-    if (TokenValue.value.message == "Please log in for get Token again." ) {
-
-localStorage.removeItem('jwtToken')
-localStorage.removeItem('time')
-TokenValue.value = "x"
-TokenTimeOut.value = true
-isActivePopup2.value = true
-
-}
   }
 
 };
@@ -83,12 +64,9 @@ const RefreshToken = async () => {
     let jwtTokenRF = await res.json()
     localStorage.setItem('jwtToken', jwtTokenRF.accessToken);
     jwtToken.value = localStorage.getItem('jwtToken');
-  } 
-  if (res.status === 401) {
-
-console.log(await res.json())
+  } else
 isActivePopup2.value=true
-}
+
 
 };
 
@@ -107,7 +85,7 @@ onBeforeMount(() => {
   jwtToken.value = localStorage.getItem('jwtToken');
  
   if(UserRole.value!="Guest") {
-    getLinkAll();
+    getLinkFuture();
   }
   
 });
@@ -136,7 +114,7 @@ const addEvent = async (dataBooking , AllDataCheck) => {
 
 
   if(AllDataCheck == true && UserRole.value!="Guest") {
-    RefreshToken()
+  //  RefreshToken()
  //dataBooking.eventStartTime = "2024-11-30T05:55:00.000Z"
   const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events`, {
     method: "POST",
@@ -217,7 +195,7 @@ function paging(index , filter) {
 
 
 const getLinkPast = async () => {
-  RefreshToken()
+  //RefreshToken()
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/events/categories/pastdays/${
       route.query.categoryId
@@ -236,10 +214,14 @@ headers: {
     eventLists.value = await res.json();
     numPage.value = Math.ceil(eventLists.value.totalElements / 8);
   }
+  if(res.status===401) {
+    await RefreshToken() 
+    await getLinkFuture() 
+  }
 };
 
 const getLinkFuture = async () => {
-  RefreshToken()
+ // RefreshToken()
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/events/categories/futuredays/${
       route.query.categoryId
@@ -260,8 +242,8 @@ headers: {
     console.log(eventLists.value);
   } 
   if(res.status===401) {
-    console.log(await res.json())
-
+    await RefreshToken() 
+    await getLinkFuture() 
   }
 };
 
@@ -304,6 +286,42 @@ function removeToken() {
 
   window.location.reload()
 }
+
+const dateFilter =  (FilterDate) =>  {
+getLinkAllNoPage(FilterDate);
+}
+
+const getLinkAllNoPage = async (FilterDate) => {
+ // await RefreshToken()
+
+  // const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events`);
+
+  const res = await fetch(
+    `${import.meta.env.VITE_APP_TITLE}/api/events?page=${page.value}&pageSize=100000`,
+    {
+
+method: 'get',
+headers: {
+
+  'Content-Type': 'application/json',
+  'Authorization': 'Bearer ' + jwtToken.value
+}
+}
+  );
+  if (res.status === 200) {
+    eventLists.value = await res.json();
+
+    let dateArrayFilter = eventLists.value.content.filter((event)=>{
+  return event.date == FilterDate
+})
+  eventLists.value.content = dateArrayFilter
+      numPage.value = Math.ceil(eventLists.value.content.length / 8);
+  }
+  if (res.status === 401) {
+    await RefreshToken() 
+    await getLinkAllNoPage() 
+  }
+};
 </script>
  
 <template>
@@ -353,8 +371,9 @@ function removeToken() {
       
       </PopupPage>
 
+      <div class="">
         <AddEvent class="px-2" @addEvent="addEvent"  :categoryDetail="categoryDetail"/>
-
+      </div>
   <!-- <AddEvent :id="id" @addEvent="addEvent" @click="getLinkAll" :categoryDetail="categoryDetail"/> -->
   <div  v-if="UserRole!=`Guest`" class="md:block  hidden">   <ShowList 
         :eventLists="eventLists.content"
@@ -362,8 +381,10 @@ function removeToken() {
         class="col-span-2" :numPage = "numPage" @paging="paging"  @pastFilter="pastFilter"
       @futureFilter="futureFilter"
       @allFilter="allFilter"
+      @dateFilter="dateFilter"
       :CheckOverlap="CheckOverlap"
       /></div> 
+
     </div>
   </div>
 </template>

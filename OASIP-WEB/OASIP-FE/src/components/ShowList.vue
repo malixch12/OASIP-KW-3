@@ -15,7 +15,7 @@ const props = defineProps({
   },
   name: {
     type: String,
-    default: "All Appointments"
+    default: "My Appointments"
   },
   numPage: {
     type: Number,
@@ -36,6 +36,7 @@ onBeforeUpdate(async () => {
   //filter.value = 3
 });
 
+const ColorTimeEventFilter = ref({past:'slate',all:'slate',future:'slate'})
 const page = ref();
 const index = ref();
 const SendBookId = ref();
@@ -69,6 +70,7 @@ var now_date =
 
 const PageIndexCurrent = ref(1)
 
+const filterStatus = ref("Upcoming")
 </script>
 
 <template>
@@ -79,19 +81,19 @@ const PageIndexCurrent = ref(1)
       <!-- filter  -->
       <div class="flex justify-center py-5">
         <div>
-          <span>Event Status : </span>
-          <RoundButton class="pr-2 "
-            bg-color="bg-slate-100 hover:bg-slate-600 hover:text-slate-100 active:bg-slate-700 focus:outline-none focus:ring focus:ring-slate-200 focus:text-slate-100 focus:bg-slate-600 text-slate-600"
-            button-name="All" @click="$emit('allFilter'), filter = 3" />
+          <span>Event Now : <span class="text-green-600">  {{filterStatus}}</span></span>
+          <RoundButton class="pr-2 ml-4 "
+            bg-color="bg-${{ColorTimeEventFilter.all}}-100 hover:bg-slate-600 hover:text-slate-100 active:bg-slate-700 focus:outline-none focus:ring focus:ring-slate-200 focus:text-slate-100 focus:bg-slate-600 text-slate-600"
+            button-name="All" @click="$emit('allFilter'), filter = 3 , filterStatus = 'All' " />
           <RoundButton class="pr-2"
-            bg-color="bg-slate-100 hover:bg-slate-600 hover:text-slate-100 active:bg-slate-700 focus:outline-none focus:ring focus:ring-slate-200 focus:text-slate-100 focus:bg-slate-600 text-slate-600"
+            bg-color="bg-${{ColorTimeEventFilter.past}}-100 hover:bg-slate-600 hover:text-slate-100 active:bg-slate-700 focus:outline-none focus:ring focus:ring-slate-200 focus:text-slate-100 focus:bg-slate-600 text-slate-600"
             button-name="Past" @click="
-              $emit('pastFilter', filter = 1)
+              $emit('pastFilter', filter = 1) , filterStatus = 'Past'
             " />
           <RoundButton
-            bg-color="bg-slate-100 hover:bg-slate-600 hover:text-slate-100 active:bg-slate-700 focus:outline-none focus:ring focus:ring-slate-200 focus:text-slate-100 focus:bg-slate-600 text-slate-600"
+            bg-color="bg-${{ColorTimeEventFilter.future}}-100 hover:bg-slate-600 hover:text-slate-100 active:bg-slate-700 focus:outline-none focus:ring focus:ring-slate-200 focus:text-slate-100 focus:bg-slate-600 text-slate-600"
             button-name="Upcoming" @click="
-              $emit('futureFilter', filter = 2)
+              $emit('futureFilter', filter = 2) , ColorTimeEventFilter.future = 'green' , filterStatus = 'Upcoming'
             " />
 
           <span class="text-slate-400 px-3">|</span>

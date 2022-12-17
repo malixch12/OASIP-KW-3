@@ -36,31 +36,8 @@ const getLinkAll = async () => {
     numPage.value = Math.ceil(UserLists.value.totalElements / 8);
 
   } else if (res.status === 401) {
-    const TokenValue = ref( await res.json())
-    console.log("status from backend = " +  TokenValue.value.message )
-    if (TokenValue.value.message == "Token is expired") {
-
-      RefreshToken()
-    }
-    if (TokenValue.value.message == "Token incorrect" & jwtToken.value != null) {
-
-      localStorage.removeItem('jwtToken')
-      localStorage.removeItem('jwtTokenRF')
-
-    TokenValue.value = "x"
-    TokenTimeOut.value = true
-    isActivePopup.value = true
-
-    }
-    if (TokenValue.value.message == "Please log in for get Token again." ) {
-
-localStorage.removeItem('jwtToken')
-localStorage.removeItem('jwtTokenRF')
-TokenValue.value = "x"
-TokenTimeOut.value = true
-isActivePopup.value = true
-
-}
+    await RefreshToken()
+    await getLinkAll()
   }
   if (res.status === 403) {
     textShow.value = "You are not an admin There is no right to view this information."
@@ -99,9 +76,13 @@ const RefreshToken = async () => {
     }
     if(res.status === 401) {
      console.log(await res.json())
+     
      CheckTokenTimeOut()
 
-    }
+    }else
+    CheckTokenTimeOut()
+
+
 
 };
 
@@ -147,8 +128,17 @@ const removeUser = async (UserId) => {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + jwtToken.value
         }
+        
       }
+      
     );
+
+    if(res.status === 401) {
+     console.log(await res.json())
+     RefreshToken()
+     removeUser(UserId)
+
+    }
   } getLinkAll()
 };
 

@@ -41,7 +41,8 @@ headers: {
 });
   if (res.status === 200) {
     timeCheck.value = await res.json();
-    addAlldate()
+    console.log(timeCheck.value)
+  //  addAlldate()
     
   }
 
@@ -53,9 +54,10 @@ const alldate = ref([])
 function addAlldate () {
 
     timeCheck.value.content.forEach(element => {
-        
+        console.log(element.date)
         if(element.eventCategory==props.cate.categoryName) {
             alldate.value.push(element.date)
+            
 
         }
 
@@ -77,7 +79,6 @@ alldate.value = uniqueChars
 
     <div class="flex justify-center  bg-gray-100 ">
   <div class="bg-white rounded-lg w-full p-4 shadow">
-
 
     <div v-for="date in alldate">
       <span class="text-gray-900 relative inline-block date uppercase font-medium tracking-widest">{{date}}</span>

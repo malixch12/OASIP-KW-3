@@ -100,8 +100,8 @@ onBeforeMount(() => {
     localStorage.setItem('UserRole', decoded.value.roles);
 
   }else {
-    decoded.value.sub = localStorage.getItem('UserName')
-    decoded.value.role = localStorage.getItem('UserRole')
+    decoded.value.username = localStorage.getItem('UserName')
+    decoded.value.roles = localStorage.getItem('UserRole')
     const jwtMicosoft = localStorage.getItem('msal.585a0cf6-90bc-4e5e-ad97-521891f56132.idtoken')
   localStorage.setItem('jwtToken', jwtMicosoft);
 

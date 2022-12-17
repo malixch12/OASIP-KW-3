@@ -63,7 +63,7 @@ headers: {
   }
   if (res.status === 401) {
     await RefreshToken()
-
+    await getLinkAll()
 //     const TokenValue = ref( await res.json())
 //     console.log("status from backend = " +  TokenValue.value.message )
 //     if (TokenValue.value.message == "Token is expired") {
@@ -116,6 +116,8 @@ headers: {
       numPage.value = 0
   }
   if (res.status === 401) {
+    await RefreshToken()
+    await getLinkAllNoPage()
 //     const TokenValue = ref( await res.json())
 //     console.log("status from backend = " +  TokenValue.value.message )
 //     if (TokenValue.value.message == "Token is expired") {
@@ -152,7 +154,7 @@ onBeforeMount(async () => {
     goHome()
   }
   
-  getLinkAll();
+  getLinkFuture();
 
 });
 
@@ -189,6 +191,8 @@ headers: {
     numPage.value = Math.ceil(eventLists.value.totalElements / 8);
   }
   if (res.status === 401) {
+    await RefreshToken()
+    await getLinkPast()
 //     const TokenValue = ref( await res.json())
 //     console.log("status from backend = " +  TokenValue.value.message )
 //     if (TokenValue.value.message == "Token is expired") {
@@ -236,6 +240,7 @@ headers: {
   }
   if (res.status === 401) {
     await RefreshToken()
+    await getLinkFuture()
     // const TokenValue = ref( await res.json())
     // console.log("status from backend = " +  TokenValue.value.message )
     // if (TokenValue.value.message == "Token is expired") {

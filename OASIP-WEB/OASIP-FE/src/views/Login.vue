@@ -43,8 +43,11 @@ const Login = async () => {
     jwtToken.value = localStorage.getItem('jwtToken');
     decoded.value = jwt_decode(jwtToken.value);
     console.log(decoded.value)
-    localStorage.setItem('UserRole', decoded.value.role);
+    console.log(decoded.value.roles)
+
+    localStorage.setItem('UserRole', decoded.value.roles);
     localStorage.setItem('UserEmail', decoded.value.sub);
+    localStorage.setItem('UserName', decoded.value.username);
   }
 
   if (res.status === 404) {
@@ -94,13 +97,19 @@ onBeforeMount(() => {
     console.log(microsoft)
     decoded.value = jwt_decode(jwtToken.value);
     console.log(decoded.value)
-    localStorage.setItem('UserRole', decoded.value.role);
+    localStorage.setItem('UserRole', decoded.value.roles);
 
   }else {
     decoded.value.sub = localStorage.getItem('UserName')
     decoded.value.role = localStorage.getItem('UserRole')
+    const jwtMicosoft = localStorage.getItem('msal.585a0cf6-90bc-4e5e-ad97-521891f56132.idtoken')
+  localStorage.setItem('jwtToken', jwtMicosoft);
 
   }
+
+ 
+
+  
 });
 
 function CheckData() {
@@ -174,15 +183,22 @@ var logoff = () => {
     myMSALObj.logout();
 };
 
-const accoutMicro = ref({accountIdentifier:null , roles:[]})
+const accoutMicro = ref({accountIdentifier:null , roles:[] , idTokenClaims: {test:"xxxx"}})
 
 
 onBeforeUpdate(() => {
-
+  
+   
   if(accoutMicro.value.accountIdentifier!=null) {
-    localStorage.setItem('jwtToken', accoutMicro.value.userName);
     localStorage.setItem('jwtTokenRF', accoutMicro.value.userName);
-    localStorage.setItem('UserRole', accoutMicro.value.idTokenClaims.roles[0]);
+    if(accoutMicro.value.idTokenClaims.roles!=undefined){
+      localStorage.setItem('UserRole', accoutMicro.value.idTokenClaims.roles[0]);
+
+    }else {
+      localStorage.setItem('UserRole', "Guest");
+    }
+
+
     localStorage.setItem('UserEmail', accoutMicro.value.userName);
     localStorage.setItem('UserName', accoutMicro.value.name);
     localStorage.setItem('micosoft', true);
@@ -359,8 +375,8 @@ onBeforeUpdate(() => {
 
       </div>
       <div class="" v-if="jwtToken!=null">
-        Welcome <span class="font-bold underline underline-offset-4">{{decoded.sub}}</span> to Clinic Booking
-       <br/><div class="text-center mt-2 text-gray-400"> you are {{decoded.role}} role</div>
+        Welcome <span class="font-bold underline underline-offset-4">{{decoded.username}}</span> to Clinic Booking
+       <br/><div class="text-center mt-2 text-gray-400"> you are {{decoded.roles}} role</div>
      
 
     

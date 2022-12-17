@@ -46,7 +46,7 @@ isActivePopup2.value=true
 };
 
 const getLink = async () => {
-  await RefreshToken()
+  //await RefreshToken()
 
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/events/categories/${
@@ -118,7 +118,7 @@ function paging(index , filter) {
 //http://localhost:8080/api/events/category/1?pageSize=4
 
 const getLinkPast = async () => {
-  await RefreshToken()
+  //await RefreshToken()
 
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/events/categories/pastdays/${
@@ -165,7 +165,7 @@ isActivePopup.value = true
 };
 
 const getLinkFuture = async () => {
-  await RefreshToken()
+ // await RefreshToken()
 
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/events/categories/futuredays/${
@@ -231,7 +231,7 @@ getLinkAllNoPage(FilterDate);
 }
 
 const getLinkAllNoPage = async (FilterDate) => {
-  await RefreshToken()
+ // await RefreshToken()
 
   // const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events`);
 

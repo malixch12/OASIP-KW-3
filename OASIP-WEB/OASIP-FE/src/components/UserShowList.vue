@@ -19,7 +19,6 @@ const jwtToken = ref()
 const jwtTokenRF = ref()
 
 const getLinkAll = async () => {
-  console.log(jwtToken.value)
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/users?page=${page.value}&pageSize=8`,
     {

@@ -5,6 +5,8 @@ import ShowList from "../components/ShowList.vue";
 import { useRoute } from "vue-router";
 import PopupPage from "../components/PopupPage.vue"
 import RoundButton from "../components/RoundButton.vue";
+import timeEvent from "../components/timeEvent.vue";
+
 import { useRouter } from "vue-router";
 
 
@@ -18,7 +20,7 @@ const numPage = ref( )
 const jwtToken = ref()
 const jwtTokenRF = ref()
 const getLinkAll = async () => {
-  RefreshToken()
+  //RefreshToken()
   const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events/categories/${route.query.categoryId}?page=${page.value}&pageSize=6`,
   {
 
@@ -136,7 +138,7 @@ const addEvent = async (dataBooking , AllDataCheck) => {
 
 
   if(AllDataCheck == true && UserRole.value!="Guest") {
-    RefreshToken()
+  //  RefreshToken()
  //dataBooking.eventStartTime = "2024-11-30T05:55:00.000Z"
   const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events`, {
     method: "POST",
@@ -217,7 +219,7 @@ function paging(index , filter) {
 
 
 const getLinkPast = async () => {
-  RefreshToken()
+  //RefreshToken()
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/events/categories/pastdays/${
       route.query.categoryId
@@ -239,7 +241,7 @@ headers: {
 };
 
 const getLinkFuture = async () => {
-  RefreshToken()
+ // RefreshToken()
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/events/categories/futuredays/${
       route.query.categoryId
@@ -353,8 +355,9 @@ function removeToken() {
       
       </PopupPage>
 
+      <div class="">
         <AddEvent class="px-2" @addEvent="addEvent"  :categoryDetail="categoryDetail"/>
-
+      </div>
   <!-- <AddEvent :id="id" @addEvent="addEvent" @click="getLinkAll" :categoryDetail="categoryDetail"/> -->
   <div  v-if="UserRole!=`Guest`" class="md:block  hidden">   <ShowList 
         :eventLists="eventLists.content"
@@ -364,6 +367,7 @@ function removeToken() {
       @allFilter="allFilter"
       :CheckOverlap="CheckOverlap"
       /></div> 
+
     </div>
   </div>
 </template>

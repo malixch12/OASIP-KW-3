@@ -48,6 +48,7 @@ const Login = async () => {
     localStorage.setItem('UserRole', decoded.value.roles);
     localStorage.setItem('UserEmail', decoded.value.sub);
     localStorage.setItem('UserName', decoded.value.username);
+
   }
 
   if (res.status === 404) {
@@ -174,6 +175,8 @@ var myMSALObj = new UserAgentApplication(msalConfig);
 var login = async () => {
     var authResult = await myMSALObj.loginPopup(requestObj);
     accoutMicro.value = authResult.account
+    localStorage.setItem('jwtToken', "wait");
+
     return authResult.account;
 };
 

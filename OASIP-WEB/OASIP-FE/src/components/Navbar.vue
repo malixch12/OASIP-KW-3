@@ -32,13 +32,7 @@ loginCheck.value = true
 });
 
 function logout () {
-  localStorage.removeItem('jwtToken')
-  localStorage.removeItem('UserRole')
-  localStorage.removeItem('jwtTokenRF')
-  localStorage.removeItem('UserEmail')
-  localStorage.setItem('UserRole', "Guest");
-  localStorage.removeItem('micosoft')
-  localStorage.removeItem('UserName')
+  localStorage.clear();
 
 
 

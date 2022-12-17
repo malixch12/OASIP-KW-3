@@ -20,7 +20,7 @@ const jwtTokenRF = ref()
 
 const getLinkAll = async () => {
   const res = await fetch(
-    `${import.meta.env.VITE_APP_TITLE}/api/users?page=${page.value}&pageSize=8`,
+    `${import.meta.env.VITE_APP_TITLE}/api/users?page=${page.value}&pageSize=100`,
     {
 
       method: 'get',
@@ -43,6 +43,7 @@ const getLinkAll = async () => {
     textShow.value = "You are not an admin There is no right to view this information."
     console.log(textShow)
   }
+  
 
 };
 
@@ -115,6 +116,7 @@ function removeToken() {
   window.location.reload()
 }
 
+const isActivePopup3 =ref(false)
 
 const removeUser = async (UserId) => {
 
@@ -138,6 +140,14 @@ const removeUser = async (UserId) => {
      RefreshToken()
      removeUser(UserId)
 
+    }
+
+    if(res.status === 400) {
+
+
+         const TokenValue = ref( await res.json())
+   console.log("status from backend = " +  TokenValue.value.message )
+   isActivePopup3.value = true
     }
   } getLinkAll()
 };
@@ -165,6 +175,8 @@ const goEdit = (UserId) => {
 
 const isActivePopup2 =ref(false)
 
+
+
 const backToHome = () => {
 
 router.push({
@@ -188,6 +200,17 @@ router.push({
       </div>
       </PopupPage>
 
+
+      <PopupPage v-show="isActivePopup3" :dim-background="true">
+      <div class="grid grid-cols-1 p-12" >
+        ลบไม่ได้เพราะเป็นอาจารย์คนสุดท้ายในวิชานี้ละงับ
+        <div class=" max-w-lg mx-auto  ">
+          <br>
+          <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
+            @click="isActivePopup3 = false " />
+        </div>
+      </div>
+      </PopupPage>
     <PopupPage v-show="isActivePopup" :dim-background="true">
 
       <div v-if="TokenTimeOut==false" class="grid grid-cols-1 p-12 ">

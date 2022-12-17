@@ -42,6 +42,21 @@ public class EventController {
     public List<GetDateTimeEvent> getDateTimeEvent() {
         return eventService.getDateTimeEvents();
     }
+    @GetMapping("/datetime/date")
+    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer','Guest')")
+    public List<GetDateTimeEvent> getDateTimeEventByDate( @RequestParam Instant date) {
+        return eventService.getDateTimeEventsbyDate(date);
+    }
+    @GetMapping("/datetime/past")
+    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer','Guest')")
+    public List<GetDateTimeEvent> getDateTimeEventByPast() {
+        return eventService.getDateTimeEventsbyPastDate();
+    }
+    @GetMapping("/datetime/future")
+    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer','Guest')")
+    public List<GetDateTimeEvent> getDateTimeEventByFuture() {
+        return eventService.getDateTimeEventsbyFutureDate();
+    }
 
     @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer','Guest')")
     @GetMapping("")

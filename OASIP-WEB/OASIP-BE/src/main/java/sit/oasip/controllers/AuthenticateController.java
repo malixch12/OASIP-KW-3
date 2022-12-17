@@ -60,7 +60,7 @@ public class AuthenticateController {
 
         Map<String, Object> expectedMap = authenticationService.getMapFromIoJsonwebtokenClaims(claims);
 
-        return ResponseEntity.ok().body(jwtTokenUtil.doGenerateAccessToken(expectedMap.get("role").toString(),expectedMap.get("username").toString(),expectedMap.get("sub").toString()));
+        return ResponseEntity.ok().body(jwtTokenUtil.doGenerateAccessToken(expectedMap.get("roles").toString(),expectedMap.get("username").toString(),expectedMap.get("sub").toString()));
     }
 
 

@@ -29,7 +29,7 @@ const timeCheck = ref({content:""})
 
 const getLinkAll = async () => {
   //RefreshToken()
-  const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events/datetime`,
+  const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events/datetime/future`,
   {
 
 method: 'get',
@@ -52,11 +52,8 @@ headers: {
 const alldate = ref([])
 
 function addAlldate () {
-    var today = new Date();
-    var now_date = (today.getDate() + '/' + (today.getMonth()+1) + '/' + (today.getFullYear()+543 ));
-    console.log(now_date)
+
     timeCheck.value.forEach(element => {
-        
         if(element.eventCategory==props.cate.categoryName  ) {
             alldate.value.push(element.date)
 

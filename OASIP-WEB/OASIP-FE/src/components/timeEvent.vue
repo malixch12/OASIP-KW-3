@@ -42,7 +42,7 @@ headers: {
   if (res.status === 200) {
     timeCheck.value = await res.json();
     console.log(timeCheck.value)
-  //  addAlldate()
+    addAlldate()
     
   }
 
@@ -52,12 +52,13 @@ headers: {
 const alldate = ref([])
 
 function addAlldate () {
-
-    timeCheck.value.content.forEach(element => {
-        console.log(element.date)
-        if(element.eventCategory==props.cate.categoryName) {
+    var today = new Date();
+    var now_date = (today.getDate() + '/' + (today.getMonth()+1) + '/' + (today.getFullYear()+543 ));
+    console.log(now_date)
+    timeCheck.value.forEach(element => {
+        
+        if(element.eventCategory==props.cate.categoryName  ) {
             alldate.value.push(element.date)
-            
 
         }
 
@@ -76,14 +77,14 @@ alldate.value = uniqueChars
   <div>
       
     
-
-    <div class="flex justify-center  bg-gray-100 ">
+   <div class="flex justify-center  bg-gray-100 ">
   <div class="bg-white rounded-lg w-full p-4 shadow">
+
 
     <div v-for="date in alldate">
       <span class="text-gray-900 relative inline-block date uppercase font-medium tracking-widest">{{date}}</span>
 
-      <div v-for="time in timeCheck.content">
+      <div v-for="time in timeCheck">
       <div class="flex mb-2" v-if="time.date == date & cate.categoryName == time.eventCategory" >
         <div class="w-2/12">
           <span class="text-sm text-gray-600 block"> {{ new Date(time.eventStartTime).toLocaleTimeString("th-TH") }}</span>

@@ -37,13 +37,30 @@ public class EventController {
         this.repository = repository;
     }
 
+    // get date time only (bind important value)
     @GetMapping("/datetime")
     @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer','Guest')")
     public List<GetDateTimeEvent> getDateTimeEvent() {
         return eventService.getDateTimeEvents();
     }
-
+    @GetMapping("/datetime/date")
     @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer','Guest')")
+    public List<GetDateTimeEvent> getDateTimeEventByDate( @RequestParam Instant date) {
+        return eventService.getDateTimeEventsbyDate(date);
+    }
+    @GetMapping("/datetime/past")
+    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer','Guest')")
+    public List<GetDateTimeEvent> getDateTimeEventByPast() {
+        return eventService.getDateTimeEventsbyPastDate();
+    }
+    @GetMapping("/datetime/future")
+    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer','Guest')")
+    public List<GetDateTimeEvent> getDateTimeEventByFuture() {
+        return eventService.getDateTimeEventsbyFutureDate();
+    }
+
+    // get simple event
+    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer')")
     @GetMapping("")
     public Page<GetEventDTO> getEventByAll(
             @RequestParam(defaultValue = "0") Integer page,
@@ -53,13 +70,13 @@ public class EventController {
         return eventService.getSimpleEventAll(PageRequest.of(page, pageSize));
     }
 
-    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer','Guest')")
+    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer')")
     @GetMapping("/{id}")
     public GetEventDTO getEventById(@PathVariable Integer id) {
         return eventService.getSimpleEventById(id);
     }
 
-    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer','Guest')")
+    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer')")
     @GetMapping("/dates")
     public Page<GetEventDTO> getEventDate(
             @RequestParam Instant date,
@@ -68,7 +85,7 @@ public class EventController {
         return eventService.getSimpleEventDate(date, PageRequest.of(page, pageSize));
     }
 
-    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer','Guest')")
+    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer')")
     @GetMapping("/pastdays")
     public Page<GetEventDTO> getEventPastDate(
             @RequestParam(defaultValue = "0") Integer page,
@@ -76,7 +93,7 @@ public class EventController {
         return eventService.getSimpleEventPastDate(PageRequest.of(page, pageSize));
     }
 
-    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer','Guest')")
+    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer')")
     @GetMapping("/futuredays")
     public Page<GetEventDTO> getEventFutureDate(
             @RequestParam(defaultValue = "0") Integer page,
@@ -85,7 +102,7 @@ public class EventController {
     }
 
     // get event by category
-    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer','Guest')")
+    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer')")
     @GetMapping("/categories/{eventCategoryID}")
     public Page<GetEventDTO> getEventByCategory(
             @PathVariable Integer eventCategoryID,
@@ -95,7 +112,7 @@ public class EventController {
         return eventService.getEventByCategory(eventCategoryID, PageRequest.of(page, pageSize, Sort.by(sortBy)));
     }
 
-    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer','Guest')")
+    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer')")
     @GetMapping("/categories/dates/{eventCategoryID}")
     public Page<GetEventDTO> getEventDateByCategory(
             @PathVariable Integer eventCategoryID,
@@ -106,7 +123,7 @@ public class EventController {
         return eventService.getEventDateByCategory(eventCategoryID, date, PageRequest.of(page, pageSize, Sort.by(sortBy)));
     }
 
-    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer','Guest')")
+    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer')")
     @GetMapping("/categories/pastdays/{eventCategoryID}")
     public Page<GetEventDTO> getEventPastDateByCategory(
             @PathVariable Integer eventCategoryID,
@@ -116,7 +133,7 @@ public class EventController {
         return eventService.getEventPastDateByCategory(eventCategoryID, PageRequest.of(page, pageSize, Sort.by(sortBy)));
     }
 
-    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer','Guest')")
+    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer')")
     @GetMapping("/categories/futuredays/{eventCategoryID}")
     public Page<GetEventDTO> getEventFutureDateByCategory(
             @PathVariable Integer eventCategoryID,

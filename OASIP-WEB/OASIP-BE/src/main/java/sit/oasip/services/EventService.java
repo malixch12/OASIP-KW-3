@@ -164,10 +164,21 @@ public class EventService {
         return event;
     }
 
+//    get date time only (bind important value)
     public List<GetDateTimeEvent> getDateTimeEvents(){
-        List<GetDateTimeEvent> listEventDTO = listMapper.mapList(repository.findAll(Sort.by("eventStartTime").descending()), GetDateTimeEvent.class, modelMapper);
-        return listEventDTO;
+        return listMapper.mapList(repository.findAll(Sort.by("eventStartTime").descending()), GetDateTimeEvent.class, modelMapper);
     }
+    public List<GetDateTimeEvent> getDateTimeEventsbyDate(Instant myDate){
+        return listMapper.mapList( repository.findByEventStartTimeEquals(myDate, Sort.by("eventStartTime").ascending()) , GetDateTimeEvent.class, modelMapper );
+    }
+    public List<GetDateTimeEvent> getDateTimeEventsbyPastDate(){
+        return listMapper.mapList( repository.findByEventStartTimeLessThan(dateNow, Sort.by("eventStartTime").descending()) , GetDateTimeEvent.class, modelMapper );
+    }
+    public List<GetDateTimeEvent> getDateTimeEventsbyFutureDate(){
+        return listMapper.mapList( repository.findByEventStartTimeGreaterThan(dateNow, Sort.by("eventStartTime").ascending()) , GetDateTimeEvent.class, modelMapper );
+    }
+
+
     public Page<GetEventDTO> getSimpleEventAll(Pageable pageable) {
         List<GetEventDTO> listEventDTO = listMapper
                 .mapList(getEvents(Sort.by("eventStartTime").descending(), null, null, null), GetEventDTO.class, modelMapper);

@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/events")
@@ -38,11 +39,8 @@ public class EventController {
 
     @GetMapping("/datetime")
     @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer','Guest')")
-    public Page<GetDateTimeEvent> getDateTimeEvent(
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "8") Integer pageSize
-    ) {
-        return eventService.getDateTimeEvents(PageRequest.of(page, pageSize));
+    public List<GetDateTimeEvent> getDateTimeEvent() {
+        return eventService.getDateTimeEvents();
     }
 
     @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer','Guest')")

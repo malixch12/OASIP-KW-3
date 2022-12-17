@@ -13,11 +13,13 @@ import java.util.Optional;
 public interface EventCategoryOwnerRepository extends JpaRepository<EventCategoryOwner,Integer> {
    EventCategoryOwner findById(int ownerId);
    List<EventCategoryOwner> findByEventCategoryID(Eventcategory cateId);
-   List<EventCategoryOwner> findByUserID(Optional<User> userId);
+   List<EventCategoryOwner> findByUserID(int userId);
 
    @Query("select ec.eventCategoryID from EventCategoryOwner ec where ec.userID.UserId = :userID")
    List<Eventcategory> findCategoryName(int userID);
 
+
+   Integer countAllByEventCategoryID(Optional<Eventcategory> eventcategory);
 
    EventCategoryOwner findByEventCategoryIDAndAndUserID(Eventcategory cateId, User userId);
 

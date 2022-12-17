@@ -165,8 +165,7 @@ public class EventService {
     }
 
     public Page<GetDateTimeEvent> getDateTimeEvents(Pageable pageable){
-        List<GetDateTimeEvent> listEventDTO = listMapper
-                .mapList(getEvents(Sort.by("eventStartTime").descending(), null, null, null), GetDateTimeEvent.class, modelMapper);
+        List<GetDateTimeEvent> listEventDTO = listMapper.mapList(repository.findAll(Sort.by("eventStartTime").descending()), GetDateTimeEvent.class, modelMapper);
         return pageMapper.mapToPage(pageable, listEventDTO);
     }
     public Page<GetEventDTO> getSimpleEventAll(Pageable pageable) {

@@ -76,7 +76,7 @@ public class UserService {
                 users.setOwners(cateName);
             });
         }
-        
+
         return users;
     }
 

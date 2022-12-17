@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 import sit.oasip.dtos.EventDTOs.AddEventDTO;
 import sit.oasip.dtos.EventDTOs.EditEventDTO;
+import sit.oasip.dtos.EventDTOs.GetDateTimeEvent;
 import sit.oasip.dtos.EventDTOs.GetEventDTO;
 import sit.oasip.entities.Event;
 import sit.oasip.repositories.EventRepository;
@@ -33,6 +34,15 @@ public class EventController {
 
     public EventController(EventRepository repository) {
         this.repository = repository;
+    }
+
+    @GetMapping("/datetime")
+    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer','Guest')")
+    public Page<GetDateTimeEvent> getDateTimeEvent(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "8") Integer pageSize
+    ) {
+        return eventService.getDateTimeEvents(PageRequest.of(page, pageSize));
     }
 
     @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer','Guest')")

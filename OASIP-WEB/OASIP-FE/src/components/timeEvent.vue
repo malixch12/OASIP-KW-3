@@ -17,8 +17,11 @@ onBeforeUpdate(async () => {
 
 });
 
+const UserRole =ref()
+
 onBeforeMount(async () => {
     getLinkAll()
+    UserRole.value = localStorage.getItem('UserRole');
 });
 
 

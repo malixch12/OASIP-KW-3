@@ -15,6 +15,8 @@ import sit.oasip.dtos.UserDTOs.GetUserDTO;
 import sit.oasip.entities.User;
 import sit.oasip.services.UserService;
 
+import java.util.List;
+
 @CrossOrigin
 @RestController
 @RequestMapping("/api/users")
@@ -29,6 +31,13 @@ public class UserController {
             @RequestParam(defaultValue = "8") Integer pageSize
     ){
         return userService.getUserAll(PageRequest.of(page, pageSize));
+    }
+
+    @GetMapping("/role/{role}")
+    @PreAuthorize("hasAnyAuthority('Admin')")
+    public List<GetUserDTO> getLecturer(
+            @PathVariable String role){
+        return userService.getUserByRole(role);
     }
 
     @PreAuthorize("hasAnyAuthority('Admin')")

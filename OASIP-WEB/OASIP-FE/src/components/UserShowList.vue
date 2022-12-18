@@ -20,7 +20,7 @@ const jwtTokenRF = ref()
 
 const getLinkAll = async () => {
   const res = await fetch(
-    `${import.meta.env.VITE_APP_TITLE}/api/users?page=${page.value}&pageSize=8`,
+    `${import.meta.env.VITE_APP_TITLE}/api/users?page=${page.value}&pageSize=100`,
     {
 
       method: 'get',
@@ -43,6 +43,7 @@ const getLinkAll = async () => {
     textShow.value = "You are not an admin There is no right to view this information."
     console.log(textShow)
   }
+  
 
 };
 
@@ -106,7 +107,9 @@ onBeforeMount(async () => {
   UserRole.value = localStorage.getItem('UserRole');
   getLinkAll();
 
-
+  if(jwtToken.value==null) {
+    goLogin()
+  }
 });
 
 
@@ -115,10 +118,44 @@ function removeToken() {
   window.location.reload()
 }
 
+const isActivePopup3 =ref(false)
 
-const removeUser = async (UserId) => {
+const removeUser = async (UserId , role , name ) => {
 
-  if (confirm("Would you like to cancel your appointment?") == true) {
+  var checkOwnLect = false
+  var checkOwn = {}
+  var cate = []
+  if(role=="Lecturer") {
+    const res = await fetch(
+    `${import.meta.env.VITE_APP_TITLE}/api/users/${UserId}`,
+    {
+
+      method: 'get',
+      headers: {
+
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + jwtToken.value
+      }
+    }
+  );
+  if (res.status === 200) {
+     checkOwn = await res.json();
+      console.log(checkOwn.owners)
+
+
+for (const [key, value] of Object.entries(checkOwn.owners)) {
+  cate.push(`${value}`)
+}
+
+    if(checkOwn.owners!=null) {
+      checkOwnLect = true
+    }
+
+  } 
+  }
+
+if(checkOwnLect==false) {
+  if (confirm("Would you like to delete this user?") == true) {
     const res = await fetch(
       `${import.meta.env.VITE_APP_TITLE}/api/users/${UserId}`,
       {
@@ -139,7 +176,51 @@ const removeUser = async (UserId) => {
      removeUser(UserId)
 
     }
-  } getLinkAll()
+
+    if(res.status === 400) {
+
+
+         const TokenValue = ref( await res.json())
+   console.log("status from backend = " +  TokenValue.value.message )
+   isActivePopup3.value = true
+    }
+  }
+}
+  
+if(checkOwnLect==true) {
+  if (confirm(`${name} is the owner of ${cate} . deletion of this user account will also remove this user from the event category. Do you still want to delete this account?`) == true) {
+    const res = await fetch(
+      `${import.meta.env.VITE_APP_TITLE}/api/users/${UserId}`,
+      {
+        method: "DELETE",
+        headers: {
+
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + jwtToken.value
+        }
+        
+      }
+      
+    );
+
+    if(res.status === 401) {
+     console.log(await res.json())
+     RefreshToken()
+     removeUser(UserId)
+
+    }
+
+    if(res.status === 400) {
+
+
+         const TokenValue = ref( await res.json())
+   console.log("status from backend = " +  TokenValue.value.message )
+   isActivePopup3.value = true
+    }
+  }
+}
+  
+  getLinkAll()
 };
 
 
@@ -165,10 +246,21 @@ const goEdit = (UserId) => {
 
 const isActivePopup2 =ref(false)
 
+
+
 const backToHome = () => {
 
 router.push({
   name: "Home"
+ 
+});
+
+};
+
+const goLogin = () => {
+
+router.push({
+  name: "Login"
  
 });
 
@@ -188,6 +280,17 @@ router.push({
       </div>
       </PopupPage>
 
+
+      <PopupPage v-show="isActivePopup3" :dim-background="true">
+      <div class="grid grid-cols-1 p-12" >
+        ลบไม่ได้เพราะเป็นอาจารย์คนสุดท้ายในวิชานี้ละงับ
+        <div class=" max-w-lg mx-auto  ">
+          <br>
+          <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
+            @click="isActivePopup3 = false " />
+        </div>
+      </div>
+      </PopupPage>
     <PopupPage v-show="isActivePopup" :dim-background="true">
 
       <div v-if="TokenTimeOut==false" class="grid grid-cols-1 p-12 ">
@@ -232,7 +335,7 @@ router.push({
   
 
     <br>
-    <div class="text-sm ">
+    <div class="text-sm mb-16 ">
       <div class="text-3xl font-bold text-center   drop-shadow-md mt-8"> USER </div>
       <div class="flex items-center justify-center">
 	<div class="container">
@@ -288,7 +391,7 @@ router.push({
             </td>
             <td class="p-3 text-center mb-1.5">
               <span class="font-medium text-blue-500  px-2 hover:underline"  @click="goEdit(user.id)">edit</span>
-              <span class="font-medium text-red-600  hover:underline" @click="removeUser(user.id)">delete</span>
+              <span class="font-medium text-red-600  hover:underline" @click="removeUser(user.id , user.role , user.name)">delete</span>
 
             </td>
             <!-- <td class="p-3  " @click="goEdit(user.id)">

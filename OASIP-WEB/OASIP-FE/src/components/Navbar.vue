@@ -32,13 +32,7 @@ loginCheck.value = true
 });
 
 function logout () {
-  localStorage.removeItem('jwtToken')
-  localStorage.removeItem('UserRole')
-  localStorage.removeItem('jwtTokenRF')
-  localStorage.removeItem('UserEmail')
-  localStorage.setItem('UserRole', "Guest");
-  localStorage.removeItem('micosoft')
-  localStorage.removeItem('UserName')
+  localStorage.clear();
 
 
 
@@ -215,7 +209,7 @@ function toggle () {
             >
           </li>
 
-          <li v-if="!loginCheck ">
+          <li v-if="!loginCheck & UserRole==`Guest` ">
             <router-link
               :to="{ name: 'ListAllByCate' }"
               class="
@@ -227,6 +221,20 @@ function toggle () {
               ><span >📅&nbsp check appointments</span>
             </router-link >
           </li>
+
+          <li v-if="UserRole==`Guest` ">
+            <router-link
+              :to="{ name: 'GuestViewEvent' }"
+              class="
+                 block
+                text-gray-700
+               
+                md:hover:text-pink-500 md:p-0  
+              "
+              ><span >📅&nbsp check appointments</span>
+            </router-link >
+          </li>
+
              <li>
             <router-link v-show="!loginCheck && UserRole==`Admin`"
               :to="{ name: 'UserManage' }"

@@ -48,6 +48,7 @@ const Login = async () => {
     localStorage.setItem('UserRole', decoded.value.roles);
     localStorage.setItem('UserEmail', decoded.value.sub);
     localStorage.setItem('UserName', decoded.value.username);
+
   }
 
   if (res.status === 404) {
@@ -103,7 +104,10 @@ onBeforeMount(() => {
     decoded.value.username = localStorage.getItem('UserName')
     decoded.value.roles = localStorage.getItem('UserRole')
     const jwtMicosoft = localStorage.getItem('msal.585a0cf6-90bc-4e5e-ad97-521891f56132.idtoken')
-  localStorage.setItem('jwtToken', jwtMicosoft);
+  if(jwtMicosoft!=null) {
+    localStorage.setItem('jwtToken', jwtMicosoft);
+
+  }
 
   }
 
@@ -171,6 +175,8 @@ var myMSALObj = new UserAgentApplication(msalConfig);
 var login = async () => {
     var authResult = await myMSALObj.loginPopup(requestObj);
     accoutMicro.value = authResult.account
+    localStorage.setItem('jwtToken', "wait");
+
     return authResult.account;
 };
 

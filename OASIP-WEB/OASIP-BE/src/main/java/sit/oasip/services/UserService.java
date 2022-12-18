@@ -18,6 +18,7 @@ import sit.oasip.dtos.UserDTOs.AddUserDTO;
 import sit.oasip.dtos.UserDTOs.EditUserDTO;
 import sit.oasip.dtos.UserDTOs.MatchUserDTO;
 import sit.oasip.dtos.UserDTOs.GetUserDTO;
+import sit.oasip.entities.EventCategoryOwner;
 import sit.oasip.entities.Eventcategory;
 import sit.oasip.entities.User;
 import sit.oasip.repositories.EventCategoryOwnerRepository;
@@ -61,12 +62,18 @@ public class UserService {
     }
 
 
+    public List<GetUserDTO> getUserByRole(String role) {
+        return listMapper
+                .mapList(repository.findByRole(role), GetUserDTO.class, modelMapper);
+    }
+
+
     public GetUserDTO getUserById(int userId) {
         User user = repository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, userId + " Does Not Exist !!!"));
         GetUserDTO users = modelMapper.map(user, GetUserDTO.class);
 
-        List<Eventcategory> eco = eventCategoryOwnerRepository.findCategoryName(userId);
+        List<EventCategoryOwner> eco = eventCategoryOwnerRepository.findCategoryName(userId);
 
         if (eco == null) {
             users.setOwners(null);
@@ -74,7 +81,7 @@ public class UserService {
 
             Map cateName = new LinkedHashMap();
             eco.forEach((e) -> {
-                cateName.put(e.getEventCategoryID(), e.getEventCategoryName());
+                cateName.put(e.getId(), e.getEventCategoryID().getEventCategoryName());
                 users.setOwners(cateName);
             });
         }
@@ -165,7 +172,7 @@ public class UserService {
     public void delete(int userId) {
         User user = repository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID " + userId + " does not exit !!!"));
 
-        List<Eventcategory> eco = eventCategoryOwnerRepository.findCategoryName(userId);
+        List<EventCategoryOwner> eco = eventCategoryOwnerRepository.findCategoryName(userId);
 
         ArrayList owners = new ArrayList();
         if (eco == null) {
@@ -179,7 +186,7 @@ public class UserService {
         for (int i = 0; i < owners.size(); i++) {
             int numOwnerEachCate = eventCategoryOwnerRepository.countAllByEventCategoryID(eventcategoryRepository.findById((Integer) owners.get(i)));
             if (numOwnerEachCate == 1) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"The system must not allow the user to delete this account");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The system must not allow the user to delete this account");
             }
         }
         repository.deleteById(userId);

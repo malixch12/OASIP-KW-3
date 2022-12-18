@@ -224,7 +224,7 @@ function toggle () {
 
           <li v-if="UserRole==`Guest` ">
             <router-link
-              :to="{ name: 'ListAllByCate' }"
+              :to="{ name: 'GuestViewEvent' }"
               class="
                  block
                 text-gray-700

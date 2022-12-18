@@ -27,6 +27,9 @@ if (res.status === 401) {
 
 }
 }
+
+getLinkAll()
+
 </script>
 
 

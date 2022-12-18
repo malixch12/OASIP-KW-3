@@ -61,6 +61,12 @@ public class UserService {
     }
 
 
+    public List<GetUserDTO> getUserByRole(String role) {
+        return listMapper
+                .mapList(repository.findByRole(role), GetUserDTO.class, modelMapper);
+    }
+
+
     public GetUserDTO getUserById(int userId) {
         User user = repository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, userId + " Does Not Exist !!!"));
@@ -179,7 +185,7 @@ public class UserService {
         for (int i = 0; i < owners.size(); i++) {
             int numOwnerEachCate = eventCategoryOwnerRepository.countAllByEventCategoryID(eventcategoryRepository.findById((Integer) owners.get(i)));
             if (numOwnerEachCate == 1) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"The system must not allow the user to delete this account");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The system must not allow the user to delete this account");
             }
         }
         repository.deleteById(userId);

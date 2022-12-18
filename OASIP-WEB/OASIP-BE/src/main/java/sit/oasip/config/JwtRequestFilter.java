@@ -62,7 +62,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                     (request.getMethod().equals(HttpMethod.GET.toString()) &&
                             (request.getRequestURL().toString().contains("events") ||
                                     request.getRequestURL().toString().contains("eventcategorys")))) {
-                System.out.println("FOR GUEST ROLE");
                 List<SimpleGrantedAuthority> role = Arrays.asList(new SimpleGrantedAuthority("Guest"));
                 UserDetails userDetails = new User("guest", "", role);
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
@@ -78,7 +77,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             if (StringUtils.hasText(getJwtToken()) == true && payload.getString("iss").equals("https://login.microsoftonline.com/6f4432dc-20d2-441d-b1db-ac3380ba633d/v2.0")) {
                 System.out.println("MSIP");
                 if(payload.has("roles") == false){
-                    System.out.println("skdjf");
                     setJwtToken(jwtTokenUtil.doGenerateAccessToken("Guest", payload.getString("preferred_username"),payload.getString("name")).getAccessToken());
                     System.out.println(getJwtToken());
                 }else{
@@ -91,7 +89,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             }
 
             if (StringUtils.hasText(getJwtToken()) == true && jwtTokenUtil.validateToken(getJwtToken())) {
-                System.out.println("1");
                 System.out.println(jwtTokenUtil.getUsernameFromToken(getJwtToken()));
                 System.out.println( jwtTokenUtil.getRolesFromToken(getJwtToken()));
                 UserDetails userDetails = new User(jwtTokenUtil.getUsernameFromToken(getJwtToken()), "",
@@ -109,7 +106,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 
             } else {
-                System.out.println("Please log in for get Token again.");
                 request.setAttribute("message", "Please log in for get Token again.");
             }
 

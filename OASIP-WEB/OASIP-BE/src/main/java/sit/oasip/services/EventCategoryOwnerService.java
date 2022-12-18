@@ -12,6 +12,7 @@ import sit.oasip.entities.User;
 import sit.oasip.repositories.EventCategoryOwnerRepository;
 import sit.oasip.repositories.EventcategoryRepository;
 import sit.oasip.repositories.UserRepository;
+import sit.oasip.utils.Role;
 
 import java.util.List;
 import java.util.Optional;
@@ -44,8 +45,13 @@ public class EventCategoryOwnerService {
         Optional<User> u = userRepository.findById(owner.getUserId());
         Eventcategory ec = eventcategoryRepository.findByEventCategoryID(owner.getEventCategoryID());
         if (eventCategoryOwnerRepository.findByEventCategoryIDAndAndUserID(ec, u.get()) == null) {
-            eco.setEventCategoryID(ec);
-            eco.setUserID(u.get());
+            if(u.get().getRole() == Role.Lecturer.name()){
+                eco.setEventCategoryID(ec);
+                eco.setUserID(u.get());
+            }else{
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,u.get().getRole() + " cannot add owner.");
+            }
+
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,u.get().getUserName() + " already owns " + ec.getEventCategoryName() + " .");
         }

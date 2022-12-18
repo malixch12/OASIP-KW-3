@@ -46,12 +46,42 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
             String jwtToken = extractJwtFromRequest(request);
 
-            if (StringUtils.hasText(jwtToken) == true && jwtTokenUtil.validateToken(jwtToken)) {
+            if (getJwtToken() == null &&
+                    (request.getMethod().equals(HttpMethod.GET.toString()) &&
+                            (request.getRequestURL().toString().contains("events") ||
+                                    request.getRequestURL().toString().contains("eventcategorys")))) {
+                List<SimpleGrantedAuthority> role = Arrays.asList(new SimpleGrantedAuthority("Guest"));
+                UserDetails userDetails = new User("guest", "", role);
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 
-                UserDetails userDetails = new User(jwtTokenUtil.getUsernameFromToken(jwtToken), "",
-                        jwtTokenUtil.getRolesFromToken(jwtToken));
-                String userName = jwtTokenUtil.getUsernameFromToken(jwtToken);
-                UserDetails userDetail = this.jwtUserDetailsService.loadUserByUsername(userName);
+            }
+            JSONObject payload = null;
+            if (getJwtToken() != null) {
+                payload = extractMSJwt(getJwtToken());
+            }
+
+            if (StringUtils.hasText(getJwtToken()) == true && payload.getString("iss").equals("https://login.microsoftonline.com/6f4432dc-20d2-441d-b1db-ac3380ba633d/v2.0")) {
+                System.out.println("MSIP");
+                if(payload.has("roles") == false){
+                    setJwtToken(jwtTokenUtil.doGenerateAccessToken("Guest", payload.getString("preferred_username"),payload.getString("name")).getAccessToken());
+                    System.out.println(getJwtToken());
+                }else{
+                    String role = payload.getString("roles");
+                    String extract = role.replaceAll("[^a-zA-Z]+", "");
+                    setJwtToken(jwtTokenUtil.doGenerateAccessToken(extract, payload.getString("preferred_username"),payload.getString("name")).getAccessToken());
+                    System.out.println(getJwtToken());
+                }
+
+            }
+
+            if (StringUtils.hasText(getJwtToken()) == true && jwtTokenUtil.validateToken(getJwtToken())) {
+                System.out.println(jwtTokenUtil.getUsernameFromToken(getJwtToken()));
+                System.out.println( jwtTokenUtil.getRolesFromToken(getJwtToken()));
+                UserDetails userDetails = new User(jwtTokenUtil.getUsernameFromToken(getJwtToken()), "",
+                        jwtTokenUtil.getRolesFromToken(getJwtToken()));
+                System.out.println("2");
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 /*

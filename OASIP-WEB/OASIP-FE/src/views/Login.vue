@@ -43,6 +43,8 @@ const Login = async () => {
     console.log(decoded.value)
     localStorage.setItem('UserRole', decoded.value.role);
     localStorage.setItem('UserEmail', decoded.value.sub);
+    localStorage.setItem('UserName', decoded.value.username);
+
   }
 
   if (res.status === 404) {
@@ -91,7 +93,20 @@ onBeforeMount(() => {
     console.log(decoded.value)
     localStorage.setItem('UserRole', decoded.value.role);
 
+  }else {
+    decoded.value.username = localStorage.getItem('UserName')
+    decoded.value.roles = localStorage.getItem('UserRole')
+    const jwtMicosoft = localStorage.getItem('msal.585a0cf6-90bc-4e5e-ad97-521891f56132.idtoken')
+  if(jwtMicosoft!=null) {
+    localStorage.setItem('jwtToken', jwtMicosoft);
+
   }
+
+  }
+
+ 
+
+  
 });
 
 function CheckData() {
@@ -130,6 +145,70 @@ const goHome = () => {
 
 
 
+const msalConfig = {
+    auth: {
+        clientId: "585a0cf6-90bc-4e5e-ad97-521891f56132",
+        authority: "https://login.microsoftonline.com/6f4432dc-20d2-441d-b1db-ac3380ba633d",
+        redirectURI: "http://localhost:3000/"
+    },
+    cache: {
+        cacheLocation: "localStorage", // This configures where your cache will be stored
+        storeAuthStateInCookie: true,
+        popUp:true // Set this to "true" if you are having issues on IE11 or Edge
+    }
+};  
+
+
+var requestObj = {
+    scopes: ["user.read"]
+};
+
+var myMSALObj = new UserAgentApplication(msalConfig);
+
+var login = async () => {
+    var authResult = await myMSALObj.loginPopup(requestObj);
+    accoutMicro.value = authResult.account
+    localStorage.setItem('jwtToken', "wait");
+
+    return authResult.account;
+};
+
+var getAccount = async () => {
+    var account = await myMSALObj.getAccount();
+    return account;
+};
+
+var logoff = () => {
+    myMSALObj.logout();
+};
+
+const accoutMicro = ref({accountIdentifier:null , roles:[] , idTokenClaims: {test:"xxxx"}})
+
+
+onBeforeUpdate(() => {
+  
+   
+  if(accoutMicro.value.accountIdentifier!=null) {
+    localStorage.setItem('jwtTokenRF', accoutMicro.value.userName);
+    if(accoutMicro.value.idTokenClaims.roles!=undefined){
+      localStorage.setItem('UserRole', accoutMicro.value.idTokenClaims.roles[0]);
+
+    }else {
+      localStorage.setItem('UserRole', "Guest");
+    }
+
+
+    localStorage.setItem('UserEmail', accoutMicro.value.userName);
+    localStorage.setItem('UserName', accoutMicro.value.name);
+    localStorage.setItem('micosoft', true);
+
+    CheckStatus.value = true
+    isActivePopup.value = true
+
+    
+  }
+
+});
 </script>
 
 <template>

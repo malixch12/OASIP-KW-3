@@ -14,15 +14,21 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
-                                                AuthenticationException authException) throws IOException {
+                         AuthenticationException authException) throws IOException {
         String errorMsg = (String) request.getAttribute("message");
-    if (errorMsg != null){
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED,errorMsg);
-        response.getOutputStream().println(errorMsg);
-    }else {
-        response.sendError(HttpServletResponse.SC_FORBIDDEN,"No permission");
-    }
+        response.reset();
+        response.resetBuffer();
+        System.out.println(errorMsg);
+//        if (errorMsg != null) {
+//            System.out.println(errorMsg);
 
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED,errorMsg);
+//        response.setStatus(404);
+        response.flushBuffer();
+//            System.out.println("atttt");
+//        } else {
+//            response.sendError(HttpServletResponse.SC_FORBIDDEN, "No permission");
+//        }
 
     }
 

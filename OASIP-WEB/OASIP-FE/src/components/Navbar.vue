@@ -31,11 +31,7 @@ loginCheck.value = true
 });
 
 function logout () {
-  localStorage.removeItem('jwtToken')
-  localStorage.removeItem('UserRole')
-  localStorage.removeItem('jwtTokenRF')
-  localStorage.removeItem('UserEmail')
-  localStorage.setItem('UserRole', "Guest");
+  localStorage.clear();
 
   window.location.reload()
 

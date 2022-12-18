@@ -2,7 +2,8 @@
 import { onBeforeMount, ref, onBeforeUpdate } from "@vue/runtime-core";
 import UserShowList from "../components/UserShowList.vue";
 import CheckPassword from "../components/CheckPassword.vue";
-import CategoryManage from "../components/CategoryManage.vue";
+import CategoryOwn from "../components/CategoryOwn.vue";
+import addUser from "../components/addUser.vue";
 
 import PopupPage from "../components/PopupPage.vue";
 
@@ -24,8 +25,8 @@ const CategoryManageShow = ref(false);
   <button @click="UserShowListShow=false,CheckPasswordShow=true ,CategoryManageShow=false" class="bg-gray-300 border-r-2  border-white hover:bg-gray-400 text-gray-800 font-bold py-2 px-9 text-base  ">
     CHECK PASSWORD
   </button>
-  <button  @click="UserShowListShow=false,CheckPasswordShow=false ,CategoryManageShow=true" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-9 rounded-r text-base">
-    CATEGORY
+  <button  @click="UserShowListShow=false,CheckPasswordShow=false ,CategoryManageShow=true ,addUserShow=false" class="bg-gray-300 border-r-2  border-white hover:bg-gray-400 text-gray-800 font-bold py-2 px-9  md:text-base text-sm">
+    CATEGORY OWN
   </button>
 </div>
 
@@ -40,7 +41,7 @@ const CategoryManageShow = ref(false);
 </div>
 
 <div class="flex justify-center">
-  <CategoryManage v-if="CategoryManageShow"/>
+  <CategoryOwn v-if="CategoryManageShow"/>
 
 </div>
    

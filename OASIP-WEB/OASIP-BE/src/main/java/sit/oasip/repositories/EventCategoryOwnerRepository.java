@@ -15,8 +15,8 @@ public interface EventCategoryOwnerRepository extends JpaRepository<EventCategor
    List<EventCategoryOwner> findByEventCategoryID(Eventcategory cateId);
    List<EventCategoryOwner> findByUserID(int userId);
 
-   @Query("select ec.eventCategoryID from EventCategoryOwner ec where ec.userID.UserId = :userID")
-   List<Eventcategory> findCategoryName(int userID);
+   @Query("select ec from EventCategoryOwner ec where ec.userID.UserId = :userID")
+   List<EventCategoryOwner> findCategoryName(int userID);
 
 
    Integer countAllByEventCategoryID(Optional<Eventcategory> eventcategory);

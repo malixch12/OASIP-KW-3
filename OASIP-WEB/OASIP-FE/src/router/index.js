@@ -12,7 +12,6 @@ import UserManage from "../views/UserManage.vue"
 import SignUpPage from "../views/SignUpPage.vue"
 import EditUserPage from "../views/EditUserPage.vue"
 import Login from "../views/Login.vue"
-import logoutPage from "../views/logoutPage.vue"
 
 //const history = createWebHistory();
 const history = createWebHashHistory('/kw3/');
@@ -81,11 +80,6 @@ const routes = [
     path: "/Login",
     name: "Login",
     component: Login,
-  } ,
-  {
-    path: "/logoutPage",
-    name: "logoutPage",
-    component: logoutPage,
   }
 ];
 

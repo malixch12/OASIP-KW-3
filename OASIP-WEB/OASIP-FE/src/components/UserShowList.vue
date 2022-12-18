@@ -19,6 +19,7 @@ const jwtToken = ref()
 const jwtTokenRF = ref()
 
 const getLinkAll = async () => {
+  console.log(jwtToken.value)
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/users?page=${page.value}&pageSize=100`,
     {
@@ -36,8 +37,31 @@ const getLinkAll = async () => {
     numPage.value = Math.ceil(UserLists.value.totalElements / 8);
 
   } else if (res.status === 401) {
-    await RefreshToken()
-    await getLinkAll()
+    const TokenValue = ref( await res.json())
+    console.log("status from backend = " +  TokenValue.value.message )
+    if (TokenValue.value.message == "Token is expired") {
+
+      RefreshToken()
+    }
+    if (TokenValue.value.message == "Token incorrect" & jwtToken.value != null) {
+
+      localStorage.removeItem('jwtToken')
+      localStorage.removeItem('jwtTokenRF')
+
+    TokenValue.value = "x"
+    TokenTimeOut.value = true
+    isActivePopup.value = true
+
+    }
+    if (TokenValue.value.message == "Please log in for get Token again." ) {
+
+localStorage.removeItem('jwtToken')
+localStorage.removeItem('jwtTokenRF')
+TokenValue.value = "x"
+TokenTimeOut.value = true
+isActivePopup.value = true
+
+}
   }
   if (res.status === 403) {
     textShow.value = "You are not an admin There is no right to view this information."
@@ -77,13 +101,9 @@ const RefreshToken = async () => {
     }
     if(res.status === 401) {
      console.log(await res.json())
-     
      CheckTokenTimeOut()
 
-    }else
-    CheckTokenTimeOut()
-
-
+    }
 
 };
 
@@ -165,9 +185,7 @@ if(checkOwnLect==false) {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + jwtToken.value
         }
-        
       }
-      
     );
 
     if(res.status === 401) {

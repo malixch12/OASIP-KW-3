@@ -35,9 +35,29 @@ headers: {
     CateLists.value = await res.json();
   }
   if (res.status === 401) {
-    
-    await RefreshToken()
-    await getLinkAll()
+    const TokenValue = ref( await res.json())
+    console.log("status from backend = " +  TokenValue.value.message )
+    if (TokenValue.value.message == "Token is expired") {
+
+  
+    }
+    if (TokenValue.value.message == "Token incorrect" & jwtToken.value != null) {
+
+      localStorage.removeItem('jwtToken')
+    localStorage.removeItem('time')
+    TokenValue.value = "x"
+    TokenTimeOut.value = true
+    isActivePopup.value = true
+
+    }
+    if (TokenValue.value.message == "Please log in for get Token again." ) {
+
+localStorage.removeItem('jwtToken')
+localStorage.removeItem('time')
+TokenValue.value = "x"
+TokenTimeOut.value = true
+isActivePopup.value = true
+    }
 }
 if (res.status === 500) {   isActivePopup2.value=true
 }
@@ -60,10 +80,29 @@ headers: {
     CateLists.value = await res.json();
   }
   if (res.status === 401) {
-   
-    await RefreshToken()
-    await getLinkAll()
+    const TokenValue = ref( await res.json())
+    console.log("status from backend = " +  TokenValue.value.message )
+    if (TokenValue.value.message == "Token is expired") {
 
+  
+    }
+    if (TokenValue.value.message == "Token incorrect" & jwtToken.value != null) {
+
+      localStorage.removeItem('jwtToken')
+    localStorage.removeItem('time')
+    TokenValue.value = "x"
+    TokenTimeOut.value = true
+    isActivePopup.value = true
+
+    }
+    if (TokenValue.value.message == "Please log in for get Token again." ) {
+
+localStorage.removeItem('jwtToken')
+localStorage.removeItem('time')
+TokenValue.value = "x"
+TokenTimeOut.value = true
+isActivePopup.value = true
+    }
 }
 if (res.status === 500) {   isActivePopup2.value=true
 }
@@ -91,11 +130,13 @@ if (res.status === 200) {
   localStorage.setItem('jwtToken', jwtTokenRF.accessToken);
   jwtToken.value = localStorage.getItem('jwtToken');
   getLinkAll()
-}else
+}
+
+if (res.status === 401) {
 
   console.log(await res.json())
   isActivePopup2.value=true
-
+}
 
 
 

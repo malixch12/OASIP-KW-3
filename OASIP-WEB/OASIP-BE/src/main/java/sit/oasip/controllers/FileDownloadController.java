@@ -4,7 +4,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import sit.oasip.entities.Event;
@@ -27,7 +26,6 @@ public class FileDownloadController {
         this.fileService = fileService;
     }
 
-    @PreAuthorize("hasAnyAuthority('Admin','Student','Lecturer')")
     @GetMapping("/download/{id}")
     public ResponseEntity<Resource> getFile(@PathVariable Integer id) {
         Event fileDB = repository.findByBookingId(id);
@@ -40,14 +38,12 @@ public class FileDownloadController {
                 .body(file);
     }
 
-    @PreAuthorize("hasAnyAuthority('Admin')")
     @GetMapping("/downloadZip")
     public void getZipfile(HttpServletResponse response) {
         fileService.loadAllFile(response);
 
     }
 
-    @PreAuthorize("hasAnyAuthority('Admin','Student')")
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Integer id) throws IOException {
         fileService.delete(id);

@@ -38,13 +38,15 @@ const RefreshToken = async () => {
     let jwtTokenRF = await res.json()
     localStorage.setItem('jwtToken', jwtTokenRF.accessToken);
     jwtToken.value = localStorage.getItem('jwtToken');
-  } else
-isActivePopup2.value=true
+  }   if (res.status === 401) {
 
+console.log(await res.json())
+isActivePopup2.value=true
+}
 };
 
 const getLink = async () => {
-  //await RefreshToken()
+  await RefreshToken()
 
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/events/categories/${
@@ -65,32 +67,29 @@ headers: {
     numPage.value = Math.ceil(eventLists.value.totalElements / 8);
   }
   if (res.status === 401) {
-    await RefreshToken()
-    await getLink()
-//     const TokenValue = ref( await res.json())
-//     console.log("status from backend = " +  TokenValue.value.message )
-//     if (TokenValue.value.message == "Token is expired") {
+    const TokenValue = ref( await res.json())
+    console.log("status from backend = " +  TokenValue.value.message )
+    if (TokenValue.value.message == "Token is expired") {
 
   
-//     }
-//     if (TokenValue.value.message == "Token incorrect" & jwtToken.value != null) {
+    }
+    if (TokenValue.value.message == "Token incorrect" & jwtToken.value != null) {
 
-//       localStorage.removeItem('jwtToken')
-//     localStorage.removeItem('time')
-//     TokenValue.value = "x"
-//     TokenTimeOut.value = true
-//     isActivePopup.value = true
+      localStorage.removeItem('jwtToken')
+    localStorage.removeItem('time')
+    TokenValue.value = "x"
+    TokenTimeOut.value = true
+    isActivePopup.value = true
 
-//     }
-//     if (TokenValue.value.message == "Please log in for get Token again." ) {
+    }
+    if (TokenValue.value.message == "Please log in for get Token again." ) {
 
-// localStorage.removeItem('jwtToken')
-// localStorage.removeItem('time')
-// TokenValue.value = "x"
-// TokenTimeOut.value = true
-// isActivePopup.value = true
-//     }}
-  }
+localStorage.removeItem('jwtToken')
+localStorage.removeItem('time')
+TokenValue.value = "x"
+TokenTimeOut.value = true
+isActivePopup.value = true
+    }}
 };
 
 onBeforeMount(async () => {
@@ -99,7 +98,7 @@ onBeforeMount(async () => {
   if(jwtToken.value==null) {
     goHome()
   }
-  getLinkFuture();
+  getLink();
 });
 
 
@@ -119,7 +118,7 @@ function paging(index , filter) {
 //http://localhost:8080/api/events/category/1?pageSize=4
 
 const getLinkPast = async () => {
-  //await RefreshToken()
+  await RefreshToken()
 
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/events/categories/pastdays/${
@@ -140,36 +139,33 @@ headers: {
     numPage.value = Math.ceil(eventLists.value.totalElements / 8);
   }
   if (res.status === 401) {
-    await RefreshToken()
-    await getLinkPast()
-//     const TokenValue = ref( await res.json())
-//     console.log("status from backend = " +  TokenValue.value.message )
-//     if (TokenValue.value.message == "Token is expired") {
+    const TokenValue = ref( await res.json())
+    console.log("status from backend = " +  TokenValue.value.message )
+    if (TokenValue.value.message == "Token is expired") {
 
   
-//     }
-//     if (TokenValue.value.message == "Token incorrect" & jwtToken.value != null) {
+    }
+    if (TokenValue.value.message == "Token incorrect" & jwtToken.value != null) {
 
-//       localStorage.removeItem('jwtToken')
-//     localStorage.removeItem('time')
-//     TokenValue.value = "x"
-//     TokenTimeOut.value = true
-//     isActivePopup.value = true
+      localStorage.removeItem('jwtToken')
+    localStorage.removeItem('time')
+    TokenValue.value = "x"
+    TokenTimeOut.value = true
+    isActivePopup.value = true
 
-//     }
-//     if (TokenValue.value.message == "Please log in for get Token again." ) {
+    }
+    if (TokenValue.value.message == "Please log in for get Token again." ) {
 
-// localStorage.removeItem('jwtToken')
-// localStorage.removeItem('time')
-// TokenValue.value = "x"
-// TokenTimeOut.value = true
-// isActivePopup.value = true
-//     }}
-  }
+localStorage.removeItem('jwtToken')
+localStorage.removeItem('time')
+TokenValue.value = "x"
+TokenTimeOut.value = true
+isActivePopup.value = true
+    }}
 };
 
 const getLinkFuture = async () => {
- // await RefreshToken()
+  await RefreshToken()
 
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/events/categories/futuredays/${
@@ -191,8 +187,29 @@ headers: {
     console.log(eventLists.value);
   }
   if (res.status === 401) {
-    await RefreshToken()
-    await getLinkFuture()
+    const TokenValue = ref( await res.json())
+    console.log("status from backend = " +  TokenValue.value.message )
+    if (TokenValue.value.message == "Token is expired") {
+
+  
+    }
+    if (TokenValue.value.message == "Token incorrect" & jwtToken.value != null) {
+
+      localStorage.removeItem('jwtToken')
+    localStorage.removeItem('time')
+    TokenValue.value = "x"
+    TokenTimeOut.value = true
+    isActivePopup.value = true
+
+    }
+    if (TokenValue.value.message == "Please log in for get Token again." ) {
+
+localStorage.removeItem('jwtToken')
+localStorage.removeItem('time')
+TokenValue.value = "x"
+TokenTimeOut.value = true
+isActivePopup.value = true
+    }
   }
 };
 
@@ -214,7 +231,7 @@ getLinkAllNoPage(FilterDate);
 }
 
 const getLinkAllNoPage = async (FilterDate) => {
- // await RefreshToken()
+  await RefreshToken()
 
   // const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events`);
 
@@ -240,8 +257,29 @@ headers: {
       numPage.value = Math.ceil(eventLists.value.content.length / 8);
   }
   if (res.status === 401) {
-    await RefreshToken() 
-    await getLinkAllNoPage() 
+    const TokenValue = ref( await res.json())
+    console.log("status from backend = " +  TokenValue.value.message )
+    if (TokenValue.value.message == "Token is expired") {
+
+  
+    }
+    if (TokenValue.value.message == "Token incorrect" & jwtToken.value != null) {
+
+      localStorage.removeItem('jwtToken')
+    localStorage.removeItem('time')
+    TokenValue.value = "x"
+    TokenTimeOut.value = true
+    isActivePopup.value = true
+
+    }
+    if (TokenValue.value.message == "Please log in for get Token again." ) {
+
+localStorage.removeItem('jwtToken')
+localStorage.removeItem('time')
+TokenValue.value = "x"
+TokenTimeOut.value = true
+isActivePopup.value = true
+    }
   }
 };
 

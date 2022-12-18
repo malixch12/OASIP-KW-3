@@ -4,8 +4,6 @@ import { useRouter, useRoute } from "vue-router";
 import { ref, onBeforeMount, onBeforeUpdate, computed } from "vue";
 import PopupPage from "../components/PopupPage.vue"
 import privew from "../components/PicPreview.vue"
-import timeEvent from "../components/timeEvent.vue"
-
 const appRouter = useRouter();
 const goBack = () => appRouter.go(-1);
 
@@ -204,9 +202,6 @@ window.addEventListener("load", function() {
     var datetimeField = document.getElementById("inputTime");
     datetimeField.value = localDatetime;
 });
-
-
-const timeCheck = ref(false)
 </script>
 
 <template>
@@ -358,10 +353,6 @@ const timeCheck = ref(false)
       </div>
 
 
-      <div class="flex justify-center">        <button type="submit" @click="timeCheck = !timeCheck" class=" text-gray-500 bg-gray-300 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-2 py-1 text-center ">click for view all booked events </button>
-</div>
-
-      <timeEvent :cate="categoryDetail" v-if="timeCheck"/>
 
 
 

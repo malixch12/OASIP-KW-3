@@ -8,7 +8,7 @@ import PopupPage from "../components/PopupPage.vue";
 import RoundButton from "../components/RoundButton.vue";
 import { useRouter } from "vue-router";
 
-
+console.log("xxx")
 const router = useRouter();
 
 const route = useRoute();

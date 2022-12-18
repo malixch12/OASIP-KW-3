@@ -18,9 +18,10 @@ const errorStatus = ref({
 })
 const page = ref(0);
 const userLect = ref([])
+const category =ref()
 const getLinkAll = async () => {
   const res = await fetch(
-    `${import.meta.env.VITE_APP_TITLE}/api/users?page=${page.value}&pageSize=100`,
+    `${import.meta.env.VITE_APP_TITLE}/api/users/role/Lecturer`,
     {
 
       method: 'get',
@@ -32,8 +33,8 @@ const getLinkAll = async () => {
     }
   );
   if (res.status === 200) {
-    var UserLists = await res.json();
-    
+     userLect.value = await res.json();
+    console.log(userLect.value )
 
   } else if (res.status === 401) {
     await RefreshToken()
@@ -44,31 +45,46 @@ const getLinkAll = async () => {
     console.log(textShow)
   }
   
+  const res2 = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/eventcategorys` ,{
+
+method: 'get',
+headers: {
+
+  'Content-Type': 'application/json',
+  'Authorization': 'Bearer ' + jwtToken.value
+}
+}
+
+  );
+  if (res2.status === 200) {
+    category.value = await res2.json();
+    console.log(category.value)
+  }
+  if (res2.status === 401) {
+    
+    await RefreshToken()
+    await getLinkAll()
+}
 
 };
 
 
 const addUser = async () => {
 
-    const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/users/signup`, {
+    const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/owners`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
+        'Authorization': 'Bearer ' + jwtToken.value
+
       },
       body: JSON.stringify(dataUser.value),
     })
 
     if (res.status === 200) {
-      console.log(dataUser.value);
-      isActivePopup.value = true
-      CheckStatus.value = true
+        isActivePopup3.value = true      
     } else {
-      CheckStatus.value = false
-      isActivePopup2.value = true
-
-      // console.log(await res.json());
-      errorStatus.value = await res.json()
-      console.log(errorStatus.value)
+        isActivePopup4.value = true      
     }
 
   
@@ -78,22 +94,33 @@ const addUser = async () => {
 };
 
 
+const userShow = ref('')
+const userLectId = ref(0)
+
+const cateShow = ref('')
+const cateId = ref(0)
+
 
 const dataUser = ref({    //สำหรับให้ ฟอม v-model
-  name: null,
-  role: "Student",
-  email: null,
-  password: null,
-  passwordConfirm: ""
+    userId:0,
+    eventCategoryID:0
 });
 
 const isActivePopup = ref(false);
 const isActivePopup2= ref(false);
+const isActivePopup3= ref(false);
+const isActivePopup4= ref(false);
 
 
 
+const jwtToken = ref()
+const jwtTokenRF =ref()
+const UserRole = ref()
 onBeforeMount(() => {
-   // getLinkAll()
+    jwtToken.value = localStorage.getItem('jwtToken');
+  jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
+  UserRole.value = localStorage.getItem('UserRole');
+    getLinkAll()
 
 });
 
@@ -111,9 +138,8 @@ function goHome () {
 </script>
 
 <template>
-  <div class="mt-16">
+  <div class="mt-16 ">
   
-
 
 
     <PopupPage v-show="isActivePopup" :dim-background="true">
@@ -152,16 +178,45 @@ function goHome () {
       </div>
 </PopupPage>
 
+<PopupPage v-show="isActivePopup3" :dim-background="true">
+      <div  class="grid grid-cols-1 p-12">
+        <p class="text-3xl text-center font-semibold text-green-600 tracking-wide pb-8">
+          add own succeeded
+        </p>
+     <div class="text-center mb-4">  {{errorStatus.Email}} <br/>
+     {{errorStatus.Name}}
+  </div>
+        <div class=" max-w-lg mx-auto  ">
+          <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
+            @click="isActivePopup3 = false " />
+        </div>
+      </div>
+</PopupPage>
 
-    
+<PopupPage v-show="isActivePopup4" :dim-background="true">
+      <div  class="grid grid-cols-1 p-12">
+        <p class="text-3xl text-center font-semibold text-red-600 tracking-wide pb-8">
+            add own not succeeded        </p>
+     <div class="text-center mb-4">  {{errorStatus.Email}} <br/>
+     {{errorStatus.Name}}
+  </div>
+        <div class=" max-w-lg mx-auto  ">
+          <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
+            @click="isActivePopup4 = false " />
+        </div>
+      </div>
+</PopupPage>
+
+    <div class="flex justify-center">
     <form class="w-72">
-        <label for="role" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">user</label>
+        <label for="role" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">select user</label>
 
 <Menu as="div" class=" mb-6 ">
                 <div>
                   <MenuButton id="role"
                     class="text-left bg-transparent rounded-lg h-12 w-full  border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
-                    eventCategoryID
+                    {{userShow}}
+                    
                     <ChevronDownIcon class="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
                   </MenuButton>
                 </div>
@@ -173,21 +228,12 @@ function goHome () {
                   <MenuItems
                     class=" absolute  rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                     <div class="py-1">
-                      <MenuItem v-slot="{ active }">
+                      <MenuItem v-slot="{ active }" v-for="userLect in userLect">
                       <div
                         :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']"
-                        @click="dataUser.role = `Admin`">Admin</div>
+                        @click="userShow = userLect.name , dataUser.userId = userLect.id ">{{userLect.name}} </div>
                       </MenuItem>
-                      <MenuItem v-slot="{ active }">
-                      <div
-                        :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']"
-                        @click="dataUser.role = `Lecturer`">Lecturer</div>
-                      </MenuItem>
-                      <MenuItem v-slot="{ active }">
-                      <div
-                        :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']"
-                        @click="dataUser.role = `Student`">Student</div>
-                      </MenuItem>
+                     
 
                     </div>
                   </MenuItems>
@@ -200,7 +246,7 @@ function goHome () {
                   <div>
                     <MenuButton id="role"
                       class="text-left bg-transparent rounded-lg h-12 w-full  border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
-                      eventCategoryID
+                      {{cateShow}}
                       <ChevronDownIcon class="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
                     </MenuButton>
                   </div>
@@ -212,31 +258,82 @@ function goHome () {
                     <MenuItems
                       class=" absolute  rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                       <div class="py-1">
-                        <MenuItem v-slot="{ active }">
-                        <div
-                          :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']"
-                          @click="dataUser.role = `Admin`">Admin</div>
-                        </MenuItem>
-                        <MenuItem v-slot="{ active }">
-                        <div
-                          :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']"
-                          @click="dataUser.role = `Lecturer`">Lecturer</div>
-                        </MenuItem>
-                        <MenuItem v-slot="{ active }">
-                        <div
-                          :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']"
-                          @click="dataUser.role = `Student`">Student</div>
-                        </MenuItem>
-
+                        <MenuItem v-slot="{ active }" v-for="category in category">
+                      <div
+                        :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']"
+                        @click="cateShow = category.eventCategoryName , dataUser.eventCategoryID = category.eventCategoryID ">{{category.eventCategoryName}}</div>
+                      </MenuItem>
                       </div>
                     </MenuItems>
                   </transition>
                 </Menu>
 
 
-  <button type="submit" @click="addUser()" class="text-white mt-6 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add user</button>
+  <div  @click="addUser()" class="text-white mt-6 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">add own</div>
 </form>
    
+</div>
+
+
+<div class="container mt-24">
+		<table class="w-full flex flex-row flex-no-wrap sm:bg-white rounded-lg overflow-hidden sm:shadow-lg my-5">
+			<thead class="text-white">
+				<tr v-for="(user, index) in userLect" :key="index" class="bg-black flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0">
+					<th scope="col" class="py-3 px-14 ">
+              User name
+            </th>
+            <th scope="col" class="py-3 px-14">
+              Email
+            </th>
+         
+            <th scope="col" class="py-3   ">
+              role
+            </th>
+         
+
+            
+
+            <th scope="col" class="py-3 px-14" > 
+                    action
+            </th >
+         
+				</tr>
+			
+			</thead>
+			<tbody class="flex-1 sm:flex-none">
+				<tr  v-for="(user, index) in userLect" :key="index" class="flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0">
+          <th scope="row" class="p-3  text-center ">
+              {{user.name}}
+            </th>
+            <td class="p-3 text-center">
+              {{user.email}}
+            </td>
+         
+
+     
+            <td class="p-3 text-center">
+              {{user.role}}
+            </td>
+            <td class="p-3 text-center mb-1.5">
+              <span class="font-medium text-blue-500  px-2 hover:underline"  @click="goEdit(user.id)">edit</span>
+              <span class="font-medium text-red-600  hover:underline" @click="removeUser(user.id , user.role , user.name)">delete</span>
+
+            </td>
+            <!-- <td class="p-3  " @click="goEdit(user.id)">
+              <svg width="1em" height="1em" viewBox="0 0 24 24">
+                <path fill="#888888"
+                  d="m19.3 8.925l-4.25-4.2l1.4-1.4q.575-.575 1.413-.575q.837 0 1.412.575l1.4 1.4q.575.575.6 1.388q.025.812-.55 1.387ZM17.85 10.4L7.25 21H3v-4.25l10.6-10.6Z">
+                </path>
+              </svg>
+            </td> -->
+				</tr>
+		
+			</tbody>
+		</table>
+	</div>
+
+
+
   </div>
 </template>
  

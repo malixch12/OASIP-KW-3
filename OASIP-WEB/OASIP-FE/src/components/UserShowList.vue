@@ -335,7 +335,7 @@ router.push({
   
 
     <br>
-    <div class="text-sm ">
+    <div class="text-sm mb-16 ">
       <div class="text-3xl font-bold text-center   drop-shadow-md mt-8"> USER </div>
       <div class="flex items-center justify-center">
 	<div class="container">

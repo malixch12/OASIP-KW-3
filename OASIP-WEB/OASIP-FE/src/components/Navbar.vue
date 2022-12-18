@@ -196,7 +196,7 @@ function toggle () {
               >🏠&nbspHome</router-link
             >
           </li>
-          <li v-if=" (UserRole!=`Lecturer` ) " >
+          <li v-if=" (UserRole!=`Lecturer` &  UserRole!=`Guest`) " >
             <router-link
               :to="{ name: 'BookingEventByCate' }"
               class="

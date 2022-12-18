@@ -28,14 +28,18 @@ if (res.status === 401) {
 }
 }
 
-getLinkAll()
+
+onBeforeMount(async () => {
+
+  await  getLinkAll()
+
+});
 
 </script>
 
 
 
 <template>
-{{CateLists}}
-<timeEvent :cate="CateLists"/>
+<timeEvent :cate="CateLists" :role="`Guest`"/>
 
 </template>

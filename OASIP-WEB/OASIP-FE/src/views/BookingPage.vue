@@ -134,7 +134,7 @@ const addEvent = async (dataBooking , AllDataCheck) => {
 
     }else
          OverlapFalse()
-          getLinkAll();
+          getLinkFuture();
           isActivePopup.value = true
 
   }

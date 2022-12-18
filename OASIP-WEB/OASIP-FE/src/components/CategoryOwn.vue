@@ -133,20 +133,88 @@ function goHome () {
   });
 }
 
+const lectOwnDetail = ref([])
 
+async function goEdit (id) {
+
+    const res = await fetch(
+    `${import.meta.env.VITE_APP_TITLE}/api/users/${id}`,
+    {
+
+      method: 'get',
+      headers: {
+
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + jwtToken.value
+      }
+    }
+  );
+  if (res.status === 200) {
+   var  checkOwn = await res.json();
+      console.log(checkOwn.owners)
+
+if(checkOwn.owners!=null) {
+
+    for (const [key, value] of Object.entries(checkOwn.owners)) {
+  console.log(`${value}`)
+  lectOwnDetail.value.push({OwnId:key , name:value})
+  console.log(lectOwnDetail.value)
+
+}
+}
+
+isActivePopup.value = true
+
+  } 
+
+}
+
+
+const dataOwnForDelete = ref(
+
+    {name:"select your lecter",
+     idOwn:""       }
+)
 
 </script>
 
 <template>
   <div class="mt-16 ">
-  
+  {{dataOwnForDelete}}
 
 
     <PopupPage v-show="isActivePopup" :dim-background="true">
       <div  class="grid grid-cols-1 p-12">
-        <p class="text-3xl font-semibold text-green-600 tracking-wide pb-8">
-          sign up succeeded
-        </p>
+        <p class="text-2sm font-semibold text-green-600 tracking-wide pb-8">
+            <Menu as="div" class=" mb-6 ">
+                <div>
+                  <MenuButton id="role"
+                    class="text-left bg-transparent rounded-lg h-12 w-full  border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+{{            dataOwnForDelete.name
+}}                    <ChevronDownIcon class="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
+                  </MenuButton>
+                </div>
+
+                <transition enter-active-class="transition ease-out duration-100"
+                  enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100"
+                  leave-active-class="transition ease-in duration-75"
+                  leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
+                  <MenuItems
+                    class=" absolute  rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <div class="py-1">
+                      <MenuItem v-slot="{ active }" v-for="lectOwnDetail in lectOwnDetail">
+                      <div
+                        :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']"
+                        @click="dataOwnForDelete.name = lectOwnDetail.name , dataOwnForDelete.idOwn = lectOwnDetail.OwnId ">{{lectOwnDetail.name}} </div>
+                      </MenuItem>
+                     
+
+                    </div>
+                  </MenuItems>
+                </transition>
+              </Menu>    
+
+</p>
         <div class="success-checkmark">
           <div class="check-icon">
             <span class="icon-line line-tip"></span>
@@ -162,21 +230,6 @@ function goHome () {
       </div>
 </PopupPage>
 
-
-<PopupPage v-show="isActivePopup2" :dim-background="true">
-      <div  class="grid grid-cols-1 p-12">
-        <p class="text-3xl text-center font-semibold text-red-600 tracking-wide pb-8">
-          sign not up succeeded
-        </p>
-     <div class="text-center mb-4">  {{errorStatus.Email}} <br/>
-     {{errorStatus.Name}}
-  </div>
-        <div class=" max-w-lg mx-auto  ">
-          <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
-            @click="isActivePopup2 = false " />
-        </div>
-      </div>
-</PopupPage>
 
 <PopupPage v-show="isActivePopup3" :dim-background="true">
       <div  class="grid grid-cols-1 p-12">
@@ -315,8 +368,7 @@ function goHome () {
               {{user.role}}
             </td>
             <td class="p-3 text-center mb-1.5">
-              <span class="font-medium text-blue-500  px-2 hover:underline"  @click="goEdit(user.id)">edit</span>
-              <span class="font-medium text-red-600  hover:underline" @click="removeUser(user.id , user.role , user.name)">delete</span>
+              <span class="font-medium text-blue-500  px-2 hover:underline"  @click="goEdit(user.id)">edit own</span>
 
             </td>
             <!-- <td class="p-3  " @click="goEdit(user.id)">

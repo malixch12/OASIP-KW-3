@@ -6,6 +6,7 @@ import { useRoute } from "vue-router";
 import PopupPage from "../components/PopupPage.vue"
 import RoundButton from "../components/RoundButton.vue";
 import timeEvent from "../components/timeEvent.vue";
+import goToLogin from "../components/goToLogin.vue";
 
 import { useRouter } from "vue-router";
 
@@ -87,6 +88,7 @@ onBeforeMount(() => {
   if(UserRole.value!="Guest") {
     getLinkFuture();
   }
+ 
   
 });
 // const yourISODateTime = computed(() => {
@@ -247,14 +249,6 @@ headers: {
   }
 };
 
-const goHome = () => {
-
-  router.push({
-    name: "Login"
-   
-  });
-
-};
 
 const backToHome = () => {
 
@@ -384,6 +378,8 @@ headers: {
       @dateFilter="dateFilter"
       :CheckOverlap="CheckOverlap"
       /></div> 
+
+ <goToLogin/>
 
     </div>
   </div>

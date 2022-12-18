@@ -53,121 +53,6 @@ function toggle () {
  
 <template>
 
-  <!-- <nav class="">
-    <div class="container flex flex-wrap justify-between items-center  pl-12 py-5">
-      <router-link :to="{ name: 'Home' }" class="flex items-center">
-      <img src="../assets/logo-removebg-preview.png" class="w-14"/>  <div class="text-black font-bold "> Clinic Booking</div>
-      </router-link>
-
-      <div class="w-full md:block md:w-auto">
-        <ul
-          class="
-            flex flex-col
-            md:flex-row md:space-x-8 md:mt-0 text-base md:font-medium
-          "
-        >
-          <li>
-            <router-link
-              :to="{ name: 'Home' }"
-              class="
-                block
-
-                text-gray-700
-                md:hover:text-pink-500 md:p-0
-              "
-              >Home</router-link
-            >
-          </li>
-          <li v-if="!loginCheck &&(UserRole==`Admin` || UserRole==`Student`) " >
-            <router-link
-              :to="{ name: 'BookingEventByCate' }"
-              class="
-                 block
-                text-gray-700
-                
-                md:hover:text-pink-500 md:p-0
-              "
-              >booking</router-link
-            >
-          </li>
-
-          <li v-if="!loginCheck ">
-            <router-link
-              :to="{ name: 'ListAllByCate' }"
-              class="
-                 block
-                text-gray-700
-               
-                md:hover:text-pink-500 md:p-0 
-              "
-              ><span >check appointments</span>
-            </router-link>
-          </li>
-             <li>
-            <router-link
-              :to="{ name: 'UserShowList' }"
-              class="
-                 block
-                text-gray-700
-               
-                md:hover:text-pink-500 md:p-0 
-              "
-              ><span v-show="!loginCheck && UserRole==`Admin`">user list</span>
-            </router-link>
-          </li>
-              <li >
-            <router-link 
-              :to="{ name: 'Login' }"
-              class="
-                  block
-                text-gray-700
-               
-                md:hover:text-pink-500 md:p-0  
-               
-                
-              "
-              ><span v-if="!loginCheck">my profile</span> <span v-if="loginCheck">Login</span> 
-            </router-link>
-          </li>
-          <li v-if="loginCheck">
-            <router-link 
-              :to="{ name: 'SignUpPage' }"
-              class="
-                 block
-                text-transparent  bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 
-               
-                
-              "
-              >sign up
-            </router-link>
-          </li>
-          <li>
-            <div v-show="!loginCheck"  @click="logout()"
-             
-              class="
-                 block
-                text-transparent  bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 
-               
-                
-              "
-              >     Log out
-            </div>
-          </li>
-          
-          <li>
-            <span
-              :to="{  }"
-              class="
-              text-gray-400 
-              "
-              >{{countTime}}</span
-            >
-          </li>
-        </ul>
-      </div>
-    </div>
-
-  </nav> -->
 
   <div class="font-sans antialiased " id="app">
   <nav class="container flex flex-wrap justify-between items-center mx-auto mt-4">
@@ -209,7 +94,7 @@ function toggle () {
             >
           </li>
 
-          <li v-if="!loginCheck & UserRole==`Guest` ">
+          <li v-if="!loginCheck & UserRole!=`Guest` ">
             <router-link
               :to="{ name: 'ListAllByCate' }"
               class="

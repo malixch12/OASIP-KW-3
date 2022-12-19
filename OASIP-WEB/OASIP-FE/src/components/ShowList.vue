@@ -9,6 +9,7 @@ const router = useRouter();
 const props = defineProps({
   eventLists: {
     type: Array,
+    
   },
   colNum: {
     type: String,
@@ -100,7 +101,7 @@ const filterStatus = ref("Upcoming")
           <span> Select Date : </span>
           <span>
             <input type="date" class="border-2 px-2 border-slate-200 w-82 rounded-full" v-model="FilterDate" />
-            <RoundButton bg-color="bg-red-400  ml-2 text-white hover:bg-red-600" button-name="search"
+            <RoundButton bg-color="bg-gradient-to-r from-yellow-100 to-rose-300  ml-2 text-gray-700 hover:bg-red-600" button-name="search"
               @click="$emit('dateFilter', FilterDate)" />
           </span>
         </div>

@@ -146,7 +146,7 @@ const PasswordCheck = ref(true) //check password
 </script>
 
 <template>
-  <div class="mt-16">
+  <div class="mt-16 mb-20">
   
 
 

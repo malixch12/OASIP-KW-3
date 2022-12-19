@@ -5,6 +5,7 @@ import Navbar from "../components/Navbar.vue";
 import { useRoute } from "vue-router";
 import PopupPage from "../components/PopupPage.vue";
 import { useRouter } from "vue-router";
+import goToLogin from "../components/goToLogin.vue";
 
 
 const router = useRouter();
@@ -255,6 +256,7 @@ function removeToken() {
 
 <template>
   <div>
+    <goToLogin/>
     <PopupPage v-show="isActivePopup2" :dim-background="true">
       <div class="grid grid-cols-1 p-12" >
         โปรดเข้าสู่ระบบใหม่

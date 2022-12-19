@@ -9,6 +9,7 @@ import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
 import RoundButton from "../components/RoundButton.vue";
 import PopupPage from "../components/PopupPage.vue";
+import goToLogin from "../components/goToLogin.vue";
 
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 
@@ -352,6 +353,7 @@ const isActivePopup2 =ref(false)
 <template>
 
   <div class="flex justify-center">
+    <goToLogin/>
     <PopupPage v-show="UserRole!=`Admin`" :dim-background="true">
       <div class="grid grid-cols-1 p-12" >
          หน้านี้ใช้ได้เฉพาะ admin เท่านั้น

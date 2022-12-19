@@ -5,6 +5,7 @@ import { useRoute } from "vue-router";
 import ShowList from "../components/ShowList.vue";
 import PopupPage from "../components/PopupPage.vue";
 import { useRouter } from "vue-router";
+import goToLogin from "../components/goToLogin.vue";
 
 const router = useRouter();
 const eventLists = ref({content:[{test:"test"}]});
@@ -307,7 +308,7 @@ const goBack = () => appRouter.go(-1);
 
 <template>
   <div>
-
+ <goToLogin/>
     <PopupPage v-show="isActivePopup2" :dim-background="true">
       <div class="grid grid-cols-1 p-12" >
         โปรดเข้าสู่ระบบใหม่

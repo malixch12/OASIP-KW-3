@@ -40,36 +40,13 @@ headers: {
     await RefreshToken()
     await getLinkAll()
 }
-if (res.status === 500) {   isActivePopup2.value=true
+if (res.status === 500) {
+  getLinkAll()
+  isActivePopup2.value=true
 }
   }
 
-  if (UserRole.value=="Guest") {
-    const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/eventcategorys` ,{
 
-method: 'get',
-headers: {
-
-  'Content-Type': 'application/json',
-  
-}
-}
-
-  );
-
-  if (res.status === 200) {
-    CateLists.value = await res.json();
-  }
-  if (res.status === 401) {
-   
-    await RefreshToken()
-    await getLinkAll()
-
-}
-if (res.status === 500) {   isActivePopup2.value=true
-}
-  }
- 
   }
 
 const RefreshToken = async () => {
@@ -91,10 +68,9 @@ if (res.status === 200) {
   let jwtTokenRF = await res.json()
   localStorage.setItem('jwtToken', jwtTokenRF.accessToken);
   jwtToken.value = localStorage.getItem('jwtToken');
-  getLinkAll()
+  
 }else
 
-  console.log(await res.json())
   isActivePopup2.value=true
 
 
@@ -108,9 +84,9 @@ const UserRole = ref()
 onBeforeMount(async () => {
   UserRole.value = localStorage.getItem('UserRole');
   jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
-  jwtToken.value = localStorage.getItem('jwtToken');
+  jwtToken.value = await localStorage.getItem('jwtToken');
  
-  getLinkAll();
+ await getLinkAll();
 
 });
 

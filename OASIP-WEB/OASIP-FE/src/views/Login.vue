@@ -9,7 +9,7 @@ import RoundButton from "../components/RoundButton.vue";
 import { useRouter } from "vue-router";
 import jwt_decode from "jwt-decode";
 import addUser from "../components/addUser.vue";
-import { UserAgentApplication } from "msal" ;
+import { UserAgentApplication } from "msal";
 
 
 
@@ -19,7 +19,7 @@ const errorStatus = ref({
   Name: null,
   Email: null
 })
-const decoded = ref({ sub: ""  , role : ""})
+const decoded = ref({ sub: "", role: "" })
 
 const Login = async () => {
   CheckData()
@@ -67,8 +67,8 @@ const Login = async () => {
 
 };
 
-const lectOwnDetail =ref({owners:""})
-async function checkOwnForLect () {
+const lectOwnDetail = ref({ owners: "" })
+async function checkOwnForLect() {
 
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/users/byEmail`,
@@ -84,21 +84,21 @@ async function checkOwnForLect () {
   );
   if (res.status === 200) {
     lectOwnDetail.value = await res.json();
-     // console.log(checkOwn.owners)
+    // console.log(checkOwn.owners)
 
-// if(checkOwn.owners!=null) {
-//     lectOwnDetail.value = []
-//     for (const [key, value] of Object.entries(checkOwn.owners)) {
-//   console.log(`${value}`)
-//   lectOwnDetail.value.push({OwnId:key , name:value})
-//   console.log(lectOwnDetail.value)
+    // if(checkOwn.owners!=null) {
+    //     lectOwnDetail.value = []
+    //     for (const [key, value] of Object.entries(checkOwn.owners)) {
+    //   console.log(`${value}`)
+    //   lectOwnDetail.value.push({OwnId:key , name:value})
+    //   console.log(lectOwnDetail.value)
 
-// }
-// }
+    // }
+    // }
 
 
 
-  } 
+  }
 
 }
 
@@ -122,32 +122,37 @@ function validateEmail(email) {
 }
 const jwtToken = ref(null)
 onBeforeMount(() => {
-  
+
   jwtToken.value = localStorage.getItem('jwtToken');
- var  microsoft = localStorage.getItem('micosoft');
+  var microsoft = localStorage.getItem('micosoft');
 
   if (jwtToken.value != null && microsoft == null) {
     console.log(microsoft)
     decoded.value = jwt_decode(jwtToken.value);
     console.log(decoded.value)
     localStorage.setItem('UserRole', decoded.value.roles);
-    checkOwnForLect()
+    if (decoded.value.roles == "Lecturer") {
+      checkOwnForLect()
+
+    }
 
 
-  }else {
+  } else {
     decoded.value.username = localStorage.getItem('UserName')
     decoded.value.roles = localStorage.getItem('UserRole')
+    decoded.value.sub = localStorage.getItem('UserEmail')
+
     const jwtMicosoft = localStorage.getItem('msal.585a0cf6-90bc-4e5e-ad97-521891f56132.idtoken')
-  if(jwtMicosoft!=null) {
-    localStorage.setItem('jwtToken', jwtMicosoft);
+    if (jwtMicosoft != null) {
+      localStorage.setItem('jwtToken', jwtMicosoft);
+
+    }
 
   }
 
-  }
 
- 
 
-  
+
 });
 
 function CheckData() {
@@ -187,54 +192,54 @@ const goHome = () => {
 
 
 const msalConfig = {
-    auth: {
-        clientId: "585a0cf6-90bc-4e5e-ad97-521891f56132",
-        authority: "https://login.microsoftonline.com/6f4432dc-20d2-441d-b1db-ac3380ba633d",
-        redirectURI: "http://localhost:3000/"
-    },
-    cache: {
-        cacheLocation: "localStorage", // This configures where your cache will be stored
-        storeAuthStateInCookie: true,
-        popUp:true // Set this to "true" if you are having issues on IE11 or Edge
-    }
-};  
+  auth: {
+    clientId: "585a0cf6-90bc-4e5e-ad97-521891f56132",
+    authority: "https://login.microsoftonline.com/6f4432dc-20d2-441d-b1db-ac3380ba633d",
+    redirectURI: "http://localhost:3000/"
+  },
+  cache: {
+    cacheLocation: "localStorage", // This configures where your cache will be stored
+    storeAuthStateInCookie: true,
+    popUp: true // Set this to "true" if you are having issues on IE11 or Edge
+  }
+};
 
 
 var requestObj = {
-    scopes: ["user.read"]
+  scopes: ["user.read"]
 };
 
 var myMSALObj = new UserAgentApplication(msalConfig);
 
 var login = async () => {
-    var authResult = await myMSALObj.loginPopup(requestObj);
-    accoutMicro.value = authResult.account
-    localStorage.setItem('jwtToken', "wait");
+  var authResult = await myMSALObj.loginPopup(requestObj);
+  accoutMicro.value = authResult.account
+  localStorage.setItem('jwtToken', "wait");
 
-    return authResult.account;
+  return authResult.account;
 };
 
 var getAccount = async () => {
-    var account = await myMSALObj.getAccount();
-    return account;
+  var account = await myMSALObj.getAccount();
+  return account;
 };
 
 var logoff = () => {
-    myMSALObj.logout();
+  myMSALObj.logout();
 };
 
-const accoutMicro = ref({accountIdentifier:null , roles:[] , idTokenClaims: {test:"xxxx"}})
+const accoutMicro = ref({ accountIdentifier: null, roles: [], idTokenClaims: { test: "xxxx" } })
 
 
 onBeforeUpdate(() => {
-  
-   
-  if(accoutMicro.value.accountIdentifier!=null) {
+
+
+  if (accoutMicro.value.accountIdentifier != null) {
     localStorage.setItem('jwtTokenRF', accoutMicro.value.userName);
-    if(accoutMicro.value.idTokenClaims.roles!=undefined){
+    if (accoutMicro.value.idTokenClaims.roles != undefined) {
       localStorage.setItem('UserRole', accoutMicro.value.idTokenClaims.roles[0]);
 
-    }else {
+    } else {
       localStorage.setItem('UserRole', "Guest");
     }
 
@@ -246,7 +251,7 @@ onBeforeUpdate(() => {
     CheckStatus.value = true
     isActivePopup.value = true
 
-    
+
   }
 
 });
@@ -254,8 +259,8 @@ onBeforeUpdate(() => {
 
 <template>
   <div class="">
-<p class="opacity-0">{{accoutMicro.accountIdentifier}}</p>
-    <div class="text-white text-xs">{{dataUser.role}}</div>
+    <p class="opacity-0">{{ accoutMicro.accountIdentifier }}</p>
+    <div class="text-white text-xs">{{ dataUser.role }}</div>
     <PopupPage v-show="isActivePopup" :dim-background="true">
       <div v-if="CheckStatus" class="grid grid-cols-1 p-12">
         <p class="text-3xl font-semibold text-green-600 tracking-wide">
@@ -275,7 +280,7 @@ onBeforeUpdate(() => {
         </div>
         <div class=" max-w-lg mx-auto  ">
           <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
-            @click="isActivePopup = false , goHome()" />
+            @click="isActivePopup = false, goHome()" />
         </div>
       </div>
 
@@ -289,7 +294,7 @@ onBeforeUpdate(() => {
 
         <div>
           <p class="text-xl text-red-600 text-center mb-8">
-            {{messageError}}
+            {{ messageError }}
 
           </p>
           <p class="forget text-center ">dont have account ? <router-link :to="{ name: 'SignUpPage' }" class="
@@ -310,30 +315,44 @@ onBeforeUpdate(() => {
         </div>
         <div class=" max-w-lg mx-auto  ">
           <RoundButton bg-color="bg-gray-400 text-white flex justify-center mt-5" button-name="ok"
-            @click="isActivePopup = false " />
+            @click="isActivePopup = false" />
         </div>
       </div>
 
 
     </PopupPage>
 
+   
+    <section class="flex justify-center ">
+      <div class="text-center mt-8" v-if="jwtToken != null">
+      Welcome <span
+        class=" font-bold underline underline-offset-4  
+                  text-transparent  bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 ">{{ decoded.username }}</span> to
+      Clinic Booking
+      <br />
+      <div class="text-center mt-2 text-gray-400 text-lg"> {{ decoded.sub }} , {{ decoded.roles }} role</div>
+      <div v-if="decoded.roles == `Lecturer` && lectOwnDetail.owners != ``" class="text-center text-gray-400 mt-2 "> you
+        own the subject <span v-for="(own, index) in lectOwnDetail.owners">{{ own }} &nbsp</span> </div>
+      <span class="text-center text-gray-400 mt-2" v-if="decoded.roles == `Lecturer` && lectOwnDetail.owners == ``"> you
+        own 0 subject </span>
 
-    <div class="flex justify-center ">
 
+    </div>
+      
       <div class="color"> </div>
       <div class="color"></div>
       <div class="color"></div>
 
       <div class="box">
 
-        
 
-      <div class="container2 mt-16 " v-if="jwtToken==null">
-        <div class="form">
-          <h2>Login</h2>
 
-          <form>
-            <!-- <div class="inputBox">
+        <div class="container2 mt-16 " v-if="jwtToken == null">
+          <div class="form">
+            <h2>Login</h2>
+
+            <form>
+              <!-- <div class="inputBox">
                             <input type="text" placeholder="Username" v-model.trim="dataUser.name" >
                               <details class="" v-if="!NameCheck">
           <summary class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
@@ -344,51 +363,53 @@ onBeforeUpdate(() => {
           </div>
         </details>
                         </div> -->
-            <div class="inputBox ">
-              <p class="ml-4 mb-2 text-gray-500 text-sm">email</p>
-              <input type="text" class="" placeholder="" v-model.trim="dataUser.email" required>
-              <details class="" v-show="!EmailValidation || !EmailCheck">
-                <summary
-                  class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
-                  invalid
-                </summary>
-                <div class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
-                  <span v-show="!EmailCheck" class="text-red-600"> กรุณาใส่อีเมล</span>
-                  <span v-show="!EmailValidation & EmailCheck" class="text-red-600"> กรุณากรอกอีเมลล์ให้ถูกต้อง</span>
-                </div>
-              </details>
-            </div>
+              <div class="inputBox ">
+                <p class="ml-4 mb-2 text-gray-500 text-sm">email</p>
+                <input type="text" class="" placeholder="" v-model.trim="dataUser.email" required>
+                <details class="" v-show="!EmailValidation || !EmailCheck">
+                  <summary
+                    class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
+                    invalid
+                  </summary>
+                  <div class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
+                    <span v-show="!EmailCheck" class="text-red-600"> กรุณาใส่อีเมล</span>
+                    <span v-show="!EmailValidation & EmailCheck" class="text-red-600"> กรุณากรอกอีเมลล์ให้ถูกต้อง</span>
+                  </div>
+                </details>
+              </div>
 
-            <div class="inputBox">
-              <p class="ml-4 mb-2 text-gray-500 text-sm">password</p>
+              <div class="inputBox">
+                <p class="ml-4 mb-2 text-gray-500 text-sm">password</p>
 
-              <input type="password"  v-model.trim="dataUser.password">
-              <details class="" v-if="!PasswordCheck">
-                <summary
-                  class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
-                  invalid
-                </summary>
-                <div class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
-                  <span v-show="!PasswordCheck" class="text-red-600"> กรุณาใส่รหัส</span>
-                </div>
-              </details>
-            </div>
-
-
-
-
-<div class="flex justify-center">
-  <button type="submit"  @click="Login()" class="text-gray-700 bg-gradient-to-r from-yellow-100 to-rose-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full drop-shadow-md text-sm w-full sm:w-auto px-12 py-2.5 text-center my-8 ">Login</button>
-
-</div>
-
-<div class="text-gray-500 text-center text-sm mb-4">━━━━━━━━━   or   ━━━━━━━━━</div>
+                <input type="password" v-model.trim="dataUser.password">
+                <details class="" v-if="!PasswordCheck">
+                  <summary
+                    class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
+                    invalid
+                  </summary>
+                  <div class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
+                    <span v-show="!PasswordCheck" class="text-red-600"> กรุณาใส่รหัส</span>
+                  </div>
+                </details>
+              </div>
 
 
 
-<button @click="login()" class="bg-gray-200 mt-2 w-full drop-shadow-md rounded"> <img src="../assets/SignIn_with_microsoft-removebg-preview.png" class="h-14"/></button>
 
-<!-- <a href="http://localhost:3000/kw3/#/logoutPage" target="_blank">  
+              <div class="flex justify-center">
+                <button type="submit" @click="Login()"
+                  class="text-gray-700 bg-gradient-to-r from-yellow-100 to-rose-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full drop-shadow-md text-sm w-full sm:w-auto px-12 py-2.5 text-center my-8 ">Login</button>
+
+              </div>
+
+              <div class="text-gray-500 text-center text-sm mb-4">━━━━━━━━━ or ━━━━━━━━━</div>
+
+
+
+              <button @click="login()" class="bg-gray-200 mt-2 w-full drop-shadow-md rounded"> <img
+                  src="../assets/SignIn_with_microsoft-removebg-preview.png" class="h-14" /></button>
+
+              <!-- <a href="http://localhost:3000/kw3/#/logoutPage" target="_blank">  
   
   <div    class="bg-red-300sasad" >
       logout
@@ -396,30 +417,20 @@ onBeforeUpdate(() => {
 
       </a> -->
 
-          
 
-          </form>
+
+            </form>
+          </div>
+
         </div>
 
       </div>
-      
-    </div>
-    </div>
+    </section>
 
-    <div class="text-center mt-36" v-if="jwtToken!=null">
-        Welcome <span class=" font-bold underline underline-offset-4  
-                  text-transparent  bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 " >{{decoded.username}}</span> to Clinic Booking
-        <br/><div class="text-center mt-2 text-gray-400 text-lg">  {{decoded.sub}} , {{decoded.roles}} role</div>
-        <div v-if="decoded.roles==`Lecturer` && lectOwnDetail.owners!=`` " class="text-center text-gray-400 mt-2 ">     you own the subject <span v-for="(own,index) in lectOwnDetail.owners">{{own}} &nbsp</span>  </div>
-        <span class="text-center text-gray-400 mt-2" v-if="decoded.roles==`Lecturer` && lectOwnDetail.owners==`` "> you own 0 subject </span>
-
-    
-      </div>
+   
   </div>
 </template>
 
 <style>
-
-
 
 </style>

@@ -9,13 +9,23 @@ import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
 import RoundButton from "../components/RoundButton.vue";
 import PopupPage from "../components/PopupPage.vue";
+import goToLogin from "../components/goToLogin.vue";
 
 const router = useRouter();
 const myRouter = useRoute();
 const eventLists = ref({eventCategoryName:"test"})
 const getLinkAll = async () => {
   const res = await fetch(
-    `${import.meta.env.VITE_APP_TITLE}/api/eventcategorys/${myRouter.query.categoryId}`
+    `${import.meta.env.VITE_APP_TITLE}/api/eventcategorys/${myRouter.query.categoryId}` ,
+    {
+
+method: 'get',
+headers: {
+
+  'Content-Type': 'application/json',
+  'Authorization': 'Bearer ' + jwtToken.value
+}
+}
   );
   if (res.status === 200) {
     eventLists.value = await res.json();
@@ -24,8 +34,14 @@ const getLinkAll = async () => {
     console.log("cant fetch")
 };
 
+const jwtToken =ref()
+const jwtTokenRF =ref()
+
 onBeforeMount(async () => {
+  jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
+  jwtToken.value = localStorage.getItem('jwtToken');
   getLinkAll();
+  
 });
 
 
@@ -43,6 +59,7 @@ const updateNote = async () => {
         method: "PUT",
         headers: {
           "content-type": "application/json",
+          'Authorization': 'Bearer ' + jwtToken.value
         },
         body: JSON.stringify({
 
@@ -87,6 +104,7 @@ const isActivePopup = ref(false);
 <template>
 
   <div class="flex justify-center">
+    <goToLogin/>
     <PopupPage v-show="isActivePopup" :dim-background="true">
       <div v-if="CheckStatusPut" class="grid grid-cols-1 p-12">
         <p class="text-3xl font-semibold text-slate-600 tracking-wide pb-8">

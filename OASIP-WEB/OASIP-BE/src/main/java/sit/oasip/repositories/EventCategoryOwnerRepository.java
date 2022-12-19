@@ -8,7 +8,7 @@ import sit.oasip.entities.User;
 import java.util.List;
 import java.util.Optional;
 
-public interface EventCategoryOwnerRepository extends JpaRepository<Eventcategory,Integer> {
+public interface EventCategoryOwnerRepository extends JpaRepository<EventCategoryOwner,Integer> {
    EventCategoryOwner findById(int ownerId);
    List<EventCategoryOwner> findByEventCategoryID(Eventcategory cateId);
    List<EventCategoryOwner> findByUserID(int userId);

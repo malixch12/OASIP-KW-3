@@ -9,7 +9,6 @@ const router = useRouter();
 const props = defineProps({
   eventLists: {
     type: Array,
-    
   },
   colNum: {
     type: String,
@@ -37,6 +36,7 @@ onBeforeUpdate(async () => {
   //filter.value = 3
 });
 
+const ColorTimeEventFilter = ref({past:'slate',all:'slate',future:'slate'})
 const page = ref();
 const index = ref();
 const SendBookId = ref();
@@ -82,24 +82,24 @@ const PageIndexCurrent = ref(1)
         <div>
           <span>Event Status : </span>
           <RoundButton class="pr-2 "
-            bg-color="bg-slate-100 hover:bg-slate-600 hover:text-slate-100 active:bg-slate-700 focus:outline-none focus:ring focus:ring-slate-200 focus:text-slate-100 focus:bg-slate-600 text-slate-600"
+            bg-color="bg-${{ColorTimeEventFilter.all}}-100 hover:bg-slate-600 hover:text-slate-100 active:bg-slate-700 focus:outline-none focus:ring focus:ring-slate-200 focus:text-slate-100 focus:bg-slate-600 text-slate-600"
             button-name="All" @click="$emit('allFilter'), filter = 3" />
           <RoundButton class="pr-2"
-            bg-color="bg-slate-100 hover:bg-slate-600 hover:text-slate-100 active:bg-slate-700 focus:outline-none focus:ring focus:ring-slate-200 focus:text-slate-100 focus:bg-slate-600 text-slate-600"
+            bg-color="bg-${{ColorTimeEventFilter.past}}-100 hover:bg-slate-600 hover:text-slate-100 active:bg-slate-700 focus:outline-none focus:ring focus:ring-slate-200 focus:text-slate-100 focus:bg-slate-600 text-slate-600"
             button-name="Past" @click="
               $emit('pastFilter', filter = 1)
             " />
           <RoundButton
-            bg-color="bg-slate-100 hover:bg-slate-600 hover:text-slate-100 active:bg-slate-700 focus:outline-none focus:ring focus:ring-slate-200 focus:text-slate-100 focus:bg-slate-600 text-slate-600"
+            bg-color="bg-${{ColorTimeEventFilter.future}}-100 hover:bg-slate-600 hover:text-slate-100 active:bg-slate-700 focus:outline-none focus:ring focus:ring-slate-200 focus:text-slate-100 focus:bg-slate-600 text-slate-600"
             button-name="Upcoming" @click="
-              $emit('futureFilter', filter = 2)
+              $emit('futureFilter', filter = 2) , ColorTimeEventFilter.future = 'green'
             " />
 
           <span class="text-slate-400 px-3">|</span>
           <span> Select Date : </span>
           <span>
             <input type="date" class="border-2 px-2 border-slate-200 w-82 rounded-full" v-model="FilterDate" />
-            <RoundButton bg-color="bg-gradient-to-r from-yellow-100 to-rose-300  ml-2 text-gray-700 hover:bg-red-600" button-name="search"
+            <RoundButton bg-color="bg-red-400  ml-2 text-white hover:bg-red-600" button-name="search"
               @click="$emit('dateFilter', FilterDate)" />
           </span>
         </div>

@@ -2,12 +2,6 @@
 import ButtonLink from "../components/ButtonLink.vue";
 import Navbar from '../components/Navbar.vue'
 import Apple from '../components/TextAnimation.vue'
-import { onBeforeMount, onBeforeUpdate, ref } from "vue";
-
-const UserRole = ref()
-onBeforeMount(() => {
-  UserRole.value = localStorage.getItem('UserRole');
-});
 
 </script>
 
@@ -29,11 +23,9 @@ onBeforeMount(() => {
     </div>
     <div class="text-white font-bold text-base mt-4 ">
           <div class="flex flex-wrap">
-
-            <ButtonLink name="Login ->" link="Login" addStyle="bg-gradient-to-r from-yellow-100 to-rose-300 text-gray-700" class="justify-start" />
-            <ButtonLink v-if="UserRole!=`Guest`" name="Event check" link="ListAllByCate" addStyle="bg-white text-neutral-500"    class="justify-self-start " />
-            <ButtonLink v-if="UserRole==`Guest`" name="Event check" link="GuestViewEvent" addStyle="bg-white text-neutral-500"    class="justify-self-start " />
-
+            <ButtonLink name="Sign up ->" link="SignUpPage" addStyle="bg-red-400" class="justify-start" />
+            <ButtonLink name="Appointments" link="ListAllByCate" addStyle="bg-white text-neutral-500"
+              class="justify-self-start " />
           </div>
         </div>
     </div>
@@ -62,12 +54,10 @@ onBeforeMount(() => {
 
         <div class="text-white font-bold ">
           <div class="flex flex-wrap">
-            <ButtonLink name="Login ->" link="Login" addStyle="bg-gradient-to-r from-yellow-100 to-rose-300 text-gray-700" class="justify-start" />
-              <ButtonLink  v-if="UserRole!=`Guest`" name="Event check" link="ListAllByCate" addStyle="bg-white text-neutral-500"  class="justify-self-start " />
-              <ButtonLink v-if="UserRole==`Guest`" name="Event check" link="GuestViewEvent" addStyle="bg-white text-neutral-500"  class="justify-self-start " />
-
-         
-            </div>
+            <ButtonLink name="Sign up ->" link="SignUpPage" addStyle="bg-red-400" class="justify-start" />
+            <ButtonLink name="Booking" link="BookingEventByCate" addStyle="bg-white text-neutral-500"
+              class="justify-self-start " />
+          </div>
         </div>
       </div>
 

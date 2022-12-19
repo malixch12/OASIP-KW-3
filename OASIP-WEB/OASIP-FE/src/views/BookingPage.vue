@@ -5,9 +5,6 @@ import ShowList from "../components/ShowList.vue";
 import { useRoute } from "vue-router";
 import PopupPage from "../components/PopupPage.vue"
 import RoundButton from "../components/RoundButton.vue";
-import timeEvent from "../components/timeEvent.vue";
-import goToLogin from "../components/goToLogin.vue";
-
 import { useRouter } from "vue-router";
 
 
@@ -110,9 +107,8 @@ onBeforeMount(() => {
   jwtToken.value = localStorage.getItem('jwtToken');
  
   if(UserRole.value!="Guest") {
-    getLinkAll();
+    getLinkFuture();
   }
- 
   
 });
 // const yourISODateTime = computed(() => {
@@ -160,7 +156,7 @@ const addEvent = async (dataBooking , AllDataCheck) => {
 
     }else
          OverlapFalse()
-          getLinkFuture();
+          getLinkAll();
           isActivePopup.value = true
 
   }
@@ -269,6 +265,14 @@ headers: {
   }
 };
 
+const goHome = () => {
+
+  router.push({
+    name: "Login"
+   
+  });
+
+};
 
 const backToHome = () => {
 
@@ -360,9 +364,6 @@ function removeToken() {
       @allFilter="allFilter"
       :CheckOverlap="CheckOverlap"
       /></div> 
-
- <goToLogin/>
-
     </div>
   </div>
 </template>

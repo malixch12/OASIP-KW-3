@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import sit.oasip.dtos.GrantOwner;
 import sit.oasip.entities.EventCategoryOwner;
 import sit.oasip.entities.Eventcategory;
 import sit.oasip.entities.User;
@@ -44,7 +45,7 @@ public class EventCategoryOwnerService {
         Optional<User> u = userRepository.findById(owner.getUserId());
         Eventcategory ec = eventcategoryRepository.findByEventCategoryID(owner.getEventCategoryID());
         if (eventCategoryOwnerRepository.findByEventCategoryIDAndAndUserID(ec, u.get()) == null) {
-            if(u.get().getRole().equals(Role.Lecturer.name())){
+            if(u.get().getRole() == Role.Lecturer.name()){
                 eco.setEventCategoryID(ec);
                 eco.setUserID(u.get());
             }else{

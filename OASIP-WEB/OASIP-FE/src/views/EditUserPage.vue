@@ -9,9 +9,8 @@ import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
 import RoundButton from "../components/RoundButton.vue";
 import PopupPage from "../components/PopupPage.vue";
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import goToLogin from "../components/goToLogin.vue";
 
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 
 const jwtTokenRF = ref()
 const jwtToken = ref()
@@ -47,10 +46,37 @@ const getLinkAll = async () => {
     console.log("corret")
     LoginCheck.value=true
 
-  }else
-  RefreshToken()
-  getLinkAll()
-    
+  } if (res.status === 401) {
+    const TokenValue = ref(await (await res.json()))
+    console.log("status from backend = " + TokenValue.value.message)
+    if (TokenValue.value.message == "Token is expired") {
+
+      RefreshToken()
+    }
+    if (TokenValue.value.message == "Token incorrect" & jwtToken.value != null) {
+
+      localStorage.removeItem('jwtToken')
+      localStorage.removeItem('jwtTokenRF')
+      LoginCheck.value=false
+
+      //isActivePopup.value = true
+
+    }
+    if (TokenValue.value.message == "Please log in for get Token again.") {
+
+      localStorage.removeItem('jwtToken')
+      localStorage.removeItem('jwtTokenRF')
+      LoginCheck.value=false
+
+
+      //isActivePopup.value = true
+
+    }
+  }
+  if (res.status === 403) {
+
+
+  }
 };
 
 const RefreshToken = async () => {
@@ -74,9 +100,13 @@ const RefreshToken = async () => {
     jwtToken.value = localStorage.getItem('jwtToken');
     getLinkAll()
     updateUser()
-  }else
-  isActivePopup2.value=true
+  }
   
+  if (res.status === 401) {
+
+    console.log(await res.json())
+    isActivePopup2.value=true
+  }
 
 
 
@@ -130,10 +160,12 @@ const updateUser = async () => {
       }
 
       if (res.status === 401) {
-        
+        const TokenValue = ref(await (await res.json()))
+        console.log("status from backend = " + TokenValue.value.message)
+        if (TokenValue.value.message == "Token is expired") {
 
           RefreshToken()
-        
+        }
       } else
 
 
@@ -175,10 +207,12 @@ const updateUser = async () => {
         //   statusTrue()
         console.log("edited successfully");
       } else if (res2.status === 401) {
-        
+        const TokenValue = ref(await (await res2.json()))
+        console.log("status from backend = " + TokenValue.value.message)
+        if (TokenValue.value.message == "Token is expired") {
 
           RefreshToken()
-        
+        }
       } else
 
         CheckStatus.value = true
@@ -221,9 +255,13 @@ const updateUser = async () => {
         CheckStatus.value = false
         //   statusTrue()
         console.log("edited successfully");
-      } else if (res.status === 401)  {
+      } else if (res.status === 401) {
+        const TokenValue = ref(await (await res.json()))
+        console.log("status from backend = " + TokenValue.value.message)
+        if (TokenValue.value.message == "Token is expired") {
+
           RefreshToken()
-        
+        }
       } else
 
         CheckStatus.value = true
@@ -314,7 +352,6 @@ const isActivePopup2 =ref(false)
 <template>
 
   <div class="flex justify-center">
-    <goToLogin/>
     <PopupPage v-show="UserRole!=`Admin`" :dim-background="true">
       <div class="grid grid-cols-1 p-12" >
          หน้านี้ใช้ได้เฉพาะ admin เท่านั้น

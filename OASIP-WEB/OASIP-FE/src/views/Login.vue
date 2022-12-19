@@ -44,7 +44,6 @@ const Login = async () => {
     localStorage.setItem('UserRole', decoded.value.role);
     localStorage.setItem('UserEmail', decoded.value.sub);
     localStorage.setItem('UserName', decoded.value.username);
-
   }
 
   if (res.status === 404) {
@@ -64,7 +63,40 @@ const Login = async () => {
 
 };
 
+const lectOwnDetail =ref({owners:""})
+async function checkOwnForLect () {
 
+  const res = await fetch(
+    `${import.meta.env.VITE_APP_TITLE}/api/users/byEmail`,
+    {
+
+      method: 'get',
+      headers: {
+
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + jwtToken.value
+      }
+    }
+  );
+  if (res.status === 200) {
+    lectOwnDetail.value = await res.json();
+     // console.log(checkOwn.owners)
+
+// if(checkOwn.owners!=null) {
+//     lectOwnDetail.value = []
+//     for (const [key, value] of Object.entries(checkOwn.owners)) {
+//   console.log(`${value}`)
+//   lectOwnDetail.value.push({OwnId:key , name:value})
+//   console.log(lectOwnDetail.value)
+
+// }
+// }
+
+
+
+  } 
+
+}
 
 
 const dataUser = ref({    //สำหรับให้ ฟอม v-model
@@ -91,7 +123,9 @@ onBeforeMount(() => {
   if (jwtToken.value != null) {
     decoded.value = jwt_decode(jwtToken.value);
     console.log(decoded.value)
-    localStorage.setItem('UserRole', decoded.value.role);
+    localStorage.setItem('UserRole', decoded.value.roles);
+    checkOwnForLect()
+
 
   }else {
     decoded.value.username = localStorage.getItem('UserName')
@@ -277,7 +311,7 @@ onBeforeUpdate(() => {
     </PopupPage>
 
 
-    <section class="">
+    <div class="flex justify-center ">
 
       <div class="color"> </div>
       <div class="color"></div>
@@ -285,14 +319,9 @@ onBeforeUpdate(() => {
 
       <div class="box"></div>
 
-      <div class="square" style="--i:0;"></div>
-      <div class="square" style="--i:1;"></div>
-      <div class="square" style="--i:2;"></div>
-      <div class="square" style="--i:3;"></div>
-      <div class="square" style="--i:4;"></div>
+        
 
-
-      <div class="container2" v-if="jwtToken==null">
+      <div class="container2 mt-16 " v-if="jwtToken==null">
         <div class="form">
           <h2>Login</h2>
 
@@ -339,31 +368,48 @@ onBeforeUpdate(() => {
 
 
 
+<div class="flex justify-center">
+  <button type="submit"  @click="Login()" class="text-gray-700 bg-gradient-to-r from-yellow-100 to-rose-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full drop-shadow-md text-sm w-full sm:w-auto px-12 py-2.5 text-center my-8 ">Login</button>
 
 
 
-            <input class="mt-4 test rounded-full px-8 py-1 drop-shadow-lg" value="Login" @click="Login()">
-            <p class="forget">dont have account ? <router-link :to="{ name: 'SignUpPage' }" class="
-            
-              ">Click here!</router-link>
-            </p>
+
+
+<button @click="login()" class="bg-gray-200 mt-2 w-full drop-shadow-md rounded"> <img src="../assets/SignIn_with_microsoft-removebg-preview.png" class="h-14"/></button>
+
+<!-- <a href="http://localhost:3000/kw3/#/logoutPage" target="_blank">  
+  
+  <div    class="bg-red-300" >
+      logout
+    </div>
+
+      </a> -->
+
+          
 
           </form>
         </div>
 
       </div>
-      <div class="" v-if="jwtToken!=null">
-        Welcome <span class="font-bold underline underline-offset-4">{{decoded.sub}}</span> to Clinic Booking
-       <br/><div class="text-center mt-2 text-gray-400"> you are {{decoded.role}} role</div>
-       <div class="text-center text-sm text-gray-400" v-if="decoded.role==`Student` || decoded.role==`Lecturer`">  Our website does not currently support student roles.</div>
+      
+    </div>
+    </div>
+
+    <div class="text-center mt-36" v-if="jwtToken!=null">
+        Welcome <span class=" font-bold underline underline-offset-4  
+                  text-transparent  bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 " >{{decoded.username}}</span> to Clinic Booking
+        <br/><div class="text-center mt-2 text-gray-400 text-lg">  {{decoded.sub}} , {{decoded.roles}} role</div>
+        <div v-if="decoded.roles==`Lecturer`" class="text-center text-gray-400 mt-2 ">     you own the subject <span v-for="(own,index) in lectOwnDetail.owners">{{own}} &nbsp</span>  </div>
+        <span class="text-center text-gray-400 mt-2" v-if="lectOwnDetail.owners==null"> you own 0 subject </span>
+     
 
        <div class="text-center text-sm text-gray-400" v-if="decoded.role==`Admin`">  You can do everything on our website.</div>
       </div>
-    </section>
-
   </div>
 </template>
 
 <style>
+
+
 
 </style>

@@ -4,6 +4,7 @@ import UserShowList from "../components/UserShowList.vue";
 import CheckPassword from "../components/CheckPassword.vue";
 import CategoryOwn from "../components/CategoryOwn.vue";
 import addUser from "../components/addUser.vue";
+import goToLogin from "../components/goToLogin.vue";
 
 import PopupPage from "../components/PopupPage.vue";
 
@@ -17,10 +18,10 @@ const CategoryManageShow = ref(false);
 <template>
 
   <div >
-
-    <div class="flex justify-center mt-8 ">
-  <button @click="UserShowListShow=true,CheckPasswordShow=false,CategoryManageShow=false" class="border-r-2  border-white bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-9 rounded-l text-base">
-    USER
+  <goToLogin/>
+    <div class="md:flex md:justify-center mt-8 grid grid-cols-4">
+  <button @click="UserShowListShow=true,CheckPasswordShow=false,CategoryManageShow=false ,addUserShow=false" class="border-r-2   border-white bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-9 rounded-l md:text-base text-sm">
+    USER LIST
   </button>
   <button @click="UserShowListShow=false,CheckPasswordShow=true ,CategoryManageShow=false" class="bg-gray-300 border-r-2  border-white hover:bg-gray-400 text-gray-800 font-bold py-2 px-9 text-base  ">
     CHECK PASSWORD

@@ -67,9 +67,8 @@ public class EventCategoryService {
     private Eventcategory getEventCate(int cateId) {
         Eventcategory eventcategory = new Eventcategory();
 
-        String token = jwtRequestFilter.extractJwtFromRequest(request);
-        String email = jwtTokenUtil.getAllClaimsFromToken(token).getSubject();
-        String role = jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString();
+        String email = jwtTokenUtil.getAllClaimsFromToken(jwtRequestFilter.getJwtToken()).getSubject();
+        String role = jwtTokenUtil.getAllClaimsFromToken(jwtRequestFilter.getJwtToken()).get("roles").toString();
 
         if (role.equals(Role.Lecturer.name())) {
             eventcategory = repository.findEventCateByLecturerAndCateID(userRepository.findByEmail(email).getId(), cateId).orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "No Permission !!"));

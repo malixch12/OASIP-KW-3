@@ -110,6 +110,7 @@ const isActivePopup = ref(false);
 const isActivePopup2= ref(false);
 const isActivePopup3= ref(false);
 const isActivePopup4= ref(false);
+const isActivePopup5= ref(false);
 
 
 
@@ -154,7 +155,7 @@ async function goEdit (id) {
       console.log(checkOwn.owners)
 
 if(checkOwn.owners!=null) {
-
+    lectOwnDetail.value = []
     for (const [key, value] of Object.entries(checkOwn.owners)) {
   console.log(`${value}`)
   lectOwnDetail.value.push({OwnId:key , name:value})
@@ -176,11 +177,44 @@ const dataOwnForDelete = ref(
      idOwn:""       }
 )
 
+async function deleteOwn () {
+    if (confirm("Would you like to delete this user?") == true) {
+    const res = await fetch(
+      `${import.meta.env.VITE_APP_TITLE}/api/owners/${dataOwnForDelete.value.idOwn}`,
+      {
+        method: "DELETE",
+        headers: {
+
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + jwtToken.value
+        }
+        
+      }
+      
+    );
+
+    if(res.status === 200) {
+        isActivePopup2.value = true
+    }
+
+    if(res.status === 401) {
+     console.log(await res.json())
+     RefreshToken()
+     removeUser(UserId)
+
+    }
+
+    if(res.status === 400) {
+        isActivePopup5.value = true
+
+
+    }
+  }
+}
 </script>
 
 <template>
   <div class="mt-16 ">
-  {{dataOwnForDelete}}
 
 
     <PopupPage v-show="isActivePopup" :dim-background="true">
@@ -214,6 +248,9 @@ const dataOwnForDelete = ref(
                 </transition>
               </Menu>    
 
+              <div  @click="deleteOwn()" class="text-white mt-6 bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">delete own</div>
+
+
 </p>
         <div class="success-checkmark">
           <div class="check-icon">
@@ -230,6 +267,35 @@ const dataOwnForDelete = ref(
       </div>
 </PopupPage>
 
+<PopupPage v-show="isActivePopup5" :dim-background="true">
+      <div  class="grid grid-cols-1 p-12">
+        <p class="text-3xl text-center font-semibold text-red-600 tracking-wide pb-8">
+          remove own not succeeded
+        </p>
+     <div class="text-center mb-4">  
+        เหลือคนสุดท้ายแล้ว
+  </div>
+        <div class=" max-w-lg mx-auto  ">
+          <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
+            @click="isActivePopup5 = false " />
+        </div>
+      </div>
+</PopupPage>
+
+<PopupPage v-show="isActivePopup2" :dim-background="true">
+      <div  class="grid grid-cols-1 p-12">
+        <p class="text-3xl text-center font-semibold text-green-600 tracking-wide pb-8">
+          remove own succeeded
+        </p>
+     <div class="text-center mb-4">  
+  
+  </div>
+        <div class=" max-w-lg mx-auto  ">
+          <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
+            @click="isActivePopup2 = false " />
+        </div>
+      </div>
+</PopupPage>
 
 <PopupPage v-show="isActivePopup3" :dim-background="true">
       <div  class="grid grid-cols-1 p-12">
@@ -328,7 +394,7 @@ const dataOwnForDelete = ref(
 </div>
 
 
-<div class="container mt-24">
+<div class="container mt-16 mb-16">
 		<table class="w-full flex flex-row flex-no-wrap sm:bg-white rounded-lg overflow-hidden sm:shadow-lg my-5">
 			<thead class="text-white">
 				<tr v-for="(user, index) in userLect" :key="index" class="bg-black flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0">

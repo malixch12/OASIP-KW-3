@@ -44,7 +44,13 @@ public class UserController {
         return userService.getUserById(userId);
     }
 
+    @PreAuthorize("hasAnyAuthority('Lecturer')")
+    @GetMapping("/byEmail")
+    public GetUserDTO getEventById() {
+        return userService.getUserByEmail();
+    }
 
+    @PreAuthorize("hasAnyAuthority('Admin')")
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.OK)
     public User addUser(@Validated @RequestBody AddUserDTO newUser){

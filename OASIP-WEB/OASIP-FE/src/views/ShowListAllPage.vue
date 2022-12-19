@@ -3,9 +3,9 @@ import { onBeforeMount, ref, onBeforeUpdate } from "@vue/runtime-core";
 import RoundButton from "../components/RoundButton.vue";
 import { useRoute } from "vue-router";
 import ShowList from "../components/ShowList.vue";
-import Navbar from "../components/Navbar.vue";
 import PopupPage from "../components/PopupPage.vue";
 import { useRouter } from "vue-router";
+import goToLogin from "../components/goToLogin.vue";
 
 const router = useRouter();
 const eventLists = ref({content:[{test:"test"}]});
@@ -66,30 +66,14 @@ headers: {
     numPage.value = Math.ceil(eventLists.value.totalElements / 8);
   }
   if (res.status === 401) {
-    const TokenValue = ref( await res.json())
-    console.log("status from backend = " +  TokenValue.value.message )
-    if (TokenValue.value.message == "Token is expired") {
+    await RefreshToken()
+    await getLinkAll()
 
-  
-    }
-    if (TokenValue.value.message == "Token incorrect" & jwtToken.value != null) {
-
-      localStorage.removeItem('jwtToken')
-    localStorage.removeItem('time')
-    TokenValue.value = "x"
-    TokenTimeOut.value = true
-    isActivePopup.value = true
-
-    }
-    if (TokenValue.value.message == "Please log in for get Token again." ) {
-
-localStorage.removeItem('jwtToken')
-localStorage.removeItem('time')
-TokenValue.value = "x"
-TokenTimeOut.value = true
-isActivePopup.value = true
-    }
 }
+  if(res.status === 500) {
+    eventLists.value = {content:[]}
+  }
+ 
   }
 ;
 
@@ -119,29 +103,12 @@ headers: {
       numPage.value = 0
   }
   if (res.status === 401) {
-    const TokenValue = ref( await res.json())
-    console.log("status from backend = " +  TokenValue.value.message )
-    if (TokenValue.value.message == "Token is expired") {
+    await RefreshToken()
+    await getLinkAllNoPage()
 
-  
-    }
-    if (TokenValue.value.message == "Token incorrect" & jwtToken.value != null) {
-
-      localStorage.removeItem('jwtToken')
-    localStorage.removeItem('time')
-    TokenValue.value = "x"
-    TokenTimeOut.value = true
-    isActivePopup.value = true
-
-    }
-    if (TokenValue.value.message == "Please log in for get Token again." ) {
-
-localStorage.removeItem('jwtToken')
-localStorage.removeItem('time')
-TokenValue.value = "x"
-TokenTimeOut.value = true
-isActivePopup.value = true
-    }
+  }
+  if(res.status === 500) {
+    eventLists.value = {content:[]}
   }
 };
 
@@ -151,11 +118,8 @@ onBeforeMount(async () => {
   UserRole.value = localStorage.getItem('UserRole');
   jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
   jwtToken.value = localStorage.getItem('jwtToken');
-  if(jwtToken.value==null) {
-    goHome()
-  }
-  
-  getLinkAll();
+
+  getLinkFuture();
 
 });
 
@@ -192,29 +156,13 @@ headers: {
     numPage.value = Math.ceil(eventLists.value.totalElements / 8);
   }
   if (res.status === 401) {
-    const TokenValue = ref( await res.json())
-    console.log("status from backend = " +  TokenValue.value.message )
-    if (TokenValue.value.message == "Token is expired") {
+    await RefreshToken()
+    await getLinkPast()
 
   
-    }
-    if (TokenValue.value.message == "Token incorrect" & jwtToken.value != null) {
-
-      localStorage.removeItem('jwtToken')
-    localStorage.removeItem('time')
-    TokenValue.value = "x"
-    TokenTimeOut.value = true
-    isActivePopup.value = true
-
-    }
-    if (TokenValue.value.message == "Please log in for get Token again." ) {
-
-localStorage.removeItem('jwtToken')
-localStorage.removeItem('time')
-TokenValue.value = "x"
-TokenTimeOut.value = true
-isActivePopup.value = true
-    }
+  }
+  if(res.status === 500) {
+    eventLists.value = {content:[]}
   }
 };
 
@@ -238,29 +186,12 @@ headers: {
     console.log( eventLists.value)
   }
   if (res.status === 401) {
-    const TokenValue = ref( await res.json())
-    console.log("status from backend = " +  TokenValue.value.message )
-    if (TokenValue.value.message == "Token is expired") {
-
+    await RefreshToken()
+    await getLinkFuture()
   
-    }
-    if (TokenValue.value.message == "Token incorrect" & jwtToken.value != null) {
-
-      localStorage.removeItem('jwtToken')
-    localStorage.removeItem('time')
-    TokenValue.value = "x"
-    TokenTimeOut.value = true
-    isActivePopup.value = true
-
-    }
-    if (TokenValue.value.message == "Please log in for get Token again." ) {
-
-localStorage.removeItem('jwtToken')
-localStorage.removeItem('time')
-TokenValue.value = "x"
-TokenTimeOut.value = true
-isActivePopup.value = true
-    }
+  }
+  if(res.status === 500) {
+    eventLists.value = {content:[]}
   }
 };
 
@@ -290,22 +221,12 @@ function removeToken() {
 }
 
 const isActivePopup2 = ref(false)
-const goHome = () => {
 
-router.push({
-  name: "Login"
- 
-});
-
-const goBack = () => appRouter.go(-1);
-
-
-};
 </script>
 
 <template>
   <div>
-
+<goToLogin/>
     <PopupPage v-show="isActivePopup2" :dim-background="true">
       <div class="grid grid-cols-1 p-12" >
         โปรดเข้าสู่ระบบใหม่

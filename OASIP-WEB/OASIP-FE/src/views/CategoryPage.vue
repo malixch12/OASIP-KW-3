@@ -7,6 +7,7 @@ import ShowList from "../components/ShowList.vue";
 import Navbar from "../components/Navbar.vue";
 import PopupPage from "../components/PopupPage.vue";
 import { useRouter } from "vue-router";
+import goToLogin from "../components/goToLogin.vue";
 
 const router = useRouter();
 
@@ -100,10 +101,7 @@ onBeforeMount(async () => {
   UserRole.value = localStorage.getItem('UserRole');
   jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
   jwtToken.value = localStorage.getItem('jwtToken');
-  if(jwtToken.value==null) {
-    goHome()
-  }
-  
+ 
   getLinkAll();
 
 });
@@ -114,7 +112,7 @@ onBeforeMount(async () => {
 <div>
 
 <generateCategory name="Which kind of appointments would you like to see?" :categorys="CateLists" type="ShowList"/>
-
+<goToLogin/>
 
 </div>
 </template>

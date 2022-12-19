@@ -21,7 +21,7 @@ onBeforeMount(() => {
 <template>
   <div
     class="
-      bg-gray-200
+    
       relative
        
       min-h-screen

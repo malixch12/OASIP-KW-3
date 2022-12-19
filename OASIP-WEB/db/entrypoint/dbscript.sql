@@ -1,4 +1,4 @@
--- create database int222;
+create database int222;
 create user 'int222'@'%'identified with mysql_native_password by 'int222';
 grant all privileges on int222.*to'int222'@'%';
 

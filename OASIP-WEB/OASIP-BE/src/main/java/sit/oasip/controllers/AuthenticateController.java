@@ -63,7 +63,7 @@ public class AuthenticateController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"This Token is not refresh token.");
         }
 
-        return ResponseEntity.ok().body(jwtTokenUtil.doGenerateAccessToken(expectedMap.get("role").toString(),expectedMap.get("sub").toString()));
+        return ResponseEntity.ok().body(jwtTokenUtil.doGenerateAccessToken(expectedMap.get("roles").toString(),expectedMap.get("username").toString(),expectedMap.get("sub").toString()));
     }
 
 

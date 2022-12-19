@@ -45,7 +45,7 @@ public class EventCategoryOwnerService {
         Optional<User> u = userRepository.findById(owner.getUserId());
         Eventcategory ec = eventcategoryRepository.findByEventCategoryID(owner.getEventCategoryID());
         if (eventCategoryOwnerRepository.findByEventCategoryIDAndAndUserID(ec, u.get()) == null) {
-            if(u.get().getRole().equals(Role.Lecturer.name())){
+            if(u.get().getRole() == Role.Lecturer.name()){
                 eco.setEventCategoryID(ec);
                 eco.setUserID(u.get());
             }else{

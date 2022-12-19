@@ -9,7 +9,6 @@ import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
 import RoundButton from "../components/RoundButton.vue";
 import PopupPage from "../components/PopupPage.vue";
-import goToLogin from "../components/goToLogin.vue";
 
 const jwtToken = ref()
 const router = useRouter();
@@ -57,7 +56,9 @@ const UserRole = ref()
 onBeforeMount(async () => {
   jwtToken.value = localStorage.getItem('jwtToken');
   UserRole.value = localStorage.getItem('UserRole');
- 
+  if(jwtToken.value==null) {
+    goHome()
+  }
   getLinkAll();
 });
 
@@ -254,7 +255,13 @@ onBeforeUpdate(() => {
   }
 });
 
+const goHome = () => {
 
+router.push({
+  name: "Login"
+ 
+});
+}
 
 const goList = () => {
 
@@ -333,7 +340,6 @@ function previewImage(event) {
 
 <template>
   <div class="flex justify-center">
-    <goToLogin/>
      <!-- popup -->
      <PopupPage v-show="isActivePopup2 == true" :dim-background="true">
         <!-- ข้อมูลผิด -->

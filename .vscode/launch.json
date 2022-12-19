@@ -10,16 +10,6 @@
             "projectName": "classicmodels-service2",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
-        },
-        {
-            "type": "java",
-            "name": "Spring Boot-OasipBEApplication<classicmodels-service2>",
-            "request": "launch",
-            "cwd": "${workspaceFolder}",
-            "mainClass": "sit.oasip.OasipBEApplication",
-            "projectName": "classicmodels-service2",
-            "args": "",
-            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }

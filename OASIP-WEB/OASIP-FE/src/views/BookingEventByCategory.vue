@@ -7,7 +7,6 @@ import ShowList from "../components/ShowList.vue";
 import Navbar from "../components/Navbar.vue";
 import PopupPage from "../components/PopupPage.vue";
 import { useRouter } from "vue-router";
-import goToLogin from "../components/goToLogin.vue";
 
 const router = useRouter();
 
@@ -150,16 +149,20 @@ onBeforeMount(async () => {
   UserRole.value = localStorage.getItem('UserRole');
   jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
   jwtToken.value = localStorage.getItem('jwtToken');
- 
+  if(jwtToken.value==null) {
+  }
+  
   getLinkAll();
 
 });
+
+
 
 </script>
 
 <template>
 <div>
-<goToLogin/>
+
 <generateCategory name="Select a clinic to booking" :categorys="CateLists" type="Booking"/>
 
 

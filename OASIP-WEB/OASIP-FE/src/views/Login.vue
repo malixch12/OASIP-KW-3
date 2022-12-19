@@ -8,6 +8,8 @@ import PopupPage from "../components/PopupPage.vue";
 import RoundButton from "../components/RoundButton.vue";
 import { useRouter } from "vue-router";
 import jwt_decode from "jwt-decode";
+import addUser from "../components/addUser.vue";
+import { UserAgentApplication } from "msal" ;
 
 
 
@@ -17,7 +19,7 @@ const errorStatus = ref({
   Name: null,
   Email: null
 })
-const decoded = ref({ sub: "" })
+const decoded = ref({ sub: ""  , role : ""})
 
 const Login = async () => {
   CheckData()
@@ -43,7 +45,6 @@ const Login = async () => {
     console.log(decoded.value)
     localStorage.setItem('UserRole', decoded.value.role);
     localStorage.setItem('UserEmail', decoded.value.sub);
-    localStorage.setItem('UserName', decoded.value.username);
   }
 
   if (res.status === 404) {
@@ -63,40 +64,7 @@ const Login = async () => {
 
 };
 
-const lectOwnDetail =ref({owners:""})
-async function checkOwnForLect () {
 
-  const res = await fetch(
-    `${import.meta.env.VITE_APP_TITLE}/api/users/byEmail`,
-    {
-
-      method: 'get',
-      headers: {
-
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + jwtToken.value
-      }
-    }
-  );
-  if (res.status === 200) {
-    lectOwnDetail.value = await res.json();
-     // console.log(checkOwn.owners)
-
-// if(checkOwn.owners!=null) {
-//     lectOwnDetail.value = []
-//     for (const [key, value] of Object.entries(checkOwn.owners)) {
-//   console.log(`${value}`)
-//   lectOwnDetail.value.push({OwnId:key , name:value})
-//   console.log(lectOwnDetail.value)
-
-// }
-// }
-
-
-
-  } 
-
-}
 
 
 const dataUser = ref({    //สำหรับให้ ฟอม v-model
@@ -120,27 +88,19 @@ const jwtToken = ref(null)
 onBeforeMount(() => {
   
   jwtToken.value = localStorage.getItem('jwtToken');
-  if (jwtToken.value != null) {
+ var  microsoft = localStorage.getItem('micosoft');
+
+  if (jwtToken.value != null && microsoft == null) {
+    console.log(microsoft)
     decoded.value = jwt_decode(jwtToken.value);
     console.log(decoded.value)
-    localStorage.setItem('UserRole', decoded.value.roles);
-    checkOwnForLect()
-
+    localStorage.setItem('UserRole', decoded.value.role);
 
   }else {
-    decoded.value.username = localStorage.getItem('UserName')
-    decoded.value.roles = localStorage.getItem('UserRole')
-    const jwtMicosoft = localStorage.getItem('msal.585a0cf6-90bc-4e5e-ad97-521891f56132.idtoken')
-  if(jwtMicosoft!=null) {
-    localStorage.setItem('jwtToken', jwtMicosoft);
+    decoded.value.sub = localStorage.getItem('UserName')
+    decoded.value.role = localStorage.getItem('UserRole')
 
   }
-
-  }
-
- 
-
-  
 });
 
 function CheckData() {
@@ -202,8 +162,6 @@ var myMSALObj = new UserAgentApplication(msalConfig);
 var login = async () => {
     var authResult = await myMSALObj.loginPopup(requestObj);
     accoutMicro.value = authResult.account
-    localStorage.setItem('jwtToken', "wait");
-
     return authResult.account;
 };
 
@@ -216,22 +174,15 @@ var logoff = () => {
     myMSALObj.logout();
 };
 
-const accoutMicro = ref({accountIdentifier:null , roles:[] , idTokenClaims: {test:"xxxx"}})
+const accoutMicro = ref({accountIdentifier:null , roles:[]})
 
 
 onBeforeUpdate(() => {
-  
-   
+
   if(accoutMicro.value.accountIdentifier!=null) {
+    localStorage.setItem('jwtToken', accoutMicro.value.userName);
     localStorage.setItem('jwtTokenRF', accoutMicro.value.userName);
-    if(accoutMicro.value.idTokenClaims.roles!=undefined){
-      localStorage.setItem('UserRole', accoutMicro.value.idTokenClaims.roles[0]);
-
-    }else {
-      localStorage.setItem('UserRole', "Guest");
-    }
-
-
+    localStorage.setItem('UserRole', accoutMicro.value.idTokenClaims.roles[0]);
     localStorage.setItem('UserEmail', accoutMicro.value.userName);
     localStorage.setItem('UserName', accoutMicro.value.name);
     localStorage.setItem('micosoft', true);
@@ -247,7 +198,7 @@ onBeforeUpdate(() => {
 
 <template>
   <div class="">
-
+<p class="opacity-0">{{accoutMicro.accountIdentifier}}</p>
     <div class="text-white text-xs">{{dataUser.role}}</div>
     <PopupPage v-show="isActivePopup" :dim-background="true">
       <div v-if="CheckStatus" class="grid grid-cols-1 p-12">
@@ -308,17 +259,22 @@ onBeforeUpdate(() => {
     </PopupPage>
 
 
-    <div class="flex justify-center ">
+    <section class="">
 
       <div class="color"> </div>
       <div class="color"></div>
       <div class="color"></div>
 
-      <div class="box"></div>
+      <div class="box">
 
-        
+      <div class="square" style="--i:0;"></div>
+      <div class="square" style="--i:1;"></div>
+      <div class="square" style="--i:2;"></div>
+      <div class="square" style="--i:3;"></div>
+      <div class="square" style="--i:4;"></div>
 
-      <div class="container2 mt-16 " v-if="jwtToken==null">
+
+      <div class="container2" v-if="jwtToken==null">
         <div class="form">
           <h2>Login</h2>
 
@@ -335,7 +291,8 @@ onBeforeUpdate(() => {
         </details>
                         </div> -->
             <div class="inputBox ">
-              <input type="text" class="" placeholder="email" v-model.trim="dataUser.email" required>
+              <p class="ml-4 mb-2 text-gray-500 text-sm">email</p>
+              <input type="text" class="" placeholder="" v-model.trim="dataUser.email" required>
               <details class="" v-show="!EmailValidation || !EmailCheck">
                 <summary
                   class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
@@ -349,8 +306,9 @@ onBeforeUpdate(() => {
             </div>
 
             <div class="inputBox">
+              <p class="ml-4 mb-2 text-gray-500 text-sm">password</p>
 
-              <input type="password" placeholder="password" v-model.trim="dataUser.password">
+              <input type="password"  v-model.trim="dataUser.password">
               <details class="" v-if="!PasswordCheck">
                 <summary
                   class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
@@ -366,9 +324,11 @@ onBeforeUpdate(() => {
 
 
 <div class="flex justify-center">
-  <button type="submit"  @click="Login()" class="text-gray-700 bg-gradient-to-r from-yellow-100 to-rose-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full drop-shadow-md text-sm w-full sm:w-auto px-12 py-2.5 text-center my-8 ">Login</button>
+  <input class="my-4 test rounded-full text-center py-1 drop-shadow-lg w-full" value="Login" @click="Login()">
 
+</div>
 
+<div class="text-gray-500 text-center text-sm mb-4">━━━━━━━━━   or   ━━━━━━━━━</div>
 
 
 
@@ -382,31 +342,33 @@ onBeforeUpdate(() => {
 
       </a> -->
 
+                        <div class="text-center mt-2">
+                          <p class="forget">dont have account ? <router-link :to="{ name: 'SignUpPage' }" class="
+            
+            ">Click here!</router-link>
+          </p>
+
+                        </div>
           
 
           </form>
         </div>
 
       </div>
-      
-    </div>
-    </div>
-
-    <div class="text-center mt-36" v-if="jwtToken!=null">
-        Welcome <span class=" font-bold underline underline-offset-4  
-                  text-transparent  bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 " >{{decoded.username}}</span> to Clinic Booking
-        <br/><div class="text-center mt-2 text-gray-400 text-lg">  {{decoded.sub}} , {{decoded.roles}} role</div>
-        <div v-if="decoded.roles==`Lecturer`" class="text-center text-gray-400 mt-2 ">     you own the subject <span v-for="(own,index) in lectOwnDetail.owners">{{own}} &nbsp</span>  </div>
-        <span class="text-center text-gray-400 mt-2" v-if="lectOwnDetail.owners==null"> you own 0 subject </span>
+      <div class="" v-if="jwtToken!=null">
+        Welcome <span class="font-bold underline underline-offset-4">{{decoded.sub}}</span> to Clinic Booking
+       <br/><div class="text-center mt-2 text-gray-400"> you are {{decoded.role}} role</div>
      
 
-       <div class="text-center text-sm text-gray-400" v-if="decoded.role==`Admin`">  You can do everything on our website.</div>
+    
       </div>
+    </div>
+    </section>
+
   </div>
 </template>
 
 <style>
-
 
 
 </style>

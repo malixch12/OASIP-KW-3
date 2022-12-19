@@ -8,7 +8,7 @@ import PopupPage from "../components/PopupPage.vue";
 import RoundButton from "../components/RoundButton.vue";
 import { useRouter } from "vue-router";
 
-console.log("xxx")
+
 const router = useRouter();
 
 const route = useRoute();
@@ -146,7 +146,7 @@ const PasswordCheck = ref(true) //check password
 </script>
 
 <template>
-  <div class="mt-16 mb-20">
+  <div class="mt-16">
   
 
 

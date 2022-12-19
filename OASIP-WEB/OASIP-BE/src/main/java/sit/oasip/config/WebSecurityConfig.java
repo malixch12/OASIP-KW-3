@@ -60,8 +60,7 @@ public class WebSecurityConfig extends AadResourceServerWebSecurityConfigurerAda
 //        super.configure(httpSecurity);
 //        System.out.println("After Configure");
 
-        httpSecurity.csrf().disable()
-        //.cors().configurationSource(request -> corsConfiguration).and()
+        httpSecurity.csrf().disable().cors().configurationSource(request -> corsConfiguration).and()
                 .authorizeRequests()
                 .antMatchers("/api/login", "/api/users/signup").permitAll()
                 .anyRequest().authenticated()

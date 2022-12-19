@@ -292,7 +292,10 @@ onBeforeUpdate(() => {
             {{messageError}}
 
           </p>
-          
+          <p class="forget text-center ">dont have account ? <router-link :to="{ name: 'SignUpPage' }" class="
+            
+              ">Click here!</router-link>
+          </p>
         </div>
 
 

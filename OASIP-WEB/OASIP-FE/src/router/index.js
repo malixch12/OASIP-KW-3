@@ -13,6 +13,7 @@ import SignUpPage from "../views/SignUpPage.vue"
 import EditUserPage from "../views/EditUserPage.vue"
 import Login from "../views/Login.vue"
 import logoutPage from "../views/logoutPage.vue"
+import GuestViewEvent from "../views/GuestViewEvent.vue"
 
 //const history = createWebHistory();
 const history = createWebHashHistory('/kw3/');
@@ -86,6 +87,12 @@ const routes = [
     path: "/logoutPage",
     name: "logoutPage",
     component: logoutPage,
+  } ,
+
+  {
+    path: "/GuestViewEvent",
+    name: "GuestViewEvent",
+    component: GuestViewEvent,
   }
 ];
 

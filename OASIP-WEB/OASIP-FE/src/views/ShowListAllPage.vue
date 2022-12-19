@@ -62,8 +62,11 @@ headers: {
     numPage.value = Math.ceil(eventLists.value.totalElements / 8);
   }
   if (res.status === 401) {
-    await RefreshToken()
+    if(jwtToken.value!=null) {
+      await RefreshToken()
     await getLinkAll()
+    }
+    
 
 }
   if(res.status === 500) {
@@ -113,9 +116,9 @@ const UserRole = ref()
 onBeforeMount(async () => {
   UserRole.value = localStorage.getItem('UserRole');
   jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
-  jwtToken.value = localStorage.getItem('jwtToken');
+  jwtToken.value = await localStorage.getItem('jwtToken');
 
-  getLinkFuture();
+await  getLinkFuture();
 
 });
 
@@ -182,8 +185,11 @@ headers: {
     console.log( eventLists.value)
   }
   if (res.status === 401) {
-    await RefreshToken()
-    await getLinkFuture()
+    if(jwtToken.value!=null) {
+      await RefreshToken()
+    await getLinkAll()
+    }
+    
   
   }
   if(res.status === 500) {

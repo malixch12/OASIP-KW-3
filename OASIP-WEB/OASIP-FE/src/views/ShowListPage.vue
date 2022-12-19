@@ -97,9 +97,7 @@ headers: {
 onBeforeMount(async () => {
   jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
   jwtToken.value = localStorage.getItem('jwtToken');
-  if(jwtToken.value==null) {
-    goHome()
-  }
+ 
   getLinkFuture();
 });
 
@@ -248,7 +246,7 @@ headers: {
 
 
 function removeToken() {
-  localStorage.removeItem('jwtToken')
+  localStorage.clear();
   window.location.reload()
 
 }

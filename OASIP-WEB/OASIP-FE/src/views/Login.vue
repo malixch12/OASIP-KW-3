@@ -121,13 +121,14 @@ function validateEmail(email) {
   return re.test(email);
 }
 const jwtToken = ref(null)
+const microsoft =ref()
 onBeforeMount(() => {
 
   jwtToken.value = localStorage.getItem('jwtToken');
-  var microsoft = localStorage.getItem('micosoft');
+   microsoft.value = localStorage.getItem('micosoft');
 
-  if (jwtToken.value != null && microsoft == null) {
-    console.log(microsoft)
+  if (jwtToken.value != null && microsoft.value == null) {
+    console.log(microsoft.value)
     decoded.value = jwt_decode(jwtToken.value);
     console.log(decoded.value)
     localStorage.setItem('UserRole', decoded.value.roles);
@@ -333,7 +334,7 @@ onBeforeUpdate(() => {
       <div class="text-center mt-2 text-gray-400 text-lg"> {{ decoded.sub }} , {{ decoded.roles }} role</div>
       <div v-if="decoded.roles == `Lecturer` && lectOwnDetail.owners != ``" class="text-center text-gray-400 mt-2 "> you
         own the subject <span v-for="(own, index) in lectOwnDetail.owners">{{ own }} &nbsp</span> </div>
-      <span class="text-center text-gray-400 mt-2" v-if="decoded.roles == `Lecturer` && lectOwnDetail.owners == ``"> you
+      <span class="text-center text-gray-400 mt-2" v-if="microsoft == null && decoded.roles == `Lecturer` && lectOwnDetail.owners == ``"> you
         own 0 subject </span>
 
 

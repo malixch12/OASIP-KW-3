@@ -38,7 +38,7 @@ headers: {
     getLinkAll()
 }
 if (res.status === 500) { 
-  getLinkAll()
+ 
   isActivePopup2.value=true
 }
   }

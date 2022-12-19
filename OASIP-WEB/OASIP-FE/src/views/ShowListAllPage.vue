@@ -114,10 +114,7 @@ onBeforeMount(async () => {
   UserRole.value = localStorage.getItem('UserRole');
   jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
   jwtToken.value = localStorage.getItem('jwtToken');
-  if(jwtToken.value==null) {
-    goHome()
-  }
-  
+
   getLinkFuture();
 
 });

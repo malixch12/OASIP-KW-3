@@ -9,6 +9,7 @@ const router = useRouter();
 const props = defineProps({
   eventLists: {
     type: Array,
+    
   },
   colNum: {
     type: String,

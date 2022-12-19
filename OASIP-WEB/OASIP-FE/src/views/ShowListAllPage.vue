@@ -66,6 +66,10 @@ headers: {
     await getLinkAll()
 
 }
+  if(res.status === 500) {
+    eventLists.value = {content:[]}
+  }
+ 
   }
 ;
 
@@ -98,6 +102,9 @@ headers: {
     await RefreshToken()
     await getLinkAllNoPage()
 
+  }
+  if(res.status === 500) {
+    eventLists.value = {content:[]}
   }
 };
 
@@ -151,6 +158,10 @@ headers: {
     await RefreshToken()
     await getLinkPast()
 
+  
+  }
+  if(res.status === 500) {
+    eventLists.value = {content:[]}
   }
 };
 
@@ -177,6 +188,9 @@ headers: {
     await RefreshToken()
     await getLinkFuture()
   
+  }
+  if(res.status === 500) {
+    eventLists.value = {content:[]}
   }
 };
 

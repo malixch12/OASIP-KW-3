@@ -68,7 +68,40 @@ const Login = async () => {
 
 };
 
+const lectOwnDetail =ref()
+async function checkOwnForLect () {
 
+  const res = await fetch(
+    `${import.meta.env.VITE_APP_TITLE}/api/users/${id}`,
+    {
+
+      method: 'get',
+      headers: {
+
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + jwtToken.value
+      }
+    }
+  );
+  if (res.status === 200) {
+   var  checkOwn = await res.json();
+      console.log(checkOwn.owners)
+
+if(checkOwn.owners!=null) {
+    lectOwnDetail.value = []
+    for (const [key, value] of Object.entries(checkOwn.owners)) {
+  console.log(`${value}`)
+  lectOwnDetail.value.push({OwnId:key , name:value})
+  console.log(lectOwnDetail.value)
+
+}
+}
+
+isActivePopup.value = true
+
+  } 
+
+}
 
 
 const dataUser = ref({    //สำหรับให้ ฟอม v-model
@@ -382,7 +415,8 @@ onBeforeUpdate(() => {
       </div>
       <div class="" v-if="jwtToken!=null">
         Welcome <span class="font-bold underline underline-offset-4">{{decoded.username}}</span> to Clinic Booking
-       <br/><div class="text-center mt-2 text-gray-400"> you are {{decoded.roles}} role</div>
+        <br/><div class="text-center mt-2 text-gray-400">  {{decoded.sub}} , {{decoded.roles}} role</div>
+
      
 
     

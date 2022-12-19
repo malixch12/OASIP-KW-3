@@ -336,7 +336,7 @@ onBeforeUpdate(() => {
 
 <!-- <a href="http://localhost:3000/kw3/#/logoutPage" target="_blank">  
   
-  <div    class="bg-red-300" >
+  <div    class="bg-red-300sasad" >
       logout
     </div>
 

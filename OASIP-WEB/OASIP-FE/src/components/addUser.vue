@@ -14,7 +14,8 @@ const router = useRouter();
 const route = useRoute();
 const errorStatus = ref({
   Name: null,
-  Email: null
+  Email: null ,
+  Password:null
 })
 
 const addUser = async () => {
@@ -32,6 +33,7 @@ if( PasswordCheck.value == true) {
       method: "POST",
       headers: {
         "content-type": "application/json",
+        'Authorization': 'Bearer ' + jwtToken.value
       },
       body: JSON.stringify(dataUser.value),
     })
@@ -78,8 +80,9 @@ function validateEmail(email) {
   return re.test(email);
 }
 
-onBeforeUpdate(() => {
-
+const  jwtToken = ref()
+onBeforeMount(() => {
+  jwtToken.value = localStorage.getItem('jwtToken');
 
 });
 
@@ -178,7 +181,9 @@ const PasswordCheck = ref(true) //check password
           sign not up succeeded
         </p>
      <div class="text-center mb-4">  {{errorStatus.Email}} <br/>
-     {{errorStatus.Name}}
+     {{errorStatus.Name}} <br/>
+     {{errorStatus.Password}}
+    
   </div>
         <div class=" max-w-lg mx-auto  ">
           <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"

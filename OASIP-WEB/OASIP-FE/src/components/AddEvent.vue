@@ -303,7 +303,7 @@ const timeCheck = ref(false)
   
        
         <details class="" v-show="!EmailValidation || !EmailCheck">
-          <summary class="text-xs leading-6 text-slate-900  font-semibold select-none text-red-300">
+          <summary class="text-xs leading-6 text-red-300  font-semibold select-none text-red-300">
             invalid
           </summary>
           <div class="mt-3 text-sm leading-6 text-slate-600 ">
@@ -347,7 +347,7 @@ const timeCheck = ref(false)
        
 
         <details class="" v-show="DateTimeCheck">
-          <summary class="text-xs leading-6 text-slate-900  font-semibold select-none text-red-300">
+          <summary class="text-xs leading-6 text-red-300  font-semibold select-none text-red-300">
             invalid
           </summary>
           <div class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
@@ -435,7 +435,7 @@ const timeCheck = ref(false)
       </div>
       <div class="grid grid-cols-1 place-items-center">
     
-        <button type="submit" @click="isActivePopup = true" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center ">Submit</button>
+        <button type="submit" @click="isActivePopup = true" class="text-gray-700 bg-gradient-to-r from-yellow-100 to-rose-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-12 py-2.5 text-center ">Submit</button>
 
         <!--<RoundButton bg-color="bg-sky-600" button-name="add" @click="isActivePopup = true" /> -->
         <br><span v-if="!AllDataCheck" class="text-sm leading-6 text-slate-900  font-semibold select-none text-red-400">

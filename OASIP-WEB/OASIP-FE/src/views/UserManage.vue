@@ -4,14 +4,40 @@ import UserShowList from "../components/UserShowList.vue";
 import CheckPassword from "../components/CheckPassword.vue";
 import CategoryManage from "../components/CategoryManage.vue";
 import addUser from "../components/addUser.vue";
+import goToLogin from "../components/goToLogin.vue";
+import { useRouter } from "vue-router";
 
 import PopupPage from "../components/PopupPage.vue";
+const router = useRouter();
 
 const UserShowListShow = ref(true);
 const CheckPasswordShow = ref(false);
 const CategoryManageShow = ref(false);
 const addUserShow = ref(false);
+const role = ref()
 
+const goHome = () => {
+
+router.push({
+  name: "Login"
+ 
+});
+
+const goBack = () => appRouter.go(-1);
+
+
+};
+onBeforeMount(async () => {
+
+  role.value = localStorage.getItem('UserRole');
+if(role.value!="Admin") {
+  goHome()
+}
+
+
+
+
+});
 
 </script>
 

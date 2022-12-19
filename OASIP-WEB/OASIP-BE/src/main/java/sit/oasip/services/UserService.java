@@ -89,7 +89,26 @@ public class UserService {
         return users;
     }
 
+public GetUserDTO getUserByEmail() {
+        String email = jwtTokenUtil.getAllClaimsFromToken(jwtRequestFilter.getJwtToken()).getSubject();
+        User user = repository.findByEmail(email);
+        GetUserDTO users = modelMapper.map(user, GetUserDTO.class);
 
+        List<EventCategoryOwner> eco = eventCategoryOwnerRepository.findCategoryName(user.getUserId());
+
+        if (eco == null) {
+            users.setOwners(null);
+        } else {
+
+            Map cateName = new LinkedHashMap();
+            eco.forEach((e) -> {
+                cateName.put(e.getId(), e.getEventCategoryID().getEventCategoryName());
+                users.setOwners(cateName);
+            });
+        }
+
+        return users;
+    }
     public User add(AddUserDTO newUser) {
         User user = new User();
         RoleAttribute roleAttribute = new RoleAttribute();

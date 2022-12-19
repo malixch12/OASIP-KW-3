@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import sit.oasip.dtos.GrantOwner;
 import sit.oasip.entities.EventCategoryOwner;
 import sit.oasip.entities.Eventcategory;
 import sit.oasip.entities.User;

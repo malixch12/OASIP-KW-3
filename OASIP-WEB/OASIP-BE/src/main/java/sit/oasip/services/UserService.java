@@ -67,6 +67,26 @@ public class UserService {
                 .mapList(repository.findByRole(role), GetUserDTO.class, modelMapper);
     }
 
+    public GetUserDTO getUserByEmail() {
+        String email = jwtTokenUtil.getAllClaimsFromToken(jwtRequestFilter.getJwtToken()).getSubject();
+        User user = repository.findByEmail(email);
+        GetUserDTO users = modelMapper.map(user, GetUserDTO.class);
+
+        List<EventCategoryOwner> eco = eventCategoryOwnerRepository.findCategoryName(user.getUserId());
+
+        if (eco == null) {
+            users.setOwners(null);
+        } else {
+
+            Map cateName = new LinkedHashMap();
+            eco.forEach((e) -> {
+                cateName.put(e.getId(), e.getEventCategoryID().getEventCategoryName());
+                users.setOwners(cateName);
+            });
+        }
+
+        return users;
+    }
 
     public GetUserDTO getUserById(int userId) {
         User user = repository.findById(userId)

@@ -9,6 +9,7 @@ import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
 import RoundButton from "../components/RoundButton.vue";
 import PopupPage from "../components/PopupPage.vue";
+import goToLogin from "../components/goToLogin.vue";
 
 const router = useRouter();
 const myRouter = useRoute();
@@ -153,6 +154,7 @@ const isActivePopup = ref(false);
       <!-- popup -->
 
     </div>
+    <goToLogin/>
   </div>
 </template>
 

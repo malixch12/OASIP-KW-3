@@ -48,7 +48,6 @@ const Login = async () => {
     localStorage.setItem('UserRole', decoded.value.roles);
     localStorage.setItem('UserEmail', decoded.value.sub);
     localStorage.setItem('UserName', decoded.value.username);
-
   }
 
   if (res.status === 404) {
@@ -68,7 +67,40 @@ const Login = async () => {
 
 };
 
+const lectOwnDetail =ref({owners:""})
+async function checkOwnForLect () {
 
+  const res = await fetch(
+    `${import.meta.env.VITE_APP_TITLE}/api/users/byEmail`,
+    {
+
+      method: 'get',
+      headers: {
+
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + jwtToken.value
+      }
+    }
+  );
+  if (res.status === 200) {
+    lectOwnDetail.value = await res.json();
+     // console.log(checkOwn.owners)
+
+// if(checkOwn.owners!=null) {
+//     lectOwnDetail.value = []
+//     for (const [key, value] of Object.entries(checkOwn.owners)) {
+//   console.log(`${value}`)
+//   lectOwnDetail.value.push({OwnId:key , name:value})
+//   console.log(lectOwnDetail.value)
+
+// }
+// }
+
+
+
+  } 
+
+}
 
 
 const dataUser = ref({    //สำหรับให้ ฟอม v-model
@@ -99,6 +131,8 @@ onBeforeMount(() => {
     decoded.value = jwt_decode(jwtToken.value);
     console.log(decoded.value)
     localStorage.setItem('UserRole', decoded.value.roles);
+    checkOwnForLect()
+
 
   }else {
     decoded.value.username = localStorage.getItem('UserName')
@@ -284,7 +318,7 @@ onBeforeUpdate(() => {
     </PopupPage>
 
 
-    <section class="">
+    <div class="flex justify-center ">
 
       <div class="color"> </div>
       <div class="color"></div>
@@ -292,14 +326,9 @@ onBeforeUpdate(() => {
 
       <div class="box">
 
-      <div class="square" style="--i:0;"></div>
-      <div class="square" style="--i:1;"></div>
-      <div class="square" style="--i:2;"></div>
-      <div class="square" style="--i:3;"></div>
-      <div class="square" style="--i:4;"></div>
+        
 
-
-      <div class="container2" v-if="jwtToken==null">
+      <div class="container2 mt-16 " v-if="jwtToken==null">
         <div class="form">
           <h2>Login</h2>
 
@@ -367,33 +396,31 @@ onBeforeUpdate(() => {
 
       </a> -->
 
-                        <div class="text-center mt-2">
-                          <p class="forget">dont have account ? <router-link :to="{ name: 'SignUpPage' }" class="
-            
-            ">Click here!</router-link>
-          </p>
-
-                        </div>
           
 
           </form>
         </div>
 
       </div>
-      <div class="" v-if="jwtToken!=null">
-        Welcome <span class="font-bold underline underline-offset-4">{{decoded.username}}</span> to Clinic Booking
-       <br/><div class="text-center mt-2 text-gray-400"> you are {{decoded.roles}} role</div>
+      
+    </div>
+    </div>
+
+    <div class="text-center mt-36" v-if="jwtToken!=null">
+        Welcome <span class=" font-bold underline underline-offset-4  
+                  text-transparent  bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 " >{{decoded.username}}</span> to Clinic Booking
+        <br/><div class="text-center mt-2 text-gray-400 text-lg">  {{decoded.sub}} , {{decoded.roles}} role</div>
+        <div v-if="decoded.roles==`Lecturer`" class="text-center text-gray-400 mt-2 ">     you own the subject <span v-for="(own,index) in lectOwnDetail.owners">{{own}} &nbsp</span>  </div>
+        <span class="text-center text-gray-400 mt-2" v-if="lectOwnDetail.owners==null"> you own 0 subject </span>
      
 
     
       </div>
-    </div>
-    </section>
-
   </div>
 </template>
 
 <style>
+
 
 
 </style>

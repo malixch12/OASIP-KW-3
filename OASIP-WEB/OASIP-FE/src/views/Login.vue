@@ -378,7 +378,7 @@ onBeforeUpdate(() => {
 
 
 <div class="flex justify-center">
-  <input class="my-4 test rounded-full text-center py-1 drop-shadow-lg w-full" value="Login" @click="Login()">
+  <button type="submit"  @click="Login()" class="text-gray-700 bg-gradient-to-r from-yellow-100 to-rose-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full drop-shadow-md text-sm w-full sm:w-auto px-12 py-2.5 text-center my-8 ">Login</button>
 
 </div>
 

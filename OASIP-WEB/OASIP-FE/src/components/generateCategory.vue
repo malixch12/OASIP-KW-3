@@ -211,7 +211,7 @@ askShowList.value = false
   </div>
 
   <router-link :to="{ name: 'ListAllEvent', query: { categoryId: 0 } }" class="">
-    <div v-if="type == `ShowList`" class=" transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 duration-100 shadow-xl text-center font-semibold mb-10 bg-blue-400 text-white hover:bg-green-300 hover:text-black rounded-full w-72 p-1 ">
+    <div v-if="type == `ShowList`" class=" transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 duration-100 shadow-xl text-center font-semibold mb-10 bg-gradient-to-r from-yellow-100 to-rose-300 text-gray-600 hover:bg-green-300 hover:text-black rounded-full w-72 p-1 ">
            check all   
     </div>
     </router-link>

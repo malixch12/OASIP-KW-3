@@ -34,8 +34,13 @@ headers: {
     CateLists.value = await res.json();
   }
   if (res.status === 401) {
-    RefreshToken()
-    getLinkAll()
+    
+
+    if(jwtToken.value!=null) {
+    await   RefreshToken()
+    await getLinkAll()
+
+  }
 }
 if (res.status === 500) { 
  
@@ -82,7 +87,9 @@ onBeforeMount(async () => {
   jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
   jwtToken.value = await localStorage.getItem('jwtToken');
  
-  await getLinkAll();
+  if(jwtToken.value!=null) {
+    await getLinkAll();
+  }
 
 });
 

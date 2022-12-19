@@ -80,13 +80,13 @@ onBeforeUpdate(() => {
 
 const UserRole = ref()
 
-onBeforeMount(() => {
+onBeforeMount(async () => {
   UserRole.value = localStorage.getItem('UserRole');
   jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
-  jwtToken.value = localStorage.getItem('jwtToken');
+  jwtToken.value = await localStorage.getItem('jwtToken');
  
   if(UserRole.value!="Guest") {
-    getLinkFuture();
+    await getLinkFuture();
   }
  
   
@@ -245,8 +245,10 @@ headers: {
     console.log(eventLists.value);
   } 
   if(res.status===401) {
-    await RefreshToken() 
-    await getLinkFuture() 
+    if(jwtToken.value!=null) {
+      await RefreshToken()
+    await getLinkFuture()
+    }
   }
 };
 

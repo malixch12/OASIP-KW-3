@@ -96,9 +96,9 @@ headers: {
 
 onBeforeMount(async () => {
   jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
-  jwtToken.value = localStorage.getItem('jwtToken');
+  jwtToken.value =  await localStorage.getItem('jwtToken');
  
-  getLinkFuture();
+ await getLinkFuture();
 });
 
 
@@ -190,8 +190,10 @@ headers: {
     console.log(eventLists.value);
   }
   if (res.status === 401) {
-    await RefreshToken()
+    if(jwtToken.value!=null) {
+      await RefreshToken()
     await getLinkFuture()
+    }
   }
 };
 

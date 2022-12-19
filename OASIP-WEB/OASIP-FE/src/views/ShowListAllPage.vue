@@ -187,7 +187,7 @@ headers: {
   if (res.status === 401) {
     if(jwtToken.value!=null) {
       await RefreshToken()
-    await getLinkAll()
+    await getLinkFuture()
     }
     
   

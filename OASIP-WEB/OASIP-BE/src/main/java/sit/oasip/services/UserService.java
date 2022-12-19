@@ -11,21 +11,20 @@ import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import org.springframework.web.server.ResponseStatusException;
-
+import sit.oasip.Component.JwtTokenUtil;
+import sit.oasip.config.JwtRequestFilter;
 import sit.oasip.dtos.UserDTOs.AddUserDTO;
 import sit.oasip.dtos.UserDTOs.EditUserDTO;
-import sit.oasip.dtos.UserDTOs.MatchUserDTO;
 import sit.oasip.dtos.UserDTOs.GetUserDTO;
+import sit.oasip.dtos.UserDTOs.MatchUserDTO;
 import sit.oasip.entities.EventCategoryOwner;
-import sit.oasip.entities.Eventcategory;
 import sit.oasip.entities.User;
 import sit.oasip.repositories.UserRepository;
 import sit.oasip.utils.ListMapper;
 import sit.oasip.utils.PageMapper;
-
 import sit.oasip.utils.RoleAttribute;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 public class UserService {

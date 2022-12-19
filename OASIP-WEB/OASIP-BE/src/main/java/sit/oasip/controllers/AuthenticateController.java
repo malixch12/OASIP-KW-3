@@ -59,6 +59,9 @@ public class AuthenticateController {
         System.out.println(claims);
 
         Map<String, Object> expectedMap = authenticationService.getMapFromIoJsonwebtokenClaims(claims);
+        if(expectedMap.get("refresh").equals(false)){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"This Token is not refresh token.");
+        }
 
         return ResponseEntity.ok().body(jwtTokenUtil.doGenerateAccessToken(expectedMap.get("role").toString(),expectedMap.get("sub").toString()));
     }

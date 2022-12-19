@@ -67,7 +67,7 @@ const Login = async () => {
 
 };
 
-const lectOwnDetail = ref({ owners: "" })
+const lectOwnDetail = ref({ owners: [] })
 async function checkOwnForLect() {
 
   const res = await fetch(
@@ -334,7 +334,7 @@ onBeforeUpdate(() => {
       <div class="text-center mt-2 text-gray-400 text-lg"> {{ decoded.sub }} , {{ decoded.roles }} role</div>
       <div v-if="decoded.roles == `Lecturer` && lectOwnDetail.owners != ``" class="text-center text-gray-400 mt-2 "> you
         own the subject <span v-for="(own, index) in lectOwnDetail.owners">{{ own }} &nbsp</span> </div>
-      <span class="text-center text-gray-400 mt-2" v-if="microsoft == null && decoded.roles == `Lecturer` && lectOwnDetail.owners == ``"> you
+      <span class="text-center text-gray-400 mt-2" v-if="microsoft == null && decoded.roles == `Lecturer` && lectOwnDetail.owners.length == 0"> you
         own 0 subject </span>
 
 

@@ -411,7 +411,7 @@ onBeforeUpdate(() => {
                   text-transparent  bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 " >{{decoded.username}}</span> to Clinic Booking
         <br/><div class="text-center mt-2 text-gray-400 text-lg">  {{decoded.sub}} , {{decoded.roles}} role</div>
         <div v-if="decoded.roles==`Lecturer` && lectOwnDetail.owners!=`` " class="text-center text-gray-400 mt-2 ">     you own the subject <span v-for="(own,index) in lectOwnDetail.owners">{{own}} &nbsp</span>  </div>
-        <span class="text-center text-gray-400 mt-2" v-if="lectOwnDetail.owners==``"> you own 0 subject </span>
+        <span class="text-center text-gray-400 mt-2" v-if="decoded.roles==`Lecturer` && lectOwnDetail.owners==`` "> you own 0 subject </span>
 
     
       </div>

@@ -37,9 +37,29 @@ headers: {
 const jwtToken =ref()
 const jwtTokenRF =ref()
 
+
+const goHome = () => {
+
+router.push({
+  name: "Login"
+ 
+});
+
+const goBack = () => appRouter.go(-1);
+
+
+};
+
+const UserRole = ref()
 onBeforeMount(async () => {
   jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
   jwtToken.value = localStorage.getItem('jwtToken');
+
+  UserRole.value = localStorage.getItem('UserRole');
+ 
+if(UserRole.value!="Admin") {
+  goHome()
+}
   getLinkAll();
   
 });

@@ -18,7 +18,7 @@ const errorStatus = ref({
 })
 const page = ref(0);
 const userLect = ref([])
-const category =ref()
+const category = ref()
 const getLinkAll = async () => {
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/users/role/Lecturer`,
@@ -33,8 +33,8 @@ const getLinkAll = async () => {
     }
   );
   if (res.status === 200) {
-     userLect.value = await res.json();
-    console.log(userLect.value )
+    userLect.value = await res.json();
+    console.log(userLect.value)
 
   } else if (res.status === 401) {
     await RefreshToken()
@@ -44,16 +44,16 @@ const getLinkAll = async () => {
     textShow.value = "You are not an admin There is no right to view this information."
     console.log(textShow)
   }
-  
-  const res2 = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/eventcategorys` ,{
 
-method: 'get',
-headers: {
+  const res2 = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/eventcategorys`, {
 
-  'Content-Type': 'application/json',
-  'Authorization': 'Bearer ' + jwtToken.value
-}
-}
+    method: 'get',
+    headers: {
+
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + jwtToken.value
+    }
+  }
 
   );
   if (res2.status === 200) {
@@ -61,34 +61,34 @@ headers: {
     console.log(category.value)
   }
   if (res2.status === 401) {
-    
+
     await RefreshToken()
     await getLinkAll()
-}
+  }
 
 };
 
 
 const addUser = async () => {
 
-    const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/owners`, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        'Authorization': 'Bearer ' + jwtToken.value
+  const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/owners`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      'Authorization': 'Bearer ' + jwtToken.value
 
-      },
-      body: JSON.stringify(dataUser.value),
-    })
+    },
+    body: JSON.stringify(dataUser.value),
+  })
 
-    if (res.status === 200) {
-        isActivePopup3.value = true      
-    } else {
-        isActivePopup4.value = true      
-    }
+  if (res.status === 200) {
+    isActivePopup3.value = true
+  } else {
+    isActivePopup4.value = true
+  }
 
-  
-  
+
+
 
 
 };
@@ -102,43 +102,43 @@ const cateId = ref(0)
 
 
 const dataUser = ref({    //สำหรับให้ ฟอม v-model
-    userId:0,
-    eventCategoryID:0
+  userId: 0,
+  eventCategoryID: 0
 });
 
 const isActivePopup = ref(false);
-const isActivePopup2= ref(false);
-const isActivePopup3= ref(false);
-const isActivePopup4= ref(false);
-const isActivePopup5= ref(false);
+const isActivePopup2 = ref(false);
+const isActivePopup3 = ref(false);
+const isActivePopup4 = ref(false);
+const isActivePopup5 = ref(false);
 
 
 
 const jwtToken = ref()
-const jwtTokenRF =ref()
+const jwtTokenRF = ref()
 const UserRole = ref()
 onBeforeMount(() => {
-    jwtToken.value = localStorage.getItem('jwtToken');
+  jwtToken.value = localStorage.getItem('jwtToken');
   jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
   UserRole.value = localStorage.getItem('UserRole');
-    getLinkAll()
+  getLinkAll()
 
 });
 
 
 
-function goHome () {
+function goHome() {
   router.push({
     name: "Login"
- 
+
   });
 }
 
 const lectOwnDetail = ref([])
 
-async function goEdit (id) {
+async function goEdit(id) {
 
-    const res = await fetch(
+  const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/users/${id}`,
     {
 
@@ -151,34 +151,36 @@ async function goEdit (id) {
     }
   );
   if (res.status === 200) {
-   var  checkOwn = await res.json();
-      console.log(checkOwn.owners)
+    var checkOwn = await res.json();
+    console.log(checkOwn.owners)
 
-if(checkOwn.owners!=null) {
-    lectOwnDetail.value = []
-    for (const [key, value] of Object.entries(checkOwn.owners)) {
-  console.log(`${value}`)
-  lectOwnDetail.value.push({OwnId:key , name:value})
-  console.log(lectOwnDetail.value)
+    if (checkOwn.owners != null) {
+      lectOwnDetail.value = []
+      for (const [key, value] of Object.entries(checkOwn.owners)) {
+        console.log(`${value}`)
+        lectOwnDetail.value.push({ OwnId: key, name: value })
+        console.log(lectOwnDetail.value)
 
-}
-}
+      }
+    }
 
-isActivePopup.value = true
+    isActivePopup.value = true
 
-  } 
+  }
 
 }
 
 
 const dataOwnForDelete = ref(
 
-    {name:"select your lecter",
-     idOwn:""       }
+  {
+    name: "select your lecter",
+    idOwn: ""
+  }
 )
 
-async function deleteOwn () {
-    if (confirm("Would you like to delete this user?") == true) {
+async function deleteOwn() {
+  if (confirm("Would you like to delete this user?") == true) {
     const res = await fetch(
       `${import.meta.env.VITE_APP_TITLE}/api/owners/${dataOwnForDelete.value.idOwn}`,
       {
@@ -188,24 +190,24 @@ async function deleteOwn () {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + jwtToken.value
         }
-        
+
       }
-      
+
     );
 
-    if(res.status === 200) {
-        isActivePopup2.value = true
+    if (res.status === 200) {
+      isActivePopup2.value = true
     }
 
-    if(res.status === 401) {
-     console.log(await res.json())
-     RefreshToken()
-     removeUser(UserId)
+    if (res.status === 401) {
+      console.log(await res.json())
+      RefreshToken()
+      removeUser(UserId)
 
     }
 
-    if(res.status === 400) {
-        isActivePopup5.value = true
+    if (res.status === 400) {
+      isActivePopup5.value = true
 
 
     }
@@ -218,40 +220,43 @@ async function deleteOwn () {
 
 
     <PopupPage v-show="isActivePopup" :dim-background="true">
-      <div  class="grid grid-cols-1 p-12">
+      <div class="grid grid-cols-1 p-12">
         <p class="text-2sm font-semibold text-green-600 tracking-wide pb-8">
-            <Menu as="div" class=" mb-6 ">
-                <div>
-                  <MenuButton id="role"
-                    class="text-left bg-transparent rounded-lg h-12 w-full  border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
-{{            dataOwnForDelete.name
-}}                    <ChevronDownIcon class="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
-                  </MenuButton>
+          <Menu as="div" class=" mb-6 ">
+            <div>
+              <MenuButton id="role"
+                class="text-left bg-transparent rounded-lg h-12 w-full  border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+                {{ dataOwnForDelete.name
+                }}
+                <ChevronDownIcon class="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
+              </MenuButton>
+            </div>
+
+            <transition enter-active-class="transition ease-out duration-100"
+              enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100"
+              leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100"
+              leave-to-class="transform opacity-0 scale-95">
+              <MenuItems
+                class=" absolute  rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <div class="py-1">
+                  <MenuItem v-slot="{ active }" v-for="lectOwnDetail in lectOwnDetail">
+                  <div :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']"
+                    @click="dataOwnForDelete.name = lectOwnDetail.name, dataOwnForDelete.idOwn = lectOwnDetail.OwnId">
+                    {{ lectOwnDetail.name }} </div>
+                  </MenuItem>
+
+
                 </div>
+              </MenuItems>
+            </transition>
+          </Menu>
 
-                <transition enter-active-class="transition ease-out duration-100"
-                  enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100"
-                  leave-active-class="transition ease-in duration-75"
-                  leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
-                  <MenuItems
-                    class=" absolute  rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                    <div class="py-1">
-                      <MenuItem v-slot="{ active }" v-for="lectOwnDetail in lectOwnDetail">
-                      <div
-                        :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']"
-                        @click="dataOwnForDelete.name = lectOwnDetail.name , dataOwnForDelete.idOwn = lectOwnDetail.OwnId ">{{lectOwnDetail.name}} </div>
-                      </MenuItem>
-                     
-
-                    </div>
-                  </MenuItems>
-                </transition>
-              </Menu>    
-
-              <div  @click="deleteOwn()" class="text-white mt-6 bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">delete own</div>
+        <div @click="deleteOwn()"
+          class="text-white mt-6 bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+          delete own</div>
 
 
-</p>
+        </p>
         <div class="success-checkmark">
           <div class="check-icon">
             <span class="icon-line line-tip"></span>
@@ -262,179 +267,185 @@ async function deleteOwn () {
         </div>
         <div class=" max-w-lg mx-auto  ">
           <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
-            @click="isActivePopup = false " />
+            @click="isActivePopup = false" />
         </div>
       </div>
-</PopupPage>
+    </PopupPage>
 
-<PopupPage v-show="isActivePopup5" :dim-background="true">
-      <div  class="grid grid-cols-1 p-12">
+    <PopupPage v-show="isActivePopup5" :dim-background="true">
+      <div class="grid grid-cols-1 p-12">
         <p class="text-3xl text-center font-semibold text-red-600 tracking-wide pb-8">
           remove own not succeeded
         </p>
-     <div class="text-center mb-4">  
-        เหลือคนสุดท้ายแล้ว
-  </div>
+        <div class="text-center mb-4">
+          เหลือคนสุดท้ายแล้ว
+        </div>
         <div class=" max-w-lg mx-auto  ">
           <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
-            @click="isActivePopup5 = false " />
+            @click="isActivePopup5 = false" />
         </div>
       </div>
-</PopupPage>
+    </PopupPage>
 
-<PopupPage v-show="isActivePopup2" :dim-background="true">
-      <div  class="grid grid-cols-1 p-12">
+    <PopupPage v-show="isActivePopup2" :dim-background="true">
+      <div class="grid grid-cols-1 p-12">
         <p class="text-3xl text-center font-semibold text-green-600 tracking-wide pb-8">
           remove own succeeded
         </p>
-     <div class="text-center mb-4">  
-  
-  </div>
+        <div class="text-center mb-4">
+
+        </div>
         <div class=" max-w-lg mx-auto  ">
           <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
-            @click="isActivePopup2 = false " />
+            @click="isActivePopup2 = false" />
         </div>
       </div>
-</PopupPage>
+    </PopupPage>
 
-<PopupPage v-show="isActivePopup3" :dim-background="true">
-      <div  class="grid grid-cols-1 p-12">
+    <PopupPage v-show="isActivePopup3" :dim-background="true">
+      <div class="grid grid-cols-1 p-12">
         <p class="text-3xl text-center font-semibold text-green-600 tracking-wide pb-8">
           add own succeeded
         </p>
-     <div class="text-center mb-4">  {{errorStatus.Email}} <br/>
-     {{errorStatus.Name}}
-  </div>
+        <div class="text-center mb-4"> {{ errorStatus.Email }} <br />
+          {{ errorStatus.Name }}
+        </div>
         <div class=" max-w-lg mx-auto  ">
           <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
-            @click="isActivePopup3 = false " />
+            @click="isActivePopup3 = false" />
         </div>
       </div>
-</PopupPage>
+    </PopupPage>
 
-<PopupPage v-show="isActivePopup4" :dim-background="true">
-      <div  class="grid grid-cols-1 p-12">
+    <PopupPage v-show="isActivePopup4" :dim-background="true">
+      <div class="grid grid-cols-1 p-12">
         <p class="text-3xl text-center font-semibold text-red-600 tracking-wide pb-8">
-            add own not succeeded        </p>
-     <div class="text-center mb-4">  {{errorStatus.Email}} <br/>
-     {{errorStatus.Name}}
-  </div>
+          add own not succeeded </p>
+        <div class="text-center mb-4"> {{ errorStatus.Email }} <br />
+          {{ errorStatus.Name }}
+        </div>
         <div class=" max-w-lg mx-auto  ">
           <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
-            @click="isActivePopup4 = false " />
+            @click="isActivePopup4 = false" />
         </div>
       </div>
-</PopupPage>
+    </PopupPage>
 
+    <div>
     <div class="flex justify-center">
-    <form class="w-72">
+      <form class="w-72">
         <label for="role" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">select user</label>
 
-<Menu as="div" class=" mb-6 ">
-                <div>
-                  <MenuButton id="role"
-                    class="text-left bg-transparent rounded-lg h-12 w-full  border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
-                    {{userShow}}
-                    
-                    <ChevronDownIcon class="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
-                  </MenuButton>
-                </div>
+        <Menu as="div" class=" mb-6 ">
+          <div>
+            <MenuButton id="role"
+              class="text-left bg-transparent rounded-lg h-12 w-full  border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+              {{ userShow }}
 
-                <transition enter-active-class="transition ease-out duration-100"
-                  enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100"
-                  leave-active-class="transition ease-in duration-75"
-                  leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
-                  <MenuItems
-                    class=" absolute  rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                    <div class="py-1">
-                      <MenuItem v-slot="{ active }" v-for="userLect in userLect">
-                      <div
-                        :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']"
-                        @click="userShow = userLect.name , dataUser.userId = userLect.id ">{{userLect.name}} </div>
-                      </MenuItem>
-                     
+              <ChevronDownIcon class="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
+            </MenuButton>
+          </div>
 
-                    </div>
-                  </MenuItems>
-                </transition>
-              </Menu>
-
-  <label for="role" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">eventCategoryID</label>
-
-  <Menu as="div" class=" ">
-                  <div>
-                    <MenuButton id="role"
-                      class="text-left bg-transparent rounded-lg h-12 w-full  border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
-                      {{cateShow}}
-                      <ChevronDownIcon class="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
-                    </MenuButton>
-                  </div>
-
-                  <transition enter-active-class="transition ease-out duration-100"
-                    enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100"
-                    leave-active-class="transition ease-in duration-75"
-                    leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
-                    <MenuItems
-                      class=" absolute  rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      <div class="py-1">
-                        <MenuItem v-slot="{ active }" v-for="category in category">
-                      <div
-                        :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']"
-                        @click="cateShow = category.eventCategoryName , dataUser.eventCategoryID = category.eventCategoryID ">{{category.eventCategoryName}}</div>
-                      </MenuItem>
-                      </div>
-                    </MenuItems>
-                  </transition>
-                </Menu>
+          <transition enter-active-class="transition ease-out duration-100"
+            enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100"
+            leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100"
+            leave-to-class="transform opacity-0 scale-95">
+            <MenuItems
+              class=" absolute  rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <div class="py-1">
+                <MenuItem v-slot="{ active }" v-for="userLect in userLect">
+                <div :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']"
+                  @click="userShow = userLect.name, dataUser.userId = userLect.id">{{ userLect.name }} </div>
+                </MenuItem>
 
 
-  <div  @click="addUser()" class="text-white mt-6 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">add own</div>
-</form>
-   
-</div>
+              </div>
+            </MenuItems>
+          </transition>
+        </Menu>
+
+        <label for="role" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">eventCategoryID</label>
+
+        <Menu as="div" class=" ">
+          <div>
+            <MenuButton id="role"
+              class="text-left bg-transparent rounded-lg h-12 w-full  border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+              {{ cateShow }}
+              <ChevronDownIcon class="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
+            </MenuButton>
+          </div>
+
+          <transition enter-active-class="transition ease-out duration-100"
+            enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100"
+            leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100"
+            leave-to-class="transform opacity-0 scale-95">
+            <MenuItems
+              class=" absolute  rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <div class="py-1">
+                <MenuItem v-slot="{ active }" v-for="category in category">
+                <div :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']"
+                  @click="cateShow = category.eventCategoryName, dataUser.eventCategoryID = category.eventCategoryID">
+                  {{ category.eventCategoryName }}</div>
+                </MenuItem>
+              </div>
+            </MenuItems>
+          </transition>
+        </Menu>
 
 
-<div class="container mt-16 mb-16">
-		<table class="w-full flex flex-row flex-no-wrap sm:bg-white rounded-lg overflow-hidden sm:shadow-lg my-5">
-			<thead class="text-white">
-				<tr v-for="(user, index) in userLect" :key="index" class="bg-black flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0">
-					<th scope="col" class="py-3 px-14 ">
+        <div @click="addUser()"
+          class="text-white mt-6 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+          add own</div>
+      </form>
+
+    </div>
+
+
+    <div class="container mt-16 mb-16">
+      <table class="w-full flex flex-row flex-no-wrap sm:bg-white rounded-lg overflow-hidden sm:shadow-lg my-5">
+        <thead class="text-white">
+          <tr v-for="(user, index) in userLect" :key="index"
+            class="bg-black flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0">
+            <th scope="col" class="py-3 px-14 ">
               User name
             </th>
             <th scope="col" class="py-3 px-14">
               Email
             </th>
-         
+
             <th scope="col" class="py-3   ">
               role
             </th>
-         
 
-            
 
-            <th scope="col" class="py-3 px-14" > 
-                    action
-            </th >
-         
-				</tr>
-			
-			</thead>
-			<tbody class="flex-1 sm:flex-none">
-				<tr  v-for="(user, index) in userLect" :key="index" class="flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0">
-          <th scope="row" class="p-3  text-center ">
-              {{user.name}}
+
+
+            <th scope="col" class="py-3 px-14">
+              action
+            </th>
+
+          
+
+          </tr>
+
+        </thead>
+        <tbody class="flex-1 sm:flex-none">
+          <tr v-for="(user, index) in userLect" :key="index"
+            class="flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0">
+            <th scope="row" class="p-3  text-center ">
+              {{ user.name }}
             </th>
             <td class="p-3 text-center">
-              {{user.email}}
+              {{ user.email }}
             </td>
-         
 
-     
+
+
             <td class="p-3 text-center">
-              {{user.role}}
+              {{ user.role }}
             </td>
             <td class="p-3 text-center mb-1.5">
-              <span class="font-medium text-blue-500  px-2 hover:underline"  @click="goEdit(user.id)">edit own</span>
+              <span class="font-medium text-blue-500  px-2 hover:underline" @click="goEdit(user.id)">own</span>
 
             </td>
             <!-- <td class="p-3  " @click="goEdit(user.id)">
@@ -444,14 +455,14 @@ async function deleteOwn () {
                 </path>
               </svg>
             </td> -->
-				</tr>
-		
-			</tbody>
-		</table>
-	</div>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
 
 
-
+</div>
   </div>
 </template>
  

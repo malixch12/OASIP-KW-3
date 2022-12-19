@@ -343,7 +343,7 @@ onBeforeUpdate(() => {
       <div class="color"></div>
       <div class="color"></div>
 
-      <div class="box">
+      <div class="flex justify-center">
 
 
 

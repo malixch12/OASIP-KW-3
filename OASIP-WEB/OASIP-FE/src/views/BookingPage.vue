@@ -97,6 +97,7 @@ onBeforeMount(() => {
 // });
 const CheckOverlap = ref(false)
 const addEvent = async (dataBooking , AllDataCheck) => {
+  console.log(new Date(dataBooking.eventStartTime).toISOString())
   dataBooking.eventStartTime=new Date(dataBooking.eventStartTime).toISOString();
 
   console.log(dataBooking)

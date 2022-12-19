@@ -282,28 +282,30 @@ section {
 }
 
 section .color {
-  position: absolute;
   filter: blur(250px);
 }
 
 section .color:nth-child(1) {
-
+  position: absolute;
   width: 400px;
   height: 400px;
   background: #ff359b
 }
 
 section .color:nth-child(2) {
-  bottom: -150px;
-  left: 100px;
+  position: absolute;
+  bottom: -200px;
+  left: 20px;
   height: 500px;
   width: 500px;
   background: #fffd87
 }
 
 section .color:nth-child(3) {
-  bottom: 50px;
-  right: 100px;
+  position: absolute;
+
+  bottom: -200px;
+  right: 20px;
   height: 500px;
   width: 500px;
   background: #00d2ff

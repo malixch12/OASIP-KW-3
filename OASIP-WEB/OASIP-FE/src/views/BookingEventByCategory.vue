@@ -81,10 +81,29 @@ if (res.status === 200) {
 
 const UserRole = ref()
 
+
+const goHome = () => {
+
+router.push({
+  name: "Login"
+ 
+});
+
+const goBack = () => appRouter.go(-1);
+
+
+};
+
+
 onBeforeMount(async () => {
+
   UserRole.value = localStorage.getItem('UserRole');
   jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
   jwtToken.value = await localStorage.getItem('jwtToken');
+ 
+if(UserRole.value!="Admin" & UserRole.value!="Student" ) {
+  goHome()
+}
  
  await getLinkAll();
 

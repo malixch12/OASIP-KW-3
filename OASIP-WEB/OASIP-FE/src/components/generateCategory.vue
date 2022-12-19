@@ -150,7 +150,7 @@ if (props.type == "ShowList") {
 
               </div>
               <div class="mt-3 sm:pr-8">
-                <h3 class="text-lg font-semibold text-gray-500 text-white">select category</h3>
+                <h3 class="text-lg font-semibold text-gray-500 text-white">select <br/>category</h3>
               </div>
             </li>
 
@@ -171,7 +171,7 @@ if (props.type == "ShowList") {
 
               </div>
               <div class="mt-3 sm:pr-8">
-                <h3 class="text-lg font-semibold text-gray-500 text-white">enter information</h3>
+                <h3 class="text-lg font-semibold text-gray-500 text-white">enter <br/>information</h3>
               </div>
             </li>
 
@@ -201,7 +201,7 @@ if (props.type == "ShowList") {
 
               </div>
               <div class="mt-3 sm:pr-8">
-                <h3 class="text-lg font-semibold text-gray-500 text-white">submit a form</h3>
+                <h3 class="text-lg font-semibold text-gray-500 text-white">submit <br/> form</h3>
               </div>
             </li>
           </ol>

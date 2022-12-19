@@ -42,7 +42,6 @@ onBeforeMount(() => {
 });
 function CheckData() {
   //check date and time
-  console.log(dataBooking.value.bookingName.length)
   if ((countTime.value > new Date(dataBooking.value.eventStartTime))) {
     DateTimeCheck.value = true
   } else {

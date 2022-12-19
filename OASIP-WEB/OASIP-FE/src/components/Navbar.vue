@@ -54,7 +54,7 @@ function toggle () {
 <template>
 
 
-  <div class="font-sans antialiased " id="app">
+  <div class=" font-sans antialiased " id="app">
   <nav class="container flex flex-wrap justify-between items-center mx-auto mt-4">
     <div class="flex items-center flex-no-shrink text-white mr-6">
       <router-link :to="{ name: 'Home' }" class="flex items-center ">

@@ -175,6 +175,7 @@
                         <form>
                          
                              <div class=" ">
+                              email
                               <input maxlength="100" type="text" v-model.trim="dataUser.email" placeholder="email" class="
         my-3
         form-control
@@ -205,6 +206,7 @@
             </details>
                             </div>
                              <div class="">
+                              password
                               <input maxlength="100" type="text" v-model.trim="dataUser.password" placeholder="password" class="
         my-3
         form-control

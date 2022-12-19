@@ -36,8 +36,12 @@ const getLinkAll = async () => {
     numPage.value = Math.ceil(UserLists.value.totalElements / 8);
 
   } else if (res.status === 401) {
-    await RefreshToken()
+    if(jwtToken.value!=null) {
+      await RefreshToken()
     await getLinkAll()
+
+    }
+  
   }
   if (res.status === 403) {
     textShow.value = "You are not an admin There is no right to view this information."
@@ -105,7 +109,11 @@ onBeforeMount(async () => {
   jwtToken.value = localStorage.getItem('jwtToken');
   jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
   UserRole.value = localStorage.getItem('UserRole');
-  getLinkAll();
+
+  if(jwtToken.value!=null) {
+    getLinkAll();
+
+  }
 
   if(jwtToken.value==null) {
     goLogin()

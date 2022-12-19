@@ -366,7 +366,7 @@ onBeforeUpdate(() => {
                         </div> -->
               <div class="inputBox ">
                 <p class="ml-4 mb-2 text-gray-500 text-sm">email</p>
-                <input type="text" class="" placeholder="" v-model.trim="dataUser.email" required>
+                <input type="text" class="" placeholder="" v-model.trim="dataUser.email" >
                 <details class="" v-show="!EmailValidation || !EmailCheck">
                   <summary
                     class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">

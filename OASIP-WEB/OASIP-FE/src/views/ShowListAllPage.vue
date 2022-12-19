@@ -36,14 +36,18 @@ const RefreshToken = async () => {
     let jwtTokenRF = await res.json()
     localStorage.setItem('jwtToken', jwtTokenRF.accessToken);
     jwtToken.value = localStorage.getItem('jwtToken');
-  }else
-  isActivePopup2.value=true
+  }  
+  
+  if (res.status === 401) {
 
+console.log(await res.json())
+isActivePopup2.value=true
+}
 
 };
 
 const getLinkAll = async () => {
- // await RefreshToken()
+  await RefreshToken()
   // const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events`);
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/events?page=${page.value}&pageSize=8`,{
@@ -74,7 +78,7 @@ headers: {
 ;
 
 const getLinkAllNoPage = async (FilterDate) => {
-  //await RefreshToken()
+  await RefreshToken()
   // const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/events`);
 
   const res = await fetch(
@@ -114,10 +118,7 @@ onBeforeMount(async () => {
   UserRole.value = localStorage.getItem('UserRole');
   jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
   jwtToken.value = localStorage.getItem('jwtToken');
-  if(jwtToken.value==null) {
-    goHome()
-  }
-  
+
   getLinkFuture();
 
 });
@@ -137,7 +138,7 @@ getLinkPast()
 }
 
 const getLinkPast = async () => {
-  //await RefreshToken()
+  await RefreshToken()
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/events/pastdays/?pageSize=8&page=${page.value}`,
     {
@@ -166,7 +167,7 @@ headers: {
 };
 
 const getLinkFuture = async () => {
-  //await RefreshToken()
+  await RefreshToken()
   const res = await fetch(
     `${import.meta.env.VITE_APP_TITLE}/api/events/futuredays/?pageSize=8&page=${page.value}`,
     {

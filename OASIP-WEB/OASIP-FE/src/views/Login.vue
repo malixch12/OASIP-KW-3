@@ -8,8 +8,6 @@ import PopupPage from "../components/PopupPage.vue";
 import RoundButton from "../components/RoundButton.vue";
 import { useRouter } from "vue-router";
 import jwt_decode from "jwt-decode";
-import addUser from "../components/addUser.vue";
-import { UserAgentApplication } from "msal" ;
 
 
 
@@ -19,7 +17,7 @@ const errorStatus = ref({
   Name: null,
   Email: null
 })
-const decoded = ref({ sub: ""  , role : ""})
+const decoded = ref({ sub: "" })
 
 const Login = async () => {
   CheckData()
@@ -43,9 +41,7 @@ const Login = async () => {
     jwtToken.value = localStorage.getItem('jwtToken');
     decoded.value = jwt_decode(jwtToken.value);
     console.log(decoded.value)
-    console.log(decoded.value.roles)
-
-    localStorage.setItem('UserRole', decoded.value.roles);
+    localStorage.setItem('UserRole', decoded.value.role);
     localStorage.setItem('UserEmail', decoded.value.sub);
     localStorage.setItem('UserName', decoded.value.username);
   }
@@ -124,10 +120,7 @@ const jwtToken = ref(null)
 onBeforeMount(() => {
   
   jwtToken.value = localStorage.getItem('jwtToken');
- var  microsoft = localStorage.getItem('micosoft');
-
-  if (jwtToken.value != null && microsoft == null) {
-    console.log(microsoft)
+  if (jwtToken.value != null) {
     decoded.value = jwt_decode(jwtToken.value);
     console.log(decoded.value)
     localStorage.setItem('UserRole', decoded.value.roles);
@@ -254,7 +247,7 @@ onBeforeUpdate(() => {
 
 <template>
   <div class="">
-<p class="opacity-0">{{accoutMicro.accountIdentifier}}</p>
+
     <div class="text-white text-xs">{{dataUser.role}}</div>
     <PopupPage v-show="isActivePopup" :dim-background="true">
       <div v-if="CheckStatus" class="grid grid-cols-1 p-12">
@@ -321,7 +314,7 @@ onBeforeUpdate(() => {
       <div class="color"></div>
       <div class="color"></div>
 
-      <div class="box">
+      <div class="box"></div>
 
         
 
@@ -342,8 +335,7 @@ onBeforeUpdate(() => {
         </details>
                         </div> -->
             <div class="inputBox ">
-              <p class="ml-4 mb-2 text-gray-500 text-sm">email</p>
-              <input type="text" class="" placeholder="" v-model.trim="dataUser.email" required>
+              <input type="text" class="" placeholder="email" v-model.trim="dataUser.email" required>
               <details class="" v-show="!EmailValidation || !EmailCheck">
                 <summary
                   class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
@@ -357,9 +349,8 @@ onBeforeUpdate(() => {
             </div>
 
             <div class="inputBox">
-              <p class="ml-4 mb-2 text-gray-500 text-sm">password</p>
 
-              <input type="password"  v-model.trim="dataUser.password">
+              <input type="password" placeholder="password" v-model.trim="dataUser.password">
               <details class="" v-if="!PasswordCheck">
                 <summary
                   class="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none text-red-400 ml-3 mt-3">
@@ -377,9 +368,7 @@ onBeforeUpdate(() => {
 <div class="flex justify-center">
   <button type="submit"  @click="Login()" class="text-gray-700 bg-gradient-to-r from-yellow-100 to-rose-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full drop-shadow-md text-sm w-full sm:w-auto px-12 py-2.5 text-center my-8 ">Login</button>
 
-</div>
 
-<div class="text-gray-500 text-center text-sm mb-4">━━━━━━━━━   or   ━━━━━━━━━</div>
 
 
 
@@ -411,7 +400,7 @@ onBeforeUpdate(() => {
         <span class="text-center text-gray-400 mt-2" v-if="lectOwnDetail.owners==null"> you own 0 subject </span>
      
 
-    
+       <div class="text-center text-sm text-gray-400" v-if="decoded.role==`Admin`">  You can do everything on our website.</div>
       </div>
   </div>
 </template>

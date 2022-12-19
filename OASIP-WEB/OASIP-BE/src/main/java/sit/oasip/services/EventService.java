@@ -21,7 +21,6 @@ import org.springframework.data.domain.Sort;
 import sit.oasip.Component.JwtTokenUtil;
 import sit.oasip.dtos.EventDTOs.AddEventDTO;
 import sit.oasip.dtos.EventDTOs.EditEventDTO;
-import sit.oasip.dtos.EventDTOs.GetDateTimeEvent;
 import sit.oasip.dtos.EventDTOs.GetEventDTO;
 import sit.oasip.entities.Event;
 import sit.oasip.entities.Eventcategory;
@@ -79,70 +78,29 @@ public class EventService {
 
         List<Event> event = new ArrayList<>();
 
-        String token = jwtRequestFilter.getJwtToken();
-        if (token != null) {
-            String email = jwtTokenUtil.getAllClaimsFromToken(token).getSubject();
-            String role = jwtTokenUtil.getAllClaimsFromToken(token).get("roles").toString();
+        String token = jwtRequestFilter.extractJwtFromRequest(request);
+        String email = jwtTokenUtil.getAllClaimsFromToken(token).getSubject();
+        String role = jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString();
+        if (role.equals(Role.Student.name())) {
+            if (filter == null) event = repository.findAllEventByStudent(email, sort);
+            else if (filter.equals("date"))
+                event = repository.findAllEventByStudentStartTimeEquals(email, sort, myDate);
+            else if (filter.equals("past"))
+                event = repository.findAllEventByStudentStartTimeLessThan(email, sort, myDate);
+            else if (filter.equals("future"))
+                event = repository.findAllEventByStudentStartTimeGreaterThan(email, sort, myDate);
 
-            if (role.equals(Role.Student.name())) {
-                if (filter == null) event = repository.findAllEventByStudent(email, sort);
-                else if (filter.equals("date"))
-                    event = repository.findAllEventByStudentStartTimeEquals(email, sort, myDate);
-                else if (filter.equals("past"))
-                    event = repository.findAllEventByStudentStartTimeLessThan(email, sort, myDate);
-                else if (filter.equals("future"))
-                    event = repository.findAllEventByStudentStartTimeGreaterThan(email, sort, myDate);
-
-                else if (filter.equals("cateId"))
-                    event = repository.findAllEventByStudentCategoryId(email, cateId, sort);
-                else if (filter.equals("catIdDate"))
-                    event = repository.findAllEventByStudentCategoryIdAndEventStartTimeEquals(email, cateId, sort, myDate);
-                else if (filter.equals("cateIdPast"))
-                    event = repository.findAllEventByStudentCategoryIdAndEventStartTimeLessThan(email, cateId, sort, myDate);
-                else if (filter.equals("cateIdFuture"))
-                    event = repository.findAllEventByStudentCategoryIdAndEventStartTimeGreaterThan(email, cateId, sort, myDate);
+            else if (filter.equals("cateId"))
+                event = repository.findAllEventByStudentCategoryId(email, cateId, sort);
+            else if (filter.equals("catIdDate"))
+                event = repository.findAllEventByStudentCategoryIdAndEventStartTimeEquals(email, cateId, sort, myDate);
+            else if (filter.equals("cateIdPast"))
+                event = repository.findAllEventByStudentCategoryIdAndEventStartTimeLessThan(email, cateId, sort, myDate);
+            else if (filter.equals("cateIdFuture"))
+                event = repository.findAllEventByStudentCategoryIdAndEventStartTimeGreaterThan(email, cateId, sort, myDate);
 
 
-            } else if (role.equals(Role.Admin.name())) {
-                if (filter == null) event = repository.findAll(sort);
-                else if (filter.equals("date"))
-                    event = repository.findByEventStartTimeEquals(myDate, sort);
-                else if (filter.equals("past"))
-                    event = repository.findByEventStartTimeLessThan(myDate, sort);
-                else if (filter.equals("future"))
-                    event = repository.findByEventStartTimeGreaterThan(myDate, sort);
-
-                else if (filter.equals("cateId"))
-                    event = repository.findByEventCategoryID(cateId, sort);
-                else if (filter.equals("catIdDate"))
-                    event = repository.findByEventCategoryIDAndEventStartTimeEquals(cateId, myDate);
-                else if (filter.equals("cateIdPast"))
-                    event = repository.findByEventCategoryIDAndEventStartTimeLessThan(cateId, myDate, sort);
-                else if (filter.equals("cateIdFuture"))
-                    event = repository.findByEventCategoryIDAndEventStartTimeGreaterThan(cateId, myDate, sort);
-
-
-            } else if (role.equals(Role.Lecturer.name())) {
-                User user = userRepository.findByEmail(email);
-                if (filter == null) event = repository.findAllEventByLecturerCategory(user.getUserId(), sort);
-                else if (filter.equals("date"))
-                    event = repository.findAllEventByLecturerStartTimeEquals(user.getUserId(), sort, myDate);
-                else if (filter.equals("past"))
-                    event = repository.findAllEventByLecturerStartTimeLessThan(user.getUserId(), sort, myDate);
-                else if (filter.equals("future"))
-                    event = repository.findAllEventByLecturerStartTimeGreaterThan(user.getUserId(), sort, myDate);
-
-                else if (filter.equals("cateId"))
-                    event = repository.findAllEventByLecturerCategoryId(user.getUserId(), cateId, sort);
-                else if (filter.equals("catIdDate"))
-                    event = repository.findAllEventByLecturerCategoryIdAndEventStartTimeEquals(user.getUserId(), cateId, myDate);
-                else if (filter.equals("cateIdPast"))
-                    event = repository.findAllEventByLecturerCategoryIdAndEventStartTimeLessThan(user.getUserId(), cateId, myDate, sort);
-                else if (filter.equals("cateIdFuture"))
-                    event = repository.findAllEventByLecturerCategoryIdAndEventStartTimeGreaterThan(user.getUserId(), cateId, myDate, sort);
-            }
-
-        } else {
+        } else if (role.equals(Role.Admin.name())) {
             if (filter == null) event = repository.findAll(sort);
             else if (filter.equals("date"))
                 event = repository.findByEventStartTimeEquals(myDate, sort);
@@ -159,23 +117,28 @@ public class EventService {
                 event = repository.findByEventCategoryIDAndEventStartTimeLessThan(cateId, myDate, sort);
             else if (filter.equals("cateIdFuture"))
                 event = repository.findByEventCategoryIDAndEventStartTimeGreaterThan(cateId, myDate, sort);
+
+
+        } else if (role.equals(Role.Lecturer.name())) {
+            User user = userRepository.findByEmail(email);
+            if (filter == null) event = repository.findAllEventByLecturerCategory(user.getId(), sort);
+            else if (filter.equals("date"))
+                event = repository.findAllEventByLecturerStartTimeEquals(user.getId(), sort, myDate);
+            else if (filter.equals("past"))
+                event = repository.findAllEventByLecturerStartTimeLessThan(user.getId(), sort, myDate);
+            else if (filter.equals("future"))
+                event = repository.findAllEventByLecturerStartTimeGreaterThan(user.getId(), sort, myDate);
+
+            else if (filter.equals("cateId"))
+                event = repository.findAllEventByLecturerCategoryId(user.getId(), cateId, sort);
+            else if (filter.equals("catIdDate"))
+                event = repository.findAllEventByLecturerCategoryIdAndEventStartTimeEquals(user.getId(), cateId, myDate);
+            else if (filter.equals("cateIdPast"))
+                event = repository.findAllEventByLecturerCategoryIdAndEventStartTimeLessThan(user.getId(), cateId, myDate, sort);
+            else if (filter.equals("cateIdFuture"))
+                event = repository.findAllEventByLecturerCategoryIdAndEventStartTimeGreaterThan(user.getId(), cateId, myDate, sort);
         }
-
         return event;
-    }
-
-//    get date time only (bind important value)
-    public List<GetDateTimeEvent> getDateTimeEvents(){
-        return listMapper.mapList(repository.findAll(Sort.by("eventStartTime").descending()), GetDateTimeEvent.class, modelMapper);
-    }
-    public List<GetDateTimeEvent> getDateTimeEventsbyDate(Instant myDate){
-        return listMapper.mapList( repository.findByEventStartTimeEquals(myDate, Sort.by("eventStartTime").ascending()) , GetDateTimeEvent.class, modelMapper );
-    }
-    public List<GetDateTimeEvent> getDateTimeEventsbyPastDate(){
-        return listMapper.mapList( repository.findByEventStartTimeLessThan(dateNow, Sort.by("eventStartTime").descending()) , GetDateTimeEvent.class, modelMapper );
-    }
-    public List<GetDateTimeEvent> getDateTimeEventsbyFutureDate(){
-        return listMapper.mapList( repository.findByEventStartTimeGreaterThan(dateNow, Sort.by("eventStartTime").ascending()) , GetDateTimeEvent.class, modelMapper );
     }
 
 
@@ -186,8 +149,8 @@ public class EventService {
     }
 
     public GetEventDTO getSimpleEventById(int id) {
-        String token = jwtRequestFilter.getJwtToken();
-        String role = jwtTokenUtil.getAllClaimsFromToken(token).get("roles").toString();
+        String token = jwtRequestFilter.extractJwtFromRequest(request);
+        String role = jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString();
         Event event = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Booking " + id + " Does Not Exist !!!"));
 
@@ -197,7 +160,7 @@ public class EventService {
             if (role.equals(Role.Student.name())) {
                 checkEmail(event.getBookingEmail(), HttpStatus.FORBIDDEN);
             } else if (role.equals(Role.Lecturer.name())) {
-                repository.findEventByLecturerAndEventID(user.getUserId(), id).orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "No permission"));
+                repository.findEventByLecturerAndEventID(user.getId(), id).orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "No permission"));
             }
         }
 
@@ -240,15 +203,13 @@ public class EventService {
         return pageMapper.mapToPage(pageable, listEventDTO);
     }
 
-    public void delete(int eventID) throws IOException {
-        String token = jwtRequestFilter.getJwtToken();
+    public void delete(int eventID) {
+        String token = jwtRequestFilter.extractJwtFromRequest(request);
         Event event = repository.findById(eventID).orElseThrow(() -> new RuntimeException(eventID + " Does not exit !!!"));
         if (token != null) {
-            if (jwtTokenUtil.getAllClaimsFromToken(token).get("roles").toString().equals(Role.Student.name()))
+            if (jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString().equals(Role.Student.name()))
                 checkEmail(event.getBookingEmail(), HttpStatus.FORBIDDEN);
         }
-        String fileName = "../db/file-uploads/" + event.getFileName();
-        Files.delete(Paths.get(fileName));
         repository.deleteById(eventID);
     }
 
@@ -275,7 +236,7 @@ public class EventService {
     }
 
     private void checkEmail(String email, HttpStatus status) {
-        String token = jwtRequestFilter.getJwtToken();
+        String token = jwtRequestFilter.extractJwtFromRequest(request);
         if (email.equals(jwtTokenUtil.getAllClaimsFromToken(token).getSubject()) == false) {
             throw new ResponseStatusException(status, "the booking email must be the same as the student's email");
         }
@@ -287,9 +248,9 @@ public class EventService {
                 .orElseThrow(() -> new RuntimeException(newEvent.getEventCategoryID() + "Does not exit !!!"));
         Event event = new Event();
 
-        String token = jwtRequestFilter.getJwtToken();
+        String token = jwtRequestFilter.extractJwtFromRequest(request);
         if (token != null) {
-            if (jwtTokenUtil.getAllClaimsFromToken(token).get("roles").toString().equals(Role.Student.name())) {
+            if (jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString().equals(Role.Student.name())) {
                 checkEmail(newEvent.getBookingEmail(), HttpStatus.BAD_REQUEST);
             }
         }
@@ -335,9 +296,9 @@ public class EventService {
             Event event = repository.findById(bookingId)
                     .orElseThrow(() -> new RuntimeException("Bookind ID " + bookingId + "Does not exit !!!"));
 
-            String token = jwtRequestFilter.getJwtToken();
+            String token = jwtRequestFilter.extractJwtFromRequest(request);
             if (token != null) {
-                if (jwtTokenUtil.getAllClaimsFromToken(token).get("roles").toString().equals(Role.Student.name())) {
+                if (jwtTokenUtil.getAllClaimsFromToken(token).get("role").toString().equals(Role.Student.name())) {
                     checkEmail(event.getBookingEmail(), HttpStatus.FORBIDDEN);
                 }
             }
@@ -364,8 +325,8 @@ public class EventService {
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
-            } else {
-                if (updateEvent.getFile() != null) {
+            }else{
+                if(updateEvent.getFile() != null){
                     try {
                         fileService.store(updateEvent.getFile());
                     } catch (IOException ex) {
@@ -384,6 +345,10 @@ public class EventService {
             } else if (updateEvent.getEventStartTime() != null) {
                 e.setEventStartTime(updateEvent.getEventStartTime());
             }
+
+
+
+
 
 
             return repository.saveAndFlush(e);

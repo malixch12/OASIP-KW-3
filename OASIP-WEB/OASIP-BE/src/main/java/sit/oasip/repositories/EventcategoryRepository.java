@@ -15,6 +15,4 @@ public interface EventcategoryRepository extends JpaRepository<Eventcategory,Int
 
     @Query("select ec from Eventcategory ec join EventCategoryOwner eco on ec.eventCategoryID = eco.eventCategoryID.eventCategoryID where eco.userID.id = :lecturerId and ec.eventCategoryID = :eventCategoryID")
     Optional<Eventcategory> findEventCateByLecturerAndCateID(Integer lecturerId, Integer eventCategoryID);
-
-    Eventcategory findByEventCategoryID(Integer eventCategoryId);
 }

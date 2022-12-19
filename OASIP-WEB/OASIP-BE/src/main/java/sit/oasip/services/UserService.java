@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.web.server.ResponseStatusException;
 
-import sit.oasip.Component.JwtTokenUtil;
-import sit.oasip.config.JwtRequestFilter;
 import sit.oasip.dtos.UserDTOs.AddUserDTO;
 import sit.oasip.dtos.UserDTOs.EditUserDTO;
 import sit.oasip.dtos.UserDTOs.MatchUserDTO;
@@ -21,44 +19,33 @@ import sit.oasip.dtos.UserDTOs.GetUserDTO;
 import sit.oasip.entities.EventCategoryOwner;
 import sit.oasip.entities.Eventcategory;
 import sit.oasip.entities.User;
-import sit.oasip.repositories.EventCategoryOwnerRepository;
-import sit.oasip.repositories.EventcategoryRepository;
 import sit.oasip.repositories.UserRepository;
 import sit.oasip.utils.ListMapper;
 import sit.oasip.utils.PageMapper;
 
-import sit.oasip.utils.Role;
 import sit.oasip.utils.RoleAttribute;
 
-import javax.ws.rs.BadRequestException;
-import java.util.*;
+import java.util.List;
 
 @Service
 public class UserService {
     @Autowired
     private UserRepository repository;
     @Autowired
-    private EventcategoryRepository eventcategoryRepository;
-    @Autowired
     private ModelMapper modelMapper;
     @Autowired
-    private ListMapper listMapper;
+    private ListMapper listMapper ;
     @Autowired
     private PageMapper pageMapper;
     @Autowired
     private Argon2PasswordEncoder argon2PasswordEncoder;
-    @Autowired
-    private EventCategoryOwnerRepository eventCategoryOwnerRepository;
-    @Autowired
-    private JwtRequestFilter jwtRequestFilter;
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
 
 
     public Page<GetUserDTO> getUserAll(Pageable pageable) {
         List<GetUserDTO> userDTOS = listMapper
                 .mapList(repository.findAll(Sort.by("UserName").ascending()), GetUserDTO.class, modelMapper);
         return pageMapper.mapToPage(pageable, userDTOS);
+
     }
 
 
@@ -127,20 +114,21 @@ public class UserService {
         return user1;
     }
 
-    public void match(MatchUserDTO matchUser) {
+    public void match(MatchUserDTO matchUser){
         User user = repository.findByEmail(matchUser.getEmail());
 
-        if (user != null) {
-            boolean isMatchPassword = argon2PasswordEncoder.matches(matchUser.getPassword(), user.getPassword());
+        if(user != null){
+            boolean isMatchPassword = argon2PasswordEncoder.matches(matchUser.getPassword(),user.getPassword());
 
-            if (isMatchPassword) {
-                throw new ResponseStatusException(HttpStatus.OK, "Password Match");
-            } else if (!isMatchPassword) {
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Password NOT Match");
+            if(isMatchPassword){
+                throw new ResponseStatusException(HttpStatus.OK,"Password Match");
+            }
+            else if(!isMatchPassword){
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Password NOT Match");
             }
 
-        } else if (user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "A user with the specified email DOES NOT exist");
+        }else if(user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"A user with the specified email DOES NOT exist");
         }
     }
 
@@ -150,41 +138,41 @@ public class UserService {
         User user = repository.findById(userId).map(e -> {
 
 
-            RoleAttribute roleAttribute = new RoleAttribute();
+                RoleAttribute roleAttribute = new RoleAttribute();
 
 
-            if (editUserDTO.getName() != null && editUserDTO.getEmail() != null && editUserDTO.getRole() != null) {
-                e.setUserName(editUserDTO.getName().trim());
-                e.setEmail(editUserDTO.getEmail().trim());
-                e.setRole(roleAttribute.roleChoice(editUserDTO.getRole().toString()));
-            } else if (editUserDTO.getName() != null && editUserDTO.getEmail() != null) {
-                e.setUserName(editUserDTO.getName().trim());
-                e.setEmail(editUserDTO.getEmail().trim());
-                e.setRole(e.getRole().toString());
-            } else if (editUserDTO.getName() != null && editUserDTO.getRole() != null) {
-                e.setUserName(editUserDTO.getName().trim());
-                e.setRole(roleAttribute.roleChoice(editUserDTO.getRole().toString()));
-                e.setEmail(e.getEmail());
-            } else if (editUserDTO.getEmail() != null && editUserDTO.getRole() != null) {
-                e.setEmail(editUserDTO.getEmail().trim());
-                e.setRole(roleAttribute.roleChoice(editUserDTO.getRole().toString()));
-                e.setUserName(e.getUserName());
-            } else if (editUserDTO.getName() != null) {
-                e.setUserName(editUserDTO.getName().trim());
-                e.setEmail(e.getEmail());
-                e.setRole(e.getRole().toString());
-            } else if (editUserDTO.getEmail() != null) {
-                e.setEmail(editUserDTO.getEmail().trim());
-                e.setUserName(e.getUserName());
-                e.setRole(e.getRole().toString());
-            } else if (editUserDTO.getRole() != null) {
-                e.setEmail(e.getEmail());
-                e.setUserName(e.getUserName());
-                e.setRole(roleAttribute.roleChoice(editUserDTO.getRole().toString()));
+                if (editUserDTO.getName() != null && editUserDTO.getEmail() != null && editUserDTO.getRole() != null) {
+                    e.setUserName(editUserDTO.getName().trim());
+                    e.setEmail(editUserDTO.getEmail().trim());
+                    e.setRole( roleAttribute.roleChoice(editUserDTO.getRole().toString()));
+                } else if (editUserDTO.getName() != null && editUserDTO.getEmail() != null) {
+                    e.setUserName(editUserDTO.getName().trim());
+                    e.setEmail(editUserDTO.getEmail().trim());
+                    e.setRole(e.getRole().toString());
+                } else if (editUserDTO.getName() != null && editUserDTO.getRole() != null) {
+                    e.setUserName(editUserDTO.getName().trim());
+                    e.setRole( roleAttribute.roleChoice(editUserDTO.getRole().toString()));
+                    e.setEmail(e.getEmail());
+                } else if (editUserDTO.getEmail() != null && editUserDTO.getRole() != null) {
+                    e.setEmail(editUserDTO.getEmail().trim());
+                    e.setRole( roleAttribute.roleChoice(editUserDTO.getRole().toString()));
+                    e.setUserName(e.getUserName());
+                } else if (editUserDTO.getName() != null) {
+                    e.setUserName(editUserDTO.getName().trim());
+                    e.setEmail(e.getEmail());
+                    e.setRole(e.getRole().toString());
+                } else if (editUserDTO.getEmail() != null) {
+                    e.setEmail(editUserDTO.getEmail().trim());
+                    e.setUserName(e.getUserName());
+                    e.setRole(e.getRole().toString());
+                } else if (editUserDTO.getRole() != null) {
+                    e.setEmail(e.getEmail());
+                    e.setUserName(e.getUserName());
+                    e.setRole( roleAttribute.roleChoice(editUserDTO.getRole().toString()));
 
             }
             return repository.saveAndFlush(e);
-        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID " + userId + " does not exit !!!"));
+        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,"ID "+ userId + " does not exit !!!"));
         return modelMapper.map(user, User.class);
 
     }
@@ -210,7 +198,7 @@ public class UserService {
             }
         }
         repository.deleteById(userId);
-        throw new ResponseStatusException(HttpStatus.OK, "Email : " + user.getEmail() + " have been deleted");
+        throw new ResponseStatusException(HttpStatus.OK,"Email : "+ user.getEmail() + " have been deleted");
     }
 
 

@@ -275,7 +275,16 @@ router.push({
 const DowloadFlie = async () => {
 
 
-   await fetch( `${import.meta.env.VITE_APP_TITLE}/api/download/${eventLists.value.bookingId}` )
+   await fetch( `${import.meta.env.VITE_APP_TITLE}/api/file/download/${eventLists.value.bookingId}`,
+   {
+
+method: 'get',
+headers: {
+
+  'Content-Type': 'application/json',
+  'Authorization': 'Bearer ' + jwtToken.value
+}
+})
 .then((res) => { return res.blob(); })
 .then((data) => {
   var a = document.createElement("a");

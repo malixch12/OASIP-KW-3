@@ -98,7 +98,10 @@ onBeforeMount(async () => {
   jwtTokenRF.value = localStorage.getItem('jwtTokenRF');
   jwtToken.value =  await localStorage.getItem('jwtToken');
  
- await getLinkFuture();
+  if(jwtToken.value!=null) {
+    await  getLinkFuture();
+
+  }
 });
 
 

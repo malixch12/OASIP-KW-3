@@ -176,7 +176,14 @@ function toggle () {
               
                
              "
-             >    <a href="http://localhost:3000/kw3/#/logoutPage" > Log out </a> 
+             >     <router-link 
+              :to="{ name: 'logoutPage' }"
+              class="
+                  block
+                  text-transparent  bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 
+                
+              "
+              > Log out    </router-link>
            </div>
           </li>
           

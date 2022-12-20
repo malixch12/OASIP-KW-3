@@ -78,7 +78,7 @@ function toggle () {
                 text-gray-700
                 md:hover:text-pink-500 md:p-0
               "
-              >🏠&nbspHome</router-link
+              >🏠&nbsphome</router-link
             >
           </li>
           <li v-if=" (UserRole!=`Lecturer` &  UserRole!=`Guest`) " >

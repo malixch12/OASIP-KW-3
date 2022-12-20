@@ -176,7 +176,7 @@ function toggle () {
               
                
              "
-             >    <a href="http://localhost:3000/kw3/#/logoutPage" target="_blank"> Log out </a> 
+             >    <a href="http://localhost:3000/kw3/#/logoutPage" > Log out </a> 
            </div>
           </li>
           

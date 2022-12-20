@@ -3,7 +3,7 @@
 
           
           <div class="text-center mt-60 text-3xl">we're taking you logout</div>
-          <div class="text-center  text-lg">You can close this page now.</div>
+          <div class="text-center  text-lg">please wait....</div>
 
             
 

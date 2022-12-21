@@ -453,6 +453,10 @@ function previewImage(event) {
           <span v-if="!hideEdit" class="text-slate-600 font-bold">
             Date Time :
           </span>
+          <span>{{ new Date(eventLists.eventStartTime).toLocaleDateString("th-TH") }}  {{
+              new Date(eventLists.eventStartTime).toLocaleTimeString("th-TH")
+            }} </span>
+            <div  v-if="!hideEdit" class="text-sm">new date time</div>
           <input
             v-if="!hideEdit"
             type="datetime-local"

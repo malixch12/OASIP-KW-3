@@ -152,7 +152,7 @@ async function goEdit(id) {
   );
   if (res.status === 200) {
     var checkOwn = await res.json();
-    console.log(checkOwn)
+    console.log("owner :"+ checkOwn.owners)
 
     if (checkOwn.owners != null) {
       lectOwnDetail.value = []

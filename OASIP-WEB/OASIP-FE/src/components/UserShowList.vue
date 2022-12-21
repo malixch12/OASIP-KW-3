@@ -149,15 +149,17 @@ const removeUser = async (UserId , role , name ) => {
   );
   if (res.status === 200) {
      checkOwn.value = await res.json();
-      console.log(checkOwn.value.owners)
+      console.log(checkOwn.value.owners.length)
 
-if(checkOwn.value.owners!=null) {
+if(checkOwn.value.owners.length!=0) {
+  console.log("!=null")
 for (const [key, value] of Object.entries(checkOwn.value.owners)) {
   cate.push(`${value.category_name}`)
+  
   console.log(cate)
 }
 }
-    if(checkOwn.value.owners!=null) {
+    if(checkOwn.value.owners.length!=0) {
       checkOwnLect = true
     }
 

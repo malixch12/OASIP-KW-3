@@ -129,7 +129,7 @@ function removeToken() {
 const isActivePopup3 =ref(false)
 
 const checkOwn = ref({owners:{}})
-
+const errorLect =ref({message:""})
 const removeUser = async (UserId , role , name ) => {
 
   var checkOwnLect = false
@@ -189,8 +189,9 @@ if(checkOwnLect==false) {
     if(res.status === 400) {
 
 
-         const TokenValue = ref( await res.json())
-   console.log("status from backend = " +  TokenValue.value.message )
+      const test  = ref( await res.json())
+      errorLect.value = await test.message
+   console.log("status from backend = " +  errorLect.value.message )
    isActivePopup3.value = true
     }
   }
@@ -222,7 +223,7 @@ if(checkOwnLect==true) {
     if(res.status === 400) {
 
 
-         const TokenValue = ref( await res.json())
+          TokenValue.value =  await res.json()
    console.log("status from backend = " +  TokenValue.value.message )
    isActivePopup3.value = true
     }
@@ -231,7 +232,7 @@ if(checkOwnLect==true) {
   
   getLinkAll()
 };
-
+const TokenValue = ref(null)
 
 const dataDetail = ref({
 
@@ -278,6 +279,7 @@ router.push({
 
 
 <template>
+  
      <PopupPage class="" v-show="UserRole==`Lecturer`" :dim-background="true">
       <div class="grid grid-cols-1 p-12" >
         Lecturer ไม่สามารถใช้หน้านี้ได้
@@ -292,7 +294,7 @@ router.push({
 
       <PopupPage v-show="isActivePopup3" :dim-background="true">
       <div class="grid grid-cols-1 p-12" >
-        ลบไม่ได้เพราะเป็นอาจารย์คนสุดท้ายในวิชานี้ละงับ
+        {{TokenValue.message}}
         <div class=" max-w-lg mx-auto  ">
           <br>
           <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"

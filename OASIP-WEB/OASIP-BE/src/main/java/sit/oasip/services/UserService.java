@@ -89,7 +89,7 @@ public class UserService {
         return users;
     }
 
-public GetUserDTO getUserByEmail() {
+    public GetUserDTO getUserByEmail() {
         String email = jwtTokenUtil.getAllClaimsFromToken(jwtRequestFilter.getJwtToken()).getSubject();
         User user = repository.findByEmail(email);
         GetUserDTO users = modelMapper.map(user, GetUserDTO.class);
@@ -109,6 +109,7 @@ public GetUserDTO getUserByEmail() {
 
         return users;
     }
+
     public User add(AddUserDTO newUser) {
         User user = new User();
         RoleAttribute roleAttribute = new RoleAttribute();
@@ -192,25 +193,30 @@ public GetUserDTO getUserByEmail() {
         User user = repository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID " + userId + " does not exit !!!"));
 
         List<EventCategoryOwner> eco = eventCategoryOwnerRepository.findCategoryName(userId);
+//
+//        ArrayList owners = new ArrayList();
+//        if (eco == null) {
+//            owners.add(null);
+//        } else {
+//            for (int i = 0; i < eco.size(); i++) {
+//                owners.add(eco.get(i).getEventCategoryID());
+//            }
+//        }
 
-        ArrayList owners = new ArrayList();
-        if (eco == null) {
-            owners.add(null);
-        } else {
             for (int i = 0; i < eco.size(); i++) {
-                owners.add(eco.get(i).getEventCategoryID());
+                int numOwnerEachCate = eventCategoryOwnerRepository.countAllByEventCategoryID(eventcategoryRepository.findById( eco.get(i).getEventCategoryID().getEventCategoryID()));
+                if (numOwnerEachCate == 1) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The system must not allow the user to delete this account");
+                }
             }
+            for (int i = 0; i < eco.size(); i++) {
+                eventCategoryOwnerRepository.deleteById(eco.get(i).getId());
+            }
+
+            //        }
+            repository.deleteById(userId);
+            throw new ResponseStatusException(HttpStatus.OK, "Email : " + user.getEmail() + " have been deleted");
         }
 
-        for (int i = 0; i < owners.size(); i++) {
-            int numOwnerEachCate = eventCategoryOwnerRepository.countAllByEventCategoryID(eventcategoryRepository.findById((Integer) owners.get(i)));
-            if (numOwnerEachCate == 1) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The system must not allow the user to delete this account");
-            }
-        }
-        repository.deleteById(userId);
-        throw new ResponseStatusException(HttpStatus.OK, "Email : " + user.getEmail() + " have been deleted");
     }
 
-
-}

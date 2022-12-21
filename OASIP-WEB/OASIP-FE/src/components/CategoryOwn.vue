@@ -180,7 +180,7 @@ const dataOwnForDelete = ref(
 )
 
 async function deleteOwn(ownid , index) {
-  if (confirm("Would you like to delete this user?") == true) {
+  if (confirm("Would you like to delete this own category?") == true) {
     const res = await fetch(
       `${import.meta.env.VITE_APP_TITLE}/api/owners/${ownid}`,
       {

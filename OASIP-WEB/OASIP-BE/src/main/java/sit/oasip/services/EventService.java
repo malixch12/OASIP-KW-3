@@ -252,7 +252,7 @@ public class EventService {
             Files.delete(Paths.get(fileName));
         }
 
-       
+
         repository.deleteById(eventID);
     }
 

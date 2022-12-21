@@ -107,7 +107,7 @@ public class EventCategoryService {
             c.setEventCategoryDescription(updateCategory.getEventCategoryDescription());
             return repository.saveAndFlush(c);
 
-        }).orElseThrow(() -> new RuntimeException("Can not update !!!"));
+        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category ID : " + id + " Does Not Exist !!!"));
         return modelMapper.map(eventCate, GetEventCategoryDTO.class);
     }
 }

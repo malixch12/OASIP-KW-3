@@ -153,7 +153,8 @@ const removeUser = async (UserId , role , name ) => {
 
 if(checkOwn.value.owners!=null) {
 for (const [key, value] of Object.entries(checkOwn.value.owners)) {
-  cate.push(`${value}`)
+  cate.push(`${value.category_name}`)
+  console.log(cate)
 }
 }
     if(checkOwn.value.owners!=null) {
@@ -232,7 +233,7 @@ if(checkOwnLect==true) {
   
   getLinkAll()
 };
-const TokenValue = ref(null)
+const TokenValue = ref({message:""})
 
 const dataDetail = ref({
 
@@ -293,7 +294,8 @@ router.push({
 
 
       <PopupPage v-show="isActivePopup3" :dim-background="true">
-      <div class="grid grid-cols-1 p-12" >
+      <div class="grid grid-cols-1 p-12 text-red-600" >
+        <span class="text-center font-bold text-3xl mb-2">WARNING!!!</span>
         {{TokenValue.message}}
         <div class=" max-w-lg mx-auto  ">
           <br>

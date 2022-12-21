@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -16,5 +17,5 @@ public class GetUserDTO {
     private String Role;
     private Timestamp CreatedOn;
     private Timestamp UpdatedOn;
-    private Map Owners;
+    private List<Categoryyyy> Owners;
 }

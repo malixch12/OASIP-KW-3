@@ -152,13 +152,13 @@ async function goEdit(id) {
   );
   if (res.status === 200) {
     var checkOwn = await res.json();
-    console.log(checkOwn.owners)
+    console.log(checkOwn)
 
     if (checkOwn.owners != null) {
       lectOwnDetail.value = []
       for (const [key, value] of Object.entries(checkOwn.owners)) {
-        console.log(`${value}`)
-        lectOwnDetail.value.push({ OwnId: key, name: value })
+        console.log(`${value.ownerId}`)
+        lectOwnDetail.value.push({ OwnId: value.ownerId, name: value.category_name })
         console.log(lectOwnDetail.value)
 
       }
@@ -179,10 +179,10 @@ const dataOwnForDelete = ref(
   }
 )
 
-async function deleteOwn() {
+async function deleteOwn(ownid , index) {
   if (confirm("Would you like to delete this user?") == true) {
     const res = await fetch(
-      `${import.meta.env.VITE_APP_TITLE}/api/owners/${dataOwnForDelete.value.idOwn}`,
+      `${import.meta.env.VITE_APP_TITLE}/api/owners/${ownid}`,
       {
         method: "DELETE",
         headers: {
@@ -196,6 +196,7 @@ async function deleteOwn() {
     );
 
     if (res.status === 200) {
+      lectOwnDetail.value.splice(index, 1)
       isActivePopup2.value = true
     }
 
@@ -207,6 +208,8 @@ async function deleteOwn() {
     }
 
     if (res.status === 400) {
+     const TokenValue =  await res.json()
+   console.log("status from backend = " +  TokenValue.message )
       isActivePopup5.value = true
 
 
@@ -222,7 +225,7 @@ async function deleteOwn() {
     <PopupPage v-show="isActivePopup" :dim-background="true">
       <div class="grid grid-cols-1 p-12">
         <p class="text-2sm font-semibold text-green-600 tracking-wide pb-8">
-          <Menu as="div" class=" mb-6 ">
+          <!-- <Menu as="div" class=" mb-6 ">
             <div>
               <MenuButton id="role"
                 class="text-left bg-transparent rounded-lg h-12 w-full  border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
@@ -242,18 +245,24 @@ async function deleteOwn() {
                   <MenuItem v-slot="{ active }" v-for="lectOwnDetail in lectOwnDetail">
                   <div :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']"
                     @click="dataOwnForDelete.name = lectOwnDetail.name, dataOwnForDelete.idOwn = lectOwnDetail.OwnId">
-                    {{ lectOwnDetail.name }} </div>
+                    {{ lectOwnDetail.name}}  </div>
                   </MenuItem>
 
 
                 </div>
               </MenuItems>
             </transition>
-          </Menu>
+          </Menu> -->
+          <div  v-for="(lectOwnDetail, index) in lectOwnDetail">
+                  <div :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']"
+                    @click="dataOwnForDelete.name = lectOwnDetail.name, dataOwnForDelete.idOwn = lectOwnDetail.OwnId">
+                    {{ lectOwnDetail.name}}  
+                    <span @click="deleteOwn(lectOwnDetail.OwnId , index)" class="text-sm text-red-500 underline  underline-offset-4"> delete</span>
+          </div>
+                    
+                  </div>
 
-        <div @click="deleteOwn()"
-          class="text-white mt-6 bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
-          delete own</div>
+       
 
 
         </p>

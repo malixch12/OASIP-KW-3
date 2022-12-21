@@ -242,7 +242,7 @@ public class EventService {
 
     public void delete(int eventID) throws IOException {
         String token = jwtRequestFilter.getJwtToken();
-        Event event = repository.findById(eventID).orElseThrow(() -> new RuntimeException(eventID + " Does not exit !!!"));
+        Event event = repository.findById(eventID).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,eventID + " Does not exit !!!"));
         if (token != null) {
             if (jwtTokenUtil.getAllClaimsFromToken(token).get("roles").toString().equals(Role.Student.name()))
                 checkEmail(event.getBookingEmail(), HttpStatus.FORBIDDEN);
@@ -259,7 +259,7 @@ public class EventService {
     // check overlapping
     public void checkOverlapping(Instant startime, int categoryId) {
         Eventcategory eventcategory = cateRepository.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException(categoryId + "Does not exit !!!"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,categoryId + "Does not exit !!!"));
         List<Event> listAll = repository.findByEventCategoryID(categoryId, Sort.by("eventStartTime").descending());
 
         Instant newEventStartTime = startime;
@@ -288,7 +288,7 @@ public class EventService {
 
     public Event add(AddEventDTO newEvent) throws MessagingException, IOException {
         Eventcategory eventcategory = cateRepository.findById(newEvent.getEventCategoryID())
-                .orElseThrow(() -> new RuntimeException(newEvent.getEventCategoryID() + "Does not exit !!!"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,newEvent.getEventCategoryID() + "Does not exit !!!"));
         Event event = new Event();
 
         String token = jwtRequestFilter.getJwtToken();
@@ -337,7 +337,7 @@ public class EventService {
 
         if (updateEvent.getEventStartTime() != null) {
             Event event = repository.findById(bookingId)
-                    .orElseThrow(() -> new RuntimeException("Bookind ID " + bookingId + "Does not exit !!!"));
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Bookind ID " + bookingId + "Does not exit !!!"));
 
             String token = jwtRequestFilter.getJwtToken();
             if (token != null) {

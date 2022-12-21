@@ -128,10 +128,11 @@ function removeToken() {
 
 const isActivePopup3 =ref(false)
 
+const checkOwn = ref({owners:{}})
+
 const removeUser = async (UserId , role , name ) => {
 
   var checkOwnLect = false
-  var checkOwn = {}
   var cate = []
   if(role=="Lecturer") {
     const res = await fetch(
@@ -147,15 +148,15 @@ const removeUser = async (UserId , role , name ) => {
     }
   );
   if (res.status === 200) {
-     checkOwn = await res.json();
-      console.log(checkOwn.owners)
+     checkOwn.value = await res.json();
+      console.log(checkOwn.value.owners)
 
-
-for (const [key, value] of Object.entries(checkOwn.owners)) {
+if(checkOwn.value.owners!=null) {
+for (const [key, value] of Object.entries(checkOwn.value.owners)) {
   cate.push(`${value}`)
 }
-
-    if(checkOwn.owners!=null) {
+}
+    if(checkOwn.value.owners!=null) {
       checkOwnLect = true
     }
 

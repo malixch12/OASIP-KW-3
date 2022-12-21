@@ -287,8 +287,7 @@ async function deleteOwn(ownid , index) {
           remove own not succeeded
         </p>
         <div class="text-center mb-4">
-          เหลือคนสุดท้ายแล้ว
-        </div>
+          This lecturer cannot be removed because there is only one lecturer left.        </div>
         <div class=" max-w-lg mx-auto  ">
           <RoundButton bg-color="bg-gray-400 text-white flex justify-center" button-name="ok"
             @click="isActivePopup5 = false" />

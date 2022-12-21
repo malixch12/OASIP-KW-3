@@ -247,8 +247,12 @@ public class EventService {
             if (jwtTokenUtil.getAllClaimsFromToken(token).get("roles").toString().equals(Role.Student.name()))
                 checkEmail(event.getBookingEmail(), HttpStatus.FORBIDDEN);
         }
-        String fileName = "../db/file-uploads/" + event.getFileName();
-        Files.delete(Paths.get(fileName));
+        if(event.getFileName() != null){
+            String fileName = "../db/file-uploads/" + event.getFileName();
+            Files.delete(Paths.get(fileName));
+        }
+
+       
         repository.deleteById(eventID);
     }
 

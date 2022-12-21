@@ -352,7 +352,7 @@ onBeforeUpdate(() => {
           <div class="form">
             <h2>Login</h2>
 
-            <form>
+            <div>
               <!-- <div class="inputBox">
                             <input type="text" placeholder="Username" v-model.trim="dataUser.name" >
                               <details class="" v-if="!NameCheck">
@@ -398,8 +398,8 @@ onBeforeUpdate(() => {
 
 
               <div class="flex justify-center">
-                <button type="submit" @click="Login()"
-                  class="text-gray-700 bg-gradient-to-r from-yellow-100 to-rose-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full drop-shadow-md text-sm w-full sm:w-auto px-12 py-2.5 text-center my-8 ">Login</button>
+                <div type="submit" @click="Login()"
+                  class="text-gray-700 bg-gradient-to-r from-yellow-100 to-rose-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full drop-shadow-md text-sm w-full sm:w-auto px-12 py-2.5 text-center my-8 ">Login</div>
 
               </div>
 
@@ -407,8 +407,8 @@ onBeforeUpdate(() => {
 
 
 
-              <button @click="login()" class="bg-gray-200 mt-2 w-full drop-shadow-md rounded"> <img
-                  src="../assets/SignIn_with_microsoft-removebg-preview.png" class="h-14" /></button>
+              <div @click="login()" class="bg-gray-200 mt-2 w-full drop-shadow-md rounded"> <img
+                  src="../assets/SignIn_with_microsoft-removebg-preview.png" class="h-14" /></div>
 
               <!-- <a href="http://localhost:3000/kw3/#/logoutPage" target="_blank">  
   
@@ -420,7 +420,7 @@ onBeforeUpdate(() => {
 
 
 
-            </form>
+            </div>
           </div>
 
         </div>

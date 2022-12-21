@@ -106,7 +106,7 @@ const updateNote = async () => {
     eventLists.value.eventStartTime = InputTime.value
     formData.append("eventNotes", eventLists.value.eventNotes);
   formData.append("eventStartTime", 
-            eventLists.value.eventStartTime
+             new Date(eventLists.value.eventStartTime).toISOString()
   )
     const res = await fetch(
       `${import.meta.env.VITE_APP_TITLE}/api/events/${
@@ -215,7 +215,7 @@ const updateNote = async () => {
   
    }
 
-   window.location.reload();
+ window.location.reload();
 
 };
 const testname = ref('')
